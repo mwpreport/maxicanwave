@@ -1,0 +1,549 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 12, 2017, 4:07:34 PM
+    Author     : Sathiyaraj
+*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: 'muliblack';
+    src: url('../fonts/muli-black-webfont.eot');
+    src: url('../fonts/muli-black-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/muli-black-webfont.woff2') format('woff2'),
+        url('../fonts/muli-black-webfont.woff') format('woff'),
+        url('../fonts/muli-black-webfont.ttf') format('truetype'),
+        url('../fonts/muli-black-webfont.svg#muliblack') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'mulibold';
+    src: url('../fonts/muli-bold-webfont.eot');
+    src: url('../fonts/muli-bold-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/muli-bold-webfont.woff2') format('woff2'),
+        url('../fonts/muli-bold-webfont.woff') format('woff'),
+        url('../fonts/muli-bold-webfont.ttf') format('truetype'),
+        url('../fonts/muli-bold-webfont.svg#mulibold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'muliextrabold';
+    src: url('../fonts/muli-extrabold-webfont.eot');
+    src: url('../fonts/muli-extrabold-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/muli-extrabold-webfont.woff2') format('woff2'),
+        url('../fonts/muli-extrabold-webfont.woff') format('woff'),
+        url('../fonts/muli-extrabold-webfont.ttf') format('truetype'),
+        url('../fonts/muli-extrabold-webfont.svg#muliextrabold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'muliregular';
+    src: url('../fonts/muli-regular-webfont.eot');
+    src: url('../fonts/muli-regular-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/muli-regular-webfont.woff2') format('woff2'),
+        url('../fonts/muli-regular-webfont.woff') format('woff'),
+        url('../fonts/muli-regular-webfont.ttf') format('truetype'),
+        url('../fonts/muli-regular-webfont.svg#muliregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'mulisemibold';
+    src: url('../fonts/muli-semibold-webfont.eot');
+    src: url('../fonts/muli-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/muli-semibold-webfont.woff2') format('woff2'),
+        url('../fonts/muli-semibold-webfont.woff') format('woff'),
+        url('../fonts/muli-semibold-webfont.ttf') format('truetype'),
+        url('../fonts/muli-semibold-webfont.svg#mulisemibold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'robotoblack';
+    src: url('../fonts/roboto-black-webfont.eot');
+    src: url('../fonts/roboto-black-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/roboto-black-webfont.woff2') format('woff2'),
+        url('../fonts/roboto-black-webfont.woff') format('woff'),
+        url('../fonts/roboto-black-webfont.ttf') format('truetype'),
+        url('../fonts/roboto-black-webfont.svg#robotoblack') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'robotobold';
+    src: url('../fonts/roboto-bold-webfont.eot');
+    src: url('../fonts/roboto-bold-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/roboto-bold-webfont.woff2') format('woff2'),
+        url('../fonts/roboto-bold-webfont.woff') format('woff'),
+        url('../fonts/roboto-bold-webfont.ttf') format('truetype'),
+        url('../fonts/roboto-bold-webfont.svg#robotobold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'robotomedium';
+    src: url('../fonts/roboto-medium-webfont.eot');
+    src: url('../fonts/roboto-medium-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/roboto-medium-webfont.woff2') format('woff2'),
+        url('../fonts/roboto-medium-webfont.woff') format('woff'),
+        url('../fonts/roboto-medium-webfont.ttf') format('truetype'),
+        url('../fonts/roboto-medium-webfont.svg#robotomedium') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'robotoregular';
+    src: url('../fonts/roboto-regular-webfont.eot');
+    src: url('../fonts/roboto-regular-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/roboto-regular-webfont.woff2') format('woff2'),
+        url('../fonts/roboto-regular-webfont.woff') format('woff'),
+        url('../fonts/roboto-regular-webfont.ttf') format('truetype'),
+        url('../fonts/roboto-regular-webfont.svg#robotoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+body{
+    font-family: 'muliregular';
+    color:#333;
+}
+ul{
+    margin: 0px;
+    padding: 0px;
+}
+li{
+    list-style: none;
+}
+:hover, :active, :focus{
+    outline: none;
+}
+p{
+    font-size: 15px;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+    font-family: 'robotobold';
+}
+h3{
+        color: #333;
+    padding-right: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'robotobold';
+    padding: 0;
+    font-size: 16px;
+    margin-bottom: 20px;
+    margin: 0;
+}
+.pad-top-10{
+    padding-top:10px;
+}
+.pad-top-20{
+    padding-top:20px;
+}
+.pad-top-30{
+    padding-top:30px;
+}
+.pad-top-40{
+    padding-top:40px;
+}
+.pad-top-50{
+    padding-top:50px;
+}
+.pad-bottom-10{
+    padding-bottom:10px;
+}
+.pad-bottom-20{
+    padding-bottom:20px;
+}
+.pad-bottom-30{
+    padding-bottom:30px;
+}
+.pad-bottom-40{
+    padding-bottom:40px;
+}
+.pad-bottom-50{
+    padding-bottom:50px;
+}
+.mar-top-10{
+    margin-top:10px;
+}
+.mar-top-20{
+    margin-top:20px;
+}
+.mar-top-30{
+    margin-top:30px;
+}
+.mar-top-40{
+    margin-top:40px;
+}
+.mar-top-50{
+    margin-top:50px;
+}
+.mar-bottom-8{
+    margin-bottom:8px;
+}
+.mar-bottom-10{
+    margin-bottom:10px;
+}
+.mar-bottom-20{
+    margin-bottom:20px;
+}
+.mar-bottom-25{
+    margin-bottom:25px;
+}
+.mar-bottom-30{
+    margin-bottom:30px;
+}
+.mar-bottom-40{
+    margin-bottom:40px;
+}
+.mar-bottom-50{
+    margin-bottom:50px;
+}
+.loginpage .login-container {
+    display: table;
+    height: 100%;
+    table-layout: fixed;
+    width: 100%;
+}
+.loginpage .login-left {
+    background: rgba(0, 0, 0, 0) url("../images/login-bg.jpg") no-repeat scroll 0 0;
+    background-size: cover;
+    display: table-cell;
+    margin-top: 25px;
+    vertical-align: middle;
+}
+.loginpage .login-right {
+    display: table-cell;
+    vertical-align: middle;
+}
+.loginpage .login-form-container{
+    margin: 0 auto;
+    max-width: 450px;
+    width: 100%;
+    padding: 0 20px;
+}
+.logo{
+    text-align: center;
+}
+.common-btn{
+    background: transparent;
+    border: 1px solid #ccc;
+    padding: 8px 15px;
+    border-radius: 6px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    font-family: 'robotobold';
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: normal;
+}
+.btn-125{
+    width: 125px;
+}
+.blue-btn{
+    background: #0071bc;
+    border: 1px solid #0071bc;
+    color:#fff;
+}
+.blue-btn:hover, .blue-btn:focus{
+    background: #0163a4;
+    color:#fff;
+}
+.table > thead > tr > th{
+    font-family: 'robotobold';
+     background: #0071bc;
+    color: #fff;
+    font-size: 18px;
+    padding: 14px 8px;
+    text-align: center;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td{
+    padding: 14px 8px;
+    font-size: 15px;
+    text-align: center;
+}
+.table-bordered>thead>tr>th{
+    border:1px solid #37a1e8;
+}
+.table-hover>tbody>tr:hover{
+    background: #e0f2fe;
+}
+.loginpage .form-group input{
+    border-radius: 5px;
+    padding: 10px 12px;
+    height: 40px;
+}
+.loginpage .form-horizontal .control-label{
+    padding-top: 10px;
+    font-weight: normal;
+    font-family: 'mulibold';
+}
+.loginpage .login-form{
+    padding-top: 10px;
+}
+.loginpage .login-lft-container{
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+.loginpage footer {
+    background-color: #fff;
+    min-height: 36px;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: 36px;
+}
+.loginpage .footer-copyright {
+    width: 50%;
+    text-align: center;
+    color: #939393;
+    font-size: 13px;
+    padding: 7px 0 0px;
+}
+.skin-red-light .main-header .navbar, .skin-red-light .main-header .logo, .skin-red-light .main-header li.user-header{
+    background: #0071bc;
+}
+.skin-red-light .main-header .navbar .sidebar-toggle:hover, .skin-red-light .main-header .logo:hover{
+    background-color: #0163a4;
+}
+.main-footer{
+    font-size: 13px;
+}
+
+/*Account page css ends here*/
+select.form-control {
+    background: #fff url("../images/select_drop.png") no-repeat scroll right 0;
+    color:#0071bc;
+    font-size: 15px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+}
+select option {
+    color: #337ab7;
+    padding: 3px 3px 4px;
+}
+
+/* Custom Checkbox */
+input[type="checkbox"], input[type="radio"] {
+    display: none;
+}
+input[type="checkbox"] + label span, input[type="radio"] + label span {
+    float: left;
+    width: 23px;
+    height: 24px;
+    margin: 0px 6px 0 0;
+    vertical-align: middle;
+    background: url(../images/checkbox-radio-2x.png) no-repeat;
+    cursor: pointer;
+
+}
+input[type="radio"] + label span {
+    width: 18px;
+    height: 22px;
+}
+input[type="checkbox"] + label span {
+    background: url(../images/checkbox-radio-2x.png) no-repeat;
+    background-size: 86px;
+    background-position: -1px;
+}
+input[type="checkbox"]:checked + label span {
+    background: url(../images/checkbox-radio-2x.png) no-repeat;
+    background-size: 86px;
+    background-position: -24px;
+}
+input[type="radio"]:disabled + label span {
+    background: url(../images/checkbox-radio-2x.png) no-repeat;
+    opacity: 0.5;
+}
+input[type="radio"] + label span {
+    background: url(../images/checkbox-radio-2x.png) -46px top no-repeat;
+    background-size: 86px;
+    background-position: -49px;
+}
+input[type="radio"]:checked + label span {
+    background: url(../images/checkbox-radio-2x.png) -64px top no-repeat;
+    background-size: 86px;
+    background-position: -68px;
+}
+input[type="checkbox"]:disabled + label span {
+    background: url(../images/checkbox-radio-2x.png) -32px top no-repeat;
+    opacity: 0.5;
+}
+.checkbox + .checkbox, .radio + .radio {
+    margin-top: -2px;
+}
+.checkbox label, .radio label {
+    padding-left: 0;
+}
+/* Custom Checkbox */
+
+
+.white-wrapper{
+    background: #fff; 
+    padding: 35px 20px;
+    box-shadow: 0 0px 1px 1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+.hr-title h2 {
+    font-size: 20px;
+    color: #3e3f3f;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+}
+.hr-title hr {
+    margin-top: 0px;
+    margin-bottom: 25px;
+    border: 0;
+    border-top: 2px solid #106bbc;
+    width: 50px;
+    display: inline-block;
+}
+.form-group{
+    overflow: hidden;
+}
+.form-control {
+    height: 40px;
+    border: solid 1px #0071bc;
+    border-radius: 4px;
+    color: #6a4e45;
+}
+.radio-blk label{
+    color: #0071bc;
+    padding: 0 10px;
+    font-size: 17px;
+}
+.radio-blk label.gray-txt{
+    color: #333;
+    padding-right: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'robotobold';
+    padding: 0;
+    font-size: 16px;
+    
+}
+.form-group:last-child{
+    margin-bottom: 0;
+}
+.profile-dr-selection{
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+}
+.profile-dr-selection:last-child{
+    border-bottom: none;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+.profile-dr-selection ul li{
+    padding-bottom: 3px;
+    overflow: hidden;
+}
+.profile-dr-selection label{
+        color: #333;
+    padding-right: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'robotobold';
+    padding: 0;
+}
+.data-table-filter-container .form-inline select.form-control{
+    width: 75px;
+}
+.data-table-filter-container select.input-sm{
+    height:40px;
+}
+.blue-border {
+    background-color: transparent;
+    border: 1px solid #0071bc;
+    color: #33180f;
+    border-radius: 50%;
+    font-weight: normal;
+    padding: 5px 8px 6px;
+    text-align: center;
+    font-size: 15px;
+    padding: 4px 10px;
+}
+.daily-report-radio-cnt label{
+    color: #0071bc;
+    font-size: 17px;
+}
+.datepicker-days .table > thead > tr > th{
+    background: #fff;
+    color:#0071bc;
+    font-size: 15px;
+        padding:8px 10px;
+}
+.datepicker th.datepicker-switch{
+    background: #fff;
+    color:#0071bc;
+    font-size: 15px;
+        padding:8px 10px;
+}
+.datepicker.dropdown-menu th, .datepicker.dropdown-menu td{
+     background: #fff;
+    color:#0071bc;
+    font-size: 15px;
+        padding:8px 10px;
+}
+.datepicker thead tr:first-child th:hover, .datepicker tfoot tr th:hover{
+     background:#0071bc;
+    color:#fff;
+}
+.datepicker table tr td span:hover{
+     background:#0071bc;
+    color:#fff;
+}
+.datepicker table tr td.day:hover, .datepicker table tr td.day.focused{
+    background:#0071bc;
+    color:#fff;
+}
+.datepicker table tr td.active.active{
+    background:#0071bc;
+    color:#fff;
+}
+.input-group.date .input-group-addon i{
+    color: #0071bc;
+}
+.input-group .input-group-addon{
+        border-color: #0071bc;
+}
+.center-button-container{
+    max-width:500px;
+    margin: 0 auto;
+    width: 100%;
+}
+.white-popup-block {
+    background: #FFF;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+}
+.small_popup .popup-content {
+    padding: 25px;
+}
+@media (max-width: 767px) {
+    .loginpage .login-left{
+        display: none;
+    }
+    .loginpage .footer-copyright{
+        width: 100%;
+    }
+}
