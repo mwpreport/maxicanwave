@@ -13,7 +13,7 @@ use Cake\ORM\Entity;
  * @property string $qualification
  * @property int $mobile
  * @property int $phone
- * @property int $address
+ * @property string $address
  * @property int $state_id
  * @property int $city_id
  * @property int $pincode

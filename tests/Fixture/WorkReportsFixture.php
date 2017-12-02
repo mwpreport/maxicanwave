@@ -57,15 +57,15 @@ class WorkReportsFixture extends TestFixture
             'id' => 1,
             'user_id' => 1,
             'work_type_id' => 1,
-            'plan_id' => '2017-11-22',
-            'strart_date' => '2017-11-22',
+            'plan_id' => '2017-11-21',
+            'strart_date' => '2017-11-21',
             'city_id' => 1,
             'doctor_id' => 1,
             'report_details' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'is_missed' => 1,
             'is_completed' => 1,
             'is_deleted' => 1,
-            'dt' => '2017-11-22 01:41:44'
+            'dt' => '2017-11-21 10:49:02'
         ],
     ];
 }

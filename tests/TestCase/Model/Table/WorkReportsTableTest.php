@@ -28,14 +28,14 @@ class WorkReportsTableTest extends TestCase
         'app.users',
         'app.work_types',
         'app.work_plans',
-        'app.plans',
         'app.cities',
         'app.states',
         'app.chemists',
         'app.chemists_relation',
         'app.doctors',
         'app.specialities',
-        'app.doctors_relation'
+        'app.doctors_relation',
+        'app.plans'
     ];
 
     /**

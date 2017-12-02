@@ -44,7 +44,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="dailyReport"><i class="fa fa-circle-o"></i> Daily Report</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Monthly Planning</a></li>
+                    <li><a href="monthlyplan"><i class="fa fa-circle-o"></i> Monthly Planning</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i> Expenses</a></li>
                 </ul>
             </li>

@@ -32,7 +32,6 @@
     <fieldset>
         <legend><?= __('Edit Doctor') ?></legend>
         <?php
-            echo $this->Form->control('code');
             echo $this->Form->control('name');
             echo $this->Form->control('speciality_id', ['options' => $specialities]);
             echo $this->Form->control('qualification');

@@ -58,7 +58,7 @@ class DoctorsRelationFixture extends TestFixture
             'doctor_id' => 1,
             'class' => 1,
             'is_active' => 1,
-            'dt' => '2017-11-22 01:40:33'
+            'dt' => '2017-11-21 10:23:50'
         ],
     ];
 }

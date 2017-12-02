@@ -29,10 +29,6 @@
     <h3><?= h($doctor->name) ?></h3>
     <table class="vertical-table">
         <tr>
-            <th scope="row"><?= __('Code') ?></th>
-            <td><?= h($doctor->code) ?></td>
-        </tr>
-        <tr>
             <th scope="row"><?= __('Name') ?></th>
             <td><?= h($doctor->name) ?></td>
         </tr>
@@ -50,7 +46,7 @@
         </tr>
         <tr>
             <th scope="row"><?= __('City') ?></th>
-            <td><?= $doctor->has('city') ? $this->Html->link($doctor->city->id, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '' ?></td>
+            <td><?= $doctor->has('city') ? $this->Html->link($doctor->city->city_name, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '' ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Id') ?></th>
@@ -63,10 +59,6 @@
         <tr>
             <th scope="row"><?= __('Phone') ?></th>
             <td><?= $this->Number->format($doctor->phone) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Address') ?></th>
-            <td><?= $this->Number->format($doctor->address) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Pincode') ?></th>
@@ -93,6 +85,10 @@
             <td><?= h($doctor->dt) ?></td>
         </tr>
     </table>
+    <div class="row">
+        <h4><?= __('Address') ?></h4>
+        <?= $this->Text->autoParagraph(h($doctor->address)); ?>
+    </div>
     <div class="related">
         <h4><?= __('Related Doctors Relation') ?></h4>
         <?php if (!empty($doctor->doctors_relation)): ?>

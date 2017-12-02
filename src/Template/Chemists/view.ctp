@@ -40,7 +40,7 @@
         </tr>
         <tr>
             <th scope="row"><?= __('City') ?></th>
-            <td><?= $chemist->has('city') ? $this->Html->link($chemist->city->id, ['controller' => 'Cities', 'action' => 'view', $chemist->city->id]) : '' ?></td>
+            <td><?= $chemist->has('city') ? $this->Html->link($chemist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $chemist->city->id]) : '' ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Id') ?></th>
@@ -53,10 +53,6 @@
         <tr>
             <th scope="row"><?= __('Phone') ?></th>
             <td><?= $this->Number->format($chemist->phone) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Address') ?></th>
-            <td><?= $this->Number->format($chemist->address) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Pincode') ?></th>
@@ -83,6 +79,10 @@
             <td><?= h($chemist->dt) ?></td>
         </tr>
     </table>
+    <div class="row">
+        <h4><?= __('Address') ?></h4>
+        <?= $this->Text->autoParagraph(h($chemist->address)); ?>
+    </div>
     <div class="related">
         <h4><?= __('Related Chemists Relation') ?></h4>
         <?php if (!empty($chemist->chemists_relation)): ?>

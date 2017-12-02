@@ -9,8 +9,8 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $user_id
  * @property int $work_type_id
- * @property \Cake\I18n\FrozenDate $start_date
- * @property \Cake\I18n\FrozenDate $end_date
+ * @property \Cake\I18n\FrozenTime $start_date
+ * @property \Cake\I18n\FrozenTime $end_date
  * @property int $city_id
  * @property int $doctor_id
  * @property string $plan_reason
@@ -39,6 +39,7 @@ class WorkPlan extends Entity
     protected $_accessible = [
         'user_id' => true,
         'work_type_id' => true,
+        'long_plan' => true,
         'start_date' => true,
         'end_date' => true,
         'city_id' => true,

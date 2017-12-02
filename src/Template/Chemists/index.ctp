@@ -27,7 +27,6 @@
                 <th scope="col"><?= $this->Paginator->sort('contact_person') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('mobile') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('phone') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('address') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('state_id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('city_id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('pincode') ?></th>
@@ -48,9 +47,8 @@
                 <td><?= h($chemist->contact_person) ?></td>
                 <td><?= $this->Number->format($chemist->mobile) ?></td>
                 <td><?= $this->Number->format($chemist->phone) ?></td>
-                <td><?= $this->Number->format($chemist->address) ?></td>
                 <td><?= $chemist->has('state') ? $this->Html->link($chemist->state->name, ['controller' => 'States', 'action' => 'view', $chemist->state->id]) : '' ?></td>
-                <td><?= $chemist->has('city') ? $this->Html->link($chemist->city->id, ['controller' => 'Cities', 'action' => 'view', $chemist->city->id]) : '' ?></td>
+                <td><?= $chemist->has('city') ? $this->Html->link($chemist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $chemist->city->id]) : '' ?></td>
                 <td><?= $this->Number->format($chemist->pincode) ?></td>
                 <td><?= $this->Number->format($chemist->is_approved) ?></td>
                 <td><?= $this->Number->format($chemist->is_active) ?></td>

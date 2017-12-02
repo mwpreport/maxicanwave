@@ -28,7 +28,6 @@ class WorkPlansTableTest extends TestCase
         'app.users',
         'app.work_types',
         'app.work_reports',
-        'app.plans',
         'app.cities',
         'app.states',
         'app.chemists',

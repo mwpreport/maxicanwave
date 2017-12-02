@@ -45,7 +45,7 @@
                 <td><?= $workPlan->has('work_type') ? $this->Html->link($workPlan->work_type->name, ['controller' => 'WorkTypes', 'action' => 'view', $workPlan->work_type->id]) : '' ?></td>
                 <td><?= h($workPlan->start_date) ?></td>
                 <td><?= h($workPlan->end_date) ?></td>
-                <td><?= $workPlan->has('city') ? $this->Html->link($workPlan->city->id, ['controller' => 'Cities', 'action' => 'view', $workPlan->city->id]) : '' ?></td>
+                <td><?= $workPlan->has('city') ? $this->Html->link($workPlan->city->city_name, ['controller' => 'Cities', 'action' => 'view', $workPlan->city->id]) : '' ?></td>
                 <td><?= $workPlan->has('doctor') ? $this->Html->link($workPlan->doctor->name, ['controller' => 'Doctors', 'action' => 'view', $workPlan->doctor->id]) : '' ?></td>
                 <td><?= h($workPlan->plan_reason) ?></td>
                 <td><?= $this->Number->format($workPlan->is_completed) ?></td>

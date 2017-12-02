@@ -57,15 +57,15 @@ class WorkPlansFixture extends TestFixture
             'id' => 1,
             'user_id' => 1,
             'work_type_id' => 1,
-            'start_date' => '2017-11-22',
-            'end_date' => '2017-11-22',
+            'start_date' => '2017-11-21',
+            'end_date' => '2017-11-21',
             'city_id' => 1,
             'doctor_id' => 1,
             'plan_reason' => 'Lorem ipsum dolor sit amet',
             'plan_details' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'is_completed' => 1,
             'is_deleted' => 1,
-            'dt' => '2017-11-22 01:42:01'
+            'dt' => '2017-11-21 10:48:53'
         ],
     ];
 }

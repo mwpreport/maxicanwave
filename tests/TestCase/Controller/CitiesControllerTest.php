@@ -19,10 +19,15 @@ class CitiesControllerTest extends IntegrationTestCase
         'app.cities',
         'app.states',
         'app.chemists',
-        'app.doctors',
+        'app.chemists_relation',
         'app.users',
+        'app.doctors_relation',
+        'app.doctors',
+        'app.specialities',
         'app.work_plans',
-        'app.work_reports'
+        'app.work_types',
+        'app.work_reports',
+        'app.plans'
     ];
 
     /**

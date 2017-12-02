@@ -14,6 +14,17 @@ class MrsController extends AppController {
     public function initialize() {
         parent::initialize();
         $this->loadModel('Users');
+        $this->loadModel('States');
+        $this->loadModel('Cities');
+        $this->loadModel('Doctors');
+        $this->loadModel('Chemists');
+        $this->loadModel('WorkPlans');
+        $this->loadModel('WorkReports');
+        $this->loadModel('WorkTypes');
+        $this->loadModel('LeaveTypes');
+        $this->loadModel('DoctorsRelation');
+        $this->loadModel('ChemistsRelation');
+		
     }
     
     public function beforeFilter(Event $event){
@@ -35,6 +46,20 @@ class MrsController extends AppController {
     public function dailyReport(){
         $this->viewBuilder()->layout('medicalrep');
         $this->set('title', 'Daily Report');        
+    }
+	
+	public function monthlyplan(){
+        $this->viewBuilder()->layout('medicalrep');
+        $this->set('title', 'Monthly Plan');
+        $uid = $this->Auth->user('id');
+        $userCity = $this->Auth->user('city_id');
+        $user =  $this->Auth->user;
+		$state_id = $this->Auth->user('state_id');
+        $workTypes = $this->WorkTypes->find()->toarray();
+        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+        $doctorsRelation = $this->DoctorsRelation->find('all')->where(['user_id =' => $uid])->contain(['Doctors']);
+        $leaveTypes = $this->LeaveTypes->find()->toarray();
+        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation'));        
     }
     public function doctorList(){
         $this->viewBuilder()->layout('medicalrep');

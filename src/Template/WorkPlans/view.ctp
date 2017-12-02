@@ -34,7 +34,7 @@
         </tr>
         <tr>
             <th scope="row"><?= __('City') ?></th>
-            <td><?= $workPlan->has('city') ? $this->Html->link($workPlan->city->id, ['controller' => 'Cities', 'action' => 'view', $workPlan->city->id]) : '' ?></td>
+            <td><?= $workPlan->has('city') ? $this->Html->link($workPlan->city->city_name, ['controller' => 'Cities', 'action' => 'view', $workPlan->city->id]) : '' ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Doctor') ?></th>

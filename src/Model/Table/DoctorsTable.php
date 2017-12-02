@@ -78,8 +78,7 @@ class DoctorsTable extends Table
 
         $validator
             ->scalar('code')
-            ->requirePresence('code', 'create')
-            ->notEmpty('code');
+            ->allowEmpty('code');
 
         $validator
             ->scalar('name')
@@ -97,10 +96,10 @@ class DoctorsTable extends Table
 
         $validator
             ->requirePresence('phone', 'create')
-            ->notEmpty('phone');
+            ->allowEmpty('phone');
 
         $validator
-            ->integer('address')
+            ->scalar('address')
             ->requirePresence('address', 'create')
             ->notEmpty('address');
 

@@ -55,6 +55,10 @@ class WorkPlansTable extends Table
             'foreignKey' => 'doctor_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('LeaveTypes', [
+            'foreignKey' => 'plan_reason',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**
@@ -70,39 +74,34 @@ class WorkPlansTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->date('start_date')
+            ->dateTime('start_date')
             ->requirePresence('start_date', 'create')
             ->notEmpty('start_date');
 
         $validator
-            ->date('end_date')
+            ->dateTime('end_date')
             ->requirePresence('end_date', 'create')
             ->notEmpty('end_date');
 
         $validator
             ->scalar('plan_reason')
-            ->requirePresence('plan_reason', 'create')
-            ->notEmpty('plan_reason');
+            ->allowEmpty('plan_reason');
 
         $validator
             ->scalar('plan_details')
-            ->requirePresence('plan_details', 'create')
-            ->notEmpty('plan_details');
+            ->allowEmpty('plan_details');
 
         $validator
             ->integer('is_completed')
-            ->requirePresence('is_completed', 'create')
-            ->notEmpty('is_completed');
+            ->allowEmpty('is_completed');
 
         $validator
             ->integer('is_deleted')
-            ->requirePresence('is_deleted', 'create')
-            ->notEmpty('is_deleted');
+            ->allowEmpty('is_deleted');
 
         $validator
             ->dateTime('dt')
-            ->requirePresence('dt', 'create')
-            ->notEmpty('dt');
+            ->allowEmpty('dt');
 
         return $validator;
     }
@@ -120,6 +119,7 @@ class WorkPlansTable extends Table
         $rules->add($rules->existsIn(['work_type_id'], 'WorkTypes'));
         $rules->add($rules->existsIn(['city_id'], 'Cities'));
         $rules->add($rules->existsIn(['doctor_id'], 'Doctors'));
+        $rules->add($rules->existsIn(['plan_reason'], 'LeaveTypes'));
 
         return $rules;
     }

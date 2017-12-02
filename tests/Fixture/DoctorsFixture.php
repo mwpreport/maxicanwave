@@ -72,8 +72,8 @@ class DoctorsFixture extends TestFixture
             'is_approved' => 1,
             'is_active' => 1,
             'is_deleted' => 1,
-            'last_updated' => '2017-11-22 01:39:16',
-            'dt' => '2017-11-22 01:39:16'
+            'last_updated' => '2017-11-21 10:23:05',
+            'dt' => '2017-11-21 10:23:05'
         ],
     ];
 }

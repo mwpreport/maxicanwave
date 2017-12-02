@@ -28,13 +28,11 @@
         <thead>
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('code') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('name') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('speciality_id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('qualification') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('mobile') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('phone') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('address') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('state_id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('city_id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('pincode') ?></th>
@@ -50,15 +48,13 @@
             <?php foreach ($doctors as $doctor): ?>
             <tr>
                 <td><?= $this->Number->format($doctor->id) ?></td>
-                <td><?= h($doctor->code) ?></td>
                 <td><?= h($doctor->name) ?></td>
                 <td><?= $doctor->has('speciality') ? $this->Html->link($doctor->speciality->name, ['controller' => 'Specialities', 'action' => 'view', $doctor->speciality->id]) : '' ?></td>
                 <td><?= h($doctor->qualification) ?></td>
                 <td><?= $this->Number->format($doctor->mobile) ?></td>
                 <td><?= $this->Number->format($doctor->phone) ?></td>
-                <td><?= $this->Number->format($doctor->address) ?></td>
                 <td><?= $doctor->has('state') ? $this->Html->link($doctor->state->name, ['controller' => 'States', 'action' => 'view', $doctor->state->id]) : '' ?></td>
-                <td><?= $doctor->has('city') ? $this->Html->link($doctor->city->id, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '' ?></td>
+                <td><?= $doctor->has('city') ? $this->Html->link($doctor->city->city_name, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '' ?></td>
                 <td><?= $this->Number->format($doctor->pincode) ?></td>
                 <td><?= $this->Number->format($doctor->is_approved) ?></td>
                 <td><?= $this->Number->format($doctor->is_active) ?></td>
