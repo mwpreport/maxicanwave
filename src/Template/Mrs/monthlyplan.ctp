@@ -21,8 +21,8 @@
         <div class="wrapper">
 
 			<?php
-			echo $this->element('mr/header'); 
-			echo $this->element('mr/menu'); 
+			//echo $this->element('mr/header'); 
+			//echo $this->element('mr/menu'); 
 			echo $this->Flash->render();
 			?>
             <!-- Content Wrapper. Contains page content -->
@@ -62,7 +62,6 @@
                             </div>
                         </div> 
                     </section>
-                    <!--
                     <section>
                         <div class="content">
                             <div class="monthly-reports white-wrapper">
@@ -83,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                    </section> -->
+                    </section>
                     <!-- /.content -->
                 </div>
 
