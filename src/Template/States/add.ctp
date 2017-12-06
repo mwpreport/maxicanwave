@@ -11,7 +11,7 @@
 		</ul>
 	</div>
 	<div class="states form large-9 medium-8 columns content">
-		<?= $this->Form->create($state) ?>
+		<?= $this->Form->create($state, array('id' => 'newform')) ?>
 		<fieldset>
 			<legend><?= __('Add State') ?></legend>
 			<?php
@@ -23,3 +23,4 @@
 		<?= $this->Form->end() ?>
 	</div>
 </div>
+<script>$("#newform").validate();</script>

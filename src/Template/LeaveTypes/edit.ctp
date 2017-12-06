@@ -17,7 +17,7 @@
 		</ul>
 	</div>
 	<div class="leaveTypes form large-9 medium-8 columns content">
-		<?= $this->Form->create($leaveType) ?>
+		<?= $this->Form->create($leaveType, array('id' => 'editform')) ?>
 		<fieldset>
 			<legend><?= __('Edit Leave Type') ?></legend>
 			<?php
@@ -28,3 +28,4 @@
 		<?= $this->Form->end() ?>
 	</div>
 </div>
+<script>$("#editform").validate();</script>

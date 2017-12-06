@@ -201,8 +201,6 @@
         <!-- ./wrapper -->
 
     <?php echo $this->Html->script([
-                '/plugins/jQuery/jquery-2.2.3.min',
-                'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js',
                 '/bootstrap/js/bootstrap.min',               
                 '/plugins/slimScroll/jquery.slimscroll.min',
                 '/plugins/fastclick/fastclick',

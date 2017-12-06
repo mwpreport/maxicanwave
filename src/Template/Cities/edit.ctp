@@ -17,7 +17,7 @@
 	</div>
 		
 	<div class="cities form large-9 medium-8 columns content">
-		<?= $this->Form->create($city) ?>
+		<?= $this->Form->create($city, array('id' => 'editform')) ?>
 		<fieldset>
 			<legend><?= __('Edit City') ?></legend>
 			<?php
@@ -29,3 +29,4 @@
 		<?= $this->Form->end() ?>
 	</div>
 </div>
+<script>$("#editform").validate();</script>

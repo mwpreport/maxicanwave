@@ -30,6 +30,13 @@
                         ]);?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
+	<?php echo $this->Html->script([
+			'/plugins/jQuery/jquery-2.2.3.min',
+			'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js',
+            '/js/jquery.validate.js',
+			 ]); ?>        
+    <?= $this->fetch('script') ?>
+    
 </head>
 <body class="hold-transition skin-red-light sidebar-mini">
     <div class="wrapper"><?php

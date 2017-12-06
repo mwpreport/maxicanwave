@@ -35,10 +35,10 @@
                                 <div class="row">
                                     <div class="event-button-cont">
                                         <ul>
-                                            <li><a href="#ModalAdd" class="popup-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add</a></li>
+                                            <li><a href="#ModalAdd" onclick="reset_form()" class="popup-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add</a></li>
                                             <li><a href="#ModalDelete" class="popup-modal"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
                                             <li><a href="#copy_plan" class="popup-modal"><i class="fa fa-check-circle" aria-hidden="true"></i> Copy Plan</a></li>  
-                                            <li><a href="#ModalLeave" class="popup-modal"><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</a></li>  
+                                            <li><a href="#ModalLeave" onclick="reset_form()" class="popup-modal"><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</a></li>  
                                         </ul>
                                     </div>
                                     <div class="clearfix"></div>
@@ -101,7 +101,7 @@
                             <div class="col-sm-12 mar-bottom-20">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Work Type</label>
-                                    <select name="work_type_id" class="error form-control" id="work_type_id" aria-invalid="true">
+                                    <select name="work_type_id" class="error form-control required" id="work_type_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
 										foreach ($workTypes as $workType)
@@ -113,7 +113,7 @@
 
                                 <div class="form-group hide">
 									<label for="date">Long Plan</label>
-									<select name="long_plan" class="error form-control" id="long_plan" aria-invalid="true">
+									<select name="long_plan" class="form-control required" id="long_plan" aria-invalid="true">
 										<option value="0">No</option>
 										<option value="1">Yes</option>
 									</select>
@@ -125,7 +125,7 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="start_date" class="form-control" id="start_date">
+											<input type="text" name="start_date" class="form-control required" id="start_date">
 										</div>
                                     </div>
                                     <div class="col-sm-6 w2 pad-right-0 hide dhide">
@@ -140,7 +140,7 @@
                                 </div>
                                 <div class="form-group xw2 dshow">
                                     <label for="exampleInputEmail1">City</label>
-                                    <select name="city_id" class="error form-control" id="city_id" aria-invalid="true">
+                                    <select name="city_id" class="form-control required" id="city_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
 										foreach ($cities as $citiy)
@@ -151,7 +151,7 @@
                                 </div>
                                 <div class="form-group w1 hide dhide">
                                     <label for="exampleInputEmail1">Select Doctor</label>
-                                    <select name="doctor_id" class="error form-control" id="doctor_id" aria-invalid="true">
+                                    <select name="doctor_id" class="form-control required" id="doctor_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
 										foreach ($doctorsRelation as $doctor)
@@ -162,7 +162,7 @@
                                 </div>
 								<div class="form-group w2 hide dhide">
 									<label for="date">Type of Leave</label>
-									<select name="plan_reason" class="error form-control" id="plan_reason" aria-invalid="true">
+									<select name="plan_reason" class="form-control required" id="plan_reason" aria-invalid="true">
 										<option value="">Select</option>
 										<?php
 										foreach ($leaveTypes as $leaveType)
@@ -173,7 +173,7 @@
 								</div>
 								<div class="form-group w2 w8 hide dhide">
 									<label for="date">More Detials/Comment</label>
-									<textarea class="form-control" name="plan_details" id="plan_details" rows="5"></textarea>
+									<textarea class="form-control required" name="plan_details" id="plan_details" rows="5"></textarea>
 								</div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
@@ -197,8 +197,8 @@
                             <div class="col-sm-12 mar-bottom-20">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Work Type</label>
-                                    <select name="work_type_id" class="error form-control" id="work_type_id" aria-invalid="true">
-                                        <option value="">Field</option>
+                                    <select name="work_type_id" class="required form-control" id="work_type_id" aria-invalid="true">
+                                        <option value="">Select</option>
 										<?php
 										foreach ($workTypes as $workType)
 										{?>
@@ -208,7 +208,7 @@
                                 </div>
                                 <div class="form-group hide">
 									<label for="date">Long Plan</label>
-									<select name="long_plan" class="error form-control" id="long_plan" aria-invalid="true">
+									<select name="long_plan" class="required form-control" id="long_plan" aria-invalid="true">
 										<option value="0">No</option>
 										<option value="1">Yes</option>
 									</select>
@@ -220,7 +220,7 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="start_date" class="form-control" id="start_date">
+											<input type="text" name="start_date" class="form-control required" id="start_date">
 										</div>
                                     </div>
                                     <div class="col-sm-6 w2 pad-right-0 hide dhide">
@@ -235,7 +235,7 @@
                                 </div>
                                 <div class="form-group xw2 dshow">
                                     <label for="exampleInputEmail1">City</label>
-                                    <select name="city_id" class="error form-control" id="city_id" aria-invalid="true">
+                                    <select name="city_id" class="required form-control" id="city_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
 										foreach ($cities as $citiy)
@@ -246,7 +246,7 @@
                                 </div>
                                 <div class="form-group w1 hide dhide">
                                     <label for="exampleInputEmail1">Select Doctor</label>
-                                    <select name="doctor_id" class="error form-control" id="doctor_id" aria-invalid="true">
+                                    <select name="doctor_id" class="required form-control" id="doctor_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
 										foreach ($doctorsRelation as $doctor)
@@ -257,7 +257,7 @@
                                 </div>
 								<div class="form-group w2 hide dhide">
 									<label for="date">Type of Leave</label>
-									<select name="plan_reason" class="error form-control" id="plan_reason" aria-invalid="true">
+									<select name="plan_reason" class="required form-control" id="plan_reason" aria-invalid="true">
 										<option value="">Select</option>
 										<?php
 										foreach ($leaveTypes as $leaveType)
@@ -268,7 +268,7 @@
 								</div>
 								<div class="form-group w2 w8 hide dhide">
 									<label for="date">Reason for Leave</label>
-									<textarea class="form-control" name="plan_details" id="plan_details" rows="5"></textarea>
+									<textarea class="form-control required" name="plan_details" id="plan_details" rows="5"></textarea>
 								</div>
                             </div>
                             <input type="hidden" name="id" class="form-control" id="id">
@@ -455,7 +455,7 @@
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control pull-right" id="start_date" name="start_date">
+                                            <input type="text" class="form-control pull-right required" id="start_date" name="start_date">
                                         </div>
                                     </div>
                                 </div>
@@ -466,7 +466,7 @@
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control pull-right" id="end_date" name="end_date">
+                                            <input type="text" class="form-control pull-right required" id="end_date" name="end_date">
                                         </div>
                                     </div>
                                 </div>
@@ -475,7 +475,7 @@
                                 <div class="col-sm-6 mar-top-20">
                                     <div class="form-group">
                                         <label for="date">Type of Leave</label>
-                                        <select name="plan_reason" class="error form-control" id="plan_reason" aria-invalid="true">
+                                        <select name="plan_reason" class="required form-control" id="plan_reason" aria-invalid="true">
 											<option value="">Select</option>
 											<?php
 											foreach ($leaveTypes as $leaveType)
@@ -488,7 +488,7 @@
                                 <div class="col-sm-12 mar-top-20">
                                     <div class="form-group">
                                         <label for="date">Reason for Leave</label>
-                                        <textarea class="form-control" rows="5" name="plan_details"></textarea>
+                                        <textarea class="form-control required" rows="5" name="plan_details"></textarea>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
@@ -536,6 +536,7 @@
         <script src="../plugins/magnific/jquery.magnific-popup.min.js"></script>
         <script src="../plugins/input-mask/jquery.inputmask.js"></script>
         <script src="../plugins/datepicker/bootstrap-datepicker.js"></script>
+        <script src="../js/jquery.validate.js"></script>
 		<style>.fc-content .fc-time{display:none;} .mfp-close{display:none !important;}</style>
         <script>
             $(function () {
@@ -632,7 +633,7 @@
 				events: "../work-plans/mrs_view/",  // request to load current events
 
 				select: function(start, end, jsEvent) {  // click on empty time slot
-					$('#ModalAddForm')[0].reset();
+					reset_form();
 					$('#ModalAdd #start_date').val(moment(start).format('YYYY-MM-DD'));
 					$('#ModalAdd #end_date').val(moment(start).format('YYYY-MM-DD'));
 
@@ -642,7 +643,7 @@
 			   },
 			   eventRender: function(event, element) { // click on event
 					element.bind('click', function() {
-						$('#ModalEditForm')[0].reset();
+						reset_form();
 						$('#ModalEdit #id').val(event.id);
 						$.ajax({
 						 url: '../work-plans/mrs_get_plan/',
@@ -685,27 +686,12 @@
 			   
 			});
 
-               /* ADDING EVENTS */
-                
-			   $('#addSubmit').on('click', function(e){ // add event submit
-				   e.preventDefault();
-				   doSubmit(); // send to form submit function
-			   });
-			   
-			   $('#updateSubmit').on('click', function(e){ // add event submit
-				   e.preventDefault();
-				   updateSubmit(); // send to form submit function
-			   });
-			   
+               /* EVENTS */
 			   $('#deleteButton').on('click', function(e){ // delete event clicked
 				   e.preventDefault();
 				   doDelete(); //send data to delete function
 			   });
 
-			   $('#leaveSubmit').on('click', function(e){ // delete event clicked
-				   e.preventDefault();
-				   doLeave(); //send data to delete function
-			   });
 
        
 
@@ -744,6 +730,7 @@
                        color: json.color
                    },
                    true);
+                   $("#calendar").fullCalendar('removeEvents',json.id);
                    $.magnificPopup.close();
                }
            });
@@ -765,6 +752,7 @@
                        color: json.color
                    },
                    true);
+                   $("#calendar").fullCalendar('removeEvents',json.id);
                    $.magnificPopup.close();
                }
            });
@@ -813,26 +801,28 @@
 		});
 
 			   
-			   /*$("#ModalAddForm").validate({
-					 ignore: ":hidden",
-					 submitHandler: function (form) {
-						 $.ajax({
-							 type: "POST",
-							 url: "formfiles/submit.php",
-							 data: $(form).serialize(),
-							 success: function () {
-								 $(form).html("<div id='message'></div>");
-								 $('#message').html("<h2>Your request is on the way!</h2>")
-									 .append("<p>someone</p>")
-									 .hide()
-									 .fadeIn(1500, function () {
-									 $('#message').append("<img id='checkmark' src='images/ok.png' />");
-								 });
-							 }
-						 });
-						 return false; // required to block normal submit since you used ajax
-					 }
-				 });*/
+	   $("#ModalAddForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				doSubmit()
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
+	   $("#ModalEditForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				updateSubmit();
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
+		 
+	   $("#ModalLeaveForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				doLeave();
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
        
        
             });
@@ -845,8 +835,11 @@
             });
             $(document).on('click', '.popup-modal-dismiss', function (e) {
                 e.preventDefault();
+                reset_form();
                 $.magnificPopup.close();
             });
+            function reset_form(){$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm')[0].reset();}
+
         </script>
         <script>
         function getRadioValue() {

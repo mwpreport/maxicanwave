@@ -207,3 +207,60 @@
     </div>
     <!-- /.content -->
 </div>
+<!--
+                <form method="post" accept-charset="utf-8" action="/projects/maxcake/doctors/add">
+                    <div class="form-group mar-bottom-40">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Doctor Name"> 
+                        </div>
+                        <div class="col-sm-6">
+                            <select name="speciality" class="error form-control" id="speciality" aria-invalid="true">
+                                <option value="">Speciality</option>
+                            </select>  
+                        </div>
+                    </div>
+                    <div class="form-group mar-bottom-40">
+                        <div class="col-sm-6">
+                            <input type="number" class="form-control" name="qualification" id="qualification" placeholder="Qualification">
+                        </div>
+                    </div>
+                    <div class="form-group mar-bottom-40">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Chemist Mobile No"> 
+                        </div>
+                        <div class="col-sm-6 ">
+                            <input type="text" class="form-control" name="phone" id="phone" placeholder="Chemist Landline"> 
+                        </div>
+                    </div>
+                    <div class="form-group mar-bottom-40">
+                        <div class="col-sm-12">
+                            <textarea class="form-control" rows="5" name="address" id="address" placeholder="Address"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group mar-bottom-40">
+                        <div class="col-sm-6">
+                            <select name="state_id" class="error form-control" id="state_id" aria-invalid="true">
+                                <option value="">State</option>
+
+                            </select>  
+                        </div>
+                        <div class="col-sm-6">
+                            <select name="city_id" class="error form-control" id="city_id" aria-invalid="true">
+                                <option value="">City</option>
+                            </select>  
+                        </div>
+                    </div>
+                    <div class="form-group mar-bottom-40">
+                        <div class="col-sm-6">
+                            <input type="number" class="form-control" name="pincode" id="pincode" placeholder="Pincode">
+                        </div>
+                    </div>
+
+                    <div class="form-group pull-right">
+                        <div class="col-sm-12">
+                            <a href="#add_price" class="common-btn blue-btn btn-125 popup-modal" >Submit</a>
+                        </div>
+                    </div>
+                </form>
+
+-->

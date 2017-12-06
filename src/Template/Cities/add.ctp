@@ -10,7 +10,7 @@
 		</ul>
 	</div>
 	<div class="cities form large-9 medium-8 columns content">
-		<?= $this->Form->create($city) ?>
+		<?= $this->Form->create($city, array('id' => 'newform')) ?>
 		<fieldset>
 			<legend><?= __('Add City') ?></legend>
 			<?php
@@ -22,3 +22,4 @@
 		<?= $this->Form->end() ?>
 	</div>
 </div>
+<script>$("#newform").validate();</script>
