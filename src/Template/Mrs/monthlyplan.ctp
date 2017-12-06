@@ -21,8 +21,8 @@
         <div class="wrapper">
 
 			<?php
-			//echo $this->element('mr/header'); 
-			//echo $this->element('mr/menu'); 
+			echo $this->element('mr/header'); 
+			echo $this->element('mr/menu'); 
 			echo $this->Flash->render();
 			?>
             <!-- Content Wrapper. Contains page content -->
