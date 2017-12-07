@@ -28,7 +28,7 @@
 				<?php foreach ($doctorsRelation as $doctorsRelation): ?>
 				<tr>
 					<td><?= $this->Number->format($doctorsRelation->id) ?></td>
-					<td><?= $doctorsRelation->has('user') ? $this->Html->link($doctorsRelation->user->id, ['controller' => 'Users', 'action' => 'view', $doctorsRelation->user->id]) : '' ?></td>
+					<td><?= $doctorsRelation->has('user') ? $this->Html->link($doctorsRelation->user->firstname, ['controller' => 'Users', 'action' => 'view', $doctorsRelation->user->id]) : '' ?></td>
 					<td><?= $doctorsRelation->has('doctor') ? $this->Html->link($doctorsRelation->doctor->name, ['controller' => 'Doctors', 'action' => 'view', $doctorsRelation->doctor->id]) : '' ?></td>
 					<td><?= $this->Number->format($doctorsRelation->class) ?></td>
 					<td><?= $this->Number->format($doctorsRelation->is_active) ?></td>

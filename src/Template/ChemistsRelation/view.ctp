@@ -18,7 +18,7 @@
 		<table class="vertical-table">
 			<tr>
 				<th scope="row"><?= __('User') ?></th>
-				<td><?= $chemistsRelation->has('user') ? $this->Html->link($chemistsRelation->user->id, ['controller' => 'Users', 'action' => 'view', $chemistsRelation->user->id]) : '' ?></td>
+				<td><?= $chemistsRelation->has('user') ? $this->Html->link($chemistsRelation->user->firstname, ['controller' => 'Users', 'action' => 'view', $chemistsRelation->user->id]) : '' ?></td>
 			</tr>
 			<tr>
 				<th scope="row"><?= __('Chemist') ?></th>

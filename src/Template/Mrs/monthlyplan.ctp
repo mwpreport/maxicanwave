@@ -532,7 +532,7 @@
         <script src="../dist/js/demo.js"></script>
         <!-- fullCalendar 2.2.5 -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-        <script src="../plugins/fullcalendar/fullcalendar.min.js"></script>
+        <script src="../plugins/fullcalendar/fullcalendar.js"></script>
         <script src="../plugins/magnific/jquery.magnific-popup.min.js"></script>
         <script src="../plugins/input-mask/jquery.inputmask.js"></script>
         <script src="../plugins/datepicker/bootstrap-datepicker.js"></script>
@@ -544,7 +544,7 @@
                 $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date').datepicker({
                     autoclose: true
                 })
-                $('#ModalEditForm #end_date, #ModalEditForm #end_date, #ModalLeaveForm #end_date').datepicker({
+                $('#ModalAddForm #end_date, #ModalEditForm #end_date, #ModalLeaveForm #end_date').datepicker({
                     autoclose: true
                 })
             });
@@ -611,10 +611,10 @@
                 /* initialize the calendar
                  -----------------------------------------------------------------*/
                 //Date for the calendar events (dummy data)
-                var date = new Date();
-                var d = date.getDate(),
-                        m = date.getMonth(),
-                        y = date.getFullYear();
+                var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+				var startDate = new Date(y, m + 1, 1);
+				var endDate = new Date(y, m + 2, 0);
+				
                 $('#calendar').fullCalendar({  // assign calendar
 
 				header: {
@@ -622,51 +622,55 @@
 					center: 'title',
 					right: 'next'
 				},
-				defaultDate: '2016-01-12',
+				defaultDate: startDate,
 				editable: true,
 				eventLimit: true, // allow "more" link when too many events
 				selectable: true,
 				selectHelper: true,
-
-				
+				showNonCurrentDates : false,
 
 				events: "../work-plans/mrs_view/",  // request to load current events
 
 				select: function(start, end, jsEvent) {  // click on empty time slot
-					reset_form();
-					$('#ModalAdd #start_date').val(moment(start).format('YYYY-MM-DD'));
-					$('#ModalAdd #end_date').val(moment(start).format('YYYY-MM-DD'));
-
-
-					$.magnificPopup.open({ items: {src: '#ModalAdd'}, type: 'inline' });
-
+					cDate= new Date(moment(start).format('YYYY-MM-DD 00:00:00'));
+					//if(cDate >= startDate && cDate <= endDate)
+					//{
+						reset_form();
+						$('#ModalAdd #start_date').val(moment(start).format('YYYY-MM-DD'));
+						$('#ModalAdd #end_date').val(moment(start).format('YYYY-MM-DD'));
+						$.magnificPopup.open({ items: {src: '#ModalAdd'}, type: 'inline' });
+					//}
 			   },
 			   eventRender: function(event, element) { // click on event
 					element.bind('click', function() {
-						reset_form();
-						$('#ModalEdit #id').val(event.id);
-						$.ajax({
-						 url: '../work-plans/mrs_get_plan/',
-						 type: "POST",
-						 dataType: "json",
-						 data: "id="+event.id+"&action=get_event",
-						 success: function(data) {
-								if(data.success == '1'){
-								$('#ModalEdit #work_type_id').val(data.work_type_id);
-								$('#ModalEdit #long_plan').val(data.long_plan);
-								$('#ModalEdit #start_date').datepicker("setDate", data.start_date);
-								$('#ModalEdit #end_date').datepicker("setDate", data.end_date);
-								$('#ModalEdit #city_id').val(data.city_id);
-								$('#ModalEdit #doctor_id').val(data.doctor_id);
-								$('#ModalEdit #plan_reason').val(data.plan_reason);
-								$('#ModalEdit #plan_details').val(data.plan_details);
-								var work_type_id = data.work_type_id;
-								$("#ModalEdit .dhide").addClass("hide");
-								$('#ModalEdit .w'+work_type_id).removeClass("hide");
-								$.magnificPopup.open({ items: {src: '#ModalEdit'}, type: 'inline' });
+						cDate= event.start;
+						//if(cDate >= startDate && cDate <= endDate)
+						//{
+							reset_form();
+							$('#ModalEdit #id').val(event.id);
+							$.ajax({
+							 url: '../work-plans/mrs_get_plan/',
+							 type: "POST",
+							 dataType: "json",
+							 data: "id="+event.id+"&action=get_event",
+							 success: function(data) {
+									if(data.success == '1'){
+									$('#ModalEdit #work_type_id').val(data.work_type_id);
+									$('#ModalEdit #long_plan').val(data.long_plan);
+									$('#ModalEdit #start_date').datepicker("setDate", data.start_date);
+									$('#ModalEdit #end_date').datepicker("setDate", data.end_date);
+									$('#ModalEdit #city_id').val(data.city_id);
+									$('#ModalEdit #doctor_id').val(data.doctor_id);
+									$('#ModalEdit #plan_reason').val(data.plan_reason);
+									$('#ModalEdit #plan_details').val(data.plan_details);
+									var work_type_id = data.work_type_id;
+									$("#ModalEdit .dhide").addClass("hide");
+									$('#ModalEdit .w'+work_type_id).removeClass("hide");
+									$.magnificPopup.open({ items: {src: '#ModalEdit'}, type: 'inline' });
+									}
 								}
-							}
-						});
+							});
+						//}
 					});
 				},			
 			   eventDrop: function(event, delta){ // event drag and drop
@@ -730,7 +734,6 @@
                        color: json.color
                    },
                    true);
-                   $("#calendar").fullCalendar('removeEvents',json.id);
                    $.magnificPopup.close();
                }
            });
@@ -752,7 +755,6 @@
                        color: json.color
                    },
                    true);
-                   $("#calendar").fullCalendar('removeEvents',json.id);
                    $.magnificPopup.close();
                }
            });
@@ -786,7 +788,7 @@
 		  var work_type_id = $(this).val();
 		  $("#ModalAddForm .dhide").addClass("hide");
 		  $("#ModalAddForm .dshow").removeClass("hide");
-		  
+		  $('#ModalAddForm #end_date').val('');
 		  $('#ModalAddForm .w'+work_type_id).removeClass("hide");
 		  $("#ModalAddForm .xw"+work_type_id).addClass("hide");
 		});
@@ -795,7 +797,7 @@
 		  var work_type_id = $(this).val();
 		  $("#ModalEditForm .dhide").addClass("hide");
 		  $("#ModalEditForm .dshow").removeClass("hide");
-		  
+		  $('#ModalEditForm #end_date').val('');
 		  $('#ModalEditForm .w'+work_type_id).removeClass("hide");
 		  $("#ModalEditForm .xw"+work_type_id).addClass("hide");
 		});
@@ -838,7 +840,11 @@
                 reset_form();
                 $.magnificPopup.close();
             });
-            function reset_form(){$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm')[0].reset();}
+            function reset_form(){
+				$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm')[0].reset();
+				$("#ModalAddForm .dhide").addClass("hide");
+				$("#ModalAddForm .dshow").removeClass("hide");
+			}
 
         </script>
         <script>

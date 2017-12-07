@@ -16,7 +16,7 @@
 		</ul>
 	</div>
 	<div class="chemistsRelation form large-9 medium-8 columns content">
-		<?= $this->Form->create($chemistsRelation) ?>
+		<?= $this->Form->create($chemistsRelation, array('id' => 'editform')) ?>
 		<fieldset>
 			<legend><?= __('Edit Chemists Relation') ?></legend>
 			<?php
@@ -31,3 +31,4 @@
 		<?= $this->Form->end() ?>
 	</div>
 </div>
+<script>$("#editform").validate();</script>

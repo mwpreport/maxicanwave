@@ -28,7 +28,7 @@
 				<?php foreach ($chemistsRelation as $chemistsRelation): ?>
 				<tr>
 					<td><?= $this->Number->format($chemistsRelation->id) ?></td>
-					<td><?= $chemistsRelation->has('user') ? $this->Html->link($chemistsRelation->user->id, ['controller' => 'Users', 'action' => 'view', $chemistsRelation->user->id]) : '' ?></td>
+					<td><?= $chemistsRelation->has('user') ? $this->Html->link($chemistsRelation->user->firstname, ['controller' => 'Users', 'action' => 'view', $chemistsRelation->user->id]) : '' ?></td>
 					<td><?= $chemistsRelation->has('chemist') ? $this->Html->link($chemistsRelation->chemist->name, ['controller' => 'Chemists', 'action' => 'view', $chemistsRelation->chemist->id]) : '' ?></td>
 					<td><?= $this->Number->format($chemistsRelation->class) ?></td>
 					<td><?= $this->Number->format($chemistsRelation->is_active) ?></td>

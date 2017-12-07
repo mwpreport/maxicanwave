@@ -163,13 +163,12 @@ class WorkPlansController extends AppController
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
 		$uid = $this->Auth->user('id');
-		
 		$workPlan = $this->WorkPlans->newEntity();
         if ($this->request->is('post')) {
             $workPlan = $this->WorkPlans->patchEntity($workPlan, $this->request->getData());
             $workPlan->start_date = $_POST['start_date']." 00:00:00";
-            if($_POST['end_date']=="")$_POST['end_date'] = $_POST['start_date'];
-            $workPlan->end_date = $_POST['end_date']." 00:00:00";
+            if( $_POST['end_date']=="" || $workPlan->work_type_id !=2 )$_POST['end_date'] = $_POST['start_date'];
+            $workPlan->end_date = $_POST['end_date']." 23:59:00";
             $workPlan->user_id = $uid;
             if ($this->WorkPlans->save($workPlan)) {
 			$id = $workPlan->id;
@@ -195,8 +194,8 @@ class WorkPlansController extends AppController
 		if ($this->request->is(['patch', 'post', 'put'])) {
             $workPlan = $this->WorkPlans->patchEntity($workPlan, $this->request->getData());
             $workPlan->start_date = $_POST['start_date']." 00:00:00";
-            if($_POST['end_date']=="")$_POST['end_date'] = $_POST['start_date'];
-            $workPlan->end_date = $_POST['end_date']." 00:00:00";
+            if( $_POST['end_date']=="" || $workPlan->work_type_id !=2 )$_POST['end_date'] = $_POST['start_date'];
+            $workPlan->end_date = $_POST['end_date']." 23:59:00";
             if ($this->WorkPlans->save($workPlan)) {
 			$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
 			$returnArray = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$WorkTypes['name'], 'color'=>$WorkTypes['color']); 

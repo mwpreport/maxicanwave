@@ -10,7 +10,7 @@
 		</ul>
 	</div>
 	<div class="doctorsRelation form large-9 medium-8 columns content">
-		<?= $this->Form->create($doctorsRelation) ?>
+		<?= $this->Form->create($doctorsRelation, array('id' => 'newform')) ?>
 		<fieldset>
 			<legend><?= __('Add Doctors Relation') ?></legend>
 			<?php
@@ -25,3 +25,4 @@
 		<?= $this->Form->end() ?>
 	</div>
 </div>
+<script>$("#newform").validate();</script>
