@@ -1,30 +1,4 @@
-<?php $this->layout = false;?>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Calendar</title>
-        <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico">
-        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-        <link rel="stylesheet" href="../plugins/fullcalendar/fullcalendar.min.css">
-        <link rel="stylesheet" href="../plugins/fullcalendar/fullcalendar.print.css" media="print">
-        <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
-        <link rel="stylesheet" href="../dist/css/skins/skin-red-light.min.css">
-        <link rel="stylesheet" href="../plugins/magnific/magnific-popup.css" type="text/css">
-        <link rel="stylesheet" href="../plugins/datepicker/datepicker3.css">
-        <link rel="stylesheet" href="../css/stylesheet.css">
-    </head>
-    <body class="skin-red-light sidebar-mini">
-        <div class="wrapper">
 
-			<?php
-			echo $this->element('mr/header'); 
-			echo $this->element('mr/menu'); 
-			echo $this->Flash->render();
-			?>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <div class="calendar-container">
@@ -145,7 +119,7 @@
 										<?php
 										foreach ($cities as $citiy)
 										{?>
-										<option value="<?= $citiy['id']?>" <?php if($citiy['id']==$userCity	) echo "selected";?>><?= $citiy['city_name']?></option>
+										<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?>><?= $citiy['city_name']?></option>
 										<?php }	?>
                                     </select>  
                                 </div>
@@ -633,19 +607,19 @@
 
 				select: function(start, end, jsEvent) {  // click on empty time slot
 					cDate= new Date(moment(start).format('YYYY-MM-DD 00:00:00'));
-					//if(cDate >= startDate && cDate <= endDate)
-					//{
+					if(cDate >= startDate && cDate <= endDate)
+					{
 						reset_form();
 						$('#ModalAdd #start_date').val(moment(start).format('YYYY-MM-DD'));
 						$('#ModalAdd #end_date').val(moment(start).format('YYYY-MM-DD'));
 						$.magnificPopup.open({ items: {src: '#ModalAdd'}, type: 'inline' });
-					//}
+					}
 			   },
 			   eventRender: function(event, element) { // click on event
 					element.bind('click', function() {
 						cDate= event.start;
-						//if(cDate >= startDate && cDate <= endDate)
-						//{
+						if(cDate >= startDate && cDate <= endDate)
+						{
 							reset_form();
 							$('#ModalEdit #id').val(event.id);
 							$.ajax({
@@ -670,7 +644,7 @@
 									}
 								}
 							});
-						//}
+						}
 					});
 				},			
 			   eventDrop: function(event, delta){ // event drag and drop
@@ -867,5 +841,3 @@
  
         }
     </script>
-    </body>
-</html>

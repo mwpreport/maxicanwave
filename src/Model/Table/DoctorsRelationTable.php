@@ -71,8 +71,7 @@ class DoctorsRelationTable extends Table
 
         $validator
             ->dateTime('dt')
-            ->requirePresence('dt', 'create')
-            ->notEmpty('dt');
+            ->allowEmpty('dt');
 
         return $validator;
     }

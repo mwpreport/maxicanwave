@@ -117,4 +117,78 @@ class DoctorsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+    public function mrsGetDoctors()
+    {
+        $this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$data = $this->request->data;
+		$uid = $this->Auth->user('id');
+		$city = $data['city'];
+		$doctors = $this->Doctors
+			->find()
+			->notMatching('DoctorsRelation', function ($q) use ($uid) {
+				return $q->where(['DoctorsRelation.user_id' => $uid]);
+			})->where(['city_id =' => $city]);
+		if($data['speciality']!="")
+		$doctors->where(['speciality_id =' => $data['speciality']]);
+		$doctors->toarray();
+		$listHtml='<option value="">Select Doctor</option>';
+		foreach ($doctors as $doctor)
+		$listHtml.='<option value="'.$doctor['id'].'">'.$doctor['name'].'</option>';
+		
+		echo $listHtml; exit;
+    }
+    
+    public function mrsGetDoctor()
+    {
+        $this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$data = $this->request->data;
+		
+		$doctor = $this->Doctors->get($data['id'], [
+            'contain' => ['Specialities', 'States', 'Cities', 'DoctorsRelation', 'WorkPlans', 'WorkReports']
+        ]);
+        
+		$listHtml =  "";
+        if($doctor){
+			$listHtml ='<li>
+				<div class="col-md-2">
+					<label>Name</label>
+				</div>
+				<div class="col-md-10">
+					<p>'.$doctor->name.'</p>
+				</div>
+			</li>
+			<li>
+				<div class="col-md-2">
+					<label>Speciality</label>
+				</div>
+				<div class="col-md-10">
+					<p>'.$doctor->speciality->name.'</p>
+				</div>
+			</li>
+			<li>
+				<div class="col-md-2">
+					<label>Qualification</label>
+				</div>
+				<div class="col-md-10">
+					<p>'.$doctor->qualification.'</p>
+				</div>
+			</li>
+			<li>
+				<div class="col-md-2">
+					<label>Address</label>
+				</div>
+				<div class="col-md-10">
+					<p>'.$doctor->address.', '.$doctor->city->city_name.', '.$doctor->state->state_code.', '.$doctor->pincode.'</p>
+				</div>
+			</li>';
+			
+		}
+		
+
+		echo $listHtml; exit;
+    }
+
 }

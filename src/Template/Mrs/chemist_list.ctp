@@ -8,7 +8,7 @@
             <div class="white-wrapper">
                 <div class="col-md-12">
                     <div class="hr-title">
-                        <h2>Add Chemist</h2>
+                        <h2>Chemist Selection</h2>
                         <hr>
                     </div>
                 </div>

@@ -14,6 +14,7 @@ class MrsController extends AppController {
     public function initialize() {
         parent::initialize();
         $this->loadModel('Users');
+        $this->loadModel('Specialities');
         $this->loadModel('States');
         $this->loadModel('Cities');
         $this->loadModel('Doctors');
@@ -49,7 +50,7 @@ class MrsController extends AppController {
     }
 	
 	public function monthlyplan(){
-        $this->viewBuilder()->layout('medicalrep');
+        $this->viewBuilder()->layout('monthlyplan');
         $this->set('title', 'Monthly Plan');
         $uid = $this->Auth->user('id');
         $userCity = $this->Auth->user('city_id');
@@ -63,7 +64,22 @@ class MrsController extends AppController {
     }
     public function doctorList(){
         $this->viewBuilder()->layout('medicalrep');
-        $this->set('title', 'Doctor List');        
+        $this->set('title', 'Doctor List');
+        $uid = $this->Auth->user('id');
+        $userCity = $this->Auth->user('city_id');
+        $user =  $this->Auth->user;
+		$state_id = $this->Auth->user('state_id');
+        $specialities = $this->Specialities->find('all')->toarray();
+        $states = $this->States->find('all')->where(['id =' => $state_id])->toarray();
+        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->contain(['Doctors.Specialities','Doctors.Cities'])->where(['user_id =' => $uid]));
+        $doctors = $this->Doctors
+			->find()
+			->notMatching('DoctorsRelation', function ($q) use ($uid) {
+				return $q->where(['DoctorsRelation.user_id' => $uid]);
+			})->where(['city_id =' => $userCity]);
+        //pj($doctors);exit;
+        $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors'));            
     }
     public function doctorSelection(){
         $this->viewBuilder()->layout('medicalrep');

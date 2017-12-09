@@ -12,29 +12,47 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                <form>
+                <form id="doctorsListForm" method="POST" action="../doctors-relation/mrs_add/">
                     <div class="form-group mar-bottom-40">
                         <div class="col-sm-6">
-                            <select name="Country" class="error form-control" id="Country" aria-invalid="true">
-                                <option value="0">State</option>
+                            <select name="state" class="error form-control" id="state" aria-invalid="true">
+								<?php
+								foreach ($states as $state)
+								{?>
+								<option value="<?= $state['id']?>"><?= $state['name']?></option>
+								<?php }	?>
 
                             </select>  
                         </div>
                         <div class="col-sm-6">
-                            <select name="Country" class="error form-control" id="Country" aria-invalid="true">
-                                <option value="0">City</option>
+                            <select name="city" class="error form-control" id="city" onchange="loadDoctors()" aria-invalid="true">
+								<?php
+								foreach ($cities as $citiy)
+								{?>
+								<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?> ><?= $citiy['city_name']?></option>
+								<?php }	?>
                             </select>  
                         </div>
                     </div>
                     <div class="form-group mar-bottom-40">
-                        <div class="col-sm-6">
-                            <select name="Country" class="error form-control" id="Country" aria-invalid="true">
-                                <option value="0">Doctor Name</option>
+                        <div class="col-sm-6 ">
+                            <select name="speciality" class="error form-control" id="speciality" onchange="loadDoctors()" aria-invalid="true">
+                                <option value="">Select Speciality</option>
+								<?php
+								foreach ($specialities as $speciality)
+								{?>
+								<option value="<?= $speciality['id']?>"><?= $speciality['name']?></option>
+								<?php }	?>
                             </select>  
                         </div>
-                        <div class="col-sm-6 ">
-                            <select name="Country" class="error form-control" id="Country" aria-invalid="true">
-                                <option value="0">Speciality</option>
+                        <div class="col-sm-6">
+                            <select name="doctor" class="required form-control" id="doctor" aria-invalid="true">
+                                <option value="">Select Doctor</option>
+								<?php
+								foreach ($doctors as $doctor)
+								{?>
+								<option value="<?= $doctor['id']?>"><?= $doctor['name']?></option>
+								<?php }	?>
                             </select>  
                         </div>
                     </div>
@@ -42,21 +60,21 @@
                         <div class="col-sm-12">
                             <div class="radio-blk">
                                 <label for="exampleInputClass" class="gray-txt">Class</label>
-                                <input type="radio" name="UserType" id="square-account" value="square-account" checked="checked"><label for="square-account"><span></span>A</label>
-                                <input type="radio" name="UserType" id="swipe-account" value="swipe-account"><label for="swipe-account"><span></span>B</label>
+                                <input type="radio" name="class" id="classA" value="1"><label for="classA"><span></span>A</label>
+                                <input type="radio" name="class" id="classB" value="0" checked="checked"><label for="classB"><span></span>B</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group pull-right">
                         <div class="col-sm-12">
-                            <a href="" class="common-btn blue-btn btn-125">Submit</a>
+                            <button type="submit" id="doctorsSubmit" class="common-btn blue-btn btn-125">Submit</button>
                         </div>
                     </div>
                 </form>
             </div>
         </section>
         <section>
-            <div class="white-wrapper mar-top-20">
+            <div class="white-wrapper mar-top-20 hide">
                 <p class="text-center">There is no selection you have searched</p>
             </div>
         </section>
@@ -65,76 +83,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="profile-dr-selection">
-                            <ul>
-                                <li>
-                                    <div class="col-md-2">
-                                        <label>Name</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>Sathiyaraj</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col-md-2">
-                                        <label>Address 1</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>70 Bowman St. South Windsor, CT 06074</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col-md-2">
-                                        <label>Address 2</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>Nill</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col-md-2">
-                                        <label>Qualification</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>M.B.B.S</p>
-                                    </div>
-                                </li>
-
-                            </ul>
-                        </div>
-                        <div class="profile-dr-selection">
-                            <ul>
-                                <li>
-                                    <div class="col-md-2">
-                                        <label>Name</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>Sathiyaraj</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col-md-2">
-                                        <label>Address 1</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>70 Bowman St. South Windsor, CT 06074</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col-md-2">
-                                        <label>Address 2</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>Nill</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col-md-2">
-                                        <label>Qualification</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>M.B.B.S</p>
-                                    </div>
-                                </li>
+                            <ul id="doctorProfile">
                             </ul>
                         </div>
                     </div>
@@ -148,54 +97,42 @@
                     <div class="white-wrapper mar-top-20">
                         <!-- /.box-header -->
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Speciality</th>
-                                        <th>Class</th>
-                                        <th>Place</th>
-                                        <th colspan="3">Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="text-center"><span class="blue-border">1</span></td>
-                                        <td>TRZ0001</td>
-                                        <td>Doctor</td>
-                                        <td>Nero</td>
-                                        <td>A</td>
-                                        <td>Trichy</td>
-                                        <td width="60"><div class="profile-edit"><a href="#"><img src="images/eye.png" width="29" height="18" alt="profile"></a></div></td>
-                                        <td width="50"><div class="edit-icon"><a href=""><img src="images/edit@2x.png" width="18" height="18" alt="edit"></a></div></td>
-                                        <td width="50"><div class="trash"><a href="#"><img src="images/del@2x.png" width="14" height="18" alt="trash"></a></div></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center"><span class="blue-border">2</span></td>
-                                        <td>TRZ0001</td>
-                                        <td>Doctor</td>
-                                        <td>Nero</td>
-                                        <td>A</td>
-                                        <td>Trichy</td>
-                                        <td width="60"><div class="profile-edit"><a href="#"><img src="images/eye.png" width="29" height="18" alt="profile"></a></div></td>
-                                        <td width="50"><div class="edit-icon"><a href=""><img src="images/edit@2x.png" width="18" height="18" alt="edit"></a></div></td>
-                                        <td width="50"><div class="trash"><a href="#"><img src="images/del@2x.png" width="14" height="18" alt="trash"></a></div></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center"><span class="blue-border">3</span></td>
-                                        <td>TRZ0001</td>
-                                        <td>Doctor</td>
-                                        <td>Nero</td>
-                                        <td>A</td>
-                                        <td>Trichy</td>
-                                        <td width="60"><div class="profile-edit"><a href="#"><img src="images/eye.png" width="29" height="18" alt="profile"></a></div></td>
-                                        <td width="50"><div class="edit-icon"><a href=""><img src="images/edit@2x.png" width="18" height="18" alt="edit"></a></div></td>
-                                        <td width="50"><div class="trash"><a href="#"><img src="images/del@2x.png" width="14" height="18" alt="trash"></a></div></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th scope="col"><?= $this->Paginator->sort('id') ?></th>
+					<th scope="col"><?= $this->Paginator->sort('doctor_id', 'Name') ?></th>
+					<th scope="col"><?= $this->Paginator->sort('speciality_id','Speciality') ?></th>
+					<th scope="col"><?= $this->Paginator->sort('city_id', 'Place') ?></th>
+					<th scope="col"><?= $this->Paginator->sort('class') ?></th>
+					<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php $i=1; foreach ($doctorsRelation as $doctorsRelation): ?>
+				<tr>
+					<td><?= $this->Number->format($i) ?></td>
+					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->name : '' ?></td>
+					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->speciality->name : '' ?></td>
+					<td><?= ($this->Number->format($doctorsRelation->class)==0)? "B" : "A" ?></td>
+					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->city->city_name : '' ?></td>
+					<td width="60"><a href="javascript:void(0)" onclick="loadProfile(<?= $doctorsRelation->doctor_id ?>);"><img src="../images/eye.png" width="29" height="18" alt="profile"></a></td>
+					<td width="50"><a href="#ModalEdit" class="popup-modal" onclick="loadProfileForm(<?= $doctorsRelation->id ?>);"><img src="../images/edit@2x.png" width="18" height="18" alt="edit"></a></td>
+					<td width="50"><?= $this->Form->postLink(__('<img src="../images/del@2x.png" width="14" height="18" alt="trash">'), ['controller' => 'DoctorsRelation','action' => 'mrsDelete', $doctorsRelation->id], ['escape' => false, 'confirm' => __('Are you sure you want to delete?')]) ?></td>
+				</tr>
+				<?php $i++; endforeach; ?>
+			</tbody>
+		</table>
+		<div class="paginator">
+			<ul class="pagination">
+				<?= $this->Paginator->first('<< ' . __('first')) ?>
+				<?= $this->Paginator->prev('< ' . __('previous')) ?>
+				<?= $this->Paginator->numbers() ?>
+				<?= $this->Paginator->next(__('next') . ' >') ?>
+				<?= $this->Paginator->last(__('last') . ' >>') ?>
+			</ul>
+			<p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+		</div>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -207,60 +144,144 @@
     </div>
     <!-- /.content -->
 </div>
-<!--
-                <form method="post" accept-charset="utf-8" action="/projects/maxcake/doctors/add">
-                    <div class="form-group mar-bottom-40">
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Doctor Name"> 
-                        </div>
-                        <div class="col-sm-6">
-                            <select name="speciality" class="error form-control" id="speciality" aria-invalid="true">
-                                <option value="">Speciality</option>
-                            </select>  
-                        </div>
+            <!-- pop starts here -->
+            <div class="mfp-hide white-popup-block small_popup" id="ModalEdit">
+                <div class="popup-content">
+					<form class="" id="ModalEditForm" method="POST"  action="../doctors-relation/mrs_update/">
+                    <div class="popup-header">
+                        <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
+                        <div class="hr-title"><h4>Update Doctors</h4><hr /></div>
                     </div>
-                    <div class="form-group mar-bottom-40">
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" name="qualification" id="qualification" placeholder="Qualification">
-                        </div>
-                    </div>
-                    <div class="form-group mar-bottom-40">
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Chemist Mobile No"> 
-                        </div>
-                        <div class="col-sm-6 ">
-                            <input type="text" class="form-control" name="phone" id="phone" placeholder="Chemist Landline"> 
-                        </div>
-                    </div>
-                    <div class="form-group mar-bottom-40">
-                        <div class="col-sm-12">
-                            <textarea class="form-control" rows="5" name="address" id="address" placeholder="Address"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group mar-bottom-40">
-                        <div class="col-sm-6">
-                            <select name="state_id" class="error form-control" id="state_id" aria-invalid="true">
-                                <option value="">State</option>
+                    <div class="popup-body">
+                        <div class="row">
+							<div class="form-group mar-bottom-40">
+								<div class="col-sm-6">
+									<select name="state" class="error form-control" id="state" aria-invalid="true">
+										<?php
+										foreach ($states as $state)
+										{?>
+										<option value="<?= $state['id']?>"><?= $state['name']?></option>
+										<?php }	?>
 
-                            </select>  
-                        </div>
-                        <div class="col-sm-6">
-                            <select name="city_id" class="error form-control" id="city_id" aria-invalid="true">
-                                <option value="">City</option>
-                            </select>  
+									</select>  
+								</div>
+								<div class="col-sm-6">
+									<select name="city" class="error form-control" id="city" onchange="loadDoctors()" aria-invalid="true">
+										<?php
+										foreach ($cities as $citiy)
+										{?>
+										<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?> ><?= $citiy['city_name']?></option>
+										<?php }	?>
+									</select>  
+								</div>
+							</div>
+							<div class="form-group mar-bottom-40">
+								<div class="col-sm-6 ">
+									<select name="speciality" class="error form-control" id="speciality" onchange="loadDoctors()" aria-invalid="true">
+										<option value="">Select Speciality</option>
+										<?php
+										foreach ($specialities as $speciality)
+										{?>
+										<option value="<?= $speciality['id']?>"><?= $speciality['name']?></option>
+										<?php }	?>
+									</select>  
+								</div>
+								<div class="col-sm-6">
+									<select name="doctor" class="required form-control" id="doctor" aria-invalid="true">
+										<option value="">Select Doctor</option>
+										<?php
+										foreach ($doctors as $doctor)
+										{?>
+										<option value="<?= $doctor['id']?>"><?= $doctor['name']?></option>
+										<?php }	?>
+									</select>  
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-12">
+									<div class="radio-blk">
+										<label for="exampleInputClass" class="gray-txt">Class</label>
+										<input type="radio" name="class" id="class1" value="1"><label for="class1"><span></span>A</label>
+										<input type="radio" name="class" id="class0" value="0" checked="checked"><label for="class0"><span></span>B</label>
+									</div>
+								</div>
+							</div>
+							<input type="hidden" name="id" class="form-control" id="id">
+                            <div class="col-md-4 col-sm-4 col-xs-4"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
+                            <div class="col-md-4 col-sm-4 col-xs-4"> <button type="submit" id="updateSubmit" class="btn blue-btn btn-block">Save</button></div>
                         </div>
                     </div>
-                    <div class="form-group mar-bottom-40">
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" name="pincode" id="pincode" placeholder="Pincode">
-                        </div>
-                    </div>
+					</form>
+                </div>
+            </div>
+            <!-- pop ends here -->
+        <script>
+            $('.popup-modal').magnificPopup({
+                type: 'inline',
+                preloader: false,
+                modal: true
+            });
+            $(document).on('click', '.popup-modal-dismiss', function (e) {
+                e.preventDefault();
+                reset_form();
+                $.magnificPopup.close();
+            });
+        </script>
 
-                    <div class="form-group pull-right">
-                        <div class="col-sm-12">
-                            <a href="#add_price" class="common-btn blue-btn btn-125 popup-modal" >Submit</a>
-                        </div>
-                    </div>
-                </form>
+<script>
+function loadDoctors(){
+	var city = $('#city').val();
+	var speciality = $('#speciality').val();
+	$.ajax({
+		   url: '../doctors/mrs_get_doctors/',
+		   data: "city="+city+"&speciality="+speciality,
+		   type: "POST",
+		   success: function(json) {
+			   $('#doctor').html(json);
+		   }
+    });
+}
+function loadProfile(id){
+	$.ajax({
+		   url: '../doctors/mrs_get_doctor/',
+		   data: "id="+id,
+		   type: "POST",
+		   success: function(json) {
+			   $('#doctorProfile').html(json);
+		   }
+    });
+}
+function loadProfileForm(id){
+	var doctors = $('#doctor').html();
+	$.ajax({
+		   url: '../doctors-relation/mrs_get_relation/',
+		   dataType: "json",
+		   data: "id="+id,
+		   type: "POST",
+		   success: function(json) {
+			   $('#ModalEditForm #id').val(json.id);
+			   $('#ModalEditForm #city').val(json.city);
+			   $('#ModalEditForm #speciality').val(json.speciality);
+			   $('#ModalEditForm #doctor').html(doctors+json.doctor);
+			   $('#ModalEditForm radio').prop("checked", false);
+			   $('#ModalEditForm #class'+json.class).prop("checked", true);
+		   }
+    });
+}
+function addDoctor(){
+	$.ajax({
+		   url: '../doctors-relation/mrs_add/',
+		   dataType: "json",
+		   data: $('#doctorsListForm').serialize(),
+		   type: "POST",
+		   success: function(json) {
+			   location.reload();
+		   }
+    });
+}
+$("#doctorsListForm").validate();
+$("#ModalEdit #ModalEditForm").validate();
 
--->
+
+
+</script>
