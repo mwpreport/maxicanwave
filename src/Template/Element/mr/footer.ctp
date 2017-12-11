@@ -1,3 +1,4 @@
+<?php ?>
             <!-- /.content-wrapper -->
             <footer class="main-footer">
                 <!-- Default to the left -->

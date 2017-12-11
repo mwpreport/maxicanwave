@@ -11,9 +11,9 @@
 			<li><?= $this->Html->link(__('<i class="fa fa-plus-circle" aria-hidden="true"></i> New State'), ['action' => 'add'], ['escape' => false]) ?></li>
 		</ul>
 	</div>
-	<div class="states index large-9 medium-8 columns content">
+	<div class="states content"><section><div class="white-wrapper">
 		<h3><?= __('States') ?></h3>
-		<table cellpadding="0" cellspacing="0">
+		<table  class="table table-striped table-bordered table-hover">
 			<thead>
 				<tr>
 					<th scope="col"><?= $this->Paginator->sort('id') ?></th>
@@ -47,5 +47,5 @@
 			</ul>
 			<p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
 		</div>
-	</div>
+	</div></section></div>
 </div>

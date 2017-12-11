@@ -1,3 +1,4 @@
+<?php ?>
 <header class="main-header">
     <!-- Logo -->
     <a href="index2.html" class="logo">
@@ -243,9 +244,7 @@
                                 <a href="#" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <?php echo $this->HTML->Link(__('Sign Out'), 
-                                                            ['controller' => 'Users', 'action' => 'logout'],
-                                                            ['class' => 'btn btn-default btn-flat']); ?>
+								<?php echo $this->Html->link(__('Sign Out'), ['controller' => 'Users', 'action' => 'logout'], ['class' => 'btn btn-default btn-flat']); ?>
                             </div>
                         </li>
                     </ul>

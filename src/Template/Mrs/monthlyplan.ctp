@@ -486,7 +486,6 @@
                 <!-- Default to the left -->
                 Copyright © Mexican Wave Pharma. All Rights Reserved.
             </footer>
-        </div>
         <!-- ./wrapper -->
 
         <!-- REQUIRED JS SCRIPTS -->

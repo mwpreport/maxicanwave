@@ -10,17 +10,17 @@
 			<li><?= $this->Html->link(__('<i class="fa fa-list" aria-hidden="true"></i> List States'), ['action' => 'index'], ['escape' => false]) ?></li>
 		</ul>
 	</div>
-	<div class="states form large-9 medium-8 columns content">
+	<div class="states content"><section><div class="white-wrapper">
 		<?= $this->Form->create($state, array('id' => 'newform')) ?>
 		<fieldset>
 			<legend><?= __('Add State') ?></legend>
 			<?php
-				echo $this->Form->control('name');
-				echo $this->Form->control('state_code');
+				echo $this->Form->control('name', ['class' => 'form-control']);
+				echo $this->Form->control('state_code', ['class' => 'form-control']);
 			?>
 		</fieldset>
-		<?= $this->Form->button(__('Submit')) ?>
+		<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125']); ?>
 		<?= $this->Form->end() ?>
-	</div>
+	</div></section></div>
 </div>
 <script>$("#newform").validate();</script>
