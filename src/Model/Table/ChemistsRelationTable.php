@@ -61,8 +61,7 @@ class ChemistsRelationTable extends Table
 
         $validator
             ->integer('class')
-            ->requirePresence('class', 'create')
-            ->notEmpty('class');
+            ->allowEmpty('class');
 
         $validator
             ->integer('is_active')
@@ -71,8 +70,7 @@ class ChemistsRelationTable extends Table
 
         $validator
             ->dateTime('dt')
-            ->requirePresence('dt', 'create')
-            ->notEmpty('dt');
+            ->allowEmpty('dt');
 
         return $validator;
     }

@@ -43,6 +43,21 @@ class MrsController extends AppController {
     public function chemistList(){
         $this->viewBuilder()->layout('medicalrep');
         $this->set('title', 'Chemist List');
+        $uid = $this->Auth->user('id');
+        $userCity = $this->Auth->user('city_id');
+        $user =  $this->Auth->user;
+		$state_id = $this->Auth->user('state_id');
+        $states = $this->States->find('all')->where(['id =' => $state_id])->toarray();
+        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+        $chemistsRelation = $this->paginate($this->ChemistsRelation->find('all')->contain(['Chemists.Cities','Chemists.States'])->where(['user_id =' => $uid])->order(['ChemistsRelation.id' => 'ASC']));
+        $chemists = $this->Chemists
+			->find()
+			->notMatching('ChemistsRelation', function ($q) use ($uid) {
+				return $q->where(['ChemistsRelation.user_id' => $uid]);
+			})->where(['city_id =' => $userCity]);
+        //pj($chemists);exit;
+        $this->set(compact('userCity', 'states', 'cities', 'chemistsRelation', 'chemists'));            
+
     }
     public function dailyReport(){
         $this->viewBuilder()->layout('medicalrep');
@@ -72,7 +87,7 @@ class MrsController extends AppController {
         $specialities = $this->Specialities->find('all')->toarray();
         $states = $this->States->find('all')->where(['id =' => $state_id])->toarray();
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->contain(['Doctors.Specialities','Doctors.Cities'])->where(['user_id =' => $uid]));
+        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->contain(['Doctors.Specialities','Doctors.Cities'])->where(['user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']));
         $doctors = $this->Doctors
 			->find()
 			->notMatching('DoctorsRelation', function ($q) use ($uid) {

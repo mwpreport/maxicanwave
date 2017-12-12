@@ -46,7 +46,7 @@
                             </select>  
                         </div>
                         <div class="col-sm-6">
-                            <select name="doctor" class="required form-control" id="doctor" aria-invalid="true">
+                            <select name="doctor_id" class="required form-control" id="doctor_id" aria-invalid="true">
                                 <option value="">Select Doctor</option>
 								<?php
 								foreach ($doctors as $doctor)
@@ -67,7 +67,7 @@
                     </div>
                     <div class="form-group pull-right">
                         <div class="col-sm-12">
-                            <button type="submit" id="doctorsSubmit" class="common-btn blue-btn btn-125">Submit</button>
+                            <button type="submit" id="relationSubmit" class="common-btn blue-btn btn-125">Submit</button>
                         </div>
                     </div>
                 </form>
@@ -83,7 +83,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="profile-dr-selection">
-                            <ul id="doctorProfile">
+                            <ul id="selectedProfile">
                             </ul>
                         </div>
                     </div>
@@ -100,11 +100,12 @@
                             <table  class="table table-striped table-bordered table-hover">
 			<thead>
 				<tr>
-					<th scope="col"><?= $this->Paginator->sort('id') ?></th>
+					<th scope="col"><?= $this->Paginator->sort('S.No') ?></th>
+					<th scope="col"><?= $this->Paginator->sort('code', 'ID') ?></th>
 					<th scope="col"><?= $this->Paginator->sort('doctor_id', 'Name') ?></th>
 					<th scope="col"><?= $this->Paginator->sort('speciality_id','Speciality') ?></th>
-					<th scope="col"><?= $this->Paginator->sort('city_id', 'Place') ?></th>
 					<th scope="col"><?= $this->Paginator->sort('class') ?></th>
+					<th scope="col"><?= $this->Paginator->sort('city_id', 'Place') ?></th>
 					<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
 				</tr>
 			</thead>
@@ -112,10 +113,11 @@
 				<?php $i=1; foreach ($doctorsRelation as $doctorsRelation): ?>
 				<tr>
 					<td><?= $this->Number->format($i) ?></td>
+					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->code : '' ?></td>
 					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->name : '' ?></td>
 					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->speciality->name : '' ?></td>
-					<td><?= ($this->Number->format($doctorsRelation->class)==0)? "B" : "A" ?></td>
 					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->city->city_name : '' ?></td>
+					<td><?= ($this->Number->format($doctorsRelation->class)==0)? "B" : "A" ?></td>
 					<td width="60"><a href="javascript:void(0)" onclick="loadProfile(<?= $doctorsRelation->doctor_id ?>);"><img src="../images/eye.png" width="29" height="18" alt="profile"></a></td>
 					<td width="50"><a href="#ModalEdit" class="popup-modal" onclick="loadProfileForm(<?= $doctorsRelation->id ?>);"><img src="../images/edit@2x.png" width="18" height="18" alt="edit"></a></td>
 					<td width="50"><?= $this->Form->postLink(__('<img src="../images/del@2x.png" width="14" height="18" alt="trash">'), ['controller' => 'DoctorsRelation','action' => 'mrsDelete', $doctorsRelation->id], ['escape' => false, 'confirm' => __('Are you sure you want to delete?')]) ?></td>
@@ -187,7 +189,7 @@
 									</select>  
 								</div>
 								<div class="col-sm-6">
-									<select name="doctor" class="required form-control" id="doctor" aria-invalid="true">
+									<select name="doctor_id" class="required form-control" id="doctor_id" aria-invalid="true">
 										<option value="">Select Doctor</option>
 										<?php
 										foreach ($doctors as $doctor)
@@ -237,7 +239,7 @@ function loadDoctors(){
 		   data: "city="+city+"&speciality="+speciality,
 		   type: "POST",
 		   success: function(json) {
-			   $('#doctor').html(json);
+			   $('#doctor_id').html(json);
 		   }
     });
 }
@@ -247,12 +249,12 @@ function loadProfile(id){
 		   data: "id="+id,
 		   type: "POST",
 		   success: function(json) {
-			   $('#doctorProfile').html(json);
+			   $('#selectedProfile').html(json);
 		   }
     });
 }
 function loadProfileForm(id){
-	var doctors = $('#doctor').html();
+	var doctors = $('#doctor_id').html();
 	$.ajax({
 		   url: '../doctors-relation/mrs_get_relation/',
 		   dataType: "json",
@@ -262,7 +264,7 @@ function loadProfileForm(id){
 			   $('#ModalEditForm #id').val(json.id);
 			   $('#ModalEditForm #city').val(json.city);
 			   $('#ModalEditForm #speciality').val(json.speciality);
-			   $('#ModalEditForm #doctor').html(doctors+json.doctor);
+			   $('#ModalEditForm #doctor_id').html(doctors+json.doctor);
 			   $('#ModalEditForm radio').prop("checked", false);
 			   $('#ModalEditForm #class'+json.class).prop("checked", true);
 		   }

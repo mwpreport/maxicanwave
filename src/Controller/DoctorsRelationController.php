@@ -130,16 +130,21 @@ class DoctorsRelationController extends AppController
 		$relationLimit = $this->Config->find()->select('value')->where(['scope' => 'mr_doctors_limit'])->first();
         $doctorsRelation = $this->DoctorsRelation->newEntity();
         if ($this->request->is('post') && $row_count < $relationLimit->value) {
-			$data=array('user_id'=>$uid,'doctor_id'=>$_POST['doctor'],'class'=>$_POST['class'],'is_active'=>1);
+			$data=array('user_id'=>$uid,'doctor_id'=>$_POST['doctor_id'],'class'=>$_POST['class'],'is_active'=>1);
             $doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $data);
-            
-            if ($this->DoctorsRelation->save($doctorsRelation)) {
-				$id = $doctorsRelation->id;
-				$returnArray = array('id'=>$id, 'status'=>'success'); 
-				$this->Flash->success(__('The doctors relation has been saved.'));
-            }
-            else
-            $this->Flash->error(__('The doctors relation could not be saved. Please, try again.'));
+			$data_count = $this->DoctorsRelation->find()->where(['is_active' => true, 'user_id =' => $uid, 'doctor_id =' => $data['doctor_id']])->count();
+            if($data_count<1)
+            {
+				if ($this->DoctorsRelation->save($doctorsRelation)) {
+					$id = $doctorsRelation->id;
+					$returnArray = array('id'=>$id, 'status'=>'success'); 
+					$this->Flash->success(__('The doctors relation has been saved.'));
+				}
+				else
+				$this->Flash->error(__('The doctors relation could not be saved. Please, try again.'));
+			}
+			else
+			$this->Flash->error(__('The relation already exists. Please, try again.'));
         }
         else
         $this->Flash->error(__('You have reached you limit.'));
