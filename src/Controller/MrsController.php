@@ -71,12 +71,14 @@ class MrsController extends AppController {
         $userCity = $this->Auth->user('city_id');
         $user =  $this->Auth->user;
 		$state_id = $this->Auth->user('state_id');
-        $workTypes = $this->WorkTypes->find()->toarray();
+        $workTypes = $this->WorkTypes->find()->order(['list' => 'ASC'])->toarray();
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $doctorsRelation = $this->DoctorsRelation->find('all')->where(['user_id =' => $uid])->contain(['Doctors']);
+        $chemistsRelation = $this->ChemistsRelation->find('all')->where(['user_id =' => $uid])->contain(['Chemists']);
         $leaveTypes = $this->LeaveTypes->find()->toarray();
-        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation'));        
+        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'chemistsRelation'));        
     }
+    
     public function doctorList(){
         $this->viewBuilder()->layout('medicalrep');
         $this->set('title', 'Doctor List');

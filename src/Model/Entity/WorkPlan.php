@@ -44,6 +44,7 @@ class WorkPlan extends Entity
         'end_date' => true,
         'city_id' => true,
         'doctor_id' => true,
+        'chemist_id' => true,
         'plan_reason' => true,
         'plan_details' => true,
         'is_completed' => true,

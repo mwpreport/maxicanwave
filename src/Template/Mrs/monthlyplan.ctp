@@ -74,7 +74,7 @@
                         <div class="row">
                             <div class="col-sm-12 mar-bottom-20">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Work Type</label>
+                                    <label for="work_type_id">Work Type</label>
                                     <select name="work_type_id" class="error form-control required" id="work_type_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
@@ -86,34 +86,34 @@
                                 </div>
 
                                 <div class="form-group hide">
-									<label for="date">Long Plan</label>
+									<label for="long_plan">Long Plan</label>
 									<select name="long_plan" class="form-control required" id="long_plan" aria-invalid="true">
 										<option value="0">No</option>
 										<option value="1">Yes</option>
 									</select>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group date-section">
 									<div class="col-sm-6 pad-left-0">
-										<label for="date">Select <span class="w2 hide dhide">From</span> Date</label>
+										<label for="start_date">Select <span class="w1 hide dhide">From</span> Date</label>
 										<div class="input-group date">
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="start_date" class="form-control required" id="start_date">
+											<input type="text" name="start_date" autocomplete="false" class="form-control required" id="start_date">
 										</div>
                                     </div>
-                                    <div class="col-sm-6 w2 pad-right-0 hide dhide">
-										<label for="date">Select To Date</label>
+                                    <div class="col-sm-6 w1 pad-right-0 hide dhide">
+										<label for="end_date">Select To Date</label>
 										<div class="input-group date">
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="end_date" class="form-control" id="end_date">
+											<input type="text" name="end_date" autocomplete="false" class="form-control required" id="end_date">
 										</div>
                                     </div>
                                 </div>
-                                <div class="form-group xw2 dshow">
-                                    <label for="exampleInputEmail1">City</label>
+                                <div class="form-group xw1 dshow">
+                                    <label for="city_id">City</label>
                                     <select name="city_id" class="form-control required" id="city_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
@@ -123,8 +123,8 @@
 										<?php }	?>
                                     </select>  
                                 </div>
-                                <div class="form-group w1 hide dhide">
-                                    <label for="exampleInputEmail1">Select Doctor</label>
+                                <div class="form-group w2 hide dhide">
+                                    <label for="doctor_id">Select Doctor</label>
                                     <select name="doctor_id" class="form-control required" id="doctor_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
@@ -134,8 +134,19 @@
 										<?php }	?>
                                     </select>  
                                 </div>
-								<div class="form-group w2 hide dhide">
-									<label for="date">Type of Leave</label>
+                                <div class="form-group w3 hide dhide">
+                                    <label for="chemist_id">Select Chemist</label>
+                                    <select name="chemist_id" class="form-control required" id="chemist_id" aria-invalid="true">
+                                        <option value="">Select</option>
+										<?php
+										foreach ($chemistsRelation as $chemist)
+										{?>
+										<option value="<?= $chemist['chemist_id']?>"><?= $chemist->chemist->name?></option>
+										<?php }	?>
+                                    </select>  
+                                </div>
+								<div class="form-group w1 hide dhide">
+									<label for="plan_reason">Type of Leave</label>
 									<select name="plan_reason" class="form-control required" id="plan_reason" aria-invalid="true">
 										<option value="">Select</option>
 										<?php
@@ -145,8 +156,8 @@
 										<?php }	?>
 									</select>  
 								</div>
-								<div class="form-group w2 w8 hide dhide">
-									<label for="date">More Detials/Comment</label>
+								<div class="form-group w1 w9 hide dhide">
+									<label for="plan_details">More Detials/Comment</label>
 									<textarea class="form-control required" name="plan_details" id="plan_details" rows="5"></textarea>
 								</div>
                             </div>
@@ -181,7 +192,7 @@
                                     </select>  
                                 </div>
                                 <div class="form-group hide">
-									<label for="date">Long Plan</label>
+									<label for="long_plan">Long Plan</label>
 									<select name="long_plan" class="required form-control" id="long_plan" aria-invalid="true">
 										<option value="0">No</option>
 										<option value="1">Yes</option>
@@ -189,26 +200,26 @@
                                 </div>
                                 <div class="form-group">
 									<div class="col-sm-6 pad-left-0">
-										<label for="date">Select <span class="w2 hide dhide">From</span> Date</label>
+										<label for="start_date">Select <span class="w1 hide dhide">From</span> Date</label>
 										<div class="input-group date">
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="start_date" class="form-control required" id="start_date">
+											<input type="text" name="start_date" autocomplete="false" class="form-control required" id="start_date">
 										</div>
                                     </div>
-                                    <div class="col-sm-6 w2 pad-right-0 hide dhide">
-										<label for="date">Select To Date</label>
+                                    <div class="col-sm-6 w1 pad-right-0 hide dhide">
+										<label for="end_date">Select To Date</label>
 										<div class="input-group date">
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="end_date" class="form-control" id="end_date">
+											<input type="text" name="end_date" autocomplete="false" class="form-control required" id="end_date">
 										</div>
                                     </div>
                                 </div>
-                                <div class="form-group xw2 dshow">
-                                    <label for="exampleInputEmail1">City</label>
+                                <div class="form-group xw1 dshow">
+                                    <label for="city_id">City</label>
                                     <select name="city_id" class="required form-control" id="city_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
@@ -218,8 +229,8 @@
 										<?php }	?>
                                     </select>  
                                 </div>
-                                <div class="form-group w1 hide dhide">
-                                    <label for="exampleInputEmail1">Select Doctor</label>
+                                <div class="form-group w2 hide dhide">
+                                    <label for="doctor_id">Select Doctor</label>
                                     <select name="doctor_id" class="required form-control" id="doctor_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
@@ -229,8 +240,19 @@
 										<?php }	?>
                                     </select>  
                                 </div>
-								<div class="form-group w2 hide dhide">
-									<label for="date">Type of Leave</label>
+                                <div class="form-group w3 hide dhide">
+                                    <label for="chemist_id">Select Chemist</label>
+                                    <select name="chemist_id" class="required form-control" id="chemist_id" aria-invalid="true">
+                                        <option value="">Select</option>
+										<?php
+										foreach ($chemistsRelation as $chemist)
+										{?>
+										<option value="<?= $chemist['chemist_id']?>"><?= $chemist->chemist->name?></option>
+										<?php }	?>
+                                    </select>  
+                                </div>
+								<div class="form-group w1 hide dhide">
+									<label for="plan_reason">Type of Leave</label>
 									<select name="plan_reason" class="required form-control" id="plan_reason" aria-invalid="true">
 										<option value="">Select</option>
 										<?php
@@ -240,8 +262,8 @@
 										<?php }	?>
 									</select>  
 								</div>
-								<div class="form-group w2 w8 hide dhide">
-									<label for="date">Reason for Leave</label>
+								<div class="form-group w1 w9 hide dhide">
+									<label for="plan_details">Reason for Leave</label>
 									<textarea class="form-control required" name="plan_details" id="plan_details" rows="5"></textarea>
 								</div>
                             </div>
@@ -266,12 +288,12 @@
                         <div class="row">
                             <div class="col-sm-12 mar-bottom-20">
                                 <div class="form-group">
-                                    <label for="date">Select Date</label>
+                                    <label for="plan_details">Select Date</label>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="datepicker">
+                                        <input type="text" class="form-control pull-right" id="plan_details">
                                     </div>
                                 </div>
                                 <div class="table-responsive">
@@ -335,7 +357,7 @@
                             <div class="copy-from-to-container mar-bottom-20">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="date">Copy From</label>
+                                        <label for="copyfrom">Copy From</label>
                                         <div class="input-group date">
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
@@ -346,7 +368,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="date">Copy To</label>
+                                        <label for="copyto">Copy To</label>
                                         <div class="input-group date">
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
@@ -424,23 +446,23 @@
                             <div class="leave-plan mar-bottom-20">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="date">From Date</label>
+                                        <label for="start_date">From Date</label>
                                         <div class="input-group date">
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control pull-right required" id="start_date" name="start_date">
+                                            <input type="text" class="form-control pull-right required" id="start_date" name="start_date" autocomplete="false">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="date">To Date</label>
+                                        <label for="end_date">To Date</label>
                                         <div class="input-group date">
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control pull-right required" id="end_date" name="end_date">
+                                            <input type="text" class="form-control pull-right required" id="end_date" name="end_date" autocomplete="false">
                                         </div>
                                     </div>
                                 </div>
@@ -448,7 +470,7 @@
 
                                 <div class="col-sm-6 mar-top-20">
                                     <div class="form-group">
-                                        <label for="date">Type of Leave</label>
+                                        <label for="plan_reason">Type of Leave</label>
                                         <select name="plan_reason" class="required form-control" id="plan_reason" aria-invalid="true">
 											<option value="">Select</option>
 											<?php
@@ -461,14 +483,14 @@
                                 </div>
                                 <div class="col-sm-12 mar-top-20">
                                     <div class="form-group">
-                                        <label for="date">Reason for Leave</label>
+                                        <label for="plan_details">Reason for Leave</label>
                                         <textarea class="form-control required" rows="5" name="plan_details"></textarea>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="copy-btn-container mar-bottom-20">
-								<input type="hidden" name="work_type_id" value="2">
+								<input type="hidden" name="work_type_id" value="1">
 								<input type="hidden" name="city_id" value="<?= $userCity?>">
                                 <div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
                                 <div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="leaveSubmit" class="btn blue-btn btn-block">Submit</button></div>
@@ -510,84 +532,56 @@
         <script src="../plugins/input-mask/jquery.inputmask.js"></script>
         <script src="../plugins/datepicker/bootstrap-datepicker.js"></script>
         <script src="../js/jquery.validate.js"></script>
-		<style>.fc-content .fc-time{display:none;} .mfp-close{display:none !important;}</style>
+
         <script>
-            $(function () {
-                //Date picker
-                $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date').datepicker({
-                    autoclose: true
-                })
-                $('#ModalAddForm #end_date, #ModalEditForm #end_date, #ModalLeaveForm #end_date').datepicker({
-                    autoclose: true
-                })
-            });
-            $(function () {
-                //Date picker
-                $('#datepicker').datepicker({
-                    autoclose: true
-                });
-            });
-            $(function () {
-                //Date picker
-                $('#copyfrom').datepicker({
-                    autoclose: true
-                });
-            });
-            $(function () {
-                //Date picker
-                $('#copyto').datepicker({
-                    autoclose: true
-                });
-            });
-            $(function () {
-                //Date picker
-                $('#fromdate').datepicker({
-                    autoclose: true
-                });
-            });
-            $(function () {
-                //Date picker
-                $('#todate').datepicker({
-                    autoclose: true
-                });
-            });
-        </script>
-        <script>
-            $(function () {
+			
+            $(function(){
 
-                /* initialize the external events
-                 -----------------------------------------------------------------*/
-                function ini_events(ele) {
-                    ele.each(function () {
 
-                        // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-                        // it doesn't need to have a start or end
-                        var eventObject = {
-                            title: $.trim($(this).text()) // use the element's text as the event title
-                        };
-
-                        // store the Event Object in the DOM element so we can get to it later
-                        $(this).data('eventObject', eventObject);
-
-                        // make the event draggable using jQuery UI
-                        $(this).draggable({
-                            zIndex: 1070,
-                            revert: true, // will cause the event to go back to its
-                            revertDuration: 0  //  original position after the drag
-                        });
-
-                    });
-                }
-
-                ini_events($('#external-events div.external-event'));
-
-                /* initialize the calendar
-                 -----------------------------------------------------------------*/
                 //Date for the calendar events (dummy data)
                 var date = new Date(), y = date.getFullYear(), m = date.getMonth();
 				var startDate = new Date(y, m + 1, 1);
 				var endDate = new Date(y, m + 2, 0);
 				
+				//Date picker
+                $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date').datepicker({
+                    autoclose: true, startDate: startDate, endDate: endDate
+                });
+                $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date').on('changeDate', function (ev) {
+					$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker('remove');
+					$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker({autoclose: true, startDate: ev.date, endDate: endDate});
+					if($('#'+$(this).closest("form").attr('id')+' #end_date').is(":visible"))
+					$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker("setDate", ev.date);
+
+					
+				});
+                $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date, #ModalAddForm #end_date, #ModalEditForm #end_date, #ModalLeaveForm #end_date').on('hide', function(e){
+					console.debug('hide', e.date, $(this).data('stickyDate'));
+					var stickyDate = $(this).data('stickyDate');
+					if ( !e.date && stickyDate ) {
+						console.debug('restore stickyDate', stickyDate);
+						$(this).datepicker('setDate', stickyDate);
+						$(this).data('stickyDate', null);
+					}
+				});
+                $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date, #ModalAddForm #end_date, #ModalEditForm #end_date, #ModalLeaveForm #end_date').on('show', function(e){
+					console.debug('show', e.date, $(this).data('stickyDate'));
+					if ( e.date ) {
+						 $(this).data('stickyDate', e.date);
+					}
+					else {
+						 $(this).data('stickyDate', null);
+					}
+				});
+				
+                $('#ModalAddForm #end_date, #ModalEditForm #end_date, #ModalLeaveForm #end_date').datepicker({
+                    autoclose: true, startDate: startDate, endDate: endDate
+                })
+                $('#datepicker, #copyfrom, #copyto, #fromdate, #todate').datepicker({
+                    autoclose: true, startDate: startDate, endDate: endDate
+                });
+
+                // initialize the calendar
                 $('#calendar').fullCalendar({  // assign calendar
 
 				header: {
@@ -610,7 +604,8 @@
 					{
 						reset_form();
 						$('#ModalAdd #start_date').val(moment(start).format('YYYY-MM-DD'));
-						$('#ModalAdd #end_date').val(moment(start).format('YYYY-MM-DD'));
+						$('#ModalAdd #end_date').datepicker('remove');
+						$('#ModalAdd #end_date').datepicker({autoclose: true, startDate: moment(start).format('YYYY-MM-DD'), endDate: endDate});
 						$.magnificPopup.open({ items: {src: '#ModalAdd'}, type: 'inline' });
 					}
 			   },
@@ -634,6 +629,7 @@
 									$('#ModalEdit #end_date').datepicker("setDate", data.end_date);
 									$('#ModalEdit #city_id').val(data.city_id);
 									$('#ModalEdit #doctor_id').val(data.doctor_id);
+									$('#ModalEdit #chemist_id').val(data.chemist_id);
 									$('#ModalEdit #plan_reason').val(data.plan_reason);
 									$('#ModalEdit #plan_details').val(data.plan_details);
 									var work_type_id = data.work_type_id;
