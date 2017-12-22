@@ -243,6 +243,43 @@ class WorkPlansController extends AppController
 		exit;   
      }
 
+    public function mrsGetPlans()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$uid = $this->Auth->user('id');
+		$date = $_POST['date'];
+		$start_date = $date." 00:00:00";
+        $end_date = $date." 23:59:00";
+            
+		
+		$WorkPlans = $this->WorkPlans
+		->find('all')
+		->contain(['Doctors', 'Chemists'])	
+		->where(['WorkPlans.user_id =' => $uid])
+		->where(['WorkPlans.start_date =' => $start_date]);
+		debug($WorkPlans);exit;
+		$html = "";
+		$i=1;
+		foreach ($WorkPlans as $WorkPlan)
+		{
+					$html.='<tr>
+								<td class="text-center">'.$i.'</td>
+								<td>TRZ0001</td>
+								<td>Doctor</td>
+								<td>Trichy</td>
+								<td>A</td>
+								<td>Nero</td>
+							</tr>';
+		$i++;
+		}
+		
+
+		$returnArray = array('success' => "1",'html' => $html);
+		echo json_encode($returnArray); 
+		exit;   
+     }
+
     public function mrsDelete()
     {
 		$this->autoRender = false;

@@ -1,4 +1,4 @@
-
+<?php ?>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <div class="calendar-container">
@@ -280,6 +280,7 @@
             <!-- pop starts here -->
             <div class="mfp-hide white-popup-block small_popup" id="ModalDelete">
                 <div class="popup-content">
+					<form class="" id="ModalDeleteForm" method="POST" >
                     <div class="popup-header">
                         <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
                         <div class="hr-title"><h4>Delete Field</h4><hr /></div>
@@ -293,7 +294,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="plan_details">
+                                        <input type="text" class="form-control pull-right" id="delete_date">
                                     </div>
                                 </div>
                                 <div class="table-responsive">
@@ -308,7 +309,7 @@
                                                 <th>Speciality</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="delete_plan_list">
                                             <tr>
                                                 <td class="text-center">1</td>
                                                 <td>TRZ0001</td>
@@ -338,10 +339,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6 col-sm-6 col-xs-6"><button type="submit" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" class="btn blue-btn btn-block">Delete</button></div>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
+                            <div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="dateDeleteButton" class="btn blue-btn btn-block">Delete</button></div>
                         </div>
                     </div>
+					</form>
                 </div>
             </div>
             <!-- pop ends here -->
@@ -544,7 +546,7 @@
 				var endDate = new Date(y, m + 2, 0);
 				
 				//Date picker
-                $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date').datepicker({
+                $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date, #delete_date').datepicker({
                     autoclose: true, startDate: startDate, endDate: endDate
                 });
                 $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date').on('changeDate', function (ev) {
@@ -574,6 +576,20 @@
 					}
 				});
 				
+                $('#delete_date').on('changeDate', function (ev) {
+					//alert(moment(ev.date).format('YYYY-MM-DD'));
+					$.ajax({
+						   url: '../work-plans/mrsGetPlans/',
+						   dataType: "json",
+						   data: "date="+moment(ev.date).format('YYYY-MM-DD'),
+						   type: "POST",
+						   success: function(json) {
+							   $("#delete_plan_list").html(json.html);
+						   }
+					   });
+					
+				});
+
                 $('#ModalAddForm #end_date, #ModalEditForm #end_date, #ModalLeaveForm #end_date').datepicker({
                     autoclose: true, startDate: startDate, endDate: endDate
                 })
@@ -664,10 +680,33 @@
 				   e.preventDefault();
 				   doDelete(); //send data to delete function
 			   });
+               /* EVENTS */
+			   $('#dateDeleteButton').on('click', function(e){ // delete event clicked
+				   e.preventDefault();
+				   doDateDelete(); //send data to delete function
+			   });
 
 
        
 
+       function doDateDelete(){  // delete event 
+           var eventID = $('#ModalEdit #id').val();
+           $.ajax({
+               url: '../work-plans/mrs_date_delete/',
+               data: $('#ModalAddForm').serialize(),
+               type: "POST",
+               success: function(json) {
+                   if(json == 1)
+					{
+						$("#calendar").fullCalendar('removeEvents',eventID);
+						$.magnificPopup.close();
+					}
+                   else
+                        return false;
+               }
+           });
+       }
+       
        function doDelete(){  // delete event 
            var eventID = $('#ModalEdit #id').val();
            $.ajax({
@@ -684,7 +723,6 @@
                         return false;
                }
            });
-
        }
 
        function doSubmit(){ // add event
