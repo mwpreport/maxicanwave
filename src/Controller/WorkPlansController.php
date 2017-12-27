@@ -255,24 +255,23 @@ class WorkPlansController extends AppController
 		
 		$WorkPlans = $this->WorkPlans
 		->find('all')
-		->contain(['Doctors', 'Chemists'])	
+		->contain(['WorkTypes', 'Cities'])	
 		->where(['WorkPlans.user_id =' => $uid])
-		->where(['WorkPlans.start_date =' => $start_date]);
-		debug($WorkPlans);exit;
+		->where(['WorkPlans.start_date =' => $start_date])->toArray();
 		$html = "";
-		$i=1;
-		foreach ($WorkPlans as $WorkPlan)
+		if(count($WorkPlans))
 		{
-					$html.='<tr>
-								<td class="text-center">'.$i.'</td>
-								<td>TRZ0001</td>
-								<td>Doctor</td>
-								<td>Trichy</td>
-								<td>A</td>
-								<td>Nero</td>
-							</tr>';
-		$i++;
+			$i=1;$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th>S.No</th><th>Work Type</th><th>City</th></tr></thead><tbody>';
+			foreach ($WorkPlans as $WorkPlan)
+			{
+				$html.='<tr><td class="text-center">'.$i.'</td><td><input type="hidden" name="delete_plan_id[]" value="'.$WorkPlan->id.'">'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
+				$i++;
+			}
+			$html.='</tbody></table>';
+
 		}
+		else {$html.="<p>No plans on this date</p>";}
+		
 		
 
 		$returnArray = array('success' => "1",'html' => $html);
@@ -292,6 +291,23 @@ class WorkPlansController extends AppController
 		if ($this->WorkPlans->delete($WorkPlans)) {
 			echo "1";
 		}
+		exit;   
+     }
+
+    public function mrsDateDelete()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$id = $_POST['delete_plan_id'];
+		$returnArray = array();
+		
+		$WorkPlansTable = $this->WorkPlans;
+		//$WorkPlans = $WorkPlansTable->deleteAll(['WorkPlans.id IN' => $id]);
+		//pj($WorkPlans); exit;
+		if ($WorkPlansTable->deleteAll(['WorkPlans.id IN' => $id])) {
+			$returnArray = array('success' => "1",'eventIDs' => $id);
+		}
+		echo json_encode($returnArray); 
 		exit;   
      }
 

@@ -297,45 +297,10 @@
                                         <input type="text" class="form-control pull-right" id="delete_date">
                                     </div>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>S.No</th>
-                                                <th>ID</th>
-                                                <th>Doctors Name</th>
-                                                <th>City</th>
-                                                <th>Class</th>
-                                                <th>Speciality</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="delete_plan_list">
-                                            <tr>
-                                                <td class="text-center">1</td>
-                                                <td>TRZ0001</td>
-                                                <td>Doctor</td>
-                                                <td>Trichy</td>
-                                                <td>A</td>
-                                                <td>Nero</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">2</td>
-                                                <td>TRZ0001</td>
-                                                <td>Doctor</td>
-                                                <td>Trichy</td>
-                                                <td>A</td>
-                                                <td>Nero</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">3</td>
-                                                <td>TRZ0001</td>
-                                                <td>Doctor</td>
-                                                <td>Trichy</td>
-                                                <td>A</td>
-                                                <td>Nero</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div class="table-responsive" id="delete_plan_list">
+                                    
+                                            
+                                        
                                 </div>
                             </div>
 
@@ -394,37 +359,29 @@
                                         <thead>
                                             <tr>
                                                 <th>S.No</th>
-                                                <th>ID</th>
-                                                <th>Doctor Name</th>
+                                                <th>Work Type</th>
                                                 <th>City</th>
-                                                <th>Class</th>
-                                                <th>Speciality</th>
+                                                <th>Doctor/Chemist</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td class="text-center">1</td>
                                                 <td>TRZ0001</td>
-                                                <td>Doctor</td>
                                                 <td>Trichy</td>
                                                 <td>A</td>
-                                                <td>Nero</td>
                                             </tr>
                                             <tr>
                                                 <td class="text-center">2</td>
                                                 <td>TRZ0001</td>
-                                                <td>Doctor</td>
                                                 <td>Trichy</td>
                                                 <td>A</td>
-                                                <td>Nero</td>
                                             </tr>
                                             <tr>
                                                 <td class="text-center">3</td>
                                                 <td>TRZ0001</td>
-                                                <td>Doctor</td>
                                                 <td>Trichy</td>
                                                 <td>A</td>
-                                                <td>Nero</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -690,15 +647,15 @@
        
 
        function doDateDelete(){  // delete event 
-           var eventID = $('#ModalEdit #id').val();
            $.ajax({
                url: '../work-plans/mrs_date_delete/',
-               data: $('#ModalAddForm').serialize(),
+               data: $('#ModalDeleteForm').serialize(),
                type: "POST",
+			   dataType: "json",
                success: function(json) {
-                   if(json == 1)
+                   if(json.success == "1")
 					{
-						$("#calendar").fullCalendar('removeEvents',eventID);
+						$('#calendar').fullCalendar( 'refetchEvents' );
 						$.magnificPopup.close();
 					}
                    else
@@ -848,7 +805,8 @@
                 $.magnificPopup.close();
             });
             function reset_form(){
-				$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm')[0].reset();
+				$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm,#ModalDeleteForm')[0].reset();
+				$("#delete_plan_list").html('');
 				$("#ModalAddForm .dhide").addClass("hide");
 				$("#ModalAddForm .dshow").removeClass("hide");
 			}
