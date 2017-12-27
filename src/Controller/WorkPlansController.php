@@ -194,7 +194,7 @@ class WorkPlansController extends AppController
 		if ($this->request->is(['patch', 'post', 'put'])) {
             $workPlan = $this->WorkPlans->patchEntity($workPlan, $this->request->getData());
             $workPlan->start_date = $_POST['start_date']." 00:00:00";
-            if( $_POST['end_date']=="" || $workPlan->work_type_id !=2 )$_POST['end_date'] = $_POST['start_date'];
+            if( $_POST['end_date']=="" || $workPlan->work_type_id !=1 )$_POST['end_date'] = $_POST['start_date'];
             $workPlan->end_date = $_POST['end_date']." 23:59:00";
             if ($this->WorkPlans->save($workPlan)) {
 			$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
@@ -264,7 +264,7 @@ class WorkPlansController extends AppController
 			$i=1;$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th>S.No</th><th>Work Type</th><th>City</th></tr></thead><tbody>';
 			foreach ($WorkPlans as $WorkPlan)
 			{
-				$html.='<tr><td class="text-center">'.$i.'</td><td><input type="hidden" name="delete_plan_id[]" value="'.$WorkPlan->id.'">'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
+				$html.='<tr><td class="text-center">'.$i.'</td><td><input type="hidden" name="selected_plan_id[]" value="'.$WorkPlan->id.'">'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
 				$i++;
 			}
 			$html.='</tbody></table>';
@@ -298,13 +298,30 @@ class WorkPlansController extends AppController
     {
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
-		$id = $_POST['delete_plan_id'];
+		$id = $_POST['selected_plan_id'];
 		$returnArray = array();
 		
 		$WorkPlansTable = $this->WorkPlans;
-		//$WorkPlans = $WorkPlansTable->deleteAll(['WorkPlans.id IN' => $id]);
 		//pj($WorkPlans); exit;
 		if ($WorkPlansTable->deleteAll(['WorkPlans.id IN' => $id])) {
+			$returnArray = array('success' => "1",'eventIDs' => $id);
+		}
+		echo json_encode($returnArray); 
+		exit;   
+     }
+     
+    public function mrsPlanCopy()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$id = $_POST['selected_plan_id'];
+		$start_date = $_POST['copyto']." 00:00:00";
+        $end_date = $_POST['copyto']." 23:59:00";
+		$returnArray = array();
+		
+		$WorkPlansTable = $this->WorkPlans;
+		//pj($WorkPlans); exit;
+		if ($WorkPlansTable->updateAll( array('start_date' => $start_date,'end_date' => $end_date), array('id IN' => $id))) {
 			$returnArray = array('success' => "1",'eventIDs' => $id);
 		}
 		echo json_encode($returnArray); 

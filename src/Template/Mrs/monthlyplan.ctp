@@ -10,8 +10,8 @@
                                     <div class="event-button-cont">
                                         <ul>
                                             <li><a href="#ModalAdd" onclick="reset_form()" class="popup-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add</a></li>
-                                            <li><a href="#ModalDelete" class="popup-modal"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
-                                            <li><a href="#copy_plan" class="popup-modal"><i class="fa fa-check-circle" aria-hidden="true"></i> Copy Plan</a></li>  
+                                            <li><a href="#ModalDelete" onclick="reset_form()" class="popup-modal"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+                                            <li><a href="#ModalCopy" onclick="reset_form()" class="popup-modal"><i class="fa fa-check-circle" aria-hidden="true"></i> Copy Plan</a></li>  
                                             <li><a href="#ModalLeave" onclick="reset_form()" class="popup-modal"><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</a></li>  
                                         </ul>
                                     </div>
@@ -294,7 +294,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="delete_date">
+                                        <input type="text" autocomplete="false" class="form-control pull-right required" id="delete_date">
                                     </div>
                                 </div>
                                 <div class="table-responsive" id="delete_plan_list">
@@ -313,8 +313,9 @@
             </div>
             <!-- pop ends here -->
             <!-- pop starts here -->
-            <div class="mfp-hide white-popup-block small_popup" id="copy_plan">
+            <div class="mfp-hide white-popup-block small_popup" id="ModalCopy">
                 <div class="popup-content">
+					<form class="" id="ModalCopyForm" method="POST" >
                     <div class="popup-header">
                         <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
                         <div class="hr-title"><h4>Copy Plan</h4><hr /></div>
@@ -329,7 +330,7 @@
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control pull-right" id="copyfrom">
+                                            <input type="text" autocomplete="false" class="form-control pull-right required" id="copyfrom" name="copyfrom">
                                         </div>
                                     </div>
                                 </div>
@@ -340,55 +341,24 @@
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control pull-right" id="copyto">
+                                            <input type="text" autocomplete="false" class="form-control pull-right required" id="copyto" name="copyto">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-                            <div class="copy-btn-container mar-bottom-20">
-                                <div class="col-md-4 col-sm-4 col-xs-4"><button type="submit" class="btn blue-btn btn-block margin-right-35">View Plan</button></div>
-                                <div class="col-md-4 col-sm-4 col-xs-4"> <button type="submit" class="btn blue-btn btn-block">Copy Plan</button></div>
-                                <div class="col-md-4 col-sm-4 col-xs-4"> <button type="submit" class="btn blue-btn btn-block popup-modal-dismiss">Close</button></div>
-                                <div class="clearfix"></div>
-                            </div>
-
                             <div class="col-sm-12 mar-bottom-20">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>S.No</th>
-                                                <th>Work Type</th>
-                                                <th>City</th>
-                                                <th>Doctor/Chemist</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-center">1</td>
-                                                <td>TRZ0001</td>
-                                                <td>Trichy</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">2</td>
-                                                <td>TRZ0001</td>
-                                                <td>Trichy</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">3</td>
-                                                <td>TRZ0001</td>
-                                                <td>Trichy</td>
-                                                <td>A</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div class="table-responsive" id="copy_plan_list">
                                 </div>
                             </div>
+                            <div class="copy-btn-container mar-bottom-20">
+                                <!--<div class="col-md-4 col-sm-4 col-xs-4"><button type="button" class="btn blue-btn btn-block margin-right-35">View Plan</button></div>-->
+                                <div class="col-md-6 col-sm-6 col-xs-6"> <button type="button" class="btn blue-btn btn-block popup-modal-dismiss">Cancel</button></div>
+                                <div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" class="btn blue-btn btn-block" id="planCopyButton">Copy Plan</button></div>
+                            </div>                            
                         </div>
                     </div>
+					</form>
                 </div>
             </div>
             <!-- pop ends here -->
@@ -534,7 +504,6 @@
 				});
 				
                 $('#delete_date').on('changeDate', function (ev) {
-					//alert(moment(ev.date).format('YYYY-MM-DD'));
 					$.ajax({
 						   url: '../work-plans/mrsGetPlans/',
 						   dataType: "json",
@@ -542,6 +511,19 @@
 						   type: "POST",
 						   success: function(json) {
 							   $("#delete_plan_list").html(json.html);
+						   }
+					   });
+					
+				});
+				
+                $('#copyfrom').on('changeDate', function (ev) {
+					$.ajax({
+						   url: '../work-plans/mrsGetPlans/',
+						   dataType: "json",
+						   data: "date="+moment(ev.date).format('YYYY-MM-DD'),
+						   type: "POST",
+						   success: function(json) {
+							   $("#copy_plan_list").html(json.html);
 						   }
 					   });
 					
@@ -637,15 +619,26 @@
 				   e.preventDefault();
 				   doDelete(); //send data to delete function
 			   });
-               /* EVENTS */
-			   $('#dateDeleteButton').on('click', function(e){ // delete event clicked
-				   e.preventDefault();
-				   doDateDelete(); //send data to delete function
-			   });
-
-
        
 
+       function doPlanCopy(){  // delete event 
+           $.ajax({
+               url: '../work-plans/mrs_plan_copy/',
+               data: $('#ModalCopyForm').serialize(),
+               type: "POST",
+			   dataType: "json",
+               success: function(json) {
+                   if(json.success == "1")
+					{
+						$('#calendar').fullCalendar( 'refetchEvents' );
+						$.magnificPopup.close();
+					}
+                   else
+                        return false;
+               }
+           });
+       }
+       
        function doDateDelete(){  // delete event 
            $.ajax({
                url: '../work-plans/mrs_date_delete/',
@@ -782,10 +775,26 @@
 			 }
 		 });
 		 
+	   $("#ModalDeleteForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				doDateDelete();
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
+		 
 	   $("#ModalLeaveForm").validate({
 			 ignore: ":hidden",
 			 submitHandler: function (form) {
 				doLeave();
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
+		 
+	   $("#ModalCopyForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				doPlanCopy();
 				return false; // required to block normal submit since you used ajax
 			 }
 		 });
@@ -805,8 +814,8 @@
                 $.magnificPopup.close();
             });
             function reset_form(){
-				$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm,#ModalDeleteForm')[0].reset();
-				$("#delete_plan_list").html('');
+				$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm,#ModalDeleteForm, #ModalCopyForm')[0].reset();
+				$("#delete_plan_list, #copy_plan_list").html('');
 				$("#ModalAddForm .dhide").addClass("hide");
 				$("#ModalAddForm .dshow").removeClass("hide");
 			}
