@@ -36,11 +36,12 @@
 										?>
 											<div class="input required"><label for="address">Address</label><textarea class="form-control mar-bottom-10" name="address" required="required" id="address" rows="5"></textarea></div>
 										<?php
+											$yesno = ['1' => 'Yes', '0' => 'No'];
 											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10'], ['options' => $states]);
 											echo $this->Form->control('city_id', ['class' => 'form-control mar-bottom-10'], ['options' => $cities]);
 											echo $this->Form->control('pincode', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('is_approved', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('is_active', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('is_approved', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
+											echo $this->Form->control('is_active', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
 										?>
 									</fieldset>
 									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']); ?>
