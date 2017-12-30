@@ -16,6 +16,9 @@ class DoctorsRelationController extends AppController
 	 public function initialize() {
         parent::initialize();
         $this->loadModel('Config');
+		$this->loadModel('States');
+		$this->loadModel('Doctors');
+
     }
 
     /**
@@ -60,17 +63,37 @@ class DoctorsRelationController extends AppController
     {
         $doctorsRelation = $this->DoctorsRelation->newEntity();
         if ($this->request->is('post')) {
-            $doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $this->request->getData());
-            if ($this->DoctorsRelation->save($doctorsRelation)) {
-                $this->Flash->success(__('The doctors relation has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The doctors relation could not be saved. Please, try again.'));
+			$rData=array('user_id'=>$_POST['user_id'],'doctor_ids'=>$_POST['doctor_id'],'class'=>$_POST['class'],'is_active'=>1);
+			$uid = $rData['user_id'];
+			$previous_count = $this->DoctorsRelation->find()->where(['is_active' => true, 'user_id =' => $uid])->count();
+			$doctorsCount=count($rData['doctor_ids']);
+			$totalCount=$previous_count+$doctorsCount;
+			$relationLimit = $this->Config->find()->select('value')->where(['scope' => 'mr_doctors_limit'])->first();
+			$doctorsRelation = $this->DoctorsRelation->newEntity();
+			if ($this->request->is('post') && $totalCount < $relationLimit->value) {
+				foreach ($rData['doctor_ids'] as $doctor_id){
+					$data = array('user_id'=>$rData['user_id'],'doctor_id'=>$doctor_id,'class'=>$rData['class'],'is_active'=>1);
+					$doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $data);
+					$data_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid, 'doctor_id =' => $doctor_id])->count();
+					if($data_count<1)
+					{
+						//print_r($data); exit;
+						if ($this->DoctorsRelation->save($doctorsRelation)) {
+							$id = $doctorsRelation->id;
+							$returnArray = array('id'=>$id, 'status'=>'success'); 
+							$this->Flash->success(__('The doctors relation(s) has been saved.'));
+							return $this->redirect(['action' => 'index']);
+						}
+						else
+						$this->Flash->error(__('The doctors relation could not be saved. Please, try again.'));
+					}
+				}
+			}
+			else
+			$this->Flash->error(__('You have reached you limit.'));
         }
-        $users = $this->DoctorsRelation->Users->find('list', ['limit' => 200]);
-        $doctors = $this->DoctorsRelation->Doctors->find('list', ['limit' => 200]);
-        $this->set(compact('doctorsRelation', 'users', 'doctors'));
+		$states = $this->States->find('list')->toarray();
+        $this->set(compact('doctorsRelation', 'states'));
         $this->set('_serialize', ['doctorsRelation']);
     }
 
@@ -84,7 +107,7 @@ class DoctorsRelationController extends AppController
     public function edit($id = null)
     {
         $doctorsRelation = $this->DoctorsRelation->get($id, [
-            'contain' => []
+            'contain' => ['Users','Doctors']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $this->request->getData());
@@ -95,8 +118,18 @@ class DoctorsRelationController extends AppController
             }
             $this->Flash->error(__('The doctors relation could not be saved. Please, try again.'));
         }
-        $users = $this->DoctorsRelation->Users->find('list', ['limit' => 200]);
-        $doctors = $this->DoctorsRelation->Doctors->find('list', ['limit' => 200]);
+		$uid = $doctorsRelation->user_id;
+		$userCity = $doctorsRelation->user->city_id;
+        
+		$doctors=array($doctorsRelation->doctor_id => $doctorsRelation->doctor->name);
+        $users = $this->DoctorsRelation->Users->find('list')->where(['city_id =' => $userCity]);
+        $doctorRel = $this->Doctors
+			->find()
+			->notMatching('DoctorsRelation', function ($q) use ($uid) {
+				return $q->where(['DoctorsRelation.user_id' => $uid]);
+			})->where(['city_id =' => $userCity])->toarray();
+		foreach ($doctorRel as $doctor)
+		$doctors[$doctor['id']]=$doctor['name'];
         $this->set(compact('doctorsRelation', 'users', 'doctors'));
         $this->set('_serialize', ['doctorsRelation']);
     }
@@ -132,7 +165,7 @@ class DoctorsRelationController extends AppController
         if ($this->request->is('post') && $row_count < $relationLimit->value) {
 			$data=array('user_id'=>$uid,'doctor_id'=>$_POST['doctor_id'],'class'=>$_POST['class'],'is_active'=>1);
             $doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $data);
-			$data_count = $this->DoctorsRelation->find()->where(['is_active' => true, 'user_id =' => $uid, 'doctor_id =' => $data['doctor_id']])->count();
+			$data_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid, 'doctor_id =' => $data['doctor_id']])->count();
             if($data_count<1)
             {
 				if ($this->DoctorsRelation->save($doctorsRelation)) {
@@ -198,8 +231,6 @@ class DoctorsRelationController extends AppController
 		$returnArray = array('success' => "1",'id' => $doctorsRelation->id,'city' => $doctorsRelation->doctor->city_id,'speciality' => $doctorsRelation->doctor->speciality_id,'doctor' => '<option value="'.$doctorsRelation->doctor->id.'" selected>'.$doctorsRelation->doctor->name.'</option>','class' => $doctorsRelation->class);
 		echo json_encode($returnArray); 
 		exit;   
-     }
-
-   
+     }   
 
 }

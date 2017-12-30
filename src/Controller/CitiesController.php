@@ -114,7 +114,7 @@ class CitiesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
     
-    public function getCitiesHTML()
+    public function getCitiesOption()
     {
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
@@ -122,7 +122,7 @@ class CitiesController extends AppController
 		$cities = $this->Cities->find('all')->where(['state_id =' => $data['state']])->toarray();
         $citiesHtml = '<option value="">Select City</option>';
         foreach ($cities as $city)
-        $citiesHtml. = '<option value="'.$city['id'].'">'.$city['city_name'].'</option>';
+        $citiesHtml.='<option value="'.$city['id'].'">'.$city['city_name'].'</option>';
         
         $returnArray = array('success' => "1",'cities' => $citiesHtml);
 		echo json_encode($returnArray); 

@@ -36,7 +36,7 @@
 										<?php
 											echo $this->Form->control('code', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('name', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('speciality_id', ['class' => 'form-control mar-bottom-10'], ['options' => $specialities]);
+											echo $this->Form->control('speciality_id', ['class' => 'form-control mar-bottom-10', 'options' => $specialities, 'empty' => 'Select Speciality']);
 											echo $this->Form->control('qualification', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('mobile', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('phone', ['class' => 'form-control mar-bottom-10']);
@@ -44,8 +44,8 @@
 											<div class="input required"><label for="address">Address</label><textarea class="form-control mar-bottom-10" name="address" required="required" id="address" rows="5"><?= $doctor->address ?></textarea></div>
 										<?php
 											$yesno = ['1' => 'Yes', '0' => 'No'];
-											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10'], ['options' => $states]);
-											echo $this->Form->control('city_id', ['class' => 'form-control mar-bottom-10'], ['options' => $cities]);
+											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10', 'onchange' => 'loadCitiesOption()', 'options' => $states,'empty' => 'Select State']);
+											echo $this->Form->control('city_id', ['class' => 'form-control mar-bottom-10','empty' => 'Select City']);
 											echo $this->Form->control('pincode', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('is_approved', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
 											echo $this->Form->control('is_active', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
@@ -64,4 +64,18 @@
 		</section>
 		<!-- /.content -->
 </div>
-<script>$("#editform").validate();</script>
+<script>
+$("#editform").validate();
+function loadCitiesOption(){
+	var state = $('#state-id').val();
+	$.ajax({
+		   url: '../cities/get_cities_option/',
+		   dataType: "json",
+		   data: "state="+state,
+		   type: "POST",
+		   success: function(json) {
+			   $('#city-id').html(json.cities);
+		   }
+    });
+}
+</script>

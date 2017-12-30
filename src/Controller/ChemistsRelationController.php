@@ -16,6 +16,9 @@ class ChemistsRelationController extends AppController
 	 public function initialize() {
         parent::initialize();
         $this->loadModel('Config');
+		$this->loadModel('States');
+		$this->loadModel('Chemists');
+
     }
 
     /**
@@ -60,17 +63,37 @@ class ChemistsRelationController extends AppController
     {
         $chemistsRelation = $this->ChemistsRelation->newEntity();
         if ($this->request->is('post')) {
-            $chemistsRelation = $this->ChemistsRelation->patchEntity($chemistsRelation, $this->request->getData());
-            if ($this->ChemistsRelation->save($chemistsRelation)) {
-                $this->Flash->success(__('The chemists relation has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The chemists relation could not be saved. Please, try again.'));
+            $rData=array('user_id'=>$_POST['user_id'],'chemist_ids'=>$_POST['chemist_id'],'is_active'=>1);
+			$uid = $rData['user_id'];
+			$previous_count = $this->ChemistsRelation->find()->where(['is_active' => true, 'user_id =' => $uid])->count();
+			$chemistsCount=count($rData['chemist_ids']);
+			$totalCount=$previous_count+$chemistsCount;
+			$relationLimit = $this->Config->find()->select('value')->where(['scope' => 'mr_chemists_limit'])->first();
+			$chemistsRelation = $this->ChemistsRelation->newEntity();
+			if ($this->request->is('post') && $totalCount < $relationLimit->value) {
+				foreach ($rData['chemist_ids'] as $chemist_id){
+					$data = array('user_id'=>$rData['user_id'],'chemist_id'=>$chemist_id,'is_active'=>1);
+					$chemistsRelation = $this->ChemistsRelation->patchEntity($chemistsRelation, $data);
+					$data_count = $this->ChemistsRelation->find()->where(['user_id =' => $uid, 'chemist_id =' => $chemist_id])->count();
+					if($data_count<1)
+					{
+						//print_r($data); exit;
+						if ($this->ChemistsRelation->save($chemistsRelation)) {
+							$id = $chemistsRelation->id;
+							$returnArray = array('id'=>$id, 'status'=>'success'); 
+							$this->Flash->success(__('The chemists relation(s) has been saved.'));
+							return $this->redirect(['action' => 'index']);
+						}
+						else
+						$this->Flash->error(__('The chemists relation could not be saved. Please, try again.'));
+					}
+				}
+			}
+			else
+			$this->Flash->error(__('You have reached you limit.'));
         }
-        $users = $this->ChemistsRelation->Users->find('list', ['limit' => 200]);
-        $chemists = $this->ChemistsRelation->Chemists->find('list', ['limit' => 200]);
-        $this->set(compact('chemistsRelation', 'users', 'chemists'));
+        $states = $this->States->find('list')->toarray();
+        $this->set(compact('chemistsRelation', 'states'));
         $this->set('_serialize', ['chemistsRelation']);
     }
 
@@ -84,7 +107,7 @@ class ChemistsRelationController extends AppController
     public function edit($id = null)
     {
         $chemistsRelation = $this->ChemistsRelation->get($id, [
-            'contain' => []
+            'contain' => ['Users','Chemists']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $chemistsRelation = $this->ChemistsRelation->patchEntity($chemistsRelation, $this->request->getData());
@@ -95,8 +118,18 @@ class ChemistsRelationController extends AppController
             }
             $this->Flash->error(__('The chemists relation could not be saved. Please, try again.'));
         }
-        $users = $this->ChemistsRelation->Users->find('list', ['limit' => 200]);
-        $chemists = $this->ChemistsRelation->Chemists->find('list', ['limit' => 200]);
+        $uid = $chemistsRelation->user_id;
+		$userCity = $chemistsRelation->user->city_id;
+        
+		$chemists=array($chemistsRelation->chemist_id => $chemistsRelation->chemist->name);
+        $users = $this->ChemistsRelation->Users->find('list')->where(['city_id =' => $userCity]);
+        $chemistRel = $this->Chemists
+			->find()
+			->notMatching('ChemistsRelation', function ($q) use ($uid) {
+				return $q->where(['ChemistsRelation.user_id' => $uid]);
+			})->where(['city_id =' => $userCity])->toarray();
+		foreach ($chemistRel as $chemist)
+		$chemists[$chemist['id']]=$chemist['name'];
         $this->set(compact('chemistsRelation', 'users', 'chemists'));
         $this->set('_serialize', ['chemistsRelation']);
     }
@@ -132,7 +165,7 @@ class ChemistsRelationController extends AppController
         if ($this->request->is('post') && $row_count < $relationLimit->value) {
 			$data=array('user_id'=>$uid,'chemist_id'=>$_POST['chemist_id'],'is_active'=>1);
             $chemistsRelation = $this->ChemistsRelation->patchEntity($chemistsRelation, $data);
-			$data_count = $this->DoctorsRelation->find()->where(['is_active' => true, 'user_id =' => $uid, 'doctor_id =' => $data['doctor_id']])->count();
+			$data_count = $this->ChemistsRelation->find()->where(['is_active' => true, 'user_id =' => $uid, 'chemist_id =' => $data['chemist_id']])->count();
             if($data_count<1)
             {            
 				if ($this->ChemistsRelation->save($chemistsRelation)) {

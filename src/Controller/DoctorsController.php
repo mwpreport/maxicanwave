@@ -63,9 +63,8 @@ class DoctorsController extends AppController
             }
             $this->Flash->error(__('The doctor could not be saved. Please, try again.'));
         }
-        $specialities = $this->Doctors->Specialities->find('list', ['limit' => 200]);
-        $states = $this->Doctors->States->find('list', ['limit' => 200]);
-        $cities = $this->Doctors->Cities->find('list', ['limit' => 200]);
+        $specialities = $this->Doctors->Specialities->find('list');
+        $states = $this->Doctors->States->find('list');
         $this->set(compact('doctor', 'specialities', 'states', 'cities'));
         $this->set('_serialize', ['doctor']);
     }
@@ -91,9 +90,9 @@ class DoctorsController extends AppController
             }
             $this->Flash->error(__('The doctor could not be saved. Please, try again.'));
         }
-        $specialities = $this->Doctors->Specialities->find('list', ['limit' => 200]);
-        $states = $this->Doctors->States->find('list', ['limit' => 200]);
-        $cities = $this->Doctors->Cities->find('list', ['limit' => 200]);
+        $specialities = $this->Doctors->Specialities->find('list');
+        $states = $this->Doctors->States->find('list');
+        $cities = $this->Doctors->Cities->find('list')->where(['state_id =' => $doctor['state_id']])->toarray();
         $this->set(compact('doctor', 'specialities', 'states', 'cities'));
         $this->set('_serialize', ['doctor']);
     }
@@ -138,6 +137,29 @@ class DoctorsController extends AppController
 		$listHtml.='<option value="'.$doctor['id'].'">'.$doctor['name'].'</option>';
 		
 		echo $listHtml; exit;
+    }
+	
+    public function getDoctorsOption()
+    {
+        $this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$data = $this->request->data;
+		$uid = $this->Auth->user('id');
+		$city = $data['city'];
+		$uid = $data['user'];
+		$doctors = $this->Doctors
+			->find()
+			->notMatching('DoctorsRelation', function ($q) use ($uid) {
+				return $q->where(['DoctorsRelation.user_id' => $uid]);
+			})->where(['city_id =' => $city]);
+		$doctors->toarray();
+		$listHtml='';
+		foreach ($doctors as $doctor)
+		$listHtml.='<option value="'.$doctor['id'].'">'.$doctor['name'].'</option>';
+		
+		$returnArray = array('success' => "1",'doctor_id' => $listHtml);
+		echo json_encode($returnArray); 
+		exit;
     }
     
     public function mrsGetDoctor()

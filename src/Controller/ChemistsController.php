@@ -63,9 +63,8 @@ class ChemistsController extends AppController
             }
             $this->Flash->error(__('The chemist could not be saved. Please, try again.'));
         }
-        $states = $this->Chemists->States->find('list', ['limit' => 200]);
-        $cities = $this->Chemists->Cities->find('list', ['limit' => 200]);
-        $this->set(compact('chemist', 'states', 'cities'));
+        $states = $this->Chemists->States->find('list');
+        $this->set(compact('chemist', 'states'));
         $this->set('_serialize', ['chemist']);
     }
 
@@ -90,8 +89,8 @@ class ChemistsController extends AppController
             }
             $this->Flash->error(__('The chemist could not be saved. Please, try again.'));
         }
-        $states = $this->Chemists->States->find('list', ['limit' => 200]);
-        $cities = $this->Chemists->Cities->find('list', ['limit' => 200]);
+        $states = $this->Chemists->States->find('list');
+        $cities = $this->Chemists->Cities->find('list')->where(['state_id =' => $chemist['state_id']])->toarray();
         $this->set(compact('chemist', 'states', 'cities'));
         $this->set('_serialize', ['chemist']);
     }
@@ -134,6 +133,29 @@ class ChemistsController extends AppController
 		$listHtml.='<option value="'.$chemist['id'].'">'.$chemist['name'].'</option>';
 		
 		echo $listHtml; exit;
+    }
+    
+    public function getChemistsOption()
+    {
+        $this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$data = $this->request->data;
+		$uid = $this->Auth->user('id');
+		$city = $data['city'];
+		$uid = $data['user'];
+		$chemists = $this->Chemists
+			->find()
+			->notMatching('ChemistsRelation', function ($q) use ($uid) {
+				return $q->where(['ChemistsRelation.user_id' => $uid]);
+			})->where(['city_id =' => $city]);
+		$chemists->toarray();
+		$listHtml='';
+		foreach ($chemists as $chemist)
+		$listHtml.='<option value="'.$chemist['id'].'">'.$chemist['name'].'</option>';
+		
+		$returnArray = array('success' => "1",'chemist_id' => $listHtml);
+		echo json_encode($returnArray); 
+		exit;
     }
     
     public function mrsGetChemist()

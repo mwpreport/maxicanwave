@@ -136,5 +136,22 @@ class UsersController extends AppController
     public function logout() {
         $this->Flash->success('You are now logged out.');
         return $this->redirect($this->Auth->logout());
-    }    
+    } 
+
+    public function getUsersOption()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$data = $this->request->data;
+		$users = $this->Users->find('all')->where(['city_id =' => $data['city']])->toarray();
+        $usersHtml = '<option value="">Select Users</option>';
+        foreach ($users as $user)
+        $usersHtml.='<option value="'.$user['id'].'">'.$user['firstname']." ".$user['lastname'].'</option>';
+        
+        $returnArray = array('success' => "1",'user' => $usersHtml);
+		echo json_encode($returnArray); 
+		exit;   
+
+    }
+	
 }

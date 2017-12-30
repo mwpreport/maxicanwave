@@ -34,12 +34,8 @@
 									<?= $this->Form->create($chemistsRelation, array('id' => 'editform')) ?>
 									<fieldset>
 										<?php
-											$yesno = ['1' => 'Yes', '0' => 'No'];
-											$AorB = ['1' => 'A', '0' => 'B'];
-											echo $this->Form->control('user_id', ['class' => 'form-control mar-bottom-10'], ['options' => $users]);
-											echo $this->Form->control('chemist_id', ['class' => 'form-control mar-bottom-10'], ['options' => $chemists]);
-											echo $this->Form->control('class', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $AorB]);
-											echo $this->Form->control('is_active', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
+											echo $this->Form->control('user_id', ['class' => 'form-control mar-bottom-10', 'options' => $users, 'empty' => 'Select MR']);
+											echo $this->Form->control('chemist_id', ['class' => 'form-control mar-bottom-10', 'options' => $chemists, 'empty' => 'Select Chemist']);
 										?>
 									</fieldset>
 									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']); ?>
