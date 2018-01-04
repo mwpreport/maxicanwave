@@ -72,9 +72,56 @@ class AppController extends Controller
         $this->Auth->allow(['display']);
         /* Change the menu accordingly */
     }
+    public $permissions = array(
+		'1' => '*',
+		'2' => '*',
+		'3' => '*',
+		'4' => '*',
+		'5' =>array(
+		  array('controller'=>'Mrs', 'action'=>'*')
+		)
+	  );
+	  
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
-    }
+ 		$user_role = $this->Auth->user('role');
+ 		$this->isAuthorized();
+
+        $this->set("role",$user_role);
+	}
+	
+	public function verifyRole($role){
+		$request = $this->request->params;
+		  if($this->permissions[$role] == '*'){
+			return true;
+		  }else{
+			foreach($this->permissions[$role] as $permission){
+			  if($permission['controller'] == $request['controller'])
+			  {
+				if($permission['action'] == '*'){
+				  return true;
+				}
+				else{
+				  if($permission['action'] == $request['action'])
+					return true;
+				  else
+					return false;
+				}
+			  }
+			}
+		  }
+	}
+   
+    public function isAuthorized(){
+		if($this->Auth->user()){
+		  $user_role = $this->Auth->user('role');
+			  if(!$this->verifyRole($user_role)){
+				$this->Flash->error("You do not have permission.");
+				$this->redirect(['controller' => 'Mrs', 'action' => 'dashboard']);
+			  }
+		}
+	}     
+
     /**
      * Before render callback.
      *

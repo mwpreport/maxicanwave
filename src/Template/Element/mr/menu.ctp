@@ -16,6 +16,8 @@
         </form>
         <!-- /.search form -->
 
+		<?php if($role!=5){?>
+		<?php }?>
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <li class="active"><a href="#"><i class="fa fa-home" aria-hidden="true"></i>
@@ -24,8 +26,8 @@
 
             <!-- Optionally, you can add icons to the links -->
             <li class="treeview">
-                <a href="/dashboard">
-                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Core Data MR</span>
+                <a href="#">
+                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Core Data</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -35,8 +37,20 @@
                 	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Chemist List'), ['controller' => 'Mrs', 'action' => 'chemistList'], ['escape' => false]) ?></li>
                 </ul>
             </li>
+            <?php if($role!=5){?>
             <li class="treeview">
-                <a href="/dashboard">
+                <a href="#">
+                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Manage Users</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Users'), ['controller' => 'Users', 'action' => 'index'], ['escape' => false]) ?></li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
                     <i class="fa fa-medkit" aria-hidden="true"></i> <span>Doctors and Chemists</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
@@ -51,8 +65,8 @@
                 </ul>
             </li>
             <li class="treeview">
-                <a href="/dashboard">
-                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Core Data</span>
+                <a href="#">
+                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Core Form Data</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -64,6 +78,7 @@
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Leave Types'), ['controller' => 'LeaveTypes', 'action' => 'index'], ['escape' => false]) ?></li>
                 </ul>
             </li>
+            <?php }?>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-calendar"></i>
