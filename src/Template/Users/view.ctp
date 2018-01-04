@@ -54,7 +54,7 @@
         </tr>
         <tr>
             <th scope="row"><?= __('Role') ?></th>
-            <td><?= $this->Number->format($user->role) ?></td>
+            <td><?= $this->Number->format($user->role_id) ?></td>
         </tr>
     </table>
 </div>

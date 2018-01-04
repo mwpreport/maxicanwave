@@ -33,6 +33,20 @@ class UsersTable extends Table
         $this->setTable('users');
         $this->setDisplayField('firstname');
         $this->setPrimaryKey('id');
+        
+        $this->belongsTo('Roles', [
+            'foreignKey' => 'role_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('States', [
+            'foreignKey' => 'state_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('Cities', [
+            'foreignKey' => 'city_id',
+            'joinType' => 'INNER'
+        ]);
+
     }
 
     /**

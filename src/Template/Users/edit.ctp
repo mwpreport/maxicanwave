@@ -24,7 +24,7 @@
             echo $this->Form->control('email');
             echo $this->Form->control('password');
             echo $this->Form->control('status');
-            echo $this->Form->control('role');
+            echo $this->Form->control('role_id');
             echo $this->Form->control('firstname');
             echo $this->Form->control('lastname');
             echo $this->Form->control('avatar');

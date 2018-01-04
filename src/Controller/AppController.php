@@ -84,7 +84,7 @@ class AppController extends Controller
 	  
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
- 		$user_role = $this->Auth->user('role');
+ 		$user_role = $this->Auth->user('role_id');
  		$this->isAuthorized();
 
         $this->set("role",$user_role);
@@ -114,7 +114,7 @@ class AppController extends Controller
    
     public function isAuthorized(){
 		if($this->Auth->user()){
-		  $user_role = $this->Auth->user('role');
+		  $user_role = $this->Auth->user('role_id');
 			  if(!$this->verifyRole($user_role)){
 				$this->Flash->error("You do not have permission.");
 				$this->redirect(['controller' => 'Mrs', 'action' => 'dashboard']);

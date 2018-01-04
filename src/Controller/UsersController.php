@@ -29,6 +29,9 @@ class UsersController extends AppController
      */
     public function index()
     {
+		$this->paginate = [
+            'contain' => ['Roles', 'States', 'Cities']
+        ];
         $users = $this->paginate($this->Users);
 
         $this->set(compact('users'));
@@ -70,6 +73,10 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
+        $roles = $this->Users->Roles->find('list');
+        $states = $this->Users->States->find('list');
+        $this->set(compact('user', 'roles', 'states'));
+
         $this->set('_serialize', ['user']);
     }
 
