@@ -37,7 +37,7 @@
 												<th scope="col"><?= $this->Paginator->sort('firstname') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('lastname') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('gender') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('Is Active') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('is_active') ?></th>
 												<th scope="col" colspan="3" class="actions"><?= __('Actions') ?></th>
 											</tr>
 										</thead>
@@ -51,7 +51,7 @@
 												<td><?= h($user->firstname) ?></td>
 												<td><?= h($user->lastname) ?></td>
 												<td><?= ($user->gender == 1) ? "M" : "F" ?></td>
-												<td><?= ($user->status == 1) ? "Yes" : "No" ?></td>
+												<td><?= ($user->is_active == 1) ? "Yes" : "No" ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $user->id],['escape' => false]) ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $user->id],['escape' => false]) ?></td>
 												<td width="60"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $user->id], ['escape' => false,'confirm' => __('Are you sure you want to delete # {0}?', $user->id)]) ?></td>

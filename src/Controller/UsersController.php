@@ -48,7 +48,7 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => []
+            'contain' => ['Roles', 'States', 'Cities']
         ]);
 
         $this->set('user', $user);
@@ -101,7 +101,10 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $this->set(compact('user'));
+        $roles = $this->Users->Roles->find('list');
+        $states = $this->Users->States->find('list');
+        $cities = $this->Users->Cities->find('list')->where(['state_id =' => $user['state_id']])->toarray();
+        $this->set(compact('user', 'roles', 'states', 'cities'));
         $this->set('_serialize', ['user']);
     }
 

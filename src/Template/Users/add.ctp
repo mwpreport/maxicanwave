@@ -27,24 +27,24 @@
 								<div class="box-body no-padding">
 									<?= $this->Form->create($user, array('id' => 'newform')) ?>
 									<fieldset>
-										<legend><?= __('Add User') ?></legend>
 										<?php
 											$yesno = ['1' => 'Yes', '0' => 'No'];
 											$gender = ['1' => 'M', '0' => 'F'];
 											echo $this->Form->control('username', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('email', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('password', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('role_id', ['class' => 'form-control mar-bottom-10', 'options' => $roles, 'empty' => 'Select Role']);
 											echo $this->Form->control('firstname', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('lastname', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('role', ['class' => 'form-control mar-bottom-10', 'options' => $roles, 'empty' => 'Select Role']);
 											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10', 'onchange' => 'loadCitiesOption()', 'options' => $states,'empty' => 'Select State']);
 											echo $this->Form->control('city_id', ['class' => 'form-control mar-bottom-10','empty' => 'Select City']);
-											echo $this->Form->control('avatar', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('gender', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $gender,'empty' => 'Select Gender']);
-											echo $this->Form->control('status', ['label' => 'Is Active','class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
+											echo $this->Form->control('qualification', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('is_approved', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
+											echo $this->Form->control('is_active', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
 										?>
 									</fieldset>
-									<?= $this->Form->button(__('Submit')) ?>
+									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']); ?>
 									<?= $this->Form->end() ?>
 								</div>
 						</div>
