@@ -54,7 +54,7 @@
 												<td><?= ($user->is_active == 1) ? "Yes" : "No" ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $user->id],['escape' => false]) ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $user->id],['escape' => false]) ?></td>
-												<td width="60"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $user->id], ['escape' => false,'confirm' => __('Are you sure you want to delete # {0}?', $user->id)]) ?></td>
+												<td width="60"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $user->id], ['escape' => false,'confirm' => __('Are you sure you want to delete # {0}?', $user->firstname)]) ?></td>
 											</tr>
 											<?php $i++; endforeach; ?>
 										</tbody>

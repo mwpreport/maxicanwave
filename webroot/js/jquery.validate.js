@@ -363,7 +363,7 @@ $.extend( $.validator, {
 		required: "This field is required.",
 		remote: "Please fix this field.",
 		email: "Please enter a valid email address.",
-		password: "Password should contain at least a number & a special character.",
+		//password: "Password should contain at least a number & a special character.",
 		url: "Please enter a valid URL.",
 		date: "Please enter a valid date.",
 		dateISO: "Please enter a valid date (ISO).",
@@ -1162,7 +1162,7 @@ $.extend( $.validator, {
 	classRuleSettings: {
 		required: {required: true},
 		email: {email: true},
-		password: {password: true},
+		/*password: {password: true},*/
 		url: {url: true},
 		date: {date: true},
 		dateISO: {dateISO: true},
@@ -1404,11 +1404,11 @@ $.extend( $.validator, {
 			// Or use custom methods to implement your own email validation
 			return this.optional( element ) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test( value );
 		},
-		
+		/*
 		password: function(value, element) {
 			return this.optional(element) ||  /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{2,}$/.test(value);
 			//return this.optional(element) ||  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\w{6,}$/.test(value);;
-		},
+		},*/
 
 		// https://jqueryvalidation.org/url-method/
 		url: function( value, element ) {

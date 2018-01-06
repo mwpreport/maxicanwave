@@ -44,6 +44,7 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('Cookie', ['expires' => '1 day']);
+		$this->loadModel('Users');
 
         /*
          * Enable the following components for recommended CakePHP security settings.
@@ -78,16 +79,28 @@ class AppController extends Controller
 		'3' => '*',
 		'4' => '*',
 		'5' =>array(
-		  array('controller'=>'Mrs', 'action'=>'*')
+		  array('controller'=>'Users', 'action'=>['login','logout','account']),
+		  array('controller'=>'Mrs', 'action'=>'*'),
+		  array('controller'=>'Doctors', 'action'=>['mrsGetDoctors','mrsGetDoctor','getDoctorsOption']),
+		  array('controller'=>'DoctorsRelation', 'action'=>['mrsAdd','mrsUpdate','mrsDelete','mrsGetRelation']),
+		  array('controller'=>'Chemists', 'action'=>['mrsGetChemists','mrsGetChemist','getChemistsOption']),
+		  array('controller'=>'ChemistsRelation', 'action'=>['mrsAdd','mrsUpdate','mrsDelete','mrsGetRelation']),
+		  array('controller'=>'WorkPlans', 'action'=>['mrsView','mrsAdd','mrsUpdate','mrsDragDrop','mrsGetPlan','mrsGetPlans','mrsDelete','mrsDateDelete','mrsPlanCopy']),
+		  array('controller'=>'Cities', 'action'=>['getCitiesOption'])
 		)
 	  );
 	  
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
  		$user_role = $this->Auth->user('role');
+		if($this->Auth->user())
+		$user = $this->Users->get($this->Auth->user('id'), ['contain' => ['Roles']]);
+		else
+		$user ="";	
  		$this->isAuthorized();
 
         $this->set("role",$user_role);
+        $this->set("authuser",$user);
 	}
 	
 	public function verifyRole($role){
@@ -102,7 +115,7 @@ class AppController extends Controller
 				  return true;
 				}
 				else{
-				  if($permission['action'] == $request['action'])
+				  if(in_array($request['action'],$permission['action']))
 					return true;
 				  else
 					return false;
@@ -114,11 +127,22 @@ class AppController extends Controller
    
     public function isAuthorized(){
 		if($this->Auth->user()){
-		  $user_role = $this->Auth->user('role');
-			  if(!$this->verifyRole($user_role)){
-				$this->Flash->error("You do not have permission.");
-				$this->redirect(['controller' => 'Mrs', 'action' => 'dashboard']);
-			  }
+		  $user = $this->Auth->user();
+		  if($user['is_deleted']==1){
+			$this->Flash->error("Invalid Email or Password.");
+			$this->redirect($this->Auth->logout());
+		  }
+		  elseif($user['is_active']==0){
+			$this->Flash->error("You do not have an active role.");
+			$this->redirect($this->Auth->logout());
+		  }
+		  else
+		  {
+			if(!$this->verifyRole($user['role'])){
+			$this->Flash->error("You do not have permission.");
+			$this->redirect(['controller' => 'Mrs', 'action' => 'dashboard']);
+			}
+		  }
 		}
 	}     
 

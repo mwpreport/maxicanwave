@@ -1,3 +1,4 @@
+<?php ?>
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
 
@@ -15,6 +16,8 @@
         </form>
         <!-- /.search form -->
 
+		<?php if($role!=5){?>
+		<?php }?>
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <li class="active"><a href="#"><i class="fa fa-home" aria-hidden="true"></i>
@@ -23,17 +26,59 @@
 
             <!-- Optionally, you can add icons to the links -->
             <li class="treeview">
-                <a href="/dashboard">
+                <a href="#">
                     <i class="fa fa-medkit" aria-hidden="true"></i> <span>Core Data</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="doctorList"><i class="fa fa-circle-o"></i> Dr List</a></li>
-                    <li><a href="chemistList"><i class="fa fa-circle-o"></i> Chemist List</a></li>
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Dr List'), ['controller' => 'Mrs', 'action' => 'doctorList'], ['escape' => false]) ?></li>
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Chemist List'), ['controller' => 'Mrs', 'action' => 'chemistList'], ['escape' => false]) ?></li>
                 </ul>
             </li>
+            <?php if($role!=5){?>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Manage Users</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Users'), ['controller' => 'Users', 'action' => 'index'], ['escape' => false]) ?></li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Doctors and Chemists</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Doctors'), ['controller' => 'Doctors', 'action' => 'index'], ['escape' => false]) ?></li>
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Doctors Assignment'), ['controller' => 'DoctorsRelation', 'action' => 'index'], ['escape' => false]) ?></li>
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Chemists'), ['controller' => 'Chemists', 'action' => 'index'], ['escape' => false]) ?></li>
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Chemists Assignment'), ['controller' => 'ChemistsRelation', 'action' => 'index'], ['escape' => false]) ?></li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Core Form Data</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Specialities'), ['controller' => 'Specialities', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> States'), ['controller' => 'States', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Cities'), ['controller' => 'Cities', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Leave Types'), ['controller' => 'LeaveTypes', 'action' => 'index'], ['escape' => false]) ?></li>
+                </ul>
+            </li>
+            <?php }?>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-calendar"></i>
@@ -43,8 +88,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="dailyReport"><i class="fa fa-circle-o"></i> Daily Report</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Monthly Planning</a></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Daily Report'), ['controller' => 'Mrs', 'action' => 'dailyReport'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Monthly Planning'), ['controller' => 'Mrs', 'action' => 'monthlyplan'], ['escape' => false]) ?></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i> Expenses</a></li>
                 </ul>
             </li>

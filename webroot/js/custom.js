@@ -9,19 +9,23 @@ $(document).ready(function(){
        $('#loginForm').slideUp("slow");           
        $('#forgotForm').slideDown("slow");
    });
+	if($('.popup-modal').length){
     $('.popup-modal').magnificPopup({
         type: 'inline',
         preloader: false,
         modal: true
     });
+	}
     $(document).on('click', '.popup-modal-dismiss', function (e) {
         e.preventDefault();
         $.magnificPopup.close();
     });   
     $('#datepicker,.fa-calendar').datepicker({
         autoclose: true
-    });    
+    });
+	if($('#example1').length)
     $("#example1").DataTable();
+	if($('#example2').length)
     $('#example2').DataTable({
         "paging": true,
         "lengthChange": false,

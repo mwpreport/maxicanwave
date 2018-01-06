@@ -98,6 +98,7 @@ class MrsController extends AppController {
         //pj($doctors);exit;
         $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors'));            
     }
+	
     public function doctorSelection(){
         $this->viewBuilder()->layout('medicalrep');
         $this->set('title', 'Doctor Visit Report');        

@@ -11,7 +11,7 @@ $cakeDescription = 'MaxicanWave Pharma';
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">    
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->Url->image('favicon.ico')?>">
     <title><?= $cakeDescription ?> : <?= $title ?></title>
     <?= $this->Html->css([
                             'bootstrap.min.css', 
@@ -21,7 +21,11 @@ $cakeDescription = 'MaxicanWave Pharma';
                             '/plugins/iCheck/square/blue.css',
                             'stylesheet.css']);?>
     <?= $this->Html->script(['/plugins/jQuery/jquery-2.2.3.min','https://code.jquery.com/ui/1.11.4/jquery-ui.min.js',
-                            'bootstrap.min','custom']); ?>
+                            'bootstrap.min','custom',
+							'/plugins/jQuery/jquery-2.2.3.min',
+							'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js',
+							'/js/jquery.validate.js'
+							]); ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>

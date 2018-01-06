@@ -8,15 +8,15 @@
     <div class="login-form"><?php
         echo $this->Form->create('login',array('id'=>'loginForm','autocomplete'=>'off')); ?>
             <div class="form-group">
-                <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
+                <label for="email1" class="col-sm-3 control-label">Email</label>
                 <div class="col-sm-9">
-                    <input type="email" class="form-control" id="inputEmail3" placeholder="Email" name="email">
+                    <input type="email" class="form-control required" id="email1" placeholder="Email" name="email">
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputPassword3" class="col-sm-3 control-label">Password</label>
                 <div class="col-sm-9">
-                    <input type="password" class="form-control" id="inputPassword3" placeholder="Password" name="password">
+                    <input type="password" class="form-control required" id="inputPassword3" placeholder="Password" name="password">
                 </div>
             </div>
             <div class="form-group">
@@ -32,11 +32,11 @@
                 </div>
             </div><?php
         echo $this->Form->end();    
-        echo $this->Form->create('forgot',array('id'=>'forgotForm','autocomplete'=>'off')); ?>
+        echo $this->Form->create(null ,array('url' => '/users/forgot_password','id'=>'forgotForm','autocomplete'=>'off')); ?>
             <div class="form-group">
-                <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
+                <label for="email2" class="col-sm-3 control-label">Email</label>
                 <div class="col-sm-9">
-                    <input type="email" class="form-control" id="inputEmail3" placeholder="Email" name="email">
+                    <input type="email" class="form-control required" id="email2" placeholder="Email" name="email">
                 </div>
             </div>
             <div class="form-group">
@@ -54,4 +54,8 @@
         echo $this->Form->end(); ?>
     </div>
 </div>
+<script>
+$("#loginForm").validate();
+$("#forgotForm").validate();
+</script>
 

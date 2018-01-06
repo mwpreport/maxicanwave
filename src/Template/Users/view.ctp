@@ -15,7 +15,7 @@
 							<ul class="side-nav">
 								<li><?= $this->Html->link(__('<i class="fa fa-plus-circle" aria-hidden="true"></i> New User'), ['action' => 'add'], ['escape' => false]) ?></li>
 								<li><?= $this->Html->link(__('<i class="fa fa-pencil" aria-hidden="true"></i> Edit User'), ['action' => 'edit', $user->id], ['escape' => false]) ?> </li>
-								<li><?= $this->Form->postLink(__('<i class="fa fa-trash" aria-hidden="true"></i> Delete User'), ['action' => 'delete', $user->id], ['escape' => false, 'confirm' => __('Are you sure you want to delete "{0}"?', $user->name)]) ?> </li>
+								<li><?= $this->Form->postLink(__('<i class="fa fa-trash" aria-hidden="true"></i> Delete User'), ['action' => 'delete', $user->id], ['escape' => false, 'confirm' => __('Are you sure you want to delete "{0}"?', $user->firstname)]) ?> </li>
 								<li><?= $this->Html->link(__('<i class="fa fa-list" aria-hidden="true"></i> List Users'), ['action' => 'index'], ['escape' => false]) ?> </li>
 							</ul>
 						</div>
@@ -72,12 +72,12 @@
 											<td><?= $this->Number->format($user->qualification) ?></td>
 										</tr>
 										<tr>
-											<th scope="row"><?= __('Is Approved') ?></th>
-											<td><?= ($user->is_approved == 1) ? "Yes" : "No" ?></td>
-										</tr>
-										<tr>
 											<th scope="row"><?= __('Is Active') ?></th>
 											<td><?= ($user->is_active == 1) ? "Yes" : "No" ?></td>
+										</tr>
+										<tr>
+											<th scope="row"><?= __('Is Archieved') ?></th>
+											<td><?= ($user->is_deleted == 1) ? "Yes" : "No" ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Last Updated') ?></th>
