@@ -32,7 +32,7 @@ class UsersController extends AppController
 		$authuser = $this->Auth->user();
 		$this->paginate = [
             'contain' => ['Roles', 'States', 'Cities'],
-			'conditions' => ['users.id <>' => $authuser['id'],'users.role <>' => 1,'users.is_deleted =' => 0]
+			'conditions' => ['Users.id <>' => $authuser['id'],'Users.role <>' => 1,'Users.is_deleted =' => 0]
         ];
         $users = $this->paginate($this->Users);
 

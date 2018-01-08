@@ -38,7 +38,6 @@
 											$gender = ['1' => 'M', '0' => 'F'];
 											echo $this->Form->control('username', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('email', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('password', ['class' => 'form-control mar-bottom-10', 'value' => '']);
 											echo $this->Form->control('firstname', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('lastname', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('role', ['class' => 'form-control mar-bottom-10', 'options' => $roles, 'empty' => 'Select Role']);

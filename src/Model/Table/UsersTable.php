@@ -74,11 +74,6 @@ class UsersTable extends Table
             ->notEmpty('email');
 
         $validator
-            ->scalar('password')
-            ->requirePresence('password', 'create')
-            ->notEmpty('password');
-
-        $validator
             ->integer('role')
             ->requirePresence('role', 'create')
             ->notEmpty('role');
