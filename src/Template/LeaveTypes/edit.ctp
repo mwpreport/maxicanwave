@@ -31,7 +31,7 @@
 						</div>
 						<div class="clearfix"></div>
 						<div class="col-md-12">
-								<div class="box-body no-padding">>
+								<div class="box-body no-padding">
 									<?= $this->Form->create($leaveType, array('id' => 'editform')) ?>
 									<fieldset>
 										<?php

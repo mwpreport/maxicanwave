@@ -88,6 +88,16 @@ class UsersTable extends Table
             ->allowEmpty('lastname');
 
         $validator
+            ->scalar('state_id')
+            ->requirePresence('state_id', 'create')
+            ->notEmpty('state_id');
+
+		$validator
+            ->scalar('city_id')
+            ->requirePresence('city_id', 'create')
+            ->notEmpty('city_id');
+
+		$validator
             ->scalar('avatar')
             ->allowEmpty('avatar');
 

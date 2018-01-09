@@ -89,6 +89,11 @@ class DoctorsTable extends Table
             ->scalar('qualification')
             ->requirePresence('qualification', 'create')
             ->notEmpty('qualification');
+			
+        $validator
+            ->scalar('speciality_id')
+            ->requirePresence('speciality_id', 'create')
+            ->notEmpty('speciality_id');
 
         $validator
             ->requirePresence('mobile', 'create')
@@ -114,24 +119,32 @@ class DoctorsTable extends Table
             ->notEmpty('is_approved');
 
         $validator
+            ->scalar('state_id')
+            ->requirePresence('state_id', 'create')
+            ->notEmpty('state_id');
+
+		$validator
+            ->scalar('city_id')
+            ->requirePresence('city_id', 'create')
+            ->notEmpty('city_id');
+			
+
+        $validator
             ->integer('is_active')
             ->requirePresence('is_active', 'create')
             ->notEmpty('is_active');
 
         $validator
             ->integer('is_deleted')
-            ->requirePresence('is_deleted', 'create')
-            ->notEmpty('is_deleted');
+            ->allowEmpty('is_deleted');
 
         $validator
             ->dateTime('last_updated')
-            ->requirePresence('last_updated', 'create')
-            ->notEmpty('last_updated');
+            ->allowEmpty('last_updated');
 
         $validator
             ->dateTime('dt')
-            ->requirePresence('dt', 'create')
-            ->notEmpty('dt');
+            ->allowEmpty('dt');
 
         return $validator;
     }

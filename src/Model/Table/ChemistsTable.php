@@ -96,6 +96,16 @@ class ChemistsTable extends Table
             ->notEmpty('pincode');
 
         $validator
+            ->scalar('state_id')
+            ->requirePresence('state_id', 'create')
+            ->notEmpty('state_id');
+
+		$validator
+            ->scalar('city_id')
+            ->requirePresence('city_id', 'create')
+            ->notEmpty('city_id');
+
+		$validator
             ->integer('is_approved')
             ->requirePresence('is_approved', 'create')
             ->notEmpty('is_approved');
@@ -107,18 +117,15 @@ class ChemistsTable extends Table
 
         $validator
             ->integer('is_deleted')
-            ->requirePresence('is_deleted', 'create')
-            ->notEmpty('is_deleted');
+            ->allowEmpty('is_deleted');
 
         $validator
             ->dateTime('last_updated')
-            ->requirePresence('last_updated', 'create')
-            ->notEmpty('last_updated');
+            ->allowEmpty('last_updated');
 
         $validator
             ->dateTime('dt')
-            ->requirePresence('dt', 'create')
-            ->notEmpty('dt');
+            ->allowEmpty('dt');
 
         return $validator;
     }

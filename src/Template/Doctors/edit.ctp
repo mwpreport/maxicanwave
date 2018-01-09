@@ -41,7 +41,10 @@
 											echo $this->Form->control('mobile', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('phone', ['class' => 'form-control mar-bottom-10']);
 										?>
-											<div class="input required"><label for="address">Address</label><textarea class="form-control mar-bottom-10" name="address" required="required" id="address" rows="5"><?= $doctor->address ?></textarea></div>
+											<div class="input required">
+											<label for="address">Address</label>
+											<?php echo $this->Form->textarea('address', ['label' => 'Address', 'id' => 'address', 'class' => 'form-control mar-bottom-10',  'rows' => '5']);?>
+											</div>
 										<?php
 											$yesno = ['1' => 'Yes', '0' => 'No'];
 											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10', 'onchange' => 'loadCitiesOption()', 'options' => $states,'empty' => 'Select State']);
