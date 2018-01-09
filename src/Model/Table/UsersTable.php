@@ -36,8 +36,7 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
         
         $this->belongsTo('Roles', [
-            'foreignKey' => 'role',
-			'propertyName' => 'role',
+            'foreignKey' => 'role_id',
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('States', [
@@ -74,9 +73,9 @@ class UsersTable extends Table
             ->notEmpty('email');
 
         $validator
-            ->integer('role')
-            ->requirePresence('role', 'create')
-            ->notEmpty('role');
+            ->integer('role_id')
+            ->requirePresence('role_id', 'create')
+            ->notEmpty('role_id');
 
         $validator
             ->scalar('firstname')

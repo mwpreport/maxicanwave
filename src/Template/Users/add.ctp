@@ -35,7 +35,7 @@
 											echo $this->Form->control('password', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('firstname', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('lastname', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('role', ['class' => 'form-control mar-bottom-10', 'options' => $roles, 'empty' => 'Select Role']);
+											echo $this->Form->control('role_id', ['class' => 'form-control mar-bottom-10', 'options' => $roles, 'empty' => 'Select Role']);
 											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10', 'onchange' => 'loadCitiesOption()', 'options' => $states,'empty' => 'Select State']);
 											echo $this->Form->control('city_id', ['class' => 'form-control mar-bottom-10','empty' => 'Select City']);
 											echo $this->Form->control('gender', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $gender,'empty' => 'Select Gender']);

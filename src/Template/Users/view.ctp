@@ -53,7 +53,7 @@
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Role') ?></th>
-											<td><?= $user->has('role') ? $this->Html->link($user->role->name, ['controller' => 'Roles', 'action' => 'view', $user->role->id]) : '' ?></td>
+											<td><?= $user->role->name ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('State') ?></th>

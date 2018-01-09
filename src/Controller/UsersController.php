@@ -32,7 +32,7 @@ class UsersController extends AppController
 		$authuser = $this->Auth->user();
 		$this->paginate = [
             'contain' => ['Roles', 'States', 'Cities'],
-			'conditions' => ['Users.id <>' => $authuser['id'],'Users.role <>' => 1,'Users.is_deleted =' => 0]
+			'conditions' => ['Users.id <>' => $authuser['id'],'Users.role_id <>' => 1,'Users.is_deleted =' => 0]
         ];
         $users = $this->paginate($this->Users);
 
@@ -76,7 +76,7 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
-        $roles = $this->Users->Roles->find('list')->where(['id >' => $authuser['role']])->toarray();
+        $roles = $this->Users->Roles->find('list')->where(['id >' => $authuser['role_id']])->toarray();
         $states = $this->Users->States->find('list');
         $this->set(compact('user', 'roles', 'states'));
 
@@ -105,7 +105,7 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $roles = $this->Users->Roles->find('list')->where(['id >' => $authuser['role']])->toarray();
+        $roles = $this->Users->Roles->find('list')->where(['id >' => $authuser['role_id']])->toarray();
         $states = $this->Users->States->find('list');
         $cities = $this->Users->Cities->find('list')->where(['state_id =' => $user['state_id']])->toarray();
         $this->set(compact('user', 'roles', 'states', 'cities'));
@@ -172,7 +172,7 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('Something went wrong. Please, try again.'));
         }
-        $roles = $this->Users->Roles->find('list')->where(['id >' => $authuser['role']])->toarray();
+        $roles = $this->Users->Roles->find('list')->where(['id >' => $authuser['role_id']])->toarray();
         $states = $this->Users->States->find('list');
         $cities = $this->Users->Cities->find('list')->where(['state_id =' => $user['state_id']])->toarray();
         $this->set(compact('user', 'roles', 'states', 'cities'));
