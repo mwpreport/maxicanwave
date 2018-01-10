@@ -78,6 +78,10 @@ class ChemistsTable extends Table
             ->notEmpty('contact_person');
 
         $validator
+            ->requirePresence('email', 'create')
+            ->notEmpty('email');
+
+        $validator
             ->requirePresence('mobile', 'create')
             ->notEmpty('mobile');
 
@@ -86,9 +90,16 @@ class ChemistsTable extends Table
             ->allowEmpty('phone');
 
         $validator
-            ->scalar('address')
-            ->requirePresence('address', 'create')
-            ->notEmpty('address');
+            ->scalar('door_no')
+            ->allowEmpty('door_no');
+			
+        $validator
+            ->scalar('street')
+            ->allowEmpty('street');
+			
+        $validator
+            ->scalar('area')
+            ->allowEmpty('area');
 
         $validator
             ->integer('pincode')
@@ -141,6 +152,7 @@ class ChemistsTable extends Table
     {
         $rules->add($rules->existsIn(['state_id'], 'States'));
         $rules->add($rules->existsIn(['city_id'], 'Cities'));
+		$rules->add($rules->isUnique(['email']));
 
         return $rules;
     }

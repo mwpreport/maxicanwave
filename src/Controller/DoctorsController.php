@@ -39,7 +39,7 @@ class DoctorsController extends AppController
     public function view($id = null)
     {
         $doctor = $this->Doctors->get($id, [
-            'contain' => ['Specialities', 'States', 'Cities', 'DoctorsRelation', 'WorkPlans', 'WorkReports']
+            'contain' => ['Specialities', 'Qualifications', 'States', 'Cities', 'DoctorsRelation', 'WorkPlans', 'WorkReports']
         ]);
 
         $this->set('doctor', $doctor);
@@ -64,8 +64,9 @@ class DoctorsController extends AppController
             $this->Flash->error(__('The doctor could not be saved. Please, try again.'));
         }
         $specialities = $this->Doctors->Specialities->find('list');
+		$qualifications = $this->Doctors->Qualifications->find('list');
         $states = $this->Doctors->States->find('list');
-        $this->set(compact('doctor', 'specialities', 'states', 'cities'));
+        $this->set(compact('doctor', 'specialities', 'qualifications', 'states', 'cities'));
         $this->set('_serialize', ['doctor']);
     }
 
@@ -91,9 +92,10 @@ class DoctorsController extends AppController
             $this->Flash->error(__('The doctor could not be saved. Please, try again.'));
         }
         $specialities = $this->Doctors->Specialities->find('list');
+        $qualifications = $this->Doctors->Qualifications->find('list');
         $states = $this->Doctors->States->find('list');
         $cities = $this->Doctors->Cities->find('list')->where(['state_id =' => $doctor['state_id']])->toarray();
-        $this->set(compact('doctor', 'specialities', 'states', 'cities'));
+        $this->set(compact('doctor', 'specialities', 'qualifications', 'states', 'cities'));
         $this->set('_serialize', ['doctor']);
     }
 
@@ -195,7 +197,15 @@ class DoctorsController extends AppController
 					<label>Qualification</label>
 				</div>
 				<div class="col-md-10">
-					<p>'.$doctor->qualification.'</p>
+					<p>'.$doctor->qualification->name.', '.$doctor->add_qualification.'</p>
+				</div>
+			</li>
+			<li>
+				<div class="col-md-2">
+					<label>Contact</label>
+				</div>
+				<div class="col-md-10">
+					<p>Email : '.$doctor->email.', Mobile : '.$doctor->email.'</p>
 				</div>
 			</li>
 			<li>
@@ -203,7 +213,7 @@ class DoctorsController extends AppController
 					<label>Address</label>
 				</div>
 				<div class="col-md-10">
-					<p>'.$doctor->address.', '.$doctor->city->city_name.', '.$doctor->state->state_code.', '.$doctor->pincode.'</p>
+					<p>'.$doctor->clinic_name.',<br> '.$doctor->door_no.' - '.$doctor->street.',<br> '.$doctor->area.',<br> '.$doctor->city->city_name.' - '.$doctor->pincode.', '.$doctor->state->state_code.'</p>
 				</div>
 			</li>';
 			

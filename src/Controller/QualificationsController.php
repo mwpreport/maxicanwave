@@ -4,13 +4,13 @@ namespace App\Controller;
 use App\Controller\AppController;
 
 /**
- * Qualification Controller
+ * Qualifications Controller
  *
- * @property \App\Model\Table\QualificationTable $Qualification
+ * @property \App\Model\Table\QualificationsTable $Qualifications
  *
  * @method \App\Model\Entity\Qualification[] paginate($object = null, array $settings = [])
  */
-class QualificationController extends AppController
+class QualificationsController extends AppController
 {
 
     /**
@@ -20,10 +20,10 @@ class QualificationController extends AppController
      */
     public function index()
     {
-        $qualification = $this->paginate($this->Qualification);
+        $qualifications = $this->paginate($this->Qualifications);
 
-        $this->set(compact('qualification'));
-        $this->set('_serialize', ['qualification']);
+        $this->set(compact('qualifications'));
+        $this->set('_serialize', ['qualifications']);
     }
 
     /**
@@ -35,8 +35,8 @@ class QualificationController extends AppController
      */
     public function view($id = null)
     {
-        $qualification = $this->Qualification->get($id, [
-            'contain' => []
+        $qualification = $this->Qualifications->get($id, [
+            'contain' => ['Doctors']
         ]);
 
         $this->set('qualification', $qualification);
@@ -50,10 +50,10 @@ class QualificationController extends AppController
      */
     public function add()
     {
-        $qualification = $this->Qualification->newEntity();
+        $qualification = $this->Qualifications->newEntity();
         if ($this->request->is('post')) {
-            $qualification = $this->Qualification->patchEntity($qualification, $this->request->getData());
-            if ($this->Qualification->save($qualification)) {
+            $qualification = $this->Qualifications->patchEntity($qualification, $this->request->getData());
+            if ($this->Qualifications->save($qualification)) {
                 $this->Flash->success(__('The qualification has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -73,12 +73,12 @@ class QualificationController extends AppController
      */
     public function edit($id = null)
     {
-        $qualification = $this->Qualification->get($id, [
+        $qualification = $this->Qualifications->get($id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $qualification = $this->Qualification->patchEntity($qualification, $this->request->getData());
-            if ($this->Qualification->save($qualification)) {
+            $qualification = $this->Qualifications->patchEntity($qualification, $this->request->getData());
+            if ($this->Qualifications->save($qualification)) {
                 $this->Flash->success(__('The qualification has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -99,8 +99,8 @@ class QualificationController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $qualification = $this->Qualification->get($id);
-        if ($this->Qualification->delete($qualification)) {
+        $qualification = $this->Qualifications->get($id);
+        if ($this->Qualifications->delete($qualification)) {
             $this->Flash->success(__('The qualification has been deleted.'));
         } else {
             $this->Flash->error(__('The qualification could not be deleted. Please, try again.'));

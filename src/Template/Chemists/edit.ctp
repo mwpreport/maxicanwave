@@ -35,16 +35,14 @@
 									<fieldset>
 										<?php
 											echo $this->Form->control('code', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('name', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('name', ['label' => 'Pharmacy Name', 'class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('contact_person', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('email', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('mobile', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('phone', ['class' => 'form-control mar-bottom-10']);
-										?>
-											<div class="input required">
-											<label for="address">Address</label>
-											<?php echo $this->Form->textarea('address', ['label' => 'Address', 'id' => 'address', 'class' => 'form-control mar-bottom-10',  'rows' => '5']);?>
-											</div>
-										<?php
+											echo $this->Form->control('door_no', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('street', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('area', ['class' => 'form-control mar-bottom-10']);
 											$yesno = ['1' => 'Yes', '0' => 'No'];
 											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10', 'onchange' => 'loadCitiesOption()', 'options' => $states,'empty' => 'Select State']);
 											echo $this->Form->control('city_id', ['class' => 'form-control mar-bottom-10','empty' => 'Select City']);

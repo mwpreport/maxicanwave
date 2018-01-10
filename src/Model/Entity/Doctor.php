@@ -10,7 +10,7 @@ use Cake\ORM\Entity;
  * @property string $code
  * @property string $name
  * @property int $speciality_id
- * @property string $qualification
+ * @property int $qualification
  * @property int $mobile
  * @property int $phone
  * @property string $address
@@ -47,9 +47,14 @@ class Doctor extends Entity
         'name' => true,
         'speciality_id' => true,
         'qualification' => true,
+        'add_qualification' => true,
+        'email' => true,
         'mobile' => true,
         'phone' => true,
-        'address' => true,
+        'clinic_name' => true,
+        'door_no' => true,
+        'street' => true,
+        'area' => true,
         'state_id' => true,
         'city_id' => true,
         'pincode' => true,
@@ -58,6 +63,8 @@ class Doctor extends Entity
         'is_deleted' => true,
         'last_updated' => true,
         'dt' => true,
+        'dob' => true,
+        'dow' => true,
         'speciality' => true,
         'state' => true,
         'city' => true,

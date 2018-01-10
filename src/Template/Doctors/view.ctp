@@ -41,19 +41,15 @@
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Qualification') ?></th>
-											<td><?= h($doctor->qualification) ?></td>
-										</tr>
-										<tr>
-											<th scope="row"><?= __('State') ?></th>
-											<td><?= $doctor->has('state') ? $this->Html->link($doctor->state->name, ['controller' => 'States', 'action' => 'view', $doctor->state->id]) : '' ?></td>
-										</tr>
-										<tr>
-											<th scope="row"><?= __('City') ?></th>
-											<td><?= $doctor->has('city') ? $this->Html->link($doctor->city->city_name, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '' ?></td>
+											<td><?= $doctor->has('qualification') ? $this->Html->link($doctor->qualification->name, ['controller' => 'Qualifications', 'action' => 'view', $doctor->qualification->id]) : '' ?>,<?= h($doctor->add_qualification) ?><</td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Id') ?></th>
 											<td><?= $this->Number->format($doctor->id) ?></td>
+										</tr>
+										<tr>
+											<th scope="row"><?= __('Email') ?></th>
+											<td><?= $doctor->email ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Mobile') ?></th>
@@ -64,8 +60,15 @@
 											<td><?= $this->Number->format($doctor->phone) ?></td>
 										</tr>
 										<tr>
-											<th scope="row"><?= __('Pincode') ?></th>
-											<td><?= $this->Number->format($doctor->pincode) ?></td>
+											<th scope="row"><?= __('Address') ?></th>
+											<td>
+											<?= h($doctor->clinic_name) ?><br>
+											<?= h($doctor->door_no) ?> - <?= h($doctor->street) ?>,<br>
+											<?= h($doctor->area) ?>,<br>
+											<?= $doctor->has('city') ? $this->Html->link($doctor->city->city_name, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '' ?> - <?= $this->Number->format($doctor->pincode) ?>.<br>
+											<?= $doctor->has('state') ? $this->Html->link($doctor->state->name, ['controller' => 'States', 'action' => 'view', $doctor->state->id]) : '' ?>
+											
+											</td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Is Approved') ?></th>
@@ -80,10 +83,6 @@
 											<td><?= h($doctor->last_updated) ?></td>
 										</tr>
 									</table>
-									<div class="row">
-										<h4><?= __('Address') ?></h4>
-										<?= $this->Text->autoParagraph(h($doctor->address)); ?>
-									</div>
 								</div>
 						</div>
 						<div class="clearfix"></div>

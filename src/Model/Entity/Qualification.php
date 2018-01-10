@@ -8,6 +8,8 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property string $name
+ *
+ * @property \App\Model\Entity\Doctor[] $doctors
  */
 class Qualification extends Entity
 {
@@ -22,6 +24,7 @@ class Qualification extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true
+        'name' => true,
+        'doctors' => true
     ];
 }

@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\QualificationController;
+use App\Controller\QualificationsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\QualificationController Test Case
+ * App\Controller\QualificationsController Test Case
  */
-class QualificationControllerTest extends IntegrationTestCase
+class QualificationsControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,7 +16,21 @@ class QualificationControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.qualification'
+        'app.qualifications',
+        'app.doctors',
+        'app.specialities',
+        'app.states',
+        'app.chemists',
+        'app.cities',
+        'app.users',
+        'app.roles',
+        'app.work_plans',
+        'app.work_types',
+        'app.work_reports',
+        'app.plans',
+        'app.leave_types',
+        'app.chemists_relation',
+        'app.doctors_relation'
     ];
 
     /**

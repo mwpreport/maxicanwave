@@ -7,7 +7,9 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Qualification Model
+ * Qualifications Model
+ *
+ * @property \App\Model\Table\DoctorsTable|\Cake\ORM\Association\HasMany $Doctors
  *
  * @method \App\Model\Entity\Qualification get($primaryKey, $options = [])
  * @method \App\Model\Entity\Qualification newEntity($data = null, array $options = [])
@@ -17,7 +19,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Qualification[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Qualification findOrCreate($search, callable $callback = null, $options = [])
  */
-class QualificationTable extends Table
+class QualificationsTable extends Table
 {
 
     /**
@@ -30,9 +32,13 @@ class QualificationTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('qualification');
+        $this->setTable('qualifications');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
+
+        $this->hasMany('Doctors', [
+            'foreignKey' => 'qualification_id'
+        ]);
     }
 
     /**

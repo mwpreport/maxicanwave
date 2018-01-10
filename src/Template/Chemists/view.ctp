@@ -44,16 +44,12 @@
 											<td><?= h($chemist->contact_person) ?></td>
 										</tr>
 										<tr>
-											<th scope="row"><?= __('State') ?></th>
-											<td><?= $chemist->has('state') ? $this->Html->link($chemist->state->name, ['controller' => 'States', 'action' => 'view', $chemist->state->id]) : '' ?></td>
-										</tr>
-										<tr>
-											<th scope="row"><?= __('City') ?></th>
-											<td><?= $chemist->has('city') ? $this->Html->link($chemist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $chemist->city->id]) : '' ?></td>
-										</tr>
-										<tr>
 											<th scope="row"><?= __('Id') ?></th>
 											<td><?= $this->Number->format($chemist->id) ?></td>
+										</tr>
+										<tr>
+											<th scope="row"><?= __('Email') ?></th>
+											<td><?= $chemist->email ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Mobile') ?></th>
@@ -64,8 +60,15 @@
 											<td><?= $this->Number->format($chemist->phone) ?></td>
 										</tr>
 										<tr>
-											<th scope="row"><?= __('Pincode') ?></th>
-											<td><?= $this->Number->format($chemist->pincode) ?></td>
+											<th scope="row"><?= __('Address') ?></th>
+											<td>
+											<?= h($chemist->name) ?><br>
+											<?= h($chemist->door_no) ?> - <?= h($chemist->street) ?>,<br>
+											<?= h($chemist->area) ?>,<br>
+											<?= $chemist->has('city') ? $this->Html->link($chemist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $chemist->city->id]) : '' ?> - <?= $this->Number->format($chemist->pincode) ?>.<br>
+											<?= $chemist->has('state') ? $this->Html->link($chemist->state->name, ['controller' => 'States', 'action' => 'view', $chemist->state->id]) : '' ?>
+											
+											</td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Is Approved') ?></th>
@@ -80,10 +83,6 @@
 											<td><?= h($chemist->last_updated) ?></td>
 										</tr>
 									</table>
-									<div class="row">
-										<h4><?= __('Address') ?></h4>
-										<?= $this->Text->autoParagraph(h($chemist->address)); ?>
-									</div>
 								</div>
 						</div>
 						<div class="clearfix"></div>

@@ -1,17 +1,19 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Qualification[]|\Cake\Collection\CollectionInterface $qualification
+ * @var \App\Model\Entity\Qualification[]|\Cake\Collection\CollectionInterface $qualifications
  */
 ?>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('New Qualification'), ['action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Doctors'), ['controller' => 'Doctors', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Doctor'), ['controller' => 'Doctors', 'action' => 'add']) ?></li>
     </ul>
 </nav>
-<div class="qualification index large-9 medium-8 columns content">
-    <h3><?= __('Qualification') ?></h3>
+<div class="qualifications index large-9 medium-8 columns content">
+    <h3><?= __('Qualifications') ?></h3>
     <table cellpadding="0" cellspacing="0">
         <thead>
             <tr>
@@ -21,7 +23,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($qualification as $qualification): ?>
+            <?php foreach ($qualifications as $qualification): ?>
             <tr>
                 <td><?= $this->Number->format($qualification->id) ?></td>
                 <td><?= h($qualification->name) ?></td>

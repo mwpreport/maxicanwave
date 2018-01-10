@@ -188,10 +188,18 @@ class ChemistsController extends AppController
 			</li>
 			<li>
 				<div class="col-md-2">
+					<label>Contact</label>
+				</div>
+				<div class="col-md-10">
+					<p>Email : '.$chemist->email.', Mobile : '.$chemist->email.'</p>
+				</div>
+			</li>
+			<li>
+				<div class="col-md-2">
 					<label>Address</label>
 				</div>
 				<div class="col-md-10">
-					<p>'.$chemist->address.', '.$chemist->city->city_name.', '.$chemist->state->state_code.', '.$chemist->pincode.'</p>
+					<p>'.$chemist->door_no.' - '.$chemist->street.',<br> '.$chemist->area.',<br> '.$chemist->city->city_name.', '.$chemist->state->state_code.', '.$chemist->pincode.'</p>
 				</div>
 			</li>';
 			

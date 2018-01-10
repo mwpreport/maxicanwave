@@ -53,6 +53,10 @@ class DoctorsTable extends Table
             'foreignKey' => 'city_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Qualifications', [
+            'foreignKey' => 'qualification_id',
+            'joinType' => 'INNER'
+        ]);
         $this->hasMany('DoctorsRelation', [
             'foreignKey' => 'doctor_id'
         ]);
@@ -86,14 +90,22 @@ class DoctorsTable extends Table
             ->notEmpty('name');
 
         $validator
-            ->scalar('qualification')
-            ->requirePresence('qualification', 'create')
-            ->notEmpty('qualification');
+            ->scalar('qualification_id')
+            ->requirePresence('qualification_id', 'create')
+            ->notEmpty('qualification_id');
+
+		$validator
+            ->scalar('add_qualification')
+            ->allowEmpty('add_qualification');
 			
         $validator
             ->scalar('speciality_id')
             ->requirePresence('speciality_id', 'create')
             ->notEmpty('speciality_id');
+
+        $validator
+            ->requirePresence('email', 'create')
+            ->notEmpty('email');
 
         $validator
             ->requirePresence('mobile', 'create')
@@ -104,14 +116,33 @@ class DoctorsTable extends Table
             ->allowEmpty('phone');
 
         $validator
-            ->scalar('address')
-            ->requirePresence('address', 'create')
-            ->notEmpty('address');
+            ->scalar('clinic_name')
+            ->allowEmpty('clinic_name');
+			
+        $validator
+            ->scalar('door_no')
+            ->allowEmpty('door_no');
+			
+        $validator
+            ->scalar('street')
+            ->allowEmpty('street');
+			
+        $validator
+            ->scalar('area')
+            ->allowEmpty('area');
 
         $validator
             ->integer('pincode')
             ->requirePresence('pincode', 'create')
             ->notEmpty('pincode');
+			
+        $validator
+            ->date('dob')
+            ->allowEmpty('dob');
+			
+        $validator
+            ->date('dow')
+            ->allowEmpty('dow');
 
         $validator
             ->integer('is_approved')
@@ -161,6 +192,7 @@ class DoctorsTable extends Table
         $rules->add($rules->existsIn(['speciality_id'], 'Specialities'));
         $rules->add($rules->existsIn(['state_id'], 'States'));
         $rules->add($rules->existsIn(['city_id'], 'Cities'));
+		$rules->add($rules->isUnique(['email']));
 
         return $rules;
     }
