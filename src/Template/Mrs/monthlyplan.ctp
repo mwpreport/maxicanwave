@@ -134,17 +134,6 @@
 										<?php }	?>
                                     </select>  
                                 </div>
-                                <div class="form-group w3 hide dhide">
-                                    <label for="chemist_id">Select Chemist</label>
-                                    <select name="chemist_id" class="form-control required" id="chemist_id" aria-invalid="true">
-                                        <option value="">Select</option>
-										<?php
-										foreach ($chemistsRelation as $chemist)
-										{?>
-										<option value="<?= $chemist['chemist_id']?>"><?= $chemist->chemist->name?></option>
-										<?php }	?>
-                                    </select>  
-                                </div>
 								<div class="form-group w1 hide dhide">
 									<label for="plan_reason">Type of Leave</label>
 									<select name="plan_reason" class="form-control required" id="plan_reason" aria-invalid="true">
@@ -237,17 +226,6 @@
 										foreach ($doctorsRelation as $doctor)
 										{?>
 										<option value="<?= $doctor['doctor_id']?>"><?= $doctor->doctor->name?></option>
-										<?php }	?>
-                                    </select>  
-                                </div>
-                                <div class="form-group w3 hide dhide">
-                                    <label for="chemist_id">Select Chemist</label>
-                                    <select name="chemist_id" class="required form-control" id="chemist_id" aria-invalid="true">
-                                        <option value="">Select</option>
-										<?php
-										foreach ($chemistsRelation as $chemist)
-										{?>
-										<option value="<?= $chemist['chemist_id']?>"><?= $chemist->chemist->name?></option>
 										<?php }	?>
                                     </select>  
                                 </div>
@@ -584,7 +562,6 @@
 									$('#ModalEdit #end_date').datepicker("setDate", data.end_date);
 									$('#ModalEdit #city_id').val(data.city_id);
 									$('#ModalEdit #doctor_id').val(data.doctor_id);
-									$('#ModalEdit #chemist_id').val(data.chemist_id);
 									$('#ModalEdit #plan_reason').val(data.plan_reason);
 									$('#ModalEdit #plan_details').val(data.plan_details);
 									var work_type_id = data.work_type_id;

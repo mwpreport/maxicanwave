@@ -7,17 +7,17 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Class Model
+ * DoctorTypes Model
  *
- * @method \App\Model\Entity\Clas get($primaryKey, $options = [])
- * @method \App\Model\Entity\Clas newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Clas[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Clas|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Clas patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Clas[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Clas findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\DoctorType get($primaryKey, $options = [])
+ * @method \App\Model\Entity\DoctorType newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\DoctorType[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\DoctorType|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\DoctorType patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\DoctorType[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\DoctorType findOrCreate($search, callable $callback = null, $options = [])
  */
-class ClassTable extends Table
+class DoctorTypesTable extends Table
 {
 
     /**
@@ -30,7 +30,7 @@ class ClassTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('class');
+        $this->setTable('doctor_types');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
     }
