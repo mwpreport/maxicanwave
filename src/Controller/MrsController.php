@@ -25,6 +25,7 @@ class MrsController extends AppController {
         $this->loadModel('LeaveTypes');
         $this->loadModel('DoctorsRelation');
         $this->loadModel('ChemistsRelation');
+        $this->loadModel('DoctorTypes');
 		
     }
     
@@ -74,9 +75,8 @@ class MrsController extends AppController {
         $workTypes = $this->WorkTypes->find()->order(['list' => 'ASC'])->toarray();
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $doctorsRelation = $this->DoctorsRelation->find('all')->where(['user_id =' => $uid])->contain(['Doctors']);
-        $chemistsRelation = $this->ChemistsRelation->find('all')->where(['user_id =' => $uid])->contain(['Chemists']);
         $leaveTypes = $this->LeaveTypes->find()->toarray();
-        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'chemistsRelation'));        
+        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation'));        
     }
     
     public function doctorList(){
@@ -87,16 +87,17 @@ class MrsController extends AppController {
         $user =  $this->Auth->user;
 		$state_id = $this->Auth->user('state_id');
         $specialities = $this->Specialities->find('all')->toarray();
+        $doctorTypes = $this->DoctorTypes->find('all')->toarray();
         $states = $this->States->find('all')->where(['id =' => $state_id])->toarray();
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->contain(['Doctors.Specialities','Doctors.Cities'])->where(['user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']));
+        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->contain(['DoctorTypes','Doctors.Specialities','Doctors.Cities'])->where(['user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']));
         $doctors = $this->Doctors
 			->find()
 			->notMatching('DoctorsRelation', function ($q) use ($uid) {
 				return $q->where(['DoctorsRelation.user_id' => $uid]);
 			})->where(['city_id =' => $userCity]);
         //pj($doctors);exit;
-        $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors'));            
+        $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors', 'doctorTypes'));            
     }
 	
     public function doctorSelection(){

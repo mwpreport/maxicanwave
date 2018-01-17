@@ -171,7 +171,7 @@ class DoctorsController extends AppController
 		$data = $this->request->data;
 		
 		$doctor = $this->Doctors->get($data['id'], [
-            'contain' => ['Specialities', 'States', 'Cities', 'DoctorsRelation', 'WorkPlans', 'WorkReports']
+            'contain' => ['Specialities', 'States', 'Cities', 'DoctorsRelation', 'Qualifications']
         ]);
         
 		$listHtml =  "";

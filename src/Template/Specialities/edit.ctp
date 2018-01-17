@@ -24,7 +24,7 @@
 						<div class="clearfix"></div>
 						<div class="col-md-12">
 							<div class="hr-title">
-								<h2><?= __('Add Speciality') ?></h2>
+								<h2><?= __('Edit Speciality') ?></h2>
 								<hr>
 							</div>
 						</div>

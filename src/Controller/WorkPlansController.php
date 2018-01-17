@@ -22,14 +22,12 @@ class WorkPlansController extends AppController
         $this->loadModel('Users');
         $this->loadModel('City');
         $this->loadModel('Doctors');
+        $this->loadModel('PlanRelations');
 		
     }
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|void
-     */
-    public function index()
+
+    /*
+	public function index()
     {
         $this->paginate = [
             'contain' => ['Users', 'WorkTypes', 'Cities', 'Doctors']
@@ -40,13 +38,6 @@ class WorkPlansController extends AppController
         $this->set('_serialize', ['workPlans']);
     }
 
-    /**
-     * View method
-     *
-     * @param string|null $id Work Plan id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function view($id = null)
     {
         $workPlan = $this->WorkPlans->get($id, [
@@ -56,11 +47,7 @@ class WorkPlansController extends AppController
         $this->set('workPlan', $workPlan);
         $this->set('_serialize', ['workPlan']);
     }
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
-     */
+
     public function add()
     {
         $workPlan = $this->WorkPlans->newEntity();
@@ -81,13 +68,6 @@ class WorkPlansController extends AppController
         $this->set('_serialize', ['workPlan']);
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Work Plan id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
     public function edit($id = null)
     {
         $workPlan = $this->WorkPlans->get($id, [
@@ -110,13 +90,6 @@ class WorkPlansController extends AppController
         $this->set('_serialize', ['workPlan']);
     }
 
-    /**
-     * Delete method
-     *
-     * @param string|null $id Work Plan id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
@@ -129,7 +102,7 @@ class WorkPlansController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
-
+	*/
     public function mrsView($id = null)
     {
 		$this->autoRender = false;
@@ -165,13 +138,26 @@ class WorkPlansController extends AppController
 		$uid = $this->Auth->user('id');
 		$workPlan = $this->WorkPlans->newEntity();
         if ($this->request->is('post')) {
-            $workPlan = $this->WorkPlans->patchEntity($workPlan, $this->request->getData());
+			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'end_date' => $_POST['end_date'], 'city_id' => $_POST['city_id']);
+			$data['doctors'] = isset($_POST['doctor_id']) ? 1 : 0;
+			$doctor_ids = isset($_POST['doctor_id']) ? $_POST['doctor_id'] : array();
+			$data['plan_reason'] = isset($_POST['plan_reason'])? $_POST['plan_reason'] : "";
+			$data['plan_details'] = isset($_POST['plan_details'])? $_POST['plan_details'] : "";
+            $workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
             $workPlan->start_date = $_POST['start_date']." 00:00:00";
-            if( $_POST['end_date']=="" || $workPlan->work_type_id !=2 )$_POST['end_date'] = $_POST['start_date'];
+            if( $_POST['end_date']=="" || $workPlan->work_type_id !=1 )$_POST['end_date'] = $_POST['start_date'];
             $workPlan->end_date = $_POST['end_date']." 23:59:00";
-            $workPlan->user_id = $uid;
+			//print_r($workPlan); exit;
             if ($this->WorkPlans->save($workPlan)) {
 			$id = $workPlan->id;
+			if($workPlan->doctors)
+			{
+				foreach ($doctor_ids as $doctor_id)
+				$planRelations[] = array('plan_id' => $id, 'user_id' => $uid, 'doctor_id' => $doctor_id);
+				
+				$entities = $this->PlanRelations->newEntities($planRelations);
+				$result = $this->PlanRelations->saveMany($entities);
+			}
 			$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
 			$returnArray = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$WorkTypes['name'], 'color'=>$WorkTypes['color']); 
 			echo json_encode($returnArray); 

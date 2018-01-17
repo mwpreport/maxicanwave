@@ -34,10 +34,9 @@
 									<?= $this->Form->create($doctorsRelation, array('id' => 'editform')) ?>
 									<fieldset>
 										<?php
-											$AorB = ['1' => 'A', '0' => 'B'];
 											echo $this->Form->control('user_id', ['class' => 'form-control mar-bottom-10', 'options' => $users, 'empty' => 'Select MR']);
 											echo $this->Form->control('doctor_id', ['class' => 'form-control mar-bottom-10', 'options' => $doctors, 'empty' => 'Select Doctor']);
-											echo $this->Form->control('class', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $AorB]);
+											echo $this->Form->control('class', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $doctorTypes]);
 										?>
 									</fieldset>
 									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']); ?>

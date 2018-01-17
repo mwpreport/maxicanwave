@@ -30,7 +30,7 @@
 											<table class="table table-striped table-bordered table-hover">
 												<thead>
 													<tr>
-														<th scope="col"><?= $this->Paginator->sort('S.No') ?></th>
+														<th scope="col">S.No</th>
 														<th scope="col"><?= $this->Paginator->sort('name') ?></th>
 														<th scope="col"><?= $this->Paginator->sort('state_code') ?></th>
 														<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>

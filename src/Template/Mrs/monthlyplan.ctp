@@ -125,8 +125,7 @@
                                 </div>
                                 <div class="form-group w2 hide dhide">
                                     <label for="doctor_id">Select Doctor</label>
-                                    <select name="doctor_id" class="form-control required" id="doctor_id" aria-invalid="true">
-                                        <option value="">Select</option>
+                                    <select name="doctor_id[]" class="form-control required" id="doctor_id" aria-invalid="true" multiple="multiple">
 										<?php
 										foreach ($doctorsRelation as $doctor)
 										{?>
@@ -220,8 +219,7 @@
                                 </div>
                                 <div class="form-group w2 hide dhide">
                                     <label for="doctor_id">Select Doctor</label>
-                                    <select name="doctor_id" class="required form-control" id="doctor_id" aria-invalid="true">
-                                        <option value="">Select</option>
+									<select name="doctor_id[]" class="form-control required" id="doctor_id" aria-invalid="true" multiple="multiple">
 										<?php
 										foreach ($doctorsRelation as $doctor)
 										{?>

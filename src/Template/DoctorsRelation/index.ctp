@@ -30,7 +30,7 @@
 									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th scope="col"><?= $this->Paginator->sort('S.No') ?></th>
+												<th scope="col">S.No</th>
 												<th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('doctor_id') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('class') ?></th>
@@ -41,9 +41,9 @@
 											<?php $i=1; foreach ($doctorsRelation as $doctorsRelation): ?>
 											<tr>
 												<td><?= $i ?></td>
-												<td><?= $doctorsRelation->has('user') ? $this->Html->link($doctorsRelation->user->firstname, ['controller' => 'Users', 'action' => 'view', $doctorsRelation->user->id]) : '' ?></td>
+												<td><?= $doctorsRelation->has('user') ? $this->Html->link($doctorsRelation->user->firstname." ".$doctorsRelation->user->lastname, ['controller' => 'Users', 'action' => 'view', $doctorsRelation->user->id]) : '' ?></td>
 												<td><?= $doctorsRelation->has('doctor') ? $this->Html->link($doctorsRelation->doctor->name, ['controller' => 'Doctors', 'action' => 'view', $doctorsRelation->doctor->id]) : '' ?></td>
-												<td><?= ($doctorsRelation->class == 1) ? "A" : "B" ?></td>
+												<td><?= $doctorsRelation->doctor_type->name ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $doctorsRelation->id],['escape' => false]) ?></td>
 												<td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $doctorsRelation->id],['escape' => false]) ?></td>
 												<td width="50"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $doctorsRelation->id], ['escape' => false,'confirm' => __('Are you sure you want to delete "{0}"?', $doctorsRelation->name)]) ?></td>

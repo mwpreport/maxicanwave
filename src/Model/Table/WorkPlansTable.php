@@ -51,16 +51,12 @@ class WorkPlansTable extends Table
             'foreignKey' => 'city_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Doctors', [
-            'foreignKey' => 'doctor_id',
-            'joinType' => 'INNER'
-        ]);
-        $this->belongsTo('Chemists', [
-            'foreignKey' => 'chemist_id',
-            'joinType' => 'INNER'
-        ]);
         $this->belongsTo('LeaveTypes', [
             'foreignKey' => 'plan_reason',
+            'joinType' => 'INNER'
+        ]);
+        $this->hasMany('PlanRelations', [
+            'foreignKey' => 'id',
             'joinType' => 'INNER'
         ]);
     }
@@ -122,7 +118,6 @@ class WorkPlansTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['work_type_id'], 'WorkTypes'));
         $rules->add($rules->existsIn(['city_id'], 'Cities'));
-        $rules->add($rules->existsIn(['doctor_id'], 'Doctors'));
         $rules->add($rules->existsIn(['plan_reason'], 'LeaveTypes'));
 
         return $rules;

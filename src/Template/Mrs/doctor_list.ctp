@@ -60,8 +60,11 @@
                         <div class="col-sm-12">
                             <div class="radio-blk">
                                 <label for="exampleInputClass" class="gray-txt">Class</label>
-                                <input type="radio" name="class" id="classA" value="1"><label for="classA"><span></span>A</label>
-                                <input type="radio" name="class" id="classB" value="0" checked="checked"><label for="classB"><span></span>B</label>
+								<?php
+								foreach ($doctorTypes as $doctorType)
+								{?>
+                                <input type="radio" name="class" id="class<?=$doctorType['id']?>" value="<?=$doctorType['id']?>" <?php if($doctorType['id']==2) echo "checked";?>><label for="class<?=$doctorType['id']?>"><span></span><?=$doctorType['name']?></label>
+								<?php }	?>
                             </div>
                         </div>
                     </div>
@@ -117,7 +120,7 @@
 					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->name : '' ?></td>
 					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->speciality->name : '' ?></td>
 					<td><?= $doctorsRelation->has('doctor') ? $doctorsRelation->doctor->city->city_name : '' ?></td>
-					<td><?= ($this->Number->format($doctorsRelation->class)==0)? "B" : "A" ?></td>
+					<td><?= $doctorsRelation->has('doctor_type') ? $doctorsRelation->doctor_type->name : '' ?></td>
 					<td width="60"><a href="javascript:void(0)" onclick="loadProfile(<?= $doctorsRelation->doctor_id ?>);"><img src="../images/eye.png" width="29" height="18" alt="profile"></a></td>
 					<td width="50"><a href="#ModalEdit" class="popup-modal" onclick="loadProfileForm(<?= $doctorsRelation->id ?>);"><img src="../images/edit@2x.png" width="18" height="18" alt="edit"></a></td>
 					<td width="50"><?= $this->Form->postLink(__('<img src="../images/del@2x.png" width="14" height="18" alt="trash">'), ['controller' => 'DoctorsRelation','action' => 'mrsDelete', $doctorsRelation->id], ['escape' => false, 'confirm' => __('Are you sure you want to delete?')]) ?></td>
@@ -203,8 +206,11 @@
 								<div class="col-sm-12">
 									<div class="radio-blk">
 										<label for="exampleInputClass" class="gray-txt">Class</label>
-										<input type="radio" name="class" id="class1" value="1"><label for="class1"><span></span>A</label>
-										<input type="radio" name="class" id="class0" value="0" checked="checked"><label for="class0"><span></span>B</label>
+										<?php
+										foreach ($doctorTypes as $doctorType)
+										{?>
+										<input type="radio" name="class" id="class<?=$doctorType['id']?>" value="<?=$doctorType['id']?>" <?php if($doctorType['id']==2) echo "checked";?>><label for="class<?=$doctorType['id']?>"><span></span><?=$doctorType['name']?></label>
+										<?php }	?>
 									</div>
 								</div>
 							</div>

@@ -18,6 +18,7 @@ class DoctorsRelationController extends AppController
         $this->loadModel('Config');
 		$this->loadModel('States');
 		$this->loadModel('Doctors');
+		$this->loadModel('DoctorTypes');
 
     }
 
@@ -29,7 +30,7 @@ class DoctorsRelationController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users', 'Doctors']
+            'contain' => ['Users', 'Doctors', 'DoctorTypes']
         ];
         $doctorsRelation = $this->paginate($this->DoctorsRelation);
 
@@ -47,7 +48,7 @@ class DoctorsRelationController extends AppController
     public function view($id = null)
     {
         $doctorsRelation = $this->DoctorsRelation->get($id, [
-            'contain' => ['Users', 'Doctors']
+            'contain' => ['Users', 'Doctors', 'DoctorTypes']
         ]);
 
         $this->set('doctorsRelation', $doctorsRelation);
@@ -77,7 +78,7 @@ class DoctorsRelationController extends AppController
 					$data_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid, 'doctor_id =' => $doctor_id])->count();
 					if($data_count<1)
 					{
-						//print_r($data); exit;
+						print_r($data); exit;
 						if ($this->DoctorsRelation->save($doctorsRelation)) {
 							$id = $doctorsRelation->id;
 							$returnArray = array('id'=>$id, 'status'=>'success'); 
@@ -92,8 +93,9 @@ class DoctorsRelationController extends AppController
 			else
 			$this->Flash->error(__('You have reached you limit.'));
         }
+		$doctorTypes = $this->DoctorTypes->find('list')->toarray();
 		$states = $this->States->find('list')->toarray();
-        $this->set(compact('doctorsRelation', 'states'));
+        $this->set(compact('doctorsRelation', 'states', 'doctorTypes'));
         $this->set('_serialize', ['doctorsRelation']);
     }
 
@@ -130,7 +132,8 @@ class DoctorsRelationController extends AppController
 			})->where(['city_id =' => $userCity])->toarray();
 		foreach ($doctorRel as $doctor)
 		$doctors[$doctor['id']]=$doctor['name'];
-        $this->set(compact('doctorsRelation', 'users', 'doctors'));
+		$doctorTypes = $this->DoctorTypes->find('list')->toarray();
+        $this->set(compact('doctorsRelation', 'users', 'doctors', 'doctorTypes'));
         $this->set('_serialize', ['doctorsRelation']);
     }
 

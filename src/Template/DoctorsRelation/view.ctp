@@ -41,7 +41,7 @@
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Class') ?></th>
-											<td><?= ($doctorsRelation->class == 1) ? "A" : "B" ?></td>
+											<td><?= $doctorsRelation->doctor_type->name ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Is Active') ?></th>

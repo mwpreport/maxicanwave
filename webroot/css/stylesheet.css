@@ -698,7 +698,7 @@ div.error-message, .message.error {color:#dd4b39;}
 #start_date-error{ position: absolute; left: 0; bottom: -25px;}
 #end_date-error{ position: absolute; left: 0; bottom: -25px;}
 .date-section{ overflow: auto; display: table; width: 100%;}
-
+th a{color : #fff;}
 
 @media (max-width: 767px) {
     .loginpage .login-left{

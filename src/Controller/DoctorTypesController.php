@@ -14,10 +14,6 @@ class DoctorTypesController extends AppController
 {
 
     /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|void
-     */
     public function index()
     {
         $doctorTypes = $this->paginate($this->DoctorTypes);
@@ -26,13 +22,6 @@ class DoctorTypesController extends AppController
         $this->set('_serialize', ['doctorTypes']);
     }
 
-    /**
-     * View method
-     *
-     * @param string|null $id Doctor Type id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function view($id = null)
     {
         $doctorType = $this->DoctorTypes->get($id, [
@@ -43,11 +32,6 @@ class DoctorTypesController extends AppController
         $this->set('_serialize', ['doctorType']);
     }
 
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
-     */
     public function add()
     {
         $doctorType = $this->DoctorTypes->newEntity();
@@ -64,13 +48,6 @@ class DoctorTypesController extends AppController
         $this->set('_serialize', ['doctorType']);
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Doctor Type id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
     public function edit($id = null)
     {
         $doctorType = $this->DoctorTypes->get($id, [
@@ -89,13 +66,6 @@ class DoctorTypesController extends AppController
         $this->set('_serialize', ['doctorType']);
     }
 
-    /**
-     * Delete method
-     *
-     * @param string|null $id Doctor Type id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
@@ -108,4 +78,5 @@ class DoctorTypesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+	*/
 }

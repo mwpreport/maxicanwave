@@ -4,19 +4,24 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * DoctorsRelation Entity
+ * PlanRelation Entity
  *
  * @property int $id
+ * @property int $plan_id
  * @property int $user_id
  * @property int $doctor_id
- * @property int $class
- * @property int $is_active
+ * @property int $is_missedcall
+ * @property int $is_missed
+ * @property int $is_unplanned
+ * @property int $work_with
+ * @property string $reason
  * @property \Cake\I18n\FrozenTime $dt
  *
+ * @property \App\Model\Entity\WorkPlan $work_plan
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\Doctor $doctor
  */
-class DoctorsRelation extends Entity
+class PlanRelation extends Entity
 {
 
     /**
@@ -29,10 +34,17 @@ class DoctorsRelation extends Entity
      * @var array
      */
     protected $_accessible = [
+        'plan_id' => true,
         'user_id' => true,
         'doctor_id' => true,
-        'class' => true,
-        'is_active' => true,
-        'dt' => true
+        'is_missedcall' => true,
+        'is_missed' => true,
+        'is_unplanned' => true,
+        'work_with' => true,
+        'reason' => true,
+        'dt' => true,
+        'work_plan' => true,
+        'user' => true,
+        'doctor' => true
     ];
 }

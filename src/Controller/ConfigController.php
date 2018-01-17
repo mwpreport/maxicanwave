@@ -27,12 +27,6 @@ class ConfigController extends AppController
     }
 
     /**
-     * View method
-     *
-     * @param string|null $id Config id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function view($id = null)
     {
         $config = $this->Config->get($id, [
@@ -42,12 +36,9 @@ class ConfigController extends AppController
         $this->set('config', $config);
         $this->set('_serialize', ['config']);
     }
+	*/
 
     /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
-     */
     public function add()
     {
         $config = $this->Config->newEntity();
@@ -63,14 +54,8 @@ class ConfigController extends AppController
         $this->set(compact('config'));
         $this->set('_serialize', ['config']);
     }
+	*/
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Config id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
     public function edit($id = null)
     {
         $config = $this->Config->get($id, [
@@ -89,13 +74,7 @@ class ConfigController extends AppController
         $this->set('_serialize', ['config']);
     }
 
-    /**
-     * Delete method
-     *
-     * @param string|null $id Config id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
+	/*
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
@@ -108,4 +87,5 @@ class ConfigController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+	*/
 }

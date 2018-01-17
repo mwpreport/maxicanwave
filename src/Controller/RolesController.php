@@ -14,10 +14,7 @@ class RolesController extends AppController
 {
 
     /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|void
-     */
+
     public function index()
     {
         $roles = $this->paginate($this->Roles);
@@ -26,13 +23,6 @@ class RolesController extends AppController
         $this->set('_serialize', ['roles']);
     }
 
-    /**
-     * View method
-     *
-     * @param string|null $id Role id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function view($id = null)
     {
         $role = $this->Roles->get($id, [
@@ -43,11 +33,6 @@ class RolesController extends AppController
         $this->set('_serialize', ['role']);
     }
 
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
-     */
     public function add()
     {
         $role = $this->Roles->newEntity();
@@ -64,13 +49,6 @@ class RolesController extends AppController
         $this->set('_serialize', ['role']);
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Role id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
     public function edit($id = null)
     {
         $role = $this->Roles->get($id, [
@@ -89,13 +67,6 @@ class RolesController extends AppController
         $this->set('_serialize', ['role']);
     }
 
-    /**
-     * Delete method
-     *
-     * @param string|null $id Role id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
@@ -108,4 +79,5 @@ class RolesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+	*/
 }
