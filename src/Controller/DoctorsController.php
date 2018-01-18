@@ -21,7 +21,7 @@ class DoctorsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Specialities', 'States', 'Cities']
+            'contain' => ['Specialities', 'Qualifications', 'States', 'Cities']
         ];
         $doctors = $this->paginate($this->Doctors);
 
@@ -39,7 +39,7 @@ class DoctorsController extends AppController
     public function view($id = null)
     {
         $doctor = $this->Doctors->get($id, [
-            'contain' => ['Specialities', 'Qualifications', 'States', 'Cities', 'DoctorsRelation', 'WorkPlans', 'WorkReports']
+            'contain' => ['Specialities', 'Qualifications', 'States', 'Cities']
         ]);
 
         $this->set('doctor', $doctor);

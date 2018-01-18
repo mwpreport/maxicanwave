@@ -48,7 +48,7 @@
 												<td><?= $doctor->code ?></td>
 												<td><?= h($doctor->name) ?></td>
 												<td><?= $doctor->has('speciality') ? $this->Html->link($doctor->speciality->name, ['controller' => 'Specialities', 'action' => 'view', $doctor->speciality->id]) : '' ?></td>
-												<td><?= h($doctor->qualification) ?></td>
+												<td><?= h($doctor->qualification->name) ?></td>
 												<td><?= $doctor->has('city') ? $this->Html->link($doctor->city->city_name, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '' ?>, <?= $doctor->has('state') ? $this->Html->link($doctor->state->name, ['controller' => 'States', 'action' => 'view', $doctor->state->id]) : '' ?></td>
 												<td><?= ($doctor->is_approved == 1) ? "yes" : "No"?></td>
 												<td><?= ($doctor->is_active == 1) ? "yes" : "No" ?></td>

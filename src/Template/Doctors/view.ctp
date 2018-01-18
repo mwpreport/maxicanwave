@@ -41,7 +41,7 @@
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Qualification') ?></th>
-											<td><?= $doctor->has('qualification') ? $this->Html->link($doctor->qualification->name, ['controller' => 'Qualifications', 'action' => 'view', $doctor->qualification->id]) : '' ?>,<?= h($doctor->add_qualification) ?><</td>
+											<td><?= $doctor->has('qualification') ? $this->Html->link($doctor->qualification->name, ['controller' => 'Qualifications', 'action' => 'view', $doctor->qualification->id]) : '' ?>,<?= h($doctor->add_qualification) ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Id') ?></th>

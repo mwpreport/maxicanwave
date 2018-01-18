@@ -60,12 +60,6 @@ class DoctorsTable extends Table
         $this->hasMany('DoctorsRelation', [
             'foreignKey' => 'doctor_id'
         ]);
-        $this->hasMany('WorkPlans', [
-            'foreignKey' => 'doctor_id'
-        ]);
-        $this->hasMany('WorkReports', [
-            'foreignKey' => 'doctor_id'
-        ]);
     }
 
     /**
@@ -189,6 +183,7 @@ class DoctorsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->existsIn(['qualification_id'], 'Qualifications'));
         $rules->add($rules->existsIn(['speciality_id'], 'Specialities'));
         $rules->add($rules->existsIn(['state_id'], 'States'));
         $rules->add($rules->existsIn(['city_id'], 'Cities'));

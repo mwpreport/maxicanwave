@@ -68,7 +68,7 @@
 					<form class="" id="ModalAddForm" method="POST" >
                     <div class="popup-header">
                         <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-                        <div class="hr-title"><h4>Add Field</h4><hr /></div>
+                        <div class="hr-title"><h4>Add Plan</h4><hr /></div>
                     </div>
                     <div class="popup-body">
                         <div class="row">
@@ -85,13 +85,6 @@
                                     </select>  
                                 </div>
 
-                                <div class="form-group hide">
-									<label for="long_plan">Long Plan</label>
-									<select name="long_plan" class="form-control required" id="long_plan" aria-invalid="true">
-										<option value="0">No</option>
-										<option value="1">Yes</option>
-									</select>
-                                </div>
                                 <div class="form-group date-section">
 									<div class="col-sm-6 pad-left-0">
 										<label for="start_date">Select <span class="w1 hide dhide">From</span> Date</label>
@@ -163,7 +156,7 @@
 					<form class="" id="ModalEditForm" method="POST" >
                     <div class="popup-header">
                         <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-                        <div class="hr-title"><h4>Add Field</h4><hr /></div>
+                        <div class="hr-title"><h4>Update Plan</h4><hr /></div>
                     </div>
                     <div class="popup-body">
                         <div class="row">
@@ -178,13 +171,6 @@
 										<option value="<?= $workType['id']?>"><?= $workType['name']?></option>
 										<?php }	?>
                                     </select>  
-                                </div>
-                                <div class="form-group hide">
-									<label for="long_plan">Long Plan</label>
-									<select name="long_plan" class="required form-control" id="long_plan" aria-invalid="true">
-										<option value="0">No</option>
-										<option value="1">Yes</option>
-									</select>
                                 </div>
                                 <div class="form-group">
 									<div class="col-sm-6 pad-left-0">
