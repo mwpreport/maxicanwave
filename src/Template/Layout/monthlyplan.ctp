@@ -20,8 +20,8 @@
         <div class="wrapper">
 
 			<?php
-			echo $this->element('mr/header'); 
-			echo $this->element('mr/menu'); 
+			echo $this->element('includes/header'); 
+			echo $this->element('includes/menu'); 
 			echo $this->Flash->render();
         echo $this->fetch('content');
         //echo $this->element('mr/footer'); ?>

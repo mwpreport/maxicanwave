@@ -86,19 +86,19 @@
                                     <!-- The user image in the navbar-->
                                     <img src="<?php echo $this->Url->image('avathar.jpg')?>" class="user-image" alt="User Image">
                                     <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                    <span class="hidden-xs">Senthil Kumar</span>
+                                    <span class="hidden-xs"><?php echo $authuser->username?></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <!-- The user image in the menu -->
                                     <li class="user-header">
                                         <img src="<?php echo $this->Url->image('avathar.jpg')?>" class="img-circle" alt="User Image">
-                                        <p>Senthil<small>Regional Manager</small></p>
+                                        <p><?php echo $authuser->firstname?><small><?php echo $authuser->role->name?></small></p>
                                     </li>
 
                                     <!-- Menu Footer-->
                                     <li class="user-footer">
 										<div class="pull-left">
-											<a href="#" class="btn btn-default btn-flat">Profile</a>
+											<?php echo $this->Html->link(__('Profile'), ['controller' => 'Users', 'action' => 'account'], ['class' => 'btn btn-default btn-flat']); ?>
 										</div>
 										<div class="pull-right">
 											<?php echo $this->Html->link(__('Sign Out'), ['controller' => 'Users', 'action' => 'logout'], ['class' => 'btn btn-default btn-flat']); ?>

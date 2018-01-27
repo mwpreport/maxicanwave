@@ -44,8 +44,8 @@
 											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10', 'onchange' => 'loadCitiesOption()', 'options' => $states,'empty' => 'Select State']);
 											echo $this->Form->control('city_id', ['class' => 'form-control mar-bottom-10','empty' => 'Select City']);
 											echo $this->Form->control('pincode', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('dob', ['type' => 'text','label' => 'D.O.Birth', 'class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('dow', ['type' => 'text','label' => 'D.O.Wedding', 'class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('dob', ['autocomplete' =>'false','type' => 'text','label' => 'D.O.Birth', 'class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('dow', ['autocomplete' =>'false','type' => 'text','label' => 'D.O.Wedding', 'class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('is_approved', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
 											echo $this->Form->control('is_active', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
 										?>
@@ -77,4 +77,11 @@ function loadCitiesOption(){
 		   }
     });
 }
+
+//Date picker
+var date = new Date(), y = date.getFullYear(), m = date.getMonth(), d = date.getDate();
+var startDate = new Date(y, m, 0);
+var endDate = new Date(y-18, m , 0);
+$('#dob').datepicker({autoclose: true, endDate: new Date(y-18, m , 0)});
+$('#dow').datepicker({autoclose: true, endDate: new Date(y, m , d)});
 </script>

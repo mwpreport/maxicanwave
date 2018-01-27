@@ -38,11 +38,9 @@ class MrsController extends AppController {
         }
     }    
     public function dashboard(){
-        $this->viewBuilder()->layout('medicalrep');
         $this->set('title', 'Doctor Visit Report');        
     }      
     public function chemistList(){
-        $this->viewBuilder()->layout('medicalrep');
         $this->set('title', 'Chemist List');
         $uid = $this->Auth->user('id');
         $userCity = $this->Auth->user('city_id');
@@ -61,7 +59,6 @@ class MrsController extends AppController {
 
     }
     public function dailyReport(){
-        $this->viewBuilder()->layout('medicalrep');
         $this->set('title', 'Daily Report');        
     }
 	
@@ -80,7 +77,6 @@ class MrsController extends AppController {
     }
     
     public function doctorList(){
-        $this->viewBuilder()->layout('medicalrep');
         $this->set('title', 'Doctor List');
         $uid = $this->Auth->user('id');
         $userCity = $this->Auth->user('city_id');
@@ -101,7 +97,6 @@ class MrsController extends AppController {
     }
 	
     public function doctorSelection(){
-        $this->viewBuilder()->layout('medicalrep');
         $this->set('title', 'Doctor Visit Report');        
     }      
 }

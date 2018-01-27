@@ -201,28 +201,3 @@
 
         <!-- ./wrapper -->
 
-    <?php echo $this->Html->script([
-                '/bootstrap/js/bootstrap.min',               
-                '/plugins/slimScroll/jquery.slimscroll.min',
-                '/plugins/fastclick/fastclick',
-                '/dist/js/app.min',
-                '/dist/js/demo',
-                '/plugins/datatables/jquery.dataTables.min',
-                '/plugins/datatables/dataTables.bootstrap.min',
-                '/plugins/magnific/jquery.magnific-popup.min',
-                'custom',             
-                '/plugins/sparkline/jquery.sparkline.min',
-                '/plugins/jvectormap/jquery-jvectormap-1.2.2.min',
-                '/plugins/jvectormap/jquery-jvectormap-world-mill-en',
-                '/plugins/knob/jquery.knob',
-                'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js',
-                '/plugins/daterangepicker/daterangepicker',
-                '/plugins/datepicker/bootstrap-datepicker',
-                'https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js',
-                '/plugins/morris/morris.min',          
-                '/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min',        
-                '/dist/js/pages/dashboard',
-            ]); ?>        
-    <?= $this->fetch('script') ?>
-
-  

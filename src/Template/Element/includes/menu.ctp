@@ -72,10 +72,13 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Qualifications'), ['controller' => 'Qualifications', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Specialities'), ['controller' => 'Specialities', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> States'), ['controller' => 'States', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Cities'), ['controller' => 'Cities', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Products'), ['controller' => 'Products', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Leave Types'), ['controller' => 'LeaveTypes', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Configuration'), ['controller' => 'Config', 'action' => 'index'], ['escape' => false]) ?></li>
                 </ul>
             </li>
             <?php }?>

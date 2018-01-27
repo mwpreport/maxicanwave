@@ -22,7 +22,6 @@ class WorkPlansController extends AppController
         $this->loadModel('Users');
         $this->loadModel('City');
         $this->loadModel('Doctors');
-        $this->loadModel('PlanRelations');
 		
     }
 
@@ -103,12 +102,21 @@ class WorkPlansController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	*/
+	protected function _checkLeave($start_date)
+    {
+		$workPlans = $this->WorkPlans->find()->where(['start_date >=' => $start_date])->orWhere(['end_date <=' => $start_date])->andWhere(['work_type_id <=' => 1])->toarray();
+		if(count($workPlans)>0)
+		print_r($workPlans);
+		echo "Oooooooops"; exit;
+     }
+
+
     public function mrsView($id = null)
     {
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
 		$uid = $this->Auth->user('id');
-        $workPlan = $this->WorkPlans->find()->where(['user_id' => $uid]);
+        $workPlan = $this->WorkPlans->find()->contain(['Doctors'])->where(['user_id' => $uid]);
 		//$city->has('state') ? $this->Html->link($city->state->name, ['controller' => 'States', 'action' => 'view', $city->state->id]) : '';
 		foreach($workPlan as $event)
         {
@@ -125,7 +133,10 @@ class WorkPlansController extends AppController
 				$end = $event['end_date'];
 			}
 			$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $event['work_type_id']])->first();
-			$events[] = array('id'=>$event['id'], 'start'=>$start ,'end'=>$end ,'title'=>$WorkTypes['name'], 'color'=>$WorkTypes['color']); 
+			$title = $WorkTypes['name'];
+			if($event['work_type_id']==2)
+			$title = $event->doctor->name;
+			$events[] = array('id'=>$event['id'], 'start'=>$start ,'end'=>$end ,'title'=>$title, 'color'=>$WorkTypes['color']); 
         }
 			echo json_encode($events); 
 			exit;
@@ -139,31 +150,51 @@ class WorkPlansController extends AppController
 		$workPlan = $this->WorkPlans->newEntity();
         if ($this->request->is('post')) {
 			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'end_date' => $_POST['end_date'], 'city_id' => $_POST['city_id']);
-			$data['doctors'] = isset($_POST['doctor_id']) ? 1 : 0;
-			$doctor_ids = isset($_POST['doctor_id']) ? $_POST['doctor_id'] : array();
 			$data['plan_reason'] = isset($_POST['plan_reason'])? $_POST['plan_reason'] : "";
 			$data['plan_details'] = isset($_POST['plan_details'])? $_POST['plan_details'] : "";
-            $workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
-            $workPlan->start_date = $_POST['start_date']." 00:00:00";
-            if( $_POST['end_date']=="" || $workPlan->work_type_id !=1 )$_POST['end_date'] = $_POST['start_date'];
-            $workPlan->end_date = $_POST['end_date']." 23:59:00";
-			//print_r($workPlan); exit;
-            if ($this->WorkPlans->save($workPlan)) {
-			$id = $workPlan->id;
-			if($workPlan->doctors)
-			{
-				foreach ($doctor_ids as $doctor_id)
-				$planRelations[] = array('plan_id' => $id, 'user_id' => $uid, 'doctor_id' => $doctor_id);
-				
-				$entities = $this->PlanRelations->newEntities($planRelations);
-				$result = $this->PlanRelations->saveMany($entities);
+            $data['start_date'] = $_POST['start_date']." 00:00:00";
+            if( $_POST['end_date']=="" || $data['work_type_id'] !=1 )$_POST['end_date'] = $_POST['start_date'];
+            $data['end_date'] = $_POST['end_date']." 23:59:00";
+            
+            if($this->_checkLeave($data['start_date']))
+            {
+            echo json_encode(array("status"=>0,"error"=>'You cannot plan on leave days.')); exit;
 			}
-			$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
-			$returnArray = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$WorkTypes['name'], 'color'=>$WorkTypes['color']); 
-			echo json_encode($returnArray); 
-            }
-            else
-            echo 'The work plan could not be saved. Please, try again.';
+            
+            
+			if(isset($_POST['doctor_id']))
+			{
+				$doctor_ids = isset($_POST['doctor_id']) ? $_POST['doctor_id'] : array();
+				foreach ($doctor_ids as $doctor_id)
+				{
+					$plan_data = $data;
+					$plan_data['doctor_id'] = $doctor_id;
+					$workPlans_array[] = $plan_data;
+				}
+
+				$entities = $this->WorkPlans->newEntities($workPlans_array);
+				$_results = $this->WorkPlans->saveMany($entities);
+				$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => 2])->first();
+				foreach ($_results as $_result)
+				{
+					$doctor_name = $this->WorkPlans->Doctors->find()->select(['name'])->where(['id =' => $_result['doctor_id']])->first()->name;
+					$returnArray[] = array('id'=> $_result['id'], 'start'=>$_result['start_date'] ,'end'=>$_result['end_date'] ,'title'=>$doctor_name, 'color'=>$WorkTypes['color']); 
+				}
+				echo json_encode(array("status"=>1,"events"=>$returnArray)); exit;
+			}
+			else
+			{
+				$workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
+				if ($this->WorkPlans->save($workPlan)) {
+					$id = $workPlan->id;
+					$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
+					$returnArray[] = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$WorkTypes['name'], 'color'=>$WorkTypes['color']); 
+					echo json_encode(array("status"=>1,"events"=>$returnArray)); exit;
+				}
+				else
+				echo json_encode(array("status"=>1,"error"=>'The work plan could not be saved. Please, try again.')); exit;
+			}
+			
         }
 		exit;   
      }
@@ -184,7 +215,10 @@ class WorkPlansController extends AppController
             $workPlan->end_date = $_POST['end_date']." 23:59:00";
             if ($this->WorkPlans->save($workPlan)) {
 			$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
-			$returnArray = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$WorkTypes['name'], 'color'=>$WorkTypes['color']); 
+			$title = $WorkTypes['name'];
+			if($workPlan->work_type_id==2)
+			$title = $this->WorkPlans->Doctors->find()->select(['name'])->where(['id =' => $workPlan->doctor_id])->first()->name;
+			$returnArray = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$title, 'color'=>$WorkTypes['color']); 
 			echo json_encode($returnArray); 
 
             }

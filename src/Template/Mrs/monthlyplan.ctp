@@ -137,7 +137,7 @@
 										<?php }	?>
 									</select>  
 								</div>
-								<div class="form-group w1 w9 hide dhide">
+								<div class="form-group w1 w8 hide dhide">
 									<label for="plan_details">More Detials/Comment</label>
 									<textarea class="form-control required" name="plan_details" id="plan_details" rows="5"></textarea>
 								</div>
@@ -205,7 +205,7 @@
                                 </div>
                                 <div class="form-group w2 hide dhide">
                                     <label for="doctor_id">Select Doctor</label>
-									<select name="doctor_id[]" class="form-control required" id="doctor_id" aria-invalid="true" multiple="multiple">
+									<select name="doctor_id" class="form-control required" id="doctor_id" aria-invalid="true">
 										<?php
 										foreach ($doctorsRelation as $doctor)
 										{?>
@@ -224,8 +224,8 @@
 										<?php }	?>
 									</select>  
 								</div>
-								<div class="form-group w1 w9 hide dhide">
-									<label for="plan_details">Reason for Leave</label>
+								<div class="form-group w1 w8 hide dhide">
+									<label for="plan_details">More Detials/Comment</label>
 									<textarea class="form-control required" name="plan_details" id="plan_details" rows="5"></textarea>
 								</div>
                             </div>
@@ -643,15 +643,25 @@
                data: $('#ModalAddForm').serialize()+"&action=add",
                type: "POST",
                success: function(json) {
-                   $("#calendar").fullCalendar('renderEvent',
-                   {
-                       id: json.id,
-                       title: json.title,
-                       start: json.start,
-                       end: json.end,
-                       color: json.color
-                   },
-                   true);
+				   if(json.status == 1)
+				   {					   
+					   for( var i=0; i<json.events.length; i++)
+					   {
+						   $("#calendar").fullCalendar('renderEvent',
+						   {
+							   id: json.events[i].id,
+							   title: json.events[i].title,
+							   start: json.events[i].start,
+							   end: json.events[i].end,
+							   color: json.events[i].color
+						   },
+						   true);
+					   }
+				   }
+				   else
+				   {
+					   alert(json.error);
+				   }
                    $.magnificPopup.close();
                }
            });

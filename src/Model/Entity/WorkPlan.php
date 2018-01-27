@@ -37,17 +37,6 @@ class WorkPlan extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'work_type_id' => true,
-        'start_date' => true,
-        'end_date' => true,
-        'city_id' => true,
-        'doctors' => true,
-        'chemist_id' => true,
-        'plan_reason' => true,
-        'plan_details' => true,
-        'is_completed' => true,
-        'is_deleted' => true,
-        'dt' => true
+        '*' => true
     ];
 }
