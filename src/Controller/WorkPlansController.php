@@ -104,11 +104,17 @@ class WorkPlansController extends AppController
 	*/
 	protected function _checkLeave($start_date)
     {
-		$workPlans = $this->WorkPlans->find()->where(['start_date >=' => $start_date])->orWhere(['end_date <=' => $start_date])->andWhere(['work_type_id <=' => 1])->toarray();
+		$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date,'work_type_id =' => 1])->toarray();
 		if(count($workPlans)>0)
-		print_r($workPlans);
-		echo "Oooooooops"; exit;
-     }
+		return true; exit;
+    }
+    
+	protected function _leaveCheck($start_date, $end_date)
+    {
+		$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date,'work_type_id =' => 1])->toarray();
+		if(count($workPlans)>0)
+		return true; exit;
+    }
 
 
     public function mrsView($id = null)
@@ -157,6 +163,11 @@ class WorkPlansController extends AppController
             $data['end_date'] = $_POST['end_date']." 23:59:00";
             
             if($this->_checkLeave($data['start_date']))
+            {
+            echo json_encode(array("status"=>0,"error"=>'You cannot plan on leave days.')); exit;
+			}
+			
+            if($this->_leaveCheck($data['start_date'],$data['end_date']))
             {
             echo json_encode(array("status"=>0,"error"=>'You cannot plan on leave days.')); exit;
 			}

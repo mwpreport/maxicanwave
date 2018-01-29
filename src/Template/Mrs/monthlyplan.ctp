@@ -441,8 +441,8 @@
                 $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date').on('changeDate', function (ev) {
 					$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker('remove');
 					$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker({autoclose: true, startDate: ev.date, endDate: endDate});
-					if($('#'+$(this).closest("form").attr('id')+' #end_date').is(":visible"))
-					$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker("setDate", ev.date);
+					//if($('#'+$(this).closest("form").attr('id')+' #end_date').is(":visible"))
+					//$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker("setDate", ev.date);
 
 					
 				});
