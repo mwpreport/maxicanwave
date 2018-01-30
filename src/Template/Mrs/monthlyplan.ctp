@@ -507,6 +507,7 @@
 					right: 'next'
 				},
 				defaultDate: startDate,
+				disableDragging : true,
 				editable: true,
 				eventLimit: true, // allow "more" link when too many events
 				selectable: true,
@@ -549,6 +550,7 @@
 									$('#ModalEdit #plan_reason').val(data.plan_reason);
 									$('#ModalEdit #plan_details').val(data.plan_details);
 									var work_type_id = data.work_type_id;
+									$('#ModalEdit .xw'+work_type_id).addClass("hide");
 									$("#ModalEdit .dhide").addClass("hide");
 									$('#ModalEdit .w'+work_type_id).removeClass("hide");
 									$.magnificPopup.open({ items: {src: '#ModalEdit'}, type: 'inline' });
@@ -657,12 +659,12 @@
 						   },
 						   true);
 					   }
+                   $.magnificPopup.close();
 				   }
 				   else
 				   {
 					   alert(json.error);
 				   }
-                   $.magnificPopup.close();
                }
            });
        }
@@ -674,16 +676,26 @@
                data: $('#ModalLeaveForm').serialize()+"&action=add",
                type: "POST",
                success: function(json) {
-                   $("#calendar").fullCalendar('renderEvent',
-                   {
-                       id: json.id,
-                       title: json.title,
-                       start: json.start,
-                       end: json.end,
-                       color: json.color
-                   },
-                   true);
+                   if(json.status == 1)
+				   {					   
+					   for( var i=0; i<json.events.length; i++)
+					   {
+						   $("#calendar").fullCalendar('renderEvent',
+						   {
+							   id: json.events[i].id,
+							   title: json.events[i].title,
+							   start: json.events[i].start,
+							   end: json.events[i].end,
+							   color: json.events[i].color
+						   },
+						   true);
+					   }
                    $.magnificPopup.close();
+				   }
+				   else
+				   {
+					   alert(json.error);
+				   }
                }
            });
        }
@@ -696,17 +708,26 @@
                data: $('#ModalEditForm').serialize()+"&action=update_event",
                type: "POST",
                success: function(json) {
-				   $("#calendar").fullCalendar('removeEvents',eventID);
-                   $("#calendar").fullCalendar('renderEvent',
-                   {
-                       id: json.id,
-                       title: json.title,
-                       start: json.start,
-                       end: json.end,
-                       color: json.color
-                   },
-                   true);
+				   if(json.status == 1)
+				   {					   
+					   for( var i=0; i<json.events.length; i++)
+					   {
+						   $("#calendar").fullCalendar('renderEvent',
+						   {
+							   id: json.events[i].id,
+							   title: json.events[i].title,
+							   start: json.events[i].start,
+							   end: json.events[i].end,
+							   color: json.events[i].color
+						   },
+						   true);
+					   }
                    $.magnificPopup.close();
+				   }
+				   else
+				   {
+					   alert(json.error);
+				   }
                }
            });
        }
