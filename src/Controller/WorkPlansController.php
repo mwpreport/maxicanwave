@@ -102,18 +102,19 @@ class WorkPlansController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	*/
-	protected function _checkLeave($start_date)
+	protected function _checkLeave($start_date, $id)
     {
-		$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date,'work_type_id =' => 1])->toarray();
+		$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date,'work_type_id =' => 1,'id <>' => $id])->toarray();
 		if(count($workPlans)>0)
-		return true; exit;
+		return true;
     }
     
-	protected function _leaveCheck($start_date, $end_date)
+	protected function _leaveCheck($start_date, $end_date, $id)
     {
-		$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date,'work_type_id =' => 1])->toarray();
+		$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date])->orWhere(['start_date <=' => $end_date,'end_date >=' => $end_date])->andWhere(['id <>' => $id])->toarray();
 		if(count($workPlans)>0)
-		return true; exit;
+		return true;
+	
     }
 
 
@@ -160,18 +161,25 @@ class WorkPlansController extends AppController
 			$data['plan_details'] = isset($_POST['plan_details'])? $_POST['plan_details'] : "";
             $data['start_date'] = $_POST['start_date']." 00:00:00";
             if( $_POST['end_date']=="" || $data['work_type_id'] !=1 )$_POST['end_date'] = $_POST['start_date'];
+
             $data['end_date'] = $_POST['end_date']." 23:59:00";
             
-            if($this->_checkLeave($data['start_date']))
-            {
-            echo json_encode(array("status"=>0,"error"=>'You cannot plan on leave days.')); exit;
+            if($data['work_type_id'] !=1)
+			{
+				if($this->_checkLeave($data['start_date'],0))
+				{
+				echo json_encode(array("status"=>0,"error"=>'You cannot plan on leave days.')); exit;
+				}
+				
+			}
+			else
+			{
+				if($this->_leaveCheck($data['start_date'],$data['end_date'],0))
+				{
+				echo json_encode(array("status"=>0,"error"=>'Remove existing plans to plan this day as leave.')); exit;
+				}
 			}
 			
-            if($this->_leaveCheck($data['start_date'],$data['end_date']))
-            {
-            echo json_encode(array("status"=>0,"error"=>'You cannot plan on leave days.')); exit;
-			}
-            
             
 			if(isset($_POST['doctor_id']))
 			{
@@ -203,7 +211,7 @@ class WorkPlansController extends AppController
 					echo json_encode(array("status"=>1,"events"=>$returnArray)); exit;
 				}
 				else
-				echo json_encode(array("status"=>1,"error"=>'The work plan could not be saved. Please, try again.')); exit;
+				{echo json_encode(array("status"=>1,"error"=>'The work plan could not be saved. Please, try again.')); exit;}
 			}
 			
         }
@@ -224,17 +232,35 @@ class WorkPlansController extends AppController
             $workPlan->start_date = $_POST['start_date']." 00:00:00";
             if( $_POST['end_date']=="" || $workPlan->work_type_id !=1 )$_POST['end_date'] = $_POST['start_date'];
             $workPlan->end_date = $_POST['end_date']." 23:59:00";
+			
+            if($workPlan['work_type_id'] !=1)
+			{
+				if($this->_checkLeave($workPlan['start_date'],$workPlan->id))
+				{
+				echo json_encode(array("status"=>0,"error"=>'You cannot plan on leave days.')); exit;
+				}
+				
+			}
+			else
+			{
+				if($this->_leaveCheck($workPlan['start_date'],$workPlan['end_date'],$workPlan->id))
+				{
+				echo json_encode(array("status"=>0,"error"=>'Remove existing plans to plan this day as leave.')); exit;
+				}
+			}
+
+			
             if ($this->WorkPlans->save($workPlan)) {
 			$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
 			$title = $WorkTypes['name'];
 			if($workPlan->work_type_id==2)
 			$title = $this->WorkPlans->Doctors->find()->select(['name'])->where(['id =' => $workPlan->doctor_id])->first()->name;
-			$returnArray = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$title, 'color'=>$WorkTypes['color']); 
-			echo json_encode($returnArray); 
+			$returnArray[] = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$title, 'color'=>$WorkTypes['color']); 
+			echo json_encode(array("status"=>1,"events"=>$returnArray)); exit;
 
             }
             else
-            echo 'The work plan could not be saved. Please, try again.';
+            {echo json_encode(array("status"=>1,"error"=>'The work plan could not be saved. Please, try again.')); exit;}
         }
         
 		exit;   
