@@ -63,6 +63,9 @@ class DoctorsTable extends Table
         $this->hasMany('WorkPlans', [
             'foreignKey' => 'doctor_id'
         ]);
+        $this->hasMany('Users', [
+            'foreignKey' => 'user_id'
+        ]);
     }
 
     /**

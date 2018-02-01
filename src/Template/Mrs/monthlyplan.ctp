@@ -597,7 +597,9 @@
 						$.magnificPopup.close();
 					}
                    else
-                        return false;
+                   {
+					   alert(json.error); return false;
+				   }
                }
            });
        }

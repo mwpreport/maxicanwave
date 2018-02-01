@@ -48,7 +48,7 @@ class MrsController extends AppController {
 		$state_id = $this->Auth->user('state_id');
         $states = $this->States->find('all')->where(['id =' => $state_id])->toarray();
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $chemistsRelation = $this->paginate($this->ChemistsRelation->find('all')->contain(['Chemists.Cities','Chemists.States'])->where(['user_id =' => $uid])->order(['ChemistsRelation.id' => 'ASC']));
+        $chemistsRelation = $this->paginate($this->ChemistsRelation->find('all')->contain(['Chemists.Cities','Chemists.States'])->where(['ChemistsRelation.user_id =' => $uid])->order(['ChemistsRelation.id' => 'ASC']));
         $chemists = $this->Chemists
 			->find()
 			->notMatching('ChemistsRelation', function ($q) use ($uid) {
@@ -71,7 +71,7 @@ class MrsController extends AppController {
 		$state_id = $this->Auth->user('state_id');
         $workTypes = $this->WorkTypes->find()->order(['list' => 'ASC'])->toarray();
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $doctorsRelation = $this->DoctorsRelation->find('all')->where(['user_id =' => $uid])->contain(['Doctors']);
+        $doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid])->contain(['Doctors']);
         $leaveTypes = $this->LeaveTypes->find()->toarray();
         $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation'));        
     }
@@ -86,7 +86,7 @@ class MrsController extends AppController {
         $doctorTypes = $this->DoctorTypes->find('all')->toarray();
         $states = $this->States->find('all')->where(['id =' => $state_id])->toarray();
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->contain(['DoctorTypes','Doctors.Specialities','Doctors.Cities'])->where(['user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']));
+        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->contain(['DoctorTypes','Doctors.Specialities','Doctors.Cities'])->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']));
         $doctors = $this->Doctors
 			->find()
 			->notMatching('DoctorsRelation', function ($q) use ($uid) {

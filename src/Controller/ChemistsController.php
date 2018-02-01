@@ -39,7 +39,7 @@ class ChemistsController extends AppController
     public function view($id = null)
     {
         $chemist = $this->Chemists->get($id, [
-            'contain' => ['States', 'Cities', 'ChemistsRelation']
+            'contain' => ['States', 'Cities']
         ]);
 
         $this->set('chemist', $chemist);

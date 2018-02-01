@@ -123,9 +123,14 @@ class WorkPlansController extends AppController
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
 		$uid = $this->Auth->user('id');
-        $workPlan = $this->WorkPlans->find()->contain(['Doctors'])->where(['user_id' => $uid]);
-		//$city->has('state') ? $this->Html->link($city->state->name, ['controller' => 'States', 'action' => 'view', $city->state->id]) : '';
-		foreach($workPlan as $event)
+        $startDate=$_GET['start']." 00:00:00";
+        $endDate=$_GET['end']." 23:59:00";
+        $workPlans = $this->WorkPlans->find()->contain(['Doctors'])
+					->where(['start_date >= ' => $startDate,'end_date < ' => $endDate])
+					->where(['WorkPlans.user_id' => $uid]);
+        
+		$events=array();
+		foreach($workPlans as $event)
         {
 			$start = explode(" ", $event['start_date']);
 			$end = explode(" ", $event['end_date']);
@@ -313,7 +318,7 @@ class WorkPlansController extends AppController
 		$WorkPlans = $this->WorkPlans
 		->find('all')
 		->contain(['WorkTypes', 'Cities'])	
-		->where(['WorkPlans.user_id =' => $uid])
+		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.work_type_id <>' => 1])
 		->where(['WorkPlans.start_date =' => $start_date])->toArray();
 		$html = "";
 		if(count($WorkPlans))
@@ -376,8 +381,18 @@ class WorkPlansController extends AppController
         $end_date = $_POST['copyto']." 23:59:00";
 		$returnArray = array();
 		
+		$workPlan = $this->WorkPlans->find()
+			->where(['id IN' => $id])->first();
+		
+		if($workPlan['work_type_id'] !=1)
+		{
+			if($this->_checkLeave($start_date,$workPlan->id))
+			{
+			echo json_encode(array("success"=>0,"error"=>'You cannot move plans to leave days.')); exit;
+			}
+		}
+
 		$WorkPlansTable = $this->WorkPlans;
-		//pj($WorkPlans); exit;
 		if ($WorkPlansTable->updateAll( array('start_date' => $start_date,'end_date' => $end_date), array('id IN' => $id))) {
 			$returnArray = array('success' => "1",'eventIDs' => $id);
 		}

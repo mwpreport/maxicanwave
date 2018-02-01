@@ -46,9 +46,6 @@ class StockistsTable extends Table
             'foreignKey' => 'city_id',
             'joinType' => 'INNER'
         ]);
-        $this->hasMany('StockistsRelation', [
-            'foreignKey' => 'stockist_id'
-        ]);
     }
 
     /**

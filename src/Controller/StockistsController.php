@@ -39,7 +39,7 @@ class StockistsController extends AppController
     public function view($id = null)
     {
         $stockist = $this->Stockists->get($id, [
-            'contain' => ['States', 'Cities', 'StockistsRelation']
+            'contain' => ['States', 'Cities']
         ]);
 
         $this->set('stockist', $stockist);
@@ -117,48 +117,6 @@ class StockistsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
     
-    public function mrsGetStockists()
-    {
-        $this->autoRender = false;
-        $this->viewBuilder()->layout(false);
-		$data = $this->request->data;
-		$uid = $this->Auth->user('id');
-		$city = $data['city'];
-		$stockists = $this->Stockists
-			->find()
-			->notMatching('StockistsRelation', function ($q) use ($uid) {
-				return $q->where(['StockistsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $city]);
-		$stockists->toarray();
-		$listHtml='<option value="">Select Stockist</option>';
-		foreach ($stockists as $stockist)
-		$listHtml.='<option value="'.$stockist['id'].'">'.$stockist['name'].'</option>';
-		
-		echo $listHtml; exit;
-    }
-    
-    public function getStockistsOption()
-    {
-        $this->autoRender = false;
-        $this->viewBuilder()->layout(false);
-		$data = $this->request->data;
-		$uid = $this->Auth->user('id');
-		$city = $data['city'];
-		$uid = $data['user'];
-		$stockists = $this->Stockists
-			->find()
-			->notMatching('StockistsRelation', function ($q) use ($uid) {
-				return $q->where(['StockistsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $city]);
-		$stockists->toarray();
-		$listHtml='';
-		foreach ($stockists as $stockist)
-		$listHtml.='<option value="'.$stockist['id'].'">'.$stockist['name'].'</option>';
-		
-		$returnArray = array('success' => "1",'stockist_id' => $listHtml);
-		echo json_encode($returnArray); 
-		exit;
-    }
     
     public function mrsGetStockist()
     {

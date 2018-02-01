@@ -46,8 +46,11 @@ class ChemistsTable extends Table
             'foreignKey' => 'city_id',
             'joinType' => 'INNER'
         ]);
-        $this->hasMany('ChemistsRelation', [
-            'foreignKey' => 'chemist_id'
+        $this->hasMany('WorkPlans', [
+            'foreignKey' => 'doctor_id'
+        ]);
+        $this->hasMany('Users', [
+            'foreignKey' => 'user_id'
         ]);
     }
 
