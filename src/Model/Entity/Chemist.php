@@ -39,25 +39,6 @@ class Chemist extends Entity
      * @var array
      */
     protected $_accessible = [
-        'code' => true,
-        'name' => true,
-        'contact_person' => true,
-        'email' => true,
-        'mobile' => true,
-        'phone' => true,
-        'door_no' => true,
-        'street' => true,
-        'area' => true,
-        'state_id' => true,
-        'city_id' => true,
-        'pincode' => true,
-        'is_approved' => true,
-        'is_active' => true,
-        'is_deleted' => true,
-        'last_updated' => true,
-        'dt' => true,
-        'state' => true,
-        'city' => true,
-        'chemists_relation' => true
+        '*' => true
     ];
 }
