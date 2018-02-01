@@ -53,9 +53,11 @@ class ChemistsController extends AppController
      */
     public function add()
     {
+		$uid = $this->Auth->user('id');
         $chemist = $this->Chemists->newEntity();
         if ($this->request->is('post')) {
             $chemist = $this->Chemists->patchEntity($chemist, $this->request->getData());
+            $chemist->user_id=$uid;
             if ($this->Chemists->save($chemist)) {
                 $this->Flash->success(__('The chemist has been saved.'));
 

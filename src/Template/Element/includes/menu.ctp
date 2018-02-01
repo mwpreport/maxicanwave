@@ -62,6 +62,7 @@
                 	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Doctors Assignment'), ['controller' => 'DoctorsRelation', 'action' => 'index'], ['escape' => false]) ?></li>
                 	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Chemists'), ['controller' => 'Chemists', 'action' => 'index'], ['escape' => false]) ?></li>
                 	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Chemists Assignment'), ['controller' => 'ChemistsRelation', 'action' => 'index'], ['escape' => false]) ?></li>
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Stockists'), ['controller' => 'Stockists', 'action' => 'index'], ['escape' => false]) ?></li>
                 </ul>
             </li>
             <li class="treeview">
