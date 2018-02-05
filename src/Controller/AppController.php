@@ -85,7 +85,7 @@ class AppController extends Controller
 		  array('controller'=>'DoctorsRelation', 'action'=>['mrsAdd','mrsUpdate','mrsDelete','mrsGetRelation']),
 		  array('controller'=>'Chemists', 'action'=>['mrsGetChemists','mrsGetChemist','getChemistsOption']),
 		  array('controller'=>'ChemistsRelation', 'action'=>['mrsAdd','mrsUpdate','mrsDelete','mrsGetRelation']),
-		  array('controller'=>'WorkPlans', 'action'=>['mrsView','mrsAdd','mrsUpdate','mrsDragDrop','mrsGetPlan','mrsGetPlans','mrsDelete','mrsDateDelete','mrsPlanCopy']),
+		  array('controller'=>'WorkPlans', 'action'=>['mrsView','mrsAdd','mrsUpdate','mrsDragDrop','mrsGetPlan','mrsGetPlans','mrsGetReports','mrsDelete','mrsDateDelete','mrsPlanCopy','mrsReportUpdate']),
 		  array('controller'=>'Cities', 'action'=>['getCitiesOption'])
 		)
 	  );

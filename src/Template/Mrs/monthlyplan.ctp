@@ -182,7 +182,7 @@
 											<input type="text" name="start_date" autocomplete="false" class="form-control required" id="start_date">
 										</div>
                                     </div>
-                                    <div class="col-sm-6 w1 pad-right-0 hide dhide">
+                                    <div class="col-sm-6 w11 pad-right-0 hide dhide">
 										<label for="end_date">Select To Date</label>
 										<div class="input-group date">
 											<div class="input-group-addon">
@@ -508,7 +508,7 @@
 				},
 				defaultDate: startDate,
 				disableDragging : true,
-				editable: true,
+				/*editable: true,*/
 				eventLimit: true, // allow "more" link when too many events
 				selectable: true,
 				selectHelper: true,
@@ -545,6 +545,7 @@
 									$('#ModalEdit #long_plan').val(data.long_plan);
 									$('#ModalEdit #start_date').datepicker("setDate", data.start_date);
 									$('#ModalEdit #end_date').datepicker("setDate", data.end_date);
+									$('#ModalEdit #end_date').addClass("hide");
 									$('#ModalEdit #city_id').val(data.city_id);
 									$('#ModalEdit #doctor_id').val(data.doctor_id);
 									$('#ModalEdit #plan_reason').val(data.plan_reason);
@@ -594,6 +595,7 @@
                    if(json.success == "1")
 					{
 						$('#calendar').fullCalendar( 'refetchEvents' );
+						$('#ModalCopyForm #copyfrom,#ModalCopyForm #copyto').val("");
 						$.magnificPopup.close();
 					}
                    else
@@ -632,6 +634,7 @@
                    if(json == 1)
 					{
 						$("#calendar").fullCalendar('removeEvents',eventID);
+						
 						$.magnificPopup.close();
 					}
                    else
@@ -714,6 +717,7 @@
 				   {					   
 					   for( var i=0; i<json.events.length; i++)
 					   {
+						   $("#calendar").fullCalendar('removeEvents',eventID);
 						   $("#calendar").fullCalendar('renderEvent',
 						   {
 							   id: json.events[i].id,
@@ -808,7 +812,7 @@
                 $.magnificPopup.close();
             });
             function reset_form(){
-				$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm,#ModalDeleteForm, #ModalCopyForm')[0].reset();
+				$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm,#ModalDeleteForm,#ModalCopyForm')[0].reset();
 				$("#delete_plan_list, #copy_plan_list").html('');
 				$("#ModalAddForm .dhide").addClass("hide");
 				$("#ModalAddForm .dshow").removeClass("hide");
