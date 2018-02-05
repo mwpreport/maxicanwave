@@ -238,7 +238,7 @@ class WorkPlansController extends AppController
 				}
 				echo json_encode(array("status"=>1,"events"=>$returnArray)); exit;
 			}
-			else
+			elseif($data['work_type_id'] != 2 && $data['work_type_id'] != 1)
 			{
 				$workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
 				if ($this->WorkPlans->save($workPlan)) {
@@ -248,7 +248,7 @@ class WorkPlansController extends AppController
 					echo json_encode(array("status"=>1,"events"=>$returnArray)); exit;
 				}
 				else
-				{echo json_encode(array("status"=>1,"error"=>'The work plan could not be saved. Please, try again.')); exit;}
+				{echo json_encode(array("status"=>0,"error"=>'The work plan could not be saved. Please, try again.')); exit;}
 			}
 			
         }
@@ -328,6 +328,42 @@ class WorkPlansController extends AppController
      }
 
     public function mrsGetPlans()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$uid = $this->Auth->user('id');
+		$date = $_POST['date'];
+		$start_date = $date." 00:00:00";
+        $end_date = $date." 23:59:00";
+            
+		
+		$WorkPlans = $this->WorkPlans
+		->find('all')
+		->contain(['WorkTypes', 'Cities'])	
+		->where(['WorkPlans.user_id =' => $uid])
+		->where(['WorkPlans.start_date =' => $start_date])->toArray();
+		$html = "";
+		if(count($WorkPlans))
+		{
+			$i=1;$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th>S.No</th><th>Work Type</th><th>City</th></tr></thead><tbody>';
+			foreach ($WorkPlans as $WorkPlan)
+			{
+				$html.='<tr><td class="text-center">'.$i.'</td><td><input type="hidden" name="selected_plan_id[]" value="'.$WorkPlan->id.'">'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
+				$i++;
+			}
+			$html.='</tbody></table>';
+
+		}
+		else {$html.="<p>No plans on this date</p>";}
+		
+		
+
+		$returnArray = array('success' => "1",'html' => $html);
+		echo json_encode($returnArray); 
+		exit;   
+     }
+
+    public function mrsGetPlansOnly()
     {
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
@@ -430,97 +466,8 @@ class WorkPlansController extends AppController
 		$date = $_POST['date'];
 		$start_date = $date." 00:00:00";
         $end_date = $date." 23:59:00";
-            
-		
-		$WorkPlansD = $this->WorkPlans
-		->find('all')
-		->contain(['WorkTypes', 'Cities', 'Doctors'])	
-		->where(['WorkPlans.user_id =' => $uid])
-		->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
-		
-		$WorkPlansC = $this->WorkPlans
-		->find('all')
-		->contain(['WorkTypes', 'Cities'])	
-		->where(['WorkPlans.user_id =' => $uid])
-		->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
-		
-		$WorkPlansS = $this->WorkPlans
-		->find('all')
-		->contain(['WorkTypes', 'Cities'])	 
-		->where(['WorkPlans.user_id =' => $uid])
-		->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 
-		$WorkPlans = $this->WorkPlans
-		->find('all')
-		->contain(['WorkTypes', 'Cities'])	
-		->where(['WorkPlans.user_id =' => $uid])
-		->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
-		
-		$Products = $this->Products->find('all')->toarray();
-		$html = "";
-		if(count($WorkPlansD))
-		{
-			$work_with = '<select name="work_with[%s]"><option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option></select>';
-			$is_missed = '<select name="missed_reason[%s]"><option value="">No</option><option>Doctor Refused Appointment</option><option>Doctor on Leave</option><option>Doctor not in Station</option><option>Plan Changed</option><option>Meeting / CME</option><option>Others</option></select>';
-			$product_popup = '<div class="mfp-hide white-popup-block small_popup doctor_product" id="doctor_product_%s">
-			<div class="popup-content">
-				<div class="popup-header">
-					<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-					<div class="hr-title"><h4>Select Products Given as samples</h4><hr /></div>
-				</div>
-				<div class="popup-body">
-					<div class="row">
-						<div class="col-sm-12 mar-bottom-20">
-							<div class="radio-blk">
-							<select name="" multiple="" id="products[%s]">';
-							foreach($Products as $Product)
-							$product_popup.='<option value="'.$Product->id.'">'.$Product->name.'</option>';
-							$product_popup.='</select>
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6"><button type="submit" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" class="btn blue-btn btn-block">Save</button></div>
-					</div>
-				</div>
-			</div>';
-
-			$html.='<h3 class="mar-top-10 mar-bottom-10">Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Is Missed</th></tr></thead><tbody>';
-			$i = 1;
-			foreach ($WorkPlansD as $WorkPlanD)
-			{
-				$work_with_selected = str_replace("<option>".$WorkPlanD->work_with."</option>","<option selected>".$WorkPlanD->work_with."</option>",$work_with);
-				$is_missed_selected = str_replace("<option>".$WorkPlanD->missed_reason."</option>","<option selected>".$WorkPlanD->missed_reason."</option>",$is_missed);;
-				$product_popup_selected = $product_popup;
-				if($WorkPlanD->products!="")
-				{
-					$products_array = unserialize($WorkPlanD->products);
-					foreach ($products_array as $product)
-					$product_popup_selected = str_replace('value="'.$product.'"','value="'.$product.'" selected',$product_popup_selected);
-				}
-				$html.='<tr><td>'.$i.'</td><td><a href="#doctor_product_'.$WorkPlanD->id.'" class="popup-modal">'.$WorkPlanD->doctor->name.'</a>'.sprintf($product_popup_selected,$WorkPlanD->id,$WorkPlanD->id).'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.sprintf($work_with_selected,$WorkPlanD->id).'</td><td>'.sprintf($is_missed_selected,$WorkPlanD->id).'</td></tr>';
-			$i++;
-			}
-			$html.='</tbody></table>';
-		}
-		
-		if(count($WorkPlans))
-		{
-			$is_cancelled = '<select name="is_cancelled[%s]"><option value="0">No</option><option value="1">Yes</option></select>';
-			$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th><th>Is Cancelled</th></tr></thead><tbody>';
-			$i = 1;
-			foreach ($WorkPlans as $WorkPlan)
-			{
-				$is_cancelled_selected = str_replace('value="'.$WorkPlan->is_cancelled.'"','value="'.$WorkPlan->is_cancelled.'" selected',$is_cancelled);
-				$html.='<tr><td>'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td>'.sprintf($is_cancelled_selected,$WorkPlan->id).'</td></tr>';
-			$i++;
-			}
-			$html.='</tbody></table>';
-		}
-
-		if($html == ""){$html.="<p>No plans on this date</p>";}
-
-		$returnArray = array('success' => "1",'html' => $html);
-		echo json_encode($returnArray); 
+		echo json_encode(array()); 
 		exit;   
      }
 
@@ -572,5 +519,91 @@ class WorkPlansController extends AppController
 			return $this->redirect(['controller' => 'mrs','action' => 'daily-report','?' => ['date' => $reportDate]]);
         }
 	}
+
+    public function mrsAddReport()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$uid = $this->Auth->user('id');
+		$workPlan = $this->WorkPlans->newEntity();
+        if ($this->request->is('post')) {
+			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'city_id' => $_POST['city_id']);
+			$data['start_date'] = $_POST['start_date']." 00:00:00";
+			$data['end_date'] = $_POST['start_date']." 23:59:00";
+			$data['is_approved'] = 1;
+			$data['is_reported'] = 1;
+			$data['last_updated'] = date("Y-m-d H:i:s");
+			
+			/*
+            list($status, $error)=$this->_checkLeave($data['start_date'],$data['end_date'],$data['work_type_id'],0);
+            if(!$status)
+            {echo json_encode(array("status"=>$status,"msg"=>$error)); exit;}
+            */
+			if($data['work_type_id'] == "" && !isset($_POST['chemist_id']) && !isset($_POST['stockist_id']))
+			{echo json_encode(array("status"=>0,"msg"=>'The report could not be saved. Please, try again.')); exit;}
+            
+			if($data['work_type_id'] ==1)
+			{
+				// for emergency leave
+			}
+			elseif($data['work_type_id'] == 2 && isset($_POST['doctor_id']))
+			{
+				$doctor_ids = isset($_POST['doctor_id']) ? $_POST['doctor_id'] : array();
+				foreach ($doctor_ids as $doctor_id)
+				{
+					$plan_data = $data;
+					$plan_data['doctor_id'] = $doctor_id;
+					$plan_data['is_unplanned'] = 1;
+					$workPlans_array[] = $plan_data;
+				}
+
+				$entities = $this->WorkPlans->newEntities($workPlans_array);
+				$_results = $this->WorkPlans->saveMany($entities);
+				echo json_encode(array("status"=>1,"msg"=>"Unplanned Doctor(s) Saved Successfully")); exit;
+			}
+			elseif($data['work_type_id'] == "" && isset($_POST['chemist_id']))
+			{
+				$chemist_ids = isset($_POST['chemist_id']) ? $_POST['chemist_id'] : array();
+				foreach ($chemist_ids as $chemist_id)
+				{
+					$plan_data = $data;
+					$plan_data['chemist_id'] = $chemist_id;
+					$workPlans_array[] = $plan_data;
+				}
+
+				$entities = $this->WorkPlans->newEntities($workPlans_array);
+				$_results = $this->WorkPlans->saveMany($entities);
+				echo json_encode(array("status"=>1,"msg"=>"Chemist(s) Saved Successfully")); exit;
+			}
+			elseif($data['work_type_id'] == "" && isset($_POST['stockist_id']))
+			{
+				$stockist_ids = isset($_POST['stockist_id']) ? $_POST['stockist_id'] : array();
+				foreach ($stockist_ids as $stockist_id)
+				{
+					$plan_data = $data;
+					$plan_data['stockist_id'] = $stockist_id;
+					$workPlans_array[] = $plan_data;
+				}
+
+				$entities = $this->WorkPlans->newEntities($workPlans_array);
+				$_results = $this->WorkPlans->saveMany($entities);
+				echo json_encode(array("status"=>1,"msg"=>"Stockist(s) Saved Successfully")); exit;
+			}
+			elseif($data['work_type_id'] != 2 && $data['work_type_id'] != 1 && $data['work_type_id'] != "")
+			{
+				$workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
+				if ($this->WorkPlans->save($workPlan)) {
+					$id = $workPlan->id;
+					$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
+					$returnArray[] = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$WorkTypes['name'], 'color'=>$WorkTypes['color']); 
+					echo json_encode(array("status"=>1,"msg"=>"Report Saved Successfull")); exit;
+				}
+				else
+				{echo json_encode(array("status"=>0,"msg"=>'The report could not be saved. Please, try again.')); exit;}
+			}
+			
+        }
+		exit;   
+     }
 
 }

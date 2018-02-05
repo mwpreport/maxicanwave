@@ -55,6 +55,14 @@ class WorkPlansTable extends Table
             'foreignKey' => 'doctor_id',
             'joinType' => 'LEFT'
         ]);
+        $this->belongsTo('Chemists', [
+            'foreignKey' => 'chemist_id',
+            'joinType' => 'LEFT'
+        ]);
+        $this->belongsTo('Stockists', [
+            'foreignKey' => 'stockist_id',
+            'joinType' => 'LEFT'
+        ]);
         $this->belongsTo('LeaveTypes', [
             'foreignKey' => 'plan_reason',
             'joinType' => 'INNER'

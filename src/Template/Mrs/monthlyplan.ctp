@@ -467,7 +467,7 @@
 				
                 $('#delete_date').on('changeDate', function (ev) {
 					$.ajax({
-						   url: '../work-plans/mrsGetPlans/',
+						   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsGetPlans"])?>',
 						   dataType: "json",
 						   data: "date="+moment(ev.date).format('YYYY-MM-DD'),
 						   type: "POST",
@@ -480,7 +480,7 @@
 				
                 $('#copyfrom').on('changeDate', function (ev) {
 					$.ajax({
-						   url: '../work-plans/mrsGetPlans/',
+						   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsGetPlansOnly"])?>',
 						   dataType: "json",
 						   data: "date="+moment(ev.date).format('YYYY-MM-DD'),
 						   type: "POST",
@@ -502,9 +502,9 @@
                 $('#calendar').fullCalendar({  // assign calendar
 
 				header: {
-					left: 'prev',
+					left: '',
 					center: 'title',
-					right: 'next'
+					right: ''
 				},
 				defaultDate: startDate,
 				disableDragging : true,
@@ -514,7 +514,7 @@
 				selectHelper: true,
 				showNonCurrentDates : false,
 
-				events: "../work-plans/mrs_view/",  // request to load current events
+				events: "<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsView"])?>",  // request to load current events
 
 				select: function(start, end, jsEvent) {  // click on empty time slot
 					cDate= new Date(moment(start).format('YYYY-MM-DD 00:00:00'));
@@ -535,7 +535,7 @@
 							reset_form();
 							$('#ModalEdit #id').val(event.id);
 							$.ajax({
-							 url: '../work-plans/mrs_get_plan/',
+							 url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsGetPlan"])?>',
 							 type: "POST",
 							 dataType: "json",
 							 data: "id="+event.id+"&action=get_event",
@@ -567,7 +567,7 @@
 				   if(end=="Invalid date")
 				   end = start;
 				   $.ajax({
-					   url: '../work-plans/mrs_drag_drop/',
+					   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDragDrop"])?>',
 					   data: 'action=update&start_date='+start+'&end_date='+end+'&id='+event.id,
 					   type: "POST",
 					   success: function(json) {
@@ -578,16 +578,16 @@
 			   
 			});
 
-               /* EVENTS */
-			   $('#deleteButton').on('click', function(e){ // delete event clicked
-				   e.preventDefault();
-				   doDelete(); //send data to delete function
-			   });
+		   /* EVENTS */
+		   $('#deleteButton').on('click', function(e){ // delete event clicked
+			   e.preventDefault();
+			   doDelete(); //send data to delete function
+		   });
        
 
        function doPlanCopy(){  // delete event 
            $.ajax({
-               url: '../work-plans/mrs_plan_copy/',
+               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsPlanCopy"])?>',
                data: $('#ModalCopyForm').serialize(),
                type: "POST",
 			   dataType: "json",
@@ -608,7 +608,7 @@
        
        function doDateDelete(){  // delete event 
            $.ajax({
-               url: '../work-plans/mrs_date_delete/',
+               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDateDelete"])?>',
                data: $('#ModalDeleteForm').serialize(),
                type: "POST",
 			   dataType: "json",
@@ -627,7 +627,7 @@
        function doDelete(){  // delete event 
            var eventID = $('#ModalEdit #id').val();
            $.ajax({
-               url: '../work-plans/mrs_delete/',
+               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDelete"])?>',
                data: 'action=delete&id='+eventID,
                type: "POST",
                success: function(json) {
@@ -645,7 +645,7 @@
 
        function doSubmit(){ // add event
            $.ajax({
-               url: '../work-plans/mrs_add/',
+               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAdd"])?>',
                dataType: "json",
                data: $('#ModalAddForm').serialize()+"&action=add",
                type: "POST",
@@ -676,7 +676,7 @@
        
        function doLeave(){ // add event
            $.ajax({
-               url: '../work-plans/mrs_add/',
+               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAdd"])?>',
                dataType: "json",
                data: $('#ModalLeaveForm').serialize()+"&action=add",
                type: "POST",
@@ -708,7 +708,7 @@
        function updateSubmit(){ // update event
            var eventID = $('#ModalEdit #id').val();
            $.ajax({
-               url: '../work-plans/mrs_update/',
+               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsUpdate"])?>',
                dataType: "json",
                data: $('#ModalEditForm').serialize()+"&action=update_event",
                type: "POST",

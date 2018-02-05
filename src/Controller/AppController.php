@@ -80,12 +80,12 @@ class AppController extends Controller
 		'4' => '*',
 		'5' =>array(
 		  array('controller'=>'Users', 'action'=>['login','logout','account']),
-		  array('controller'=>'Mrs', 'action'=>'*'),
+		  array('controller'=>'Mrs', 'action'=> '*'),
 		  array('controller'=>'Doctors', 'action'=>['mrsGetDoctors','mrsGetDoctor','getDoctorsOption']),
 		  array('controller'=>'DoctorsRelation', 'action'=>['mrsAdd','mrsUpdate','mrsDelete','mrsGetRelation']),
 		  array('controller'=>'Chemists', 'action'=>['mrsGetChemists','mrsGetChemist','getChemistsOption']),
 		  array('controller'=>'ChemistsRelation', 'action'=>['mrsAdd','mrsUpdate','mrsDelete','mrsGetRelation']),
-		  array('controller'=>'WorkPlans', 'action'=>['mrsView','mrsAdd','mrsUpdate','mrsDragDrop','mrsGetPlan','mrsGetPlans','mrsGetReports','mrsDelete','mrsDateDelete','mrsPlanCopy','mrsReportUpdate']),
+		  array('controller'=>'WorkPlans', 'action'=> '*'),
 		  array('controller'=>'Cities', 'action'=>['getCitiesOption'])
 		)
 	  );

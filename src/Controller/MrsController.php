@@ -68,8 +68,6 @@ class MrsController extends AppController {
 		$state_id = $this->Auth->user('state_id');
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
 		$products = $this->Products->find('all')->toarray();
-		$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity])->toarray();
-		$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity])->toarray();
 		$doctorsRelation = array();
 		$date = "";
 		$html = "";
@@ -79,7 +77,9 @@ class MrsController extends AppController {
 			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
-			$planned_doctors=array();
+			$planned_doctors=array(0);
+			$reported_stockists=array(0);
+			$reported_chemists=array(0);
 			
 			$WorkPlansD = $this->WorkPlans
 			->find('all')
@@ -89,13 +89,13 @@ class MrsController extends AppController {
 			
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities'])	
+			->contain(['WorkTypes', 'Cities', 'Chemists'])	
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
 			
 			$WorkPlansS = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities'])	 
+			->contain(['WorkTypes', 'Cities', 'Stockists'])	 
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 
@@ -155,13 +155,29 @@ class MrsController extends AppController {
 					else {$pdt_lnk_text = "Select Products"; $pdt_val_text="";}
 					$product_popup_selected = str_replace("%products",$product_options,$product_popup);
 					$planned_doctors[]=$WorkPlanD->doctor_id;
-					$html.='<tr><td><input type="hidden" name=workplan_id['.$WorkPlanD->id.'] value="1">'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.str_replace("%s",$WorkPlanD->id,$work_with_selected).'</td><td>'.str_replace("%s",$WorkPlanD->id,$is_missed_selected).'</td><td><a href="#doctor_product_'.$WorkPlanD->id.'" id="pdt_link_'.$WorkPlanD->id.'" class="popup-modal">'.$pdt_lnk_text.'</a><input type="hidden" id="pdt_val_'.$WorkPlanD->id.'" name=pdt_val['.$WorkPlanD->id.'] value="'.$pdt_val_text.'">'.str_replace("%s",$WorkPlanD->id,$product_popup_selected).'</td></tr>';
+					$html.='<tr class="'.(($WorkPlanD->is_reported)?"reported":"").' "><td><input type="hidden" name=workplan_id['.$WorkPlanD->id.'] value="1">'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.str_replace("%s",$WorkPlanD->id,$work_with_selected).'</td><td>'.str_replace("%s",$WorkPlanD->id,$is_missed_selected).'</td><td><a href="#doctor_product_'.$WorkPlanD->id.'" id="pdt_link_'.$WorkPlanD->id.'" class="popup-modal">'.$pdt_lnk_text.'</a><input type="hidden" id="pdt_val_'.$WorkPlanD->id.'" name=pdt_val['.$WorkPlanD->id.'] value="'.$pdt_val_text.'">'.str_replace("%s",$WorkPlanD->id,$product_popup_selected).'</td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
 			}
 			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $planned_doctors])->contain(['Doctors']);
 
+			$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity])->toarray();
+
+			if(count($WorkPlansS))
+			{
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Stockists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th></thead><tbody>';
+				$i = 1;
+				foreach ($WorkPlansS as $WorkPlanS)
+				{
+					$reported_stockists[]=$WorkPlanS->doctor_id;
+					$html.='<tr class="'.(($WorkPlanS->is_reported)?"reported":"").' "><td><input type="hidden" name=workplan_id['.$WorkPlanS->id.'] value="1">'.$i.'</td><td>'.$WorkPlanS->stockist->name.'</td><td>'.$WorkPlanS->city->city_name.'</td></tr>';
+				$i++;
+				}
+				$html.='</tbody></table>';
+			}
+			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'id NOT IN' => $reported_stockists])->toarray();
+			
 			if(count($WorkPlans))
 			{
 				$is_cancelled = '<select name="is_cancelled[%s]"><option value="0">No</option><option value="1">Yes</option></select>';
@@ -170,7 +186,7 @@ class MrsController extends AppController {
 				foreach ($WorkPlans as $WorkPlan)
 				{
 					$is_cancelled_selected = str_replace('value="'.$WorkPlan->is_cancelled.'"','value="'.$WorkPlan->is_cancelled.'" selected',$is_cancelled);
-					$html.='<tr><td><input type="hidden" name=workplan_id['.$WorkPlan->id.'] value="1">'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td>'.sprintf($is_cancelled_selected,$WorkPlan->id).'</td></tr>';
+					$html.='<tr class="'.(($WorkPlan->is_reported)?"reported":"").' "><td><input type="hidden" name=workplan_id['.$WorkPlan->id.'] value="1">'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td>'.sprintf($is_cancelled_selected,$WorkPlan->id).'</td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
