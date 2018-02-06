@@ -34,7 +34,7 @@
                 </a>
                 <ul class="treeview-menu">
                 	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Dr List'), ['controller' => 'Mrs', 'action' => 'doctorList'], ['escape' => false]) ?></li>
-                	<!--<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Chemist List'), ['controller' => 'Mrs', 'action' => 'chemistList'], ['escape' => false]) ?></li>-->
+                	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Chemist List'), ['controller' => 'Chemists', 'action' => 'index'], ['escape' => false]) ?></li>
                 </ul>
             </li>
             <?php if($role!=5){?>

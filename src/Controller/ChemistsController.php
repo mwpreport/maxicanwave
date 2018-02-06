@@ -106,6 +106,11 @@ class ChemistsController extends AppController
      */
     public function delete($id = null)
     {
+        if($this->Auth->user('role_id')==5)
+        return $this->redirect(['action' => 'index']);
+        
+        $this->autoRender = false;
+        $this->viewBuilder()->layout(false);
         $this->request->allowMethod(['post', 'delete']);
         $chemist = $this->Chemists->get($id);
         if ($this->Chemists->delete($chemist)) {
@@ -116,99 +121,5 @@ class ChemistsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
-    
-    public function mrsGetChemists()
-    {
-        $this->autoRender = false;
-        $this->viewBuilder()->layout(false);
-		$data = $this->request->data;
-		$uid = $this->Auth->user('id');
-		$city = $data['city'];
-		$chemists = $this->Chemists
-			->find()
-			->notMatching('ChemistsRelation', function ($q) use ($uid) {
-				return $q->where(['ChemistsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $city]);
-		$chemists->toarray();
-		$listHtml='<option value="">Select Chemist</option>';
-		foreach ($chemists as $chemist)
-		$listHtml.='<option value="'.$chemist['id'].'">'.$chemist['name'].'</option>';
-		
-		echo $listHtml; exit;
-    }
-    
-    public function getChemistsOption()
-    {
-        $this->autoRender = false;
-        $this->viewBuilder()->layout(false);
-		$data = $this->request->data;
-		$uid = $this->Auth->user('id');
-		$city = $data['city'];
-		$uid = $data['user'];
-		$chemists = $this->Chemists
-			->find()
-			->notMatching('ChemistsRelation', function ($q) use ($uid) {
-				return $q->where(['ChemistsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $city]);
-		$chemists->toarray();
-		$listHtml='';
-		foreach ($chemists as $chemist)
-		$listHtml.='<option value="'.$chemist['id'].'">'.$chemist['name'].'</option>';
-		
-		$returnArray = array('success' => "1",'chemist_id' => $listHtml);
-		echo json_encode($returnArray); 
-		exit;
-    }
-    
-    public function mrsGetChemist()
-    {
-        $this->autoRender = false;
-        $this->viewBuilder()->layout(false);
-		$data = $this->request->data;
-		
-		$chemist = $this->Chemists->get($data['id'], [
-            'contain' => ['States', 'Cities']
-        ]);
         
-		$listHtml =  "";
-        if($chemist){
-			$listHtml ='<li>
-				<div class="col-md-2">
-					<label>Name</label>
-				</div>
-				<div class="col-md-10">
-					<p>'.$chemist->name.'</p>
-				</div>
-			</li>
-			<li>
-				<div class="col-md-2">
-					<label>Contact Person</label>
-				</div>
-				<div class="col-md-10">
-					<p>'.$chemist->contact_person.'</p>
-				</div>
-			</li>
-			<li>
-				<div class="col-md-2">
-					<label>Contact</label>
-				</div>
-				<div class="col-md-10">
-					<p>Email : '.$chemist->email.', Mobile : '.$chemist->email.'</p>
-				</div>
-			</li>
-			<li>
-				<div class="col-md-2">
-					<label>Address</label>
-				</div>
-				<div class="col-md-10">
-					<p>'.$chemist->door_no.' - '.$chemist->street.',<br> '.$chemist->area.',<br> '.$chemist->city->city_name.', '.$chemist->state->state_code.', '.$chemist->pincode.'</p>
-				</div>
-			</li>';
-			
-		}
-		
-
-		echo $listHtml; exit;
-    }
-
 }

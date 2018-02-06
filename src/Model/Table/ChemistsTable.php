@@ -11,7 +11,6 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\StatesTable|\Cake\ORM\Association\BelongsTo $States
  * @property \App\Model\Table\CitiesTable|\Cake\ORM\Association\BelongsTo $Cities
- * @property \App\Model\Table\ChemistsRelationTable|\Cake\ORM\Association\HasMany $ChemistsRelation
  *
  * @method \App\Model\Entity\Chemist get($primaryKey, $options = [])
  * @method \App\Model\Entity\Chemist newEntity($data = null, array $options = [])

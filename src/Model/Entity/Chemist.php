@@ -24,7 +24,6 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\State $state
  * @property \App\Model\Entity\City $city
- * @property \App\Model\Entity\ChemistsRelation[] $chemists_relation
  */
 class Chemist extends Entity
 {

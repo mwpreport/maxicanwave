@@ -42,24 +42,7 @@ class MrsController extends AppController {
     public function dashboard(){
         $this->set('title', 'Doctor Visit Report');        
     }      
-    public function chemistList(){
-        $this->set('title', 'Chemist List');
-        $uid = $this->Auth->user('id');
-        $userCity = $this->Auth->user('city_id');
-        $user =  $this->Auth->user;
-		$state_id = $this->Auth->user('state_id');
-        $states = $this->States->find('all')->where(['id =' => $state_id])->toarray();
-        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $chemistsRelation = $this->paginate($this->ChemistsRelation->find('all')->contain(['Chemists.Cities','Chemists.States'])->where(['ChemistsRelation.user_id =' => $uid])->order(['ChemistsRelation.id' => 'ASC']));
-        $chemists = $this->Chemists
-			->find()
-			->notMatching('ChemistsRelation', function ($q) use ($uid) {
-				return $q->where(['ChemistsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $userCity]);
-        //pj($chemists);exit;
-        $this->set(compact('userCity', 'states', 'cities', 'chemistsRelation', 'chemists'));            
 
-    }
     public function dailyReport(){
         $this->set('title', 'Daily Report');
         $uid = $this->Auth->user('id');
