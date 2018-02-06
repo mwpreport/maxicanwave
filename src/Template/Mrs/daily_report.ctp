@@ -74,6 +74,8 @@
 				<form class="" id="UnplannedAddForm" method="POST" >
 				<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
 				<input type="hidden" name="work_type_id" value="2">
+				<input type="hidden" id="reported_doctors" value="<?php echo serialize($reported_doctors)?>">
+				
 				<div class="popup-header">
 					<button type="button" class="close popup-modal-dismiss add-form"><span>&times;</span></button>
 					<div class="hr-title"><h4>Add Doctors</h4><hr /></div>
@@ -83,7 +85,7 @@
 						<div class="col-sm-12 mar-bottom-20">
 							<div class="form-group">
 								<label for="city_id">City</label>
-								<select name="city_id" class="form-control required" id="city_id" aria-invalid="true">
+								<select name="city_id" onchange="loadDoctors(this.value)" class="form-control required" id="city_id" aria-invalid="true">
 									<option value="">Select</option>
 									<?php
 									foreach ($cities as $citiy)
@@ -116,6 +118,8 @@
 				<form class="" id="ChemistAddForm" method="POST" >
 				<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
 				<input type="hidden" name="work_type_id" value="">
+				<input type="hidden" id="reported_chemists" value="<?php echo serialize($reported_chemists)?>">
+				
 				<div class="popup-header">
 					<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
 					<div class="hr-title"><h4>Add Chemists</h4><hr /></div>
@@ -125,7 +129,7 @@
 						<div class="col-sm-12 mar-bottom-20">
 							<div class="form-group">
 								<label for="city_id">City</label>
-								<select name="city_id" class="form-control required" id="city_id" aria-invalid="true">
+								<select name="city_id" onchange="loadChemists(this.value)" class="form-control required" id="city_id" aria-invalid="true">
 									<option value="">Select</option>
 									<?php
 									foreach ($cities as $citiy)
@@ -157,6 +161,7 @@
 				<form class="" id="StockistAddForm" method="POST" >
 				<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
 				<input type="hidden" name="work_type_id" value="">
+				<input type="hidden" id="reported_stockists" value="<?php echo serialize($reported_stockists)?>">
 				<div class="popup-header">
 					<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
 					<div class="hr-title"><h4>Add Stockists</h4><hr /></div>
@@ -166,7 +171,7 @@
 						<div class="col-sm-12 mar-bottom-20">
 							<div class="form-group">
 								<label for="city_id">City</label>
-								<select name="city_id" class="form-control required" id="city_id" aria-invalid="true">
+								<select name="city_id" class="form-control required" onchange="loadStockists(this.value)" id="city_id" aria-invalid="true">
 									<option value="">Select</option>
 									<?php
 									foreach ($cities as $citiy)
@@ -278,6 +283,42 @@
 		{$("#pdt_link_"+id).html("Select Products");}
 	}
 
+	function loadDoctors(city){
+		var r_doctors = $('#reported_doctors').val();
+		$.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetDoctors"])?>',
+			   data: "city="+city+"&r_doctors="+r_doctors,
+			   type: "POST",
+			   success: function(json) {
+				   $('#doctor_id').html(json);
+			   }
+		});
+	}
+
+	function loadChemists(city){
+		var r_chemists = $('#reported_chemists').val();
+		$.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetChemists"])?>',
+			   data: "city="+city+"&r_chemists="+r_chemists,
+			   type: "POST",
+			   success: function(json) {
+				   $('#chemist_id').html(json);
+			   }
+		});
+	}
+
+	function loadStockists(city){
+		var r_stockists = $('#reported_stockists').val();
+		$.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetStockists"])?>',
+			   data: "city="+city+"&r_stockists="+r_stockists,
+			   type: "POST",
+			   success: function(json) {
+				   $('#stockist_id').html(json);
+			   }
+		});
+	}
+
 	function doSubmit(form){ // add event
 	   $.ajax({
 		   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAddReport"])?>',
@@ -298,23 +339,24 @@
 	   });
 	}
 	
-	function doDelete(){  // delete event 
-	   var eventID = $('#ModalEdit #id').val();
-	   $.ajax({
-		   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDeleteReport"])?>',
-		   data: 'action=delete&id='+eventID,
-		   type: "POST",
-		   success: function(json) {
-			   if(json == 1)
-				{
-					$("#calendar").fullCalendar('removeEvents',eventID);
-					
-					$.magnificPopup.close();
-				}
-			   else
-					return false;
-		   }
-	   });
+	function doDelete(eventID){  // delete event 
+		if (confirm("Are you sure on deleting this?"))
+		{
+		   $.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDeleteReport"])?>',
+			   dataType: "json",
+			   data: 'action=delete&id='+eventID,
+			   type: "POST",
+			   success: function(json) {
+				   if(json.status == 1)
+					{
+						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+					}
+				   else
+						alert(json.msg);
+			   }
+		   });
+		}
 	}
 
 

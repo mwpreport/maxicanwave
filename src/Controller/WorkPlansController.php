@@ -530,7 +530,6 @@ class WorkPlansController extends AppController
 			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'city_id' => $_POST['city_id']);
 			$data['start_date'] = $_POST['start_date']." 00:00:00";
 			$data['end_date'] = $_POST['start_date']." 23:59:00";
-			$data['is_approved'] = 1;
 			$data['is_reported'] = 1;
 			$data['last_updated'] = date("Y-m-d H:i:s");
 			
@@ -554,11 +553,13 @@ class WorkPlansController extends AppController
 					$plan_data = $data;
 					$plan_data['doctor_id'] = $doctor_id;
 					$plan_data['is_unplanned'] = 1;
+					$plan_data['is_approved'] = 1;
 					$workPlans_array[] = $plan_data;
 				}
 
 				$entities = $this->WorkPlans->newEntities($workPlans_array);
 				$_results = $this->WorkPlans->saveMany($entities);
+				$this->Flash->success(__('Unplanned Doctor(s) Saved Successfully'));
 				echo json_encode(array("status"=>1,"msg"=>"Unplanned Doctor(s) Saved Successfully")); exit;
 			}
 			elseif($data['work_type_id'] == "" && isset($_POST['chemist_id']))
@@ -573,6 +574,7 @@ class WorkPlansController extends AppController
 
 				$entities = $this->WorkPlans->newEntities($workPlans_array);
 				$_results = $this->WorkPlans->saveMany($entities);
+				$this->Flash->success(__("Chemist(s) Saved Successfully"));
 				echo json_encode(array("status"=>1,"msg"=>"Chemist(s) Saved Successfully")); exit;
 			}
 			elseif($data['work_type_id'] == "" && isset($_POST['stockist_id']))
@@ -587,6 +589,7 @@ class WorkPlansController extends AppController
 
 				$entities = $this->WorkPlans->newEntities($workPlans_array);
 				$_results = $this->WorkPlans->saveMany($entities);
+				$this->Flash->success(__("Stockist(s) Saved Successfully"));
 				echo json_encode(array("status"=>1,"msg"=>"Stockist(s) Saved Successfully")); exit;
 			}
 			elseif($data['work_type_id'] != 2 && $data['work_type_id'] != 1 && $data['work_type_id'] != "")
@@ -596,14 +599,34 @@ class WorkPlansController extends AppController
 					$id = $workPlan->id;
 					$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
 					$returnArray[] = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$WorkTypes['name'], 'color'=>$WorkTypes['color']); 
+					$this->Flash->success(__("Report Saved Successfull"));
 					echo json_encode(array("status"=>1,"msg"=>"Report Saved Successfull")); exit;
 				}
 				else
-				{echo json_encode(array("status"=>0,"msg"=>'The report could not be saved. Please, try again.')); exit;}
+				{$this->Flash->error(__('The report could not be saved. Please, try again.'));echo json_encode(array("status"=>0,"msg"=>'The report could not be saved. Please, try again.')); exit;}
 			}
 			
         }
 		exit;   
      }
 
+    public function mrsDeleteReport()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$id = $_POST['id'];
+		
+        if ($this->request->is(['patch', 'post', 'put'])) {
+			$workPlan = $this->WorkPlans->get($id, [
+				'contain' => []
+			]);
+            $workPlan = $this->WorkPlans->patchEntity($workPlan, array('is_deleted' => '1'));
+            if ($this->WorkPlans->save($workPlan)) {
+                $this->Flash->success(__('Deleted Successfully.'));
+				echo json_encode(array("status"=>1,"msg"=>"Report Saved Successfull")); exit;
+            }
+        }
+            $this->Flash->error(__('Unable to delete. Please, try again.'));
+			echo json_encode(array("status"=>0,"msg"=>"Unable to delete. Please, try again.")); exit;
+     }
 }

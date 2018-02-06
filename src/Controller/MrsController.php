@@ -77,7 +77,7 @@ class MrsController extends AppController {
 			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
-			$planned_doctors=array(0);
+			$reported_doctors=array(0);
 			$reported_stockists=array(0);
 			$reported_chemists=array(0);
 			
@@ -85,26 +85,26 @@ class MrsController extends AppController {
 			->find('all')
 			->contain(['WorkTypes', 'Cities', 'Doctors'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
 			
-			$WorkPlansC = $this->WorkPlans
-			->find('all')
-			->contain(['WorkTypes', 'Cities', 'Chemists'])	
-			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
-			
-			$WorkPlansS = $this->WorkPlans
-			->find('all')
-			->contain(['WorkTypes', 'Cities', 'Stockists'])	 
-			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
-
 			$WorkPlans = $this->WorkPlans
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
 			
+			$WorkPlansC = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Chemists'])	
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+			
+			$WorkPlansS = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Stockists'])	 
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+
 			$html = "";
 			if(count($WorkPlansD))
 			{
@@ -128,7 +128,7 @@ class MrsController extends AppController {
 					</div>
 				</div>';
 
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Is Missed</th><th>Products</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Is Missed</th><th>Products</th><th>Action</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansD as $WorkPlanD)
 				{
@@ -154,46 +154,59 @@ class MrsController extends AppController {
 					if(count($sample_products)>0) {$pdt_lnk_text = implode(", ",$sample_products); $pdt_val_text=implode(",",array_keys($sample_products));}
 					else {$pdt_lnk_text = "Select Products"; $pdt_val_text="";}
 					$product_popup_selected = str_replace("%products",$product_options,$product_popup);
-					$planned_doctors[]=$WorkPlanD->doctor_id;
-					$html.='<tr class="'.(($WorkPlanD->is_reported)?"reported":"").' "><td><input type="hidden" name=workplan_id['.$WorkPlanD->id.'] value="1">'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.str_replace("%s",$WorkPlanD->id,$work_with_selected).'</td><td>'.str_replace("%s",$WorkPlanD->id,$is_missed_selected).'</td><td><a href="#doctor_product_'.$WorkPlanD->id.'" id="pdt_link_'.$WorkPlanD->id.'" class="popup-modal">'.$pdt_lnk_text.'</a><input type="hidden" id="pdt_val_'.$WorkPlanD->id.'" name=pdt_val['.$WorkPlanD->id.'] value="'.$pdt_val_text.'">'.str_replace("%s",$WorkPlanD->id,$product_popup_selected).'</td></tr>';
+					$reported_doctors[]=$WorkPlanD->doctor_id;
+					$html.='<tr class="'.(($WorkPlanD->is_reported)?"reported":"").' '.(($WorkPlanD->is_unplanned)?"unplanned":"").'"><td><input type="hidden" name=workplan_id['.$WorkPlanD->id.'] value="1">'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.str_replace("%s",$WorkPlanD->id,$work_with_selected).'</td><td>'.str_replace("%s",$WorkPlanD->id,$is_missed_selected).'</td><td><a href="#doctor_product_'.$WorkPlanD->id.'" id="pdt_link_'.$WorkPlanD->id.'" class="popup-modal">'.$pdt_lnk_text.'</a><input type="hidden" id="pdt_val_'.$WorkPlanD->id.'" name=pdt_val['.$WorkPlanD->id.'] value="'.$pdt_val_text.'">'.str_replace("%s",$WorkPlanD->id,$product_popup_selected).'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanD->id.')">Remove</a></td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
 			}
-			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $planned_doctors])->contain(['Doctors']);
+			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
 
-			$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity])->toarray();
+			if(count($WorkPlans))
+			{
+				$is_cancelled = '<select name="is_cancelled[%s]"><option value="0">No</option><option value="1">Yes</option></select>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th><th>Is Cancelled</th><th>Action</th></tr></thead><tbody>';
+				$i = 1;
+				foreach ($WorkPlans as $WorkPlan)
+				{
+					$is_cancelled_selected = str_replace('value="'.$WorkPlan->is_cancelled.'"','value="'.$WorkPlan->is_cancelled.'" selected',$is_cancelled);
+					$html.='<tr class="'.(($WorkPlan->is_reported)?"reported":"").' "><td><input type="hidden" name=workplan_id['.$WorkPlan->id.'] value="1">'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td>'.sprintf($is_cancelled_selected,$WorkPlan->id).'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlan->id.')">Remove</a></td></tr>';
+				$i++;
+				}
+				$html.='</tbody></table>';
+			}
 
+			if(count($WorkPlansC))
+			{
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th>Action</th></thead><tbody>';
+				$i = 1;
+				foreach ($WorkPlansC as $WorkPlanC)
+				{
+					$reported_chemists[]=$WorkPlanC->chemist_id;
+					$html.='<tr class="'.(($WorkPlanC->is_reported)?"reported":"").' "><td><input type="hidden" name=workplan_id['.$WorkPlanC->id.'] value="1">'.$i.'</td><td>'.$WorkPlanC->chemist->name.'</td><td>'.$WorkPlanC->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanC->id.')">Remove</a></td></tr>';
+				$i++;
+				}
+				$html.='</tbody></table>';
+			}
+			$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity, 'id NOT IN' => $reported_chemists])->toarray();
+			
 			if(count($WorkPlansS))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Stockists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Stockists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th>Action</th></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansS as $WorkPlanS)
 				{
-					$reported_stockists[]=$WorkPlanS->doctor_id;
-					$html.='<tr class="'.(($WorkPlanS->is_reported)?"reported":"").' "><td><input type="hidden" name=workplan_id['.$WorkPlanS->id.'] value="1">'.$i.'</td><td>'.$WorkPlanS->stockist->name.'</td><td>'.$WorkPlanS->city->city_name.'</td></tr>';
+					$reported_stockists[]=$WorkPlanS->stockist_id;
+					$html.='<tr class="'.(($WorkPlanS->is_reported)?"reported":"").' "><td><input type="hidden" name=workplan_id['.$WorkPlanS->id.'] value="1">'.$i.'</td><td>'.$WorkPlanS->stockist->name.'</td><td>'.$WorkPlanS->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanS->id.')">Remove</a></td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
 			}
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'id NOT IN' => $reported_stockists])->toarray();
 			
-			if(count($WorkPlans))
-			{
-				$is_cancelled = '<select name="is_cancelled[%s]"><option value="0">No</option><option value="1">Yes</option></select>';
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th><th>Is Cancelled</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlans as $WorkPlan)
-				{
-					$is_cancelled_selected = str_replace('value="'.$WorkPlan->is_cancelled.'"','value="'.$WorkPlan->is_cancelled.'" selected',$is_cancelled);
-					$html.='<tr class="'.(($WorkPlan->is_reported)?"reported":"").' "><td><input type="hidden" name=workplan_id['.$WorkPlan->id.'] value="1">'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td>'.sprintf($is_cancelled_selected,$WorkPlan->id).'</td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
 		}
 		if($html == ""){$html.="<p>No plans on this date</p>";}
-        $this->set(compact('userCity', 'cities', 'products', 'chemists', 'stockists', 'html', 'doctorsRelation', 'date'));        
+        $this->set(compact('userCity', 'cities', 'products', 'chemists', 'stockists', 'doctorsRelation', 'reported_doctors', 'reported_chemists', 'reported_stockists', 'html', 'date'));        
 		
     }
 	
@@ -234,4 +247,52 @@ class MrsController extends AppController {
     public function doctorSelection(){
         $this->set('title', 'Doctor Visit Report');        
     }      
-}
+
+    public function reportGetDoctors()
+    {
+        $this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$data = $this->request->data;
+		$uid = $this->Auth->user('id');
+		$city = $data['city'];
+		$reported_doctors = unserialize($data['r_doctors']);
+		$doctors = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $city])->contain(['Doctors']);
+		$listHtml='';
+		foreach ($doctors as $doctor)
+		$listHtml.='<option value="'.$doctor->doctor_id.'">'.$doctor->doctor->name.'</option>';
+		echo $listHtml; exit;
+    }
+
+    public function reportGetChemists()
+    {
+        $this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$data = $this->request->data;
+		$uid = $this->Auth->user('id');
+		$city = $data['city'];
+		$reported_chemists = unserialize($data['r_chemists']);
+		$chemists = $this->Chemists->find('all')->where(['city_id =' => $city, 'id NOT IN' => $reported_chemists])->toarray();
+		$listHtml='';
+		foreach ($chemists as $chemist)
+		$listHtml.='<option value="'.$chemist['id'].'">'.$chemist['name'].'</option>';
+		
+		echo $listHtml; exit;
+    }
+
+    public function reportGetStockists()
+    {
+        $this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$data = $this->request->data;
+		$uid = $this->Auth->user('id');
+		$city = $data['city'];
+		$reported_stockists = unserialize($data['r_stockists']);
+		$stockists = $this->Stockists->find('all')->where(['city_id =' => $city, 'id NOT IN' => $reported_stockists])->toarray();
+		$listHtml='';
+		foreach ($stockists as $stockist)
+		$listHtml.='<option value="'.$stockist['id'].'">'.$stockist['name'].'</option>';
+		
+		echo $listHtml; exit;
+    }
+
+	}

@@ -702,8 +702,11 @@ th a{color : #fff;}
 #report_section input[type="checkbox"]{display:inline-block;}
 #report_section th{padding:3px;}
 #report_section th:first-child, #report_section td:first-child{width:30px}
-#report_section th:last-child, #report_section td:last-child{width:150px}
-#report_section th:nth-child(2), #report_section td:nth-child(2){text-align:left; padding-left:10px;}
+#report_section th:last-child, #report_section td:last-child{width:60px;padding:0 5px;}
+#report_section th:nth-child(6), #report_section td:nth-child(6){width:150px}
+#report_section th:nth-child(2), #report_section td:nth-child(2){text-align:left; padding-left:10px; width:200px}
+#report_section tr.reported td:first-child {background: #98FB98;}
+#report_section tr.reported.unplanned td:first-child {background: #3CB371;}
 #report_section td{padding:0;}
 #report_section select{width:100px;}
 .doctor_product select[multiple]{width:50%;}
