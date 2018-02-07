@@ -58,6 +58,9 @@
 									<div class="col-sm-3">
 										<a  href="#StockistAdd" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Stockists</a>
 									</div>
+									<div class="col-sm-3">
+										<a  href="#PGOthers" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Stockists</a>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -90,7 +93,7 @@
 						<div class="col-sm-12 mar-bottom-20">
 							<div class="form-group">
 								<label for="city_id">City</label>
-								<select name="city_id" onchange="loadDoctors(this.value)" class="form-control required" id="city_id" aria-invalid="true">
+								<select name="city_id" onchange="loadDoctors(this.form.id)" class="form-control required" id="city_id" aria-invalid="true">
 									<option value="">Select</option>
 									<?php
 									foreach ($cities as $citiy)
@@ -134,7 +137,7 @@
 						<div class="col-sm-12 mar-bottom-20">
 							<div class="form-group">
 								<label for="city_id">City</label>
-								<select name="city_id" onchange="loadChemists(this.value)" class="form-control required" id="city_id" aria-invalid="true">
+								<select name="city_id" onchange="loadChemists(this.form.id)" class="form-control required" id="city_id" aria-invalid="true">
 									<option value="">Select</option>
 									<?php
 									foreach ($cities as $citiy)
@@ -176,7 +179,7 @@
 						<div class="col-sm-12 mar-bottom-20">
 							<div class="form-group">
 								<label for="city_id">City</label>
-								<select name="city_id" class="form-control required" onchange="loadStockists(this.value)" id="city_id" aria-invalid="true">
+								<select name="city_id" class="form-control required" onchange="loadStockists(this.form.id)" id="city_id" aria-invalid="true">
 									<option value="">Select</option>
 									<?php
 									foreach ($cities as $citiy)
@@ -192,6 +195,62 @@
 									foreach ($stockists as $stockist)
 									{?>
 									<option value="<?= $stockist->id?>"><?= $stockist->name?></option>
+									<?php }	?>
+								</select>  
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
+						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="StockistSubmit" class="btn blue-btn btn-block">Save</button></div>
+					</div>
+				</div>
+				</form>
+			</div>
+		</div>
+		<div class="mfp-hide white-popup-block small_popup" id="PGOthers">
+			<div class="popup-content">
+				<form class="" id="StockistAddForm" method="POST" >
+				<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
+				<input type="hidden" name="work_type_id" value="">
+				<div class="popup-header">
+					<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
+					<div class="hr-title"><h4>Add PG & Others</h4><hr /></div>
+				</div>
+				<div class="popup-body">
+					<div class="row">
+						<div class="col-sm-12 mar-bottom-20">
+							<div class="form-group">
+								<label for="city_id">Doctor Name</label>
+								<input type="text" name="name" id="name" class="required">
+							</div>
+							<div class="form-group">
+								<label for="stockit_id">Email</label>
+								<input type="email" name="email" id="email" class="required email">
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
+						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="StockistSubmit" class="btn blue-btn btn-block">Save</button></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12 mar-bottom-20">
+							<div class="form-group">
+								<label for="city_id">City</label>
+								<select name="city_id" class="form-control required" onchange="loadStockists(this.form.id)" id="city_id" aria-invalid="true">
+									<option value="">Select</option>
+									<?php
+									foreach ($cities as $citiy)
+									{?>
+									<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?>><?= $citiy['city_name']?></option>
+									<?php }	?>
+								</select>  
+							</div>
+							<div class="form-group">
+								<label for="stockit_id">Select Speciality</label>
+								<select name="city_id" class="form-control required" onchange="loadStockists(this.form.id)" id="city_id" aria-invalid="true">
+									<option value="">Select</option>
+									<?php
+									foreach ($specialities as $speciality)
+									{?>
+									<option value="<?= $speciality['id']?>" ><?= $speciality['city_name']?></option>
 									<?php }	?>
 								</select>  
 							</div>
@@ -288,11 +347,12 @@
 		{$("#pdt_link_"+id).html("Select Products");}
 	}
 
-	function loadDoctors(city){
-		var r_doctors = $('#reported_doctors').val();
+	function loadDoctors(id){
+		var city_id = $('#'+id+' #city_id').val();
+		var start_date = $('#'+id+' #start_date').val();
 		$.ajax({
 			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetDoctors"])?>',
-			   data: "city="+city+"&r_doctors="+r_doctors,
+			   data: "city_id="+city_id+"&start_date="+start_date,
 			   type: "POST",
 			   success: function(json) {
 				   $('#doctor_id').html(json);
@@ -300,11 +360,12 @@
 		});
 	}
 
-	function loadChemists(city){
-		var r_chemists = $('#reported_chemists').val();
+	function loadChemists(id){
+		var city_id = $('#'+id+' #city_id').val();
+		var start_date = $('#'+id+' #start_date').val();
 		$.ajax({
 			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetChemists"])?>',
-			   data: "city="+city+"&r_chemists="+r_chemists,
+			   data: "city_id="+city_id+"&start_date="+start_date,
 			   type: "POST",
 			   success: function(json) {
 				   $('#chemist_id').html(json);
@@ -312,11 +373,12 @@
 		});
 	}
 
-	function loadStockists(city){
-		var r_stockists = $('#reported_stockists').val();
+	function loadStockists(id){
+		var city_id = $('#'+id+' #city_id').val();
+		var start_date = $('#'+id+' #start_date').val();
 		$.ajax({
 			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetStockists"])?>',
-			   data: "city="+city+"&r_stockists="+r_stockists,
+			   data: "city_id="+city_id+"&start_date="+start_date,
 			   type: "POST",
 			   success: function(json) {
 				   $('#stockist_id').html(json);

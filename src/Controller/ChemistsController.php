@@ -105,10 +105,7 @@ class ChemistsController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
-    {
-        if($this->Auth->user('role_id')==5)
-        return $this->redirect(['action' => 'index']);
-        
+    {        
         $this->autoRender = false;
         $this->viewBuilder()->layout(false);
         $this->request->allowMethod(['post', 'delete']);

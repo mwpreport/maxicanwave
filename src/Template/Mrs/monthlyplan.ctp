@@ -502,7 +502,7 @@
                 $('#calendar').fullCalendar({  // assign calendar
 
 				header: {
-					left: '',
+					left: 'prev',
 					center: 'title',
 					right: ''
 				},
@@ -585,71 +585,153 @@
 		   });
        
 
-       function doPlanCopy(){  // delete event 
-           $.ajax({
-               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsPlanCopy"])?>',
-               data: $('#ModalCopyForm').serialize(),
-               type: "POST",
+       /*Form Events*/
+		$( "#ModalAddForm #work_type_id" ).change(function() {
+		  var work_type_id = $(this).val();
+		  $("#ModalAddForm .dhide").addClass("hide");
+		  $("#ModalAddForm .dshow").removeClass("hide");
+		  $('#ModalAddForm #end_date').val('');
+		  $('#ModalAddForm .w'+work_type_id).removeClass("hide");
+		  $("#ModalAddForm .xw"+work_type_id).addClass("hide");
+		});
+
+		$( "#ModalEditForm #work_type_id" ).change(function() {
+		  var work_type_id = $(this).val();
+		  $("#ModalEditForm .dhide").addClass("hide");
+		  $("#ModalEditForm .dshow").removeClass("hide");
+		  $('#ModalEditForm #end_date').val('');
+		  $('#ModalEditForm .w'+work_type_id).removeClass("hide");
+		  $("#ModalEditForm .xw"+work_type_id).addClass("hide");
+		});
+
+			   
+		$("#ModalAddForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				doSubmit()
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
+		$("#ModalEditForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				updateSubmit();
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
+		 
+		$("#ModalDeleteForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				doDateDelete();
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
+		 
+		$("#ModalLeaveForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				doLeave();
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
+		 
+		$("#ModalCopyForm").validate({
+			 ignore: ":hidden",
+			 submitHandler: function (form) {
+				doPlanCopy();
+				return false; // required to block normal submit since you used ajax
+			 }
+		 });
+       
+		$('.popup-modal').magnificPopup({
+			type: 'inline',
+			preloader: false,
+			modal: true
+		});
+
+		$(document).on('click', '.popup-modal-dismiss', function (e) {
+			e.preventDefault();
+			reset_form();
+			$.magnificPopup.close();
+		});
+		
+		$( "#ModalAddForm #start_date" ).on('changeDate', function (ev) {
+			loadDoctors("#ModalAddForm");
+		});
+		$( "#ModalAddForm #work_type_id, #ModalAddForm #city_id" ).change(function() {
+			loadDoctors("#ModalAddForm");
+		});
+       
+            });
+        </script>
+        <script>
+            
+		function doPlanCopy(){  // delete event 
+		   $.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsPlanCopy"])?>',
+			   data: $('#ModalCopyForm').serialize(),
+			   type: "POST",
 			   dataType: "json",
-               success: function(json) {
-                   if(json.success == "1")
+			   success: function(json) {
+				   if(json.success == "1")
 					{
 						$('#calendar').fullCalendar( 'refetchEvents' );
 						$('#ModalCopyForm #copyfrom,#ModalCopyForm #copyto').val("");
 						$.magnificPopup.close();
 					}
-                   else
-                   {
+				   else
+				   {
 					   alert(json.error); return false;
 				   }
-               }
-           });
-       }
-       
-       function doDateDelete(){  // delete event 
-           $.ajax({
-               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDateDelete"])?>',
-               data: $('#ModalDeleteForm').serialize(),
-               type: "POST",
+			   }
+		   });
+		}
+
+		function doDateDelete(){  // delete event 
+		   $.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDateDelete"])?>',
+			   data: $('#ModalDeleteForm').serialize(),
+			   type: "POST",
 			   dataType: "json",
-               success: function(json) {
-                   if(json.success == "1")
+			   success: function(json) {
+				   if(json.success == "1")
 					{
 						$('#calendar').fullCalendar( 'refetchEvents' );
 						$.magnificPopup.close();
 					}
-                   else
-                        return false;
-               }
-           });
-       }
-       
-       function doDelete(){  // delete event 
-           var eventID = $('#ModalEdit #id').val();
-           $.ajax({
-               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDelete"])?>',
-               data: 'action=delete&id='+eventID,
-               type: "POST",
-               success: function(json) {
-                   if(json == 1)
+				   else
+						return false;
+			   }
+		   });
+		}
+
+		function doDelete(){  // delete event 
+		   var eventID = $('#ModalEdit #id').val();
+		   $.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDelete"])?>',
+			   data: 'action=delete&id='+eventID,
+			   type: "POST",
+			   success: function(json) {
+				   if(json == 1)
 					{
 						$("#calendar").fullCalendar('removeEvents',eventID);
 						
 						$.magnificPopup.close();
 					}
-                   else
-                        return false;
-               }
-           });
-       }
+				   else
+						return false;
+			   }
+		   });
+		}
 
-       function doSubmit(){ // add event
-           $.ajax({
-               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAdd"])?>',
-               dataType: "json",
-               data: $('#ModalAddForm').serialize()+"&action=add",
-               type: "POST",
-               success: function(json) {
+		function doSubmit(){ // add event
+		   $.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAdd"])?>',
+			   dataType: "json",
+			   data: $('#ModalAddForm').serialize()+"&action=add",
+			   type: "POST",
+			   success: function(json) {
 				   if(json.status == 1)
 				   {					   
 					   for( var i=0; i<json.events.length; i++)
@@ -664,24 +746,24 @@
 						   },
 						   true);
 					   }
-                   $.magnificPopup.close();
+				   $.magnificPopup.close();
 				   }
 				   else
 				   {
 					   alert(json.error);
 				   }
-               }
-           });
-       }
-       
-       function doLeave(){ // add event
-           $.ajax({
-               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAdd"])?>',
-               dataType: "json",
-               data: $('#ModalLeaveForm').serialize()+"&action=add",
-               type: "POST",
-               success: function(json) {
-                   if(json.status == 1)
+			   }
+		   });
+		}
+
+		function doLeave(){ // add event
+		   $.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAdd"])?>',
+			   dataType: "json",
+			   data: $('#ModalLeaveForm').serialize()+"&action=add",
+			   type: "POST",
+			   success: function(json) {
+				   if(json.status == 1)
 				   {					   
 					   for( var i=0; i<json.events.length; i++)
 					   {
@@ -695,24 +777,24 @@
 						   },
 						   true);
 					   }
-                   $.magnificPopup.close();
+				   $.magnificPopup.close();
 				   }
 				   else
 				   {
 					   alert(json.error);
 				   }
-               }
-           });
-       }
-       
-       function updateSubmit(){ // update event
-           var eventID = $('#ModalEdit #id').val();
-           $.ajax({
-               url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsUpdate"])?>',
-               dataType: "json",
-               data: $('#ModalEditForm').serialize()+"&action=update_event",
-               type: "POST",
-               success: function(json) {
+			   }
+		   });
+		}
+
+		function updateSubmit(){ // update event
+		   var eventID = $('#ModalEdit #id').val();
+		   $.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsUpdate"])?>',
+			   dataType: "json",
+			   data: $('#ModalEditForm').serialize()+"&action=update_event",
+			   type: "POST",
+			   success: function(json) {
 				   if(json.status == 1)
 				   {					   
 					   for( var i=0; i<json.events.length; i++)
@@ -728,95 +810,41 @@
 						   },
 						   true);
 					   }
-                   $.magnificPopup.close();
+				   $.magnificPopup.close();
 				   }
 				   else
 				   {
 					   alert(json.error);
 				   }
-               }
-           });
-       }
+			   }
+		   });
+		}
        
-       /*Form Events*/
-       $( "#ModalAddForm #work_type_id" ).change(function() {
-		  var work_type_id = $(this).val();
-		  $("#ModalAddForm .dhide").addClass("hide");
-		  $("#ModalAddForm .dshow").removeClass("hide");
-		  $('#ModalAddForm #end_date').val('');
-		  $('#ModalAddForm .w'+work_type_id).removeClass("hide");
-		  $("#ModalAddForm .xw"+work_type_id).addClass("hide");
-		});
-		
-       $( "#ModalEditForm #work_type_id" ).change(function() {
-		  var work_type_id = $(this).val();
-		  $("#ModalEditForm .dhide").addClass("hide");
-		  $("#ModalEditForm .dshow").removeClass("hide");
-		  $('#ModalEditForm #end_date').val('');
-		  $('#ModalEditForm .w'+work_type_id).removeClass("hide");
-		  $("#ModalEditForm .xw"+work_type_id).addClass("hide");
-		});
-
-			   
-	   $("#ModalAddForm").validate({
-			 ignore: ":hidden",
-			 submitHandler: function (form) {
-				doSubmit()
-				return false; // required to block normal submit since you used ajax
-			 }
-		 });
-	   $("#ModalEditForm").validate({
-			 ignore: ":hidden",
-			 submitHandler: function (form) {
-				updateSubmit();
-				return false; // required to block normal submit since you used ajax
-			 }
-		 });
-		 
-	   $("#ModalDeleteForm").validate({
-			 ignore: ":hidden",
-			 submitHandler: function (form) {
-				doDateDelete();
-				return false; // required to block normal submit since you used ajax
-			 }
-		 });
-		 
-	   $("#ModalLeaveForm").validate({
-			 ignore: ":hidden",
-			 submitHandler: function (form) {
-				doLeave();
-				return false; // required to block normal submit since you used ajax
-			 }
-		 });
-		 
-	   $("#ModalCopyForm").validate({
-			 ignore: ":hidden",
-			 submitHandler: function (form) {
-				doPlanCopy();
-				return false; // required to block normal submit since you used ajax
-			 }
-		 });
-       
-       
-            });
-        </script>
-        <script>
-            $('.popup-modal').magnificPopup({
-                type: 'inline',
-                preloader: false,
-                modal: true
-            });
-            $(document).on('click', '.popup-modal-dismiss', function (e) {
-                e.preventDefault();
-                reset_form();
-                $.magnificPopup.close();
-            });
-            function reset_form(){
-				$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm,#ModalDeleteForm,#ModalCopyForm')[0].reset();
-				$("#delete_plan_list, #copy_plan_list").html('');
-				$("#ModalAddForm .dhide").addClass("hide");
-				$("#ModalAddForm .dshow").removeClass("hide");
+		function loadDoctors(form){
+			var start_date = $(form+" #start_date").val();
+			var work_type_id = $(form+" #work_type_id").val();
+			if(work_type_id == 2)
+			{
+				var city_id = $(form+" #city_id").val();
+				if($(form+" #work_type_id").length)
+				var id = $(form+" #id").val();
+				$.ajax({
+					   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "planGetDoctors"])?>',
+					   data: "city_id="+city_id+"&start_date="+start_date+"&id="+id,
+					   type: "POST",
+					   success: function(json) {
+						   $(form+' #doctor_id').html(json);
+					   }
+				});
 			}
+		}
+		
+		function reset_form(){
+			$('#ModalAddForm,#ModalEditForm,#ModalLeaveForm,#ModalDeleteForm,#ModalCopyForm')[0].reset();
+			$("#delete_plan_list, #copy_plan_list").html('');
+			$("#ModalAddForm .dhide").addClass("hide");
+			$("#ModalAddForm .dshow").removeClass("hide");
+		}
 
         </script>
         <script>

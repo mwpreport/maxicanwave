@@ -25,6 +25,7 @@
             </li>
 
             <!-- Optionally, you can add icons to the links -->
+            <?php if($role==5){?>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-medkit" aria-hidden="true"></i> <span>Core Data</span>
@@ -37,7 +38,7 @@
                 	<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Chemist List'), ['controller' => 'Chemists', 'action' => 'index'], ['escape' => false]) ?></li>
                 </ul>
             </li>
-            <?php if($role!=5){?>
+            <?php }else{?>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-medkit" aria-hidden="true"></i> <span>Manage Users</span>
@@ -51,7 +52,7 @@
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Doctors and Chemists</span>
+                    <i class="fa fa-medkit" aria-hidden="true"></i> <span>Core Data</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>

@@ -53,6 +53,7 @@ class AppController extends Controller
         //$this->loadComponent('Security');
         //$this->loadComponent('Csrf');
         $this->loadComponent('Auth', [
+			'authorize' => ['Controller'], // Added this line
             'authenticate' => [
                 'Form' => [
                     'fields' => [
@@ -96,7 +97,6 @@ class AppController extends Controller
 		$user = $this->Users->get($this->Auth->user('id'), ['contain' => ['Roles']]);
 		else
 		$user ="";	
- 		$this->isAuthorized();
 
         $this->set("role",$user_role);
         $this->set("authuser",$user);
@@ -128,21 +128,20 @@ class AppController extends Controller
 		if($this->Auth->user()){
 		  $user = $this->Auth->user();
 		  if($user['is_deleted']==1){
-			$this->Flash->error("Invalid Email or Password.");
-			$this->redirect($this->Auth->logout());
+			$this->redirect($this->Auth->logout()); return false;
 		  }
 		  elseif($user['is_active']==0){
-			$this->Flash->error("You do not have an active role.");
-			$this->redirect($this->Auth->logout());
+			$this->redirect($this->Auth->logout()); return false;
 		  }
 		  else
 		  {
 			if(!$this->verifyRole($user['role_id'])){
-			$this->Flash->error("You do not have permission.");
 			$this->redirect(['controller' => 'Mrs', 'action' => 'dashboard']);
+			return false;
 			}
 		  }
 		}
+		return true;
 	}     
 
     /**
