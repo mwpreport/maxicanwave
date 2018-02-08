@@ -13,7 +13,12 @@ use App\Controller\AppController;
 class CitiesController extends AppController
 {
 
-    /**
+     public function initialize() {
+        parent::initialize();
+        $this->loadModel('States');
+    }
+
+   /**
      * Index method
      *
      * @return \Cake\Http\Response|void
@@ -23,9 +28,19 @@ class CitiesController extends AppController
         $this->paginate = [
             'contain' => ['States']
         ];
-        $cities = $this->paginate($this->Cities);
+        if(isset($_GET['state']))
+        $filterState = $_GET['state'];
+        else
+        $filterState = $this->Auth->user('state_id');
+        
+		$uid = $this->Auth->user('id');
+        $userCity = $this->Auth->user('city_id');
+        
 
-        $this->set(compact('cities'));
+        $cities = $this->paginate($this->Cities->find('all')->where(['state_id =' => $filterState]));
+        $states = $this->States->find('all')->toarray();
+
+        $this->set(compact('cities','states', 'filterState'));
         $this->set('_serialize', ['cities']);
     }
 

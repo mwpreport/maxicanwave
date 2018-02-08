@@ -219,7 +219,6 @@ class MrsController extends AppController {
 
 			if(count($WorkPlans))
 			{
-				if()
 				$is_cancelled = '<select name="is_cancelled[%s]"><option value="0">No</option><option value="1">Yes</option></select>';
 				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" name="check_all" value="1"></th><th>Work Type</th><th>City</th><th>Is Cancelled</th><th>Action</th></tr></thead><tbody>';
 				foreach ($WorkPlans as $WorkPlan)

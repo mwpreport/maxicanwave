@@ -30,13 +30,6 @@ class City extends Entity
      * @var array
      */
     protected $_accessible = [
-        'state_id' => true,
-        'city_name' => true,
-        'state' => true,
-        'chemists' => true,
-        'doctors' => true,
-        'users' => true,
-        'work_plans' => true,
-        'work_reports' => true
+        '*' => true
     ];
 }

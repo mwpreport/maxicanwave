@@ -40,9 +40,10 @@
 											echo $this->Form->control('email', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('firstname', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('lastname', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('role_id', ['class' => 'form-control mar-bottom-10', 'options' => $roles, 'empty' => 'Select Role']);
+											echo $this->Form->control('role_id', ['class' => 'form-control mar-bottom-10', 'onchange' => 'loadLeadOptions()', 'options' => $roles, 'empty' => 'Select Role']);
+											echo $this->Form->control('lead_id', ['class' => 'form-control mar-bottom-10', 'options' => $leads, 'empty' => 'Select Lead']);
 											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10', 'onchange' => 'loadCitiesOption()', 'options' => $states,'empty' => 'Select State']);
-											echo $this->Form->control('city_id', ['class' => 'form-control mar-bottom-10','empty' => 'Select City']);
+											echo $this->Form->control('city_id', ['label' => 'MR Headquarters', 'class' => 'form-control mar-bottom-10','empty' => 'Select City']);
 											echo $this->Form->control('avatar', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('gender', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $gender,'empty' => 'Select Gender']);
 											echo $this->Form->control('qualification', ['class' => 'form-control mar-bottom-10']);
@@ -67,12 +68,24 @@ $("#editform").validate();
 function loadCitiesOption(){
 	var state = $('#state-id').val();
 	$.ajax({
-		   url: '../cities/get_cities_option/',
+		   url: '<?php echo $this->Url->build(["controller" => "Cities","action" => "getCitiesOption"])?>',
 		   dataType: "json",
 		   data: "state="+state,
 		   type: "POST",
 		   success: function(json) {
 			   $('#city-id').html(json.cities);
+		   }
+    });
+}
+function loadLeadOptions(){
+	var role = $('#role-id').val();
+	$.ajax({
+		   url: '<?php echo $this->Url->build(["controller" => "Users","action" => "getLeadsOption"])?>',
+		   dataType: "json",
+		   data: "role="+role,
+		   type: "POST",
+		   success: function(json) {
+			   $('#lead-id').html(json.leads);
 		   }
     });
 }

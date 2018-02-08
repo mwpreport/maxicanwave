@@ -25,6 +25,13 @@
 						</div>
 						<div class="clearfix"></div>
 						<div class="col-md-12">
+							<select name="state_id" id="state_id" class="">
+								<?php foreach ($states as $state){
+								echo '<option value="'.$state->id.'" '.(($state->id==$filterState)?"selected":"").'>'.$state->name.'</option>';
+								} ?>
+							</select>
+						</div>
+						<div class="col-md-12">
 							<div class="box box-primary">
 								<div class="box-body no-padding">
 									<table class="table table-striped table-bordered table-hover">
@@ -73,3 +80,8 @@
 		<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<script>
+	$('#state_id').on('change', function (ev) {
+		window.location.replace("<?php echo $this->Url->build(["controller" => "Cities","action" => "index"])?>/?state="+$('#state_id').val());
+	});
+</script>

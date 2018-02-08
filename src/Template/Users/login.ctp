@@ -8,9 +8,9 @@
     <div class="login-form"><?php
         echo $this->Form->create('login',array('id'=>'loginForm','autocomplete'=>'off')); ?>
             <div class="form-group">
-                <label for="email1" class="col-sm-3 control-label">Email</label>
+                <label for="email1" class="col-sm-3 control-label">Username</label>
                 <div class="col-sm-9">
-                    <input type="email" class="form-control required" id="email1" placeholder="Email" name="email">
+                    <input type="text" class="form-control required" id="email1" placeholder="Username" name="username">
                 </div>
             </div>
             <div class="form-group">

@@ -46,7 +46,7 @@
                             </select>  
                         </div>
                         <div class="col-sm-6">
-                            <select name="doctor_id" class="required form-control" id="doctor_id" aria-invalid="true">
+                            <select name="doctor_id" class="required form-control" id="doctor_id" aria-invalid="true" onclick="loadProfile(this.value)" onchange="loadProfile(this.value)">
                                 <option value="">Select Doctor</option>
 								<?php
 								foreach ($doctors as $doctor)

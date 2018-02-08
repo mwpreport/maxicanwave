@@ -65,6 +65,8 @@ class UsersController extends AppController
     public function add()
     {
 		$authuser = $this->Auth->user();
+		$city_id = $authuser['city_id'];
+		$state_id = $authuser['state_id'];
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
@@ -78,7 +80,8 @@ class UsersController extends AppController
         $this->set(compact('user'));
         $roles = $this->Users->Roles->find('list')->where(['id >' => $authuser['role_id']])->toarray();
         $states = $this->Users->States->find('list');
-        $this->set(compact('user', 'roles', 'states'));
+        $cities = $this->Users->Cities->find('list')->where(['state_id =' => $state_id])->toarray();
+        $this->set(compact('user', 'roles', 'states','cities','state_id'));
 
         $this->set('_serialize', ['user']);
     }
@@ -108,7 +111,9 @@ class UsersController extends AppController
         $roles = $this->Users->Roles->find('list')->where(['id >' => $authuser['role_id']])->toarray();
         $states = $this->Users->States->find('list');
         $cities = $this->Users->Cities->find('list')->where(['state_id =' => $user['state_id']])->toarray();
-        $this->set(compact('user', 'roles', 'states', 'cities'));
+        $leadRole = $user['role']-1;
+        $leads = $users = $this->Users->find('all')->where(['role_id =' => $leadRole])->toarray();
+        $this->set(compact('user', 'roles', 'states', 'cities', 'leads'));
         $this->set('_serialize', ['user']);
     }
 
@@ -367,6 +372,23 @@ class UsersController extends AppController
         $returnArray = array('success' => "1",'user' => $usersHtml);
 		echo json_encode($returnArray); 
 		exit;   
+
+    }
+
+    public function getLeadsOption()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$data = $this->request->data;
+		$leadRole = $data['role']-1;
+		$users = $this->Users->find('all')->where(['role_id =' => $leadRole])->toarray();
+        $leadsHtml = '<option value="">Select Users</option>';
+        foreach ($users as $user)
+        $leadsHtml.='<option value="'.$user['id'].'">'.$user['firstname']." ".$user['lastname'].'</option>';
+        
+        $returnArray = array('success' => "1",'leads' => $leadsHtml);
+		echo json_encode($returnArray); 
+		exit;    
 
     }
 	

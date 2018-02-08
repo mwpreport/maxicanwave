@@ -282,17 +282,6 @@
 
 	$('#reportDate').on('changeDate', function (ev) {
 		window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date="+moment(ev.date).format('YYYY-MM-DD'));
-		/*$.ajax({
-			   url: '../work-plans/mrsGetReports/',
-			   dataType: "json",
-			   data: "date="+moment(ev.date).format('YYYY-MM-DD'),
-			   type: "POST",
-			   success: function(json) {
-				   $("#report_section").html(json.html);
-			   }
-		   });
-		*/
-		
 	});
 	
 	$('.popup-modal').magnificPopup({

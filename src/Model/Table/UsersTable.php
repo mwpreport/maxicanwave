@@ -78,6 +78,11 @@ class UsersTable extends Table
             ->notEmpty('role_id');
 
         $validator
+            ->integer('lead_id')
+            ->requirePresence('lead_id', 'create')
+            ->notEmpty('lead_id');
+
+        $validator
             ->scalar('firstname')
             ->requirePresence('firstname', 'create')
             ->notEmpty('firstname');
