@@ -11,6 +11,9 @@
                         <hr>
                     </div>
                 </div>
+				<?php
+				
+				?>
                 <div class="clearfix"></div>
                 <div class="daily-report-radio-cnt">
 					<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
@@ -34,10 +37,87 @@
 							</div>
 						</div>
 						<div class="col-sm-12 mar-bottom-20">
-							<div class="table-responsive" id="report_section">
-							<?= $html?>
-							</div>
+							<ul>
+								<li class="col-md-12"><h3 class="mar-top-20 mar-bottom-20">Type of Work</h3></li>
+								<li class="col-md-3"><input type="radio" name="workType" id="workType_2" value="1"><label for="workType_2"><span></span>Field</label></li>
+								<?php foreach ($workTypes as $workType){?>
+									<li class="col-md-3"><input type="radio" name="workType" id="workType_<?php echo $workType->id?>" value="<?php echo $workType->id?>"><label for="workType_<?php echo $workType->id?>"><span></span><?php echo $workType->name;?></label></li>
+								<?php }?>
+							</ul>
 						</div>
+						<div id="report_section">
+							<div class="col-sm-12 mar-bottom-20" id="workType_section_2">
+								<div class="table-responsive">
+								<?php
+								$html = "";
+								if(count($WorkPlansD))
+								{
+									$work_with = '<select name="work_with[%s]"><option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option></select>';
+									$is_missed = '<select name="missed_reason[%s]"><option value="">No</option><option>Doctor Refused Appointment</option><option>Doctor on Leave</option><option>Doctor not in Station</option><option>Plan Changed</option><option>Meeting / CME</option><option>Others</option></select>';
+									$product_popup = '<div class="mfp-hide white-popup-block small_popup doctor_product" id="doctor_product_%s">
+									<div class="popup-content">
+										<div class="popup-header">
+											<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
+											<div class="hr-title"><h4>Select Products Given as samples</h4><hr /></div>
+										</div>
+										<div class="popup-body">
+											<div class="row">
+												<div class="col-sm-12 mar-bottom-20">
+													<div class="radio-blk">
+													<select name="products[%s]" multiple="" id="products_%s"  onchange="productShow(%s)">%products</select>
+													</div>
+												</div>
+												<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss pull-right">OK</button></div>
+											</div>
+										</div>
+									</div>';
+
+									$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" name="check_all" value="1"></th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th></tr></thead><tbody>';
+									foreach ($WorkPlansD as $WorkPlanD)
+									{
+										
+										$work_with_selected = str_replace("<option>".$WorkPlanD->work_with."</option>","<option selected>".$WorkPlanD->work_with."</option>",$work_with);
+										$is_missed_selected = str_replace("<option>".$WorkPlanD->missed_reason."</option>","<option selected>".$WorkPlanD->missed_reason."</option>",$is_missed);;
+										$products_array = array();
+										if($WorkPlanD->products!="")
+										$products_array = unserialize($WorkPlanD->products);
+
+										$sample_products =array();$product_options="";
+										foreach($products as $product)
+										{
+											if (in_array($product->id, $products_array))
+											{
+												$product_options.='<option value="'.$product->id.'" selected>'.$product->name.'</option>';
+												$sample_products[$product->id]= $product->name;
+											}
+											else
+											$product_options.='<option value="'.$product->id.'">'.$product->name.'</option>';
+												
+										}
+										if(count($sample_products)>0) {$pdt_lnk_text = implode(", ",$sample_products); $pdt_val_text=implode(",",array_keys($sample_products));}
+										else {$pdt_lnk_text = "Select Products"; $pdt_val_text="";}
+										$product_popup_selected = str_replace("%products",$product_options,$product_popup);
+										$html.='<tr class="'.(($WorkPlanD->is_reported)?"reported":"").' '.(($WorkPlanD->is_unplanned)?"unplanned":"").'"><td><input type="checkbox" name="workplan_id['.$WorkPlanD->id.']" value="1"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.str_replace("%s",$WorkPlanD->id,$work_with_selected).'</td><td><a href="#doctor_product_'.$WorkPlanD->id.'" id="pdt_link_'.$WorkPlanD->id.'" class="popup-modal">'.$pdt_lnk_text.'</a><input type="hidden" id="pdt_val_'.$WorkPlanD->id.'" name=pdt_val['.$WorkPlanD->id.'] value="'.$pdt_val_text.'">'.str_replace("%s",$WorkPlanD->id,$product_popup_selected).'</td></tr>';
+									}
+									$html.='</tbody></table>';
+								}
+
+								echo $html;
+								?>
+								</div>
+							</div>
+							
+							<?php foreach ($workTypes as $workType){
+								
+								?>
+							<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_<?php echo $workType->id?>">
+								<div class="table-responsive">
+								
+								</div>
+							</div>
+							<?php }?>
+						</div>
+						
 						<div class="clearfix"></div>
 						<?php if($date!=""){?>
 						<div class="center-button-container">
@@ -45,6 +125,12 @@
 								<div class="form-group  mar-top-30">
 									<div class="col-sm-3">
 										<button class="common-btn blue-btn pull-left" type="submit" id="ReportSubmit">Save</button>
+									</div>
+									<div class="col-sm-3">
+										<button class="common-btn blue-btn pull-left" type="submit" id="ReportSubmit">Missed</button>
+									</div>
+									<div class="col-sm-3">
+										<button class="common-btn blue-btn pull-left" type="submit" id="ReportSubmit">Remove Visit List</button>
 									</div>
 								</div>
 								<hr>
@@ -59,7 +145,7 @@
 										<a  href="#StockistAdd" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Stockists</a>
 									</div>
 									<div class="col-sm-3">
-										<a  href="#PGOthers" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Stockists</a>
+										<a  href="#PGOthers" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> PG & Others</a>
 									</div>
 								</div>
 							</div>
@@ -220,15 +306,9 @@
 						<div class="col-sm-12 mar-bottom-20">
 							<div class="form-group">
 								<label for="city_id">Doctor Name</label>
-								<input type="text" name="name" id="name" class="required">
-							</div>
-							<div class="form-group">
-								<label for="stockit_id">Email</label>
-								<input type="email" name="email" id="email" class="required email">
+								<input type="text" name="name" id="name" class="form-control required">
 							</div>
 						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="StockistSubmit" class="btn blue-btn btn-block">Save</button></div>
 					</div>
 					<div class="row">
 						<div class="col-sm-12 mar-bottom-20">
@@ -318,7 +398,13 @@
 		}
 	});
 
-	
+	$("input[id^='workType_']").click(function(){
+		if ($(this).is(':checked'))
+		{
+		  alert($(this).val());
+		}
+	});
+  
 	function reset_form(){
 		$('#StockistAddForm, #ChemistAddForm, #UnplannedAddForm')[0].reset();
 	}
