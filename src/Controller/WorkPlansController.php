@@ -146,7 +146,7 @@ class WorkPlansController extends AppController
         $endDate=$_GET['end']." 23:59:00";
         $workPlans = $this->WorkPlans->find()->contain(['Doctors'])
 					->where(['start_date >= ' => $startDate,'end_date < ' => $endDate])
-					->where(['WorkPlans.user_id' => $uid]);
+					->where(['WorkPlans.user_id' => $uid, 'WorkPlans.work_type_id IS NOT' => null]);
         
 		$events=array();
 		foreach($workPlans as $event)
@@ -629,4 +629,8 @@ class WorkPlansController extends AppController
             $this->Flash->error(__('Unable to delete. Please, try again.'));
 			echo json_encode(array("status"=>0,"msg"=>"Unable to delete. Please, try again.")); exit;
      }
+
+    public function finalSaveDailyReport()
+	{
+	}
 }

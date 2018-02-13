@@ -118,7 +118,13 @@ class MrsController extends AppController {
         $specialities = $this->Specialities->find('all')->toarray();
 		$products = $this->Products->find('all')->toarray();
 		$date = "";
-		$html = "";
+		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
+		$WorkPlansD = array();
+		$WorkPlans = array();
+		$doctorsRelation = array();
+		$chemists = array();
+		$stockists = array();
+
 		if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];
@@ -126,7 +132,6 @@ class MrsController extends AppController {
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
 			
-			$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id <>' => '2'])->toarray();
 			
 			$WorkPlansD = $this->WorkPlans
 			->find('all')
@@ -134,7 +139,6 @@ class MrsController extends AppController {
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
 			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD);
-			$reported_doctors[]=0;
 			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
 
 
@@ -143,7 +147,7 @@ class MrsController extends AppController {
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id >' => 2]);
 			
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
@@ -151,7 +155,6 @@ class MrsController extends AppController {
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
 			$reported_chemists=array_map(function($c) { return $c->chemist_id; }, $WorkPlansC);
-			$reported_chemists[]=0;
 			$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity, 'id NOT IN' => $reported_chemists])->toarray();
 
 			
@@ -161,12 +164,10 @@ class MrsController extends AppController {
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansC);
-			$reported_stockists[]=0;
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'id NOT IN' => $reported_stockists])->toarray();
 			
 		}
-		if($html == ""){$html.="<p>No plans on this date</p>";}
-        $this->set(compact('userCity', 'cities', 'specialities', 'products', 'chemists', 'stockists', 'doctorsRelation', 'reported_doctors', 'reported_chemists', 'reported_stockists', 'workTypes', 'WorkPlansD', 'WorkPlans', 'workTypes', 'date'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
 		
     }
     

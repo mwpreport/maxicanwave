@@ -707,7 +707,7 @@ th a{color : #fff;}
 tr.reported td:first-child {background: #98FB98;}
 tr.reported.unplanned td:first-child {background: #3CB371;}
 #report_section td{padding:0;}
-#report_section select{width:100px;}
+#report_section table select{width:100px;}
 .doctor_product select[multiple]{width:50%;}
 
 
