@@ -82,7 +82,7 @@
 											</div>
 										</div>';
 
-										$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" name="check_all" value="1"></th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th></tr></thead><tbody>';
+										$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th></tr></thead><tbody>';
 										foreach ($WorkPlansD as $WorkPlanD)
 										{
 											
@@ -176,7 +176,7 @@
 										$html = "";
 										if(count($workTypePlans[$workType->id]))
 										{
-											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned '.$workType->name.'</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" name="check_all" value="1"></th><th>Work Type</th><th>City</th></thead><tbody>';
+											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned '.$workType->name.'</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Work Type</th><th>City</th></thead><tbody>';
 											foreach ($workTypePlans[$workType->id] as $workTypePlan)
 											{
 												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' "><td><input type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="1"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
@@ -189,6 +189,7 @@
 										<p>No Planned <?php echo $workType->name?> on this date</p>
 									</div>
 									<?php }else {?>
+									<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
 									<div class="table-responsive">
 										<?php echo $html;?>
 									</div>
@@ -208,6 +209,7 @@
 											</div>
 										</div>
 									</div>
+									</form>
 									<?php }?>
 								</div>
 								<div class="col-md-12 mar-bottom-20">
@@ -553,12 +555,21 @@
 		{
 			$("div[id^='workType_section_']").addClass("hide");
 			$("#workType_section_"+$(this).val()).removeClass("hide");
+			$('input[type="checkbox"]').prop('checked', false);
 			//alert($(this).val());
 		}
 	});
   
 	function reset_form(){
 		$('#StockistAddForm, #ChemistAddForm, #UnplannedAddForm')[0].reset();
+	}
+	
+	function toggleCheck(elem)
+	{
+		if($(elem).prop("checked") == true)
+		$(elem).closest("form").find("input:checkbox").prop('checked', true);
+		else
+		$(elem).closest("form").find("input:checkbox").prop('checked', false);
 	}
 	
 	function productShow(id){

@@ -146,7 +146,7 @@ class WorkPlansController extends AppController
         $endDate=$_GET['end']." 23:59:00";
         $workPlans = $this->WorkPlans->find()->contain(['Doctors'])
 					->where(['start_date >= ' => $startDate,'end_date < ' => $endDate])
-					->where(['WorkPlans.user_id' => $uid, 'WorkPlans.work_type_id IS NOT' => null]);
+					->where(['WorkPlans.user_id' => $uid, 'WorkPlans.is_planned =' => 1]);
         
 		$events=array();
 		foreach($workPlans as $event)
@@ -183,6 +183,7 @@ class WorkPlansController extends AppController
 			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'end_date' => $_POST['end_date'], 'city_id' => $_POST['city_id']);
 			$data['plan_reason'] = isset($_POST['plan_reason'])? $_POST['plan_reason'] : "";
 			$data['plan_details'] = isset($_POST['plan_details'])? $_POST['plan_details'] : "";
+			$data['is_planned'] = 1;
 			$data['start_date'] = $_POST['start_date']." 00:00:00";
 			if( $_POST['end_date']=="")$_POST['end_date'] = $_POST['start_date'];
 			$data['end_date'] = $_POST['end_date']." 23:59:00";
@@ -494,8 +495,6 @@ class WorkPlansController extends AppController
 					$reportData['missed_reason']=$data['missed_reason'][$workPlan_id];
 					$reportData['is_missed'] = 1;
 				}
-				if(isset($data['is_cancelled'][$workPlan_id]))
-				$reportData['is_cancelled']=$data['is_cancelled'][$workPlan_id];
 			
 				if(isset($data['pdt_val'][$workPlan_id]) && $data['pdt_val'][$workPlan_id] != "")
 				$reportData['products']=serialize(explode(",",$data['pdt_val'][$workPlan_id]));
