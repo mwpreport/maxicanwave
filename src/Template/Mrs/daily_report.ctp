@@ -45,10 +45,11 @@
 						<div class="col-sm-12 mar-bottom-20">
 							<ul>
 								<li class="col-md-12"><h3 class="mar-top-20 mar-bottom-20">Type of Work</h3></li>
-								<li class="col-md-3"><input type="radio" name="workType" id="workType_2" value="2"><label for="workType_2"><span></span>Field</label></li>
+								<li class="col-md-3"><input type="radio" name="workType" id="workType_2" value="2"><label for="workType_2"><span></span>Field Work</label></li>
 								<?php foreach ($workTypes as $workType){?>
 									<li class="col-md-3"><input type="radio" name="workType" id="workType_<?php echo $workType->id?>" value="<?php echo $workType->id?>"><label for="workType_<?php echo $workType->id?>"><span></span><?php echo $workType->name;?></label></li>
 								<?php $workTypePlans[$workType->id]=[];}?>
+								<li class="col-md-3"><input type="radio" name="workType" id="workType_1" value="1"><label for="workType_1"><span></span>Leave</label></li>
 							</ul>
 							<div class="clearfix"></div><hr />
 						</div>
@@ -124,13 +125,13 @@
 										<div class="row">
 											<div class="form-group  mar-top-30">
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" id="ReportSubmitSave">Save</button>
+													<button class="common-btn blue-btn pull-left" value="w2SubmitSave" type="submit" id="w2SubmitSave">Save</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" id="ReportSubmitMissed">Missed</button>
+													<button class="common-btn blue-btn pull-left" type="w2SubmitMissed" id="w2SubmitMissed">Missed</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" id="ReportSubmitRemove">Remove Visit List</button>
+													<button class="common-btn blue-btn pull-left" type="w2SubmitRemove" id="w2SubmitRemove">Remove Visit List</button>
 												</div>
 											</div>
 										</div>
@@ -196,13 +197,13 @@
 										<div class="row">
 											<div class="form-group  mar-top-30">
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" id="ReportSubmitSave">Save</button>
+													<button class="common-btn blue-btn pull-left" type="submit" value="w<?php echo $workType->id?>SubmitSave">Save</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" id="ReportSubmitMissed">Missed</button>
+													<button class="common-btn blue-btn pull-left" type="submit" value="w<?php echo $workType->id?>SubmitMissed">Missed</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" id="ReportSubmitRemove">Remove Visit List</button>
+													<button class="common-btn blue-btn pull-left" type="submit" value="w<?php echo $workType->id?>SubmitRemove">Remove Visit List</button>
 												</div>
 											</div>
 										</div>
@@ -219,7 +220,7 @@
 												<div class="col-sm-12 mar-bottom-20">
 													<div class="col-md-6 col-sm-6 col-xs-6 form-group">
 														<label for="city_id">City</label>
-														<select name="city_id" onchange="loadChemists(this.form.id)" class="form-control required" id="city_id" aria-invalid="true">
+														<select name="city_id" class="form-control required" id="city_id" aria-invalid="true">
 															<option value="">Select</option>
 															<?php
 															foreach ($cities as $citiy)
@@ -230,7 +231,7 @@
 													</div>
 													<div class="col-md-3 col-sm-3 col-xs-3">
 														<label>&nbsp;</label>
-														<button type="submit" class="btn blue-btn btn-block margin-right-35">Add <?php echo $workType->name?></button>
+														<button type="submit" class="btn blue-btn btn-block margin-right-35"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add <?php echo $workType->name?></button>
 													</div>
 												</div>
 												<!-- /.input group -->
@@ -240,6 +241,66 @@
 								</div>
 							</div>
 							<?php }?>
+							<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_1">
+								<div class="col-md-12 mar-bottom-20">
+									<?php 
+										$html = "";
+										if(count($workTypePlans[1]))
+										{
+											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" name="check_all" value="1"></th><th>Work Type</th><th>On</th></thead><tbody>';
+											foreach ($workTypePlans[1] as $workTypePlan)
+											{
+												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' "><td><input type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="1"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$reportDate.'</td></tr>';
+											}
+											$html.='</tbody></table>';
+										}
+									?>
+									<?php if($html == ""){?>
+									<div class="table-responsive">
+										<p>No Planned Leave on this date</p>
+									</div>
+									<?php }else {?>
+									<div class="table-responsive">
+										<?php echo $html;?>
+									</div>
+									<div class="clearfix"></div>
+									<div class="center-button-container">
+										<div class="row">
+											<div class="form-group  mar-top-30">
+												<div class="col-sm-3">
+													<button class="common-btn blue-btn pull-left" type="submit" value="w1SubmitSave">Save</button>
+												</div>
+												<div class="col-sm-3">
+													<button class="common-btn blue-btn pull-left" type="submit" value="w1SubmitMissed">Missed</button>
+												</div>
+												<div class="col-sm-3">
+													<button class="common-btn blue-btn pull-left" type="submit" value="w1SubmitRemove">Remove Visit List</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<?php }?>
+								</div>
+								<div class="col-md-12 mar-bottom-20">
+								<hr />
+									<form class="workplanForm" id="LeaveAddForm" method="POST" >
+										<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
+										<input type="hidden" name="work_type_id" value="1">
+										<div class="row">
+											<div class="form-group">
+												<div class="col-sm-12 mar-bottom-20">
+													<div class="col-md-6 col-sm-6 col-xs-6 form-group">
+														<label>&nbsp;</label>
+														<button type="submit" class="btn blue-btn btn-block margin-right-35"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Leave</button>
+													</div>
+												</div>
+												<!-- /.input group -->
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+
 						</div>
 						
 						</div>

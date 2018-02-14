@@ -26,7 +26,6 @@ class MrsController extends AppController {
         $this->loadModel('WorkTypes');
         $this->loadModel('LeaveTypes');
         $this->loadModel('DoctorsRelation');
-        $this->loadModel('ChemistsRelation');
         $this->loadModel('DoctorTypes');
         $this->loadModel('Products');
     }
@@ -138,8 +137,8 @@ class MrsController extends AppController {
 			->contain(['WorkTypes', 'Cities', 'Doctors'])	
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
-			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD);
-			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
+			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD); $reported_doctors[]=0;
+			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors'])->toArray();
 
 
 			
@@ -147,15 +146,15 @@ class MrsController extends AppController {
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id >' => 2]);
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
 			
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
 			->contain(['Cities', 'Chemists'])	
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
-			$reported_chemists=array_map(function($c) { return $c->chemist_id; }, $WorkPlansC);
-			$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity, 'id NOT IN' => $reported_chemists])->toarray();
+			$reported_chemists=array_map(function($c) { return $c->chemist_id; }, $WorkPlansC); $reported_chemists[]=0;
+			$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity, 'Chemists.id NOT IN' => $reported_chemists])->toarray();
 
 			
 			$WorkPlansS = $this->WorkPlans
@@ -163,8 +162,8 @@ class MrsController extends AppController {
 			->contain(['Cities', 'Stockists'])	 
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
-			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansC);
-			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'id NOT IN' => $reported_stockists])->toarray();
+			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansC); $reported_stockists[]=0;
+			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
 			
 		}
         $this->set(compact('userCity', 'cities', 'specialities', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
@@ -270,13 +269,13 @@ class MrsController extends AppController {
 
 			if(count($WorkPlans))
 			{
-				$is_cancelled = '<select name="is_cancelled[%s]"><option value="0">No</option><option value="1">Yes</option></select>';
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th><th>Is Cancelled</th><th>Action</th></tr></thead><tbody>';
+				$is_planned = '<select name="is_planned[%s]"><option value="0">No</option><option value="1">Yes</option></select>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th><th>Is Planned</th><th>Action</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlans as $WorkPlan)
 				{
-					$is_cancelled_selected = str_replace('value="'.$WorkPlan->is_cancelled.'"','value="'.$WorkPlan->is_cancelled.'" selected',$is_cancelled);
-					$html.='<tr class="'.(($WorkPlan->is_reported)?"reported":"").' "><td>'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td>'.sprintf($is_cancelled_selected,$WorkPlan->id).'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlan->id.')">Remove</a></td></tr>';
+					$is_planned_selected = str_replace('value="'.$WorkPlan->is_planned.'"','value="'.$WorkPlan->is_planned.'" selected',$is_planned);
+					$html.='<tr class="'.(($WorkPlan->is_reported)?"reported":"").' "><td>'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td>'.sprintf($is_planned_selected,$WorkPlan->id).'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlan->id.')">Remove</a></td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
