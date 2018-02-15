@@ -57,6 +57,7 @@
 						<div id="report_section">
 							<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_2">
 							<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
+							<input type="hidden" value="<?php echo $reportDate;?>" name="reportDate">
 								<div class="col-md-12 mar-bottom-20">
 									<?php
 									$html = "";
@@ -107,7 +108,7 @@
 											if(count($sample_products)>0) {$pdt_lnk_text = implode(", ",$sample_products); $pdt_val_text=implode(",",array_keys($sample_products));}
 											else {$pdt_lnk_text = "Select Products"; $pdt_val_text="";}
 											$product_popup_selected = str_replace("%products",$product_options,$product_popup);
-											$html.='<tr class="'.(($WorkPlanD->is_reported)?"reported":"").' '.(($WorkPlanD->is_unplanned)?"unplanned":"").'"><td><input type="checkbox" name="workplan_id['.$WorkPlanD->id.']" value="1"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.str_replace("%s",$WorkPlanD->id,$work_with_selected).'</td><td><a href="#doctor_product_'.$WorkPlanD->id.'" id="pdt_link_'.$WorkPlanD->id.'" class="popup-modal">'.$pdt_lnk_text.'</a><input type="hidden" id="pdt_val_'.$WorkPlanD->id.'" name=pdt_val['.$WorkPlanD->id.'] value="'.$pdt_val_text.'">'.str_replace("%s",$WorkPlanD->id,$product_popup_selected).'</td></tr>';
+											$html.='<tr class="'.(($WorkPlanD->is_reported)?"reported":"").' '.(($WorkPlanD->is_unplanned)?"unplanned":"").' '.(($WorkPlanD->is_missed)?"missed":"").'"><td><input type="checkbox" name="workplan_id['.$WorkPlanD->id.']" value="1"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.str_replace("%s",$WorkPlanD->id,$work_with_selected).'</td><td><a href="#doctor_product_'.$WorkPlanD->id.'" id="pdt_link_'.$WorkPlanD->id.'" class="popup-modal">'.$pdt_lnk_text.'</a><input type="hidden" id="pdt_val_'.$WorkPlanD->id.'" name=pdt_val['.$WorkPlanD->id.'] value="'.$pdt_val_text.'">'.str_replace("%s",$WorkPlanD->id,$product_popup_selected).'</td></tr>';
 										}
 										$html.='</tbody></table>';
 									}
@@ -125,13 +126,13 @@
 										<div class="row">
 											<div class="form-group  mar-top-30">
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" value="w2SubmitSave" type="submit" id="w2SubmitSave">Save</button>
+													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitSave" id="w2SubmitSave">Save</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="w2SubmitMissed" id="w2SubmitMissed">Missed</button>
+													<button class="common-btn blue-btn pull-left" type="button" name="SubmitMissed" id="w2SubmitMissed">Missed</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="w2SubmitRemove" id="w2SubmitRemove">Remove Visit List</button>
+													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitRemove" id="w2SubmitRemove">Remove Visit List</button>
 												</div>
 											</div>
 										</div>
@@ -179,7 +180,7 @@
 											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned '.$workType->name.'</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Work Type</th><th>City</th></thead><tbody>';
 											foreach ($workTypePlans[$workType->id] as $workTypePlan)
 											{
-												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' "><td><input type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="1"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
+												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' '.(($workTypePlan->is_missed)?"missed":"").' "><td><input type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="1"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
 											}
 											$html.='</tbody></table>';
 										}
@@ -190,6 +191,7 @@
 									</div>
 									<?php }else {?>
 									<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
+									<input type="hidden" value="<?php echo $reportDate;?>" name="reportDate">
 									<div class="table-responsive">
 										<?php echo $html;?>
 									</div>
@@ -198,13 +200,13 @@
 										<div class="row">
 											<div class="form-group  mar-top-30">
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" value="w<?php echo $workType->id?>SubmitSave">Save</button>
+													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitSave" id="w<?php echo $workType->id?>SubmitSave">Save</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" value="w<?php echo $workType->id?>SubmitMissed">Missed</button>
+													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitMissed" id="w<?php echo $workType->id?>SubmitMissed">Missed</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" value="w<?php echo $workType->id?>SubmitRemove">Remove Visit List</button>
+													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitRemove" id="w<?php echo $workType->id?>SubmitRemove">Remove Visit List</button>
 												</div>
 											</div>
 										</div>
@@ -231,7 +233,7 @@
 															<?php }	?>
 														</select>  
 													</div>
-													<div class="col-md-3 col-sm-3 col-xs-3">
+													<div class="col-md-4 col-sm-4 col-xs-4">
 														<label>&nbsp;</label>
 														<button type="submit" class="btn blue-btn btn-block margin-right-35"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add <?php echo $workType->name?></button>
 													</div>
@@ -252,7 +254,7 @@
 											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" name="check_all" value="1"></th><th>Work Type</th><th>On</th></thead><tbody>';
 											foreach ($workTypePlans[1] as $workTypePlan)
 											{
-												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' "><td><input type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="1"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$reportDate.'</td></tr>';
+												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' '.(($workTypePlan->is_missed)?"missed":"").' "><td><input type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="1"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$reportDate.'</td></tr>';
 											}
 											$html.='</tbody></table>';
 										}
@@ -262,6 +264,8 @@
 										<p>No Planned Leave on this date</p>
 									</div>
 									<?php }else {?>
+									<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
+									<input type="hidden" value="<?php echo $reportDate;?>" name="reportDate">
 									<div class="table-responsive">
 										<?php echo $html;?>
 									</div>
@@ -281,6 +285,7 @@
 											</div>
 										</div>
 									</div>
+									</form>
 									<?php }?>
 								</div>
 								<div class="col-md-12 mar-bottom-20">
@@ -513,7 +518,7 @@
 	});
 
 	$('#reportDate').on('changeDate', function (ev) {
-		window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date="+moment(ev.date).format('YYYY-MM-DD'));
+		window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>?date="+moment(ev.date).format('YYYY-MM-DD'));
 	});
 	
 	$('.popup-modal').magnificPopup({

@@ -504,7 +504,7 @@
 				header: {
 					left: 'prev',
 					center: 'title',
-					right: ''
+					right: 'next'
 				},
 				defaultDate: startDate,
 				disableDragging : true,

@@ -705,6 +705,7 @@ th a{color : #fff;}
 #report_section th:last-child, #report_section td:last-child{width:20%}
 #report_section th:nth-child(2), #report_section td:nth-child(2){text-align:left; padding-left:10px; width:200px}
 tr.reported td:first-child {background: #98FB98;}
+tr.reported.missed td:first-child {background: #ffb3b3;}
 tr.reported.unplanned td:first-child {background: #3CB371;}
 #report_section td{padding:0;}
 #report_section table select{width:100px;}
