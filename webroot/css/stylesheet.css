@@ -700,6 +700,7 @@ div.error-message, .message.error {color:#dd4b39;}
 th a{color : #fff;}
 
 #report_section input[type="checkbox"]{display:inline-block;}
+#missed_doctors_table input[type="checkbox"]{display:inline-block;}
 #report_section th{padding:3px;}
 #report_section th:first-child, #report_section td:first-child{width:30px}
 #report_section th:last-child, #report_section td:last-child{width:20%}

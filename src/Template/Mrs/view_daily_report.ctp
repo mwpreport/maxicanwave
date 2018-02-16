@@ -14,25 +14,6 @@
                 <div class="clearfix"></div>
                 <div class="daily-report-radio-cnt">
 					<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
-						<div class="col-md-6 mar-bottom-20">
-							<div class="row">
-								<div class="form-group">
-									<div class="col-sm-3">
-										<h3 class="mar-top-10 mar-bottom-20">Select Date</h3>
-									</div>
-									<div class="col-sm-9">
-										<div class="input-group date">
-											<div class="input-group-addon">
-												<i class="fa fa-calendar"></i>
-											</div>
-											<?php $reportDate = ""; if($date!="") $reportDate = date("Y-m-d", strtotime($date));?>
-											<input type="text" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo $reportDate;?>">
-										</div>
-									</div>
-									<!-- /.input group -->
-								</div>
-							</div>
-						</div>
 						<div class="col-sm-12 mar-bottom-20">
 							<div class="table-responsive" id="report_section">
 							<?= $html?>

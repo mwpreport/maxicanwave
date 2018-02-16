@@ -349,7 +349,8 @@
 							</div>
 							<div class="form-group">
 								<label for="doctor_id">Select Doctor</label>
-								<select name="doctor_id[]" class="form-control required" id="doctor_id" aria-invalid="true" multiple="multiple">
+								<select name="doctor_id[]" class="form-control required" id="doctor_id" aria-invalid="true">
+								<option value="">Select Doctors</option>
 									<?php
 									if(count($doctorsRelation)>0)
 									foreach ($doctorsRelation as $doctor)
@@ -392,7 +393,8 @@
 							</div>
 							<div class="form-group">
 								<label for="chemist_id">Select Chemists</label>
-								<select name="chemist_id[]" class="form-control required" id="chemist_id" aria-invalid="true" multiple="multiple">
+								<select name="chemist_id[]" class="form-control required" id="chemist_id" aria-invalid="true">
+								<option value="">Select Chemists</option>
 									<?php
 									foreach ($chemists as $chemist)
 									{?>
@@ -433,7 +435,8 @@
 							</div>
 							<div class="form-group">
 								<label for="stockit_id">Select Stockists</label>
-								<select name="stockist_id[]" class="form-control required" id="stockist_id" aria-invalid="true" multiple="multiple">
+								<select name="stockist_id[]" class="form-control required" id="stockist_id" aria-invalid="true">
+								<option value="">Select Stockists</option>
 									<?php
 									foreach ($stockists as $stockist)
 									{?>
@@ -499,6 +502,51 @@
 				</form>
 			</div>
 		</div>
+		<div class="mfp-hide white-popup-block small_popup" id="DoctorsMissedForm">
+			<div class="popup-content">
+				<form class="" id="StockistAddForm" method="POST" >
+				<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
+				<input type="hidden" name="work_type_id" value="">
+				<div class="popup-header">
+					<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
+					<div class="hr-title"><h4>Missed Calls</h4><hr /></div>
+				</div>
+				<div class="popup-body">
+					<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
+					<div class="row">
+						<?php
+						$html = "";
+						if(count($WorkPlansD))
+						{
+							$is_missed = '<select name="missed_reason[%s]"><option value="">Select</option><option>Doctor Refused Appointment</option><option>Doctor on Leave</option><option>Doctor not in Station</option><option>Plan Changed</option><option>Meeting / CME</option><option>Others</option></select>';
+							$html.='<table id="missed_doctors_table" class=""><thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>Reason</th><th>Date</th></tr></thead><tbody>';
+							foreach ($WorkPlansD as $WorkPlanD)
+							{
+								$html.='<tr><td><input type="checkbox" name="m_workplan_id['.$WorkPlanD->id.']" value="1"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.str_replace("%s",$WorkPlanD->id,$is_missed).'</td><td><input type="text" name="alt_date['.$WorkPlanD->id.']"></td></tr>';
+							}
+							$html.='</tbody></table>';
+						}
+						?>
+						<?php if($html == ""){?>
+						<div class="table-responsive">
+							<p>No Planned Doctors on this date</p>
+						</div>
+						<?php }else {?>
+						<div class="table-responsive">
+							<?php echo $html;?>
+						</div>
+						<?php }?>
+					</div>
+					<div class="row">
+						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
+						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="SubmitMissed" class="btn blue-btn btn-block">Save</button></div>
+					</div>
+					</form>
+				</div>
+				</form>
+			</div>
+		</div>
+		<a href="#DoctorsMissedForm" id="DoctorsMissedFormLink" class="hide popup-modal">Missed Doctors</a>
 		<?php }?>
 
 
@@ -514,6 +562,9 @@
 
 	//Date picker
 	$('#reportDate').datepicker({
+		autoclose: true, startDate: startDate, endDate: endDate
+	});
+	$('#missed_doctors_table [type="text"]').datepicker({
 		autoclose: true, startDate: startDate, endDate: endDate
 	});
 
@@ -562,6 +613,22 @@
 			$("#workType_section_"+$(this).val()).removeClass("hide");
 			$('input[type="checkbox"]').prop('checked', false);
 			//alert($(this).val());
+		}
+	});
+	
+	$("#w2SubmitMissed").click(function(){
+		if ($('input[type="checkbox"]').is(':checked'))
+		{
+			var yourArray = [];
+			$("input:checkbox[name=type]:checked").each(function(){
+				yourArray.push($(this).val());
+			});
+			alert(yourArray);
+			
+			$('#DoctorsMissedFormLink').click();
+		}
+		else{
+			alert("Please check a Doctor");
 		}
 	});
   

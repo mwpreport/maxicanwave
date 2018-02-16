@@ -136,8 +136,9 @@ class MrsController extends AppController {
 			->find('all')
 			->contain(['WorkTypes', 'Cities', 'Doctors'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
-			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD); $reported_doctors[]=0;
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
+			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray()); $reported_doctors[]=0;
+			$WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
 			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors'])->toArray();
 
 
@@ -146,7 +147,7 @@ class MrsController extends AppController {
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
 			
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
@@ -192,25 +193,25 @@ class MrsController extends AppController {
 			->find('all')
 			->contain(['WorkTypes', 'Cities', 'Doctors'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
+			->where(['WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
 			
 			$WorkPlans = $this->WorkPlans
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
+			->where(['WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
 			
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
 			->contain(['Cities', 'Chemists'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+			->where(['WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
 			
 			$WorkPlansS = $this->WorkPlans
 			->find('all')
 			->contain(['Cities', 'Stockists'])	 
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+			->where(['WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 
 			$html = "";
 			if(count($WorkPlansD))
@@ -235,7 +236,7 @@ class MrsController extends AppController {
 					</div>
 				</div>';
 
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" name="check_all" value="1"></th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Is Missed</th><th>Products</th><th>Action</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Is Missed</th><th>Products</th><th>Action</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansD as $WorkPlanD)
 				{
@@ -329,7 +330,7 @@ class MrsController extends AppController {
 		$doctor_ids[]=0;
 
 		$doctors = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $doctor_ids, 'Doctors.city_id' => $city_id])->contain(['Doctors']);
-		$listHtml='';
+		$listHtml='<option value="">Select Doctors</option>';
 		foreach ($doctors as $doctor)
 		$listHtml.='<option value="'.$doctor->doctor_id.'">'.$doctor->doctor->name.'</option>';
 		echo $listHtml; exit;
@@ -353,7 +354,7 @@ class MrsController extends AppController {
 		$chemist_ids[]=0;
 			
 		$chemists = $this->Chemists->find('all')->where(['city_id =' => $city_id, 'id NOT IN' => $chemist_ids])->toarray();
-		$listHtml='';
+		$listHtml='<option value="">Select Chemists</option>';
 		foreach ($chemists as $chemist)
 		$listHtml.='<option value="'.$chemist['id'].'">'.$chemist['name'].'</option>';
 		
@@ -378,7 +379,7 @@ class MrsController extends AppController {
 		$stockist_ids[]=0;
 		
 		$stockists = $this->Stockists->find('all')->where(['city_id =' => $city_id, 'id NOT IN' => $stockist_ids])->toarray();
-		$listHtml='';
+		$listHtml='<option value="">Select Stockists</option>';
 		foreach ($stockists as $stockist)
 		$listHtml.='<option value="'.$stockist['id'].'">'.$stockist['name'].'</option>';
 		
