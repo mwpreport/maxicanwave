@@ -134,7 +134,7 @@ class MrsController extends AppController {
 			
 			$WorkPlansD = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities', 'Doctors'])	
+			->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
 			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray()); $reported_doctors[]=0;
@@ -307,7 +307,7 @@ class MrsController extends AppController {
 			}
 			
 		}
-		if($html == ""){$html.="<p>No plans on this date</p>";}
+		if($html == ""){$html.="<p>No reports on this date</p>";}
         $this->set(compact('html', 'date'));        
 		
     }

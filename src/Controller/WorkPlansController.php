@@ -503,7 +503,7 @@ class WorkPlansController extends AppController
 					if(isset($data['work_with'][$workPlan_id]))
 					$reportData['work_with']=$data['work_with'][$workPlan_id];
 					
-					if(isset($data['pdt_val'][$workPlan_id]) && $data['pdt_val'][$workPlan_id] != "")
+					if(1==0)
 					$reportData['products']=serialize(explode(",",$data['pdt_val'][$workPlan_id]));
 				
 					$success = 'The work plan has been saved.';
@@ -527,6 +527,74 @@ class WorkPlansController extends AppController
 				$reportData['last_updated'] = date("Y-m-d H:i:s");
 			
 				//pj($reportData);exit;
+
+				$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
+				if ($this->WorkPlans->save($workPlan)) {
+				}
+				else
+				{
+					$this->Flash->error(__('Something went wrong. Please, try again.'));
+					return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+				}
+					
+			} //exit;
+			$this->Flash->success(__($success));
+			return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+        }
+	}
+ 	public function mrsReportMissed()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+        $uid = $this->Auth->user('id');
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+			$data = $this->request->getData();
+			//pj($data);exit;
+			$reportDate = $data['start_date'];
+			$workPlan_ids = array();
+			if(isset($data['m_workplan_id']))
+			$workPlan_ids = array_keys($data['m_workplan_id']);
+			if(count($workPlan_ids)<1)
+				{
+					$this->Flash->error(__('Please select any plan to process.'));
+					return $this->redirect(['controller' => 'mrs','action' => 'daily-report','?' => ['date' => $reportDate]]);
+				}
+
+			foreach($workPlan_ids as $workPlan_id)
+			{	
+				$reportData=array();
+				$workPlan = $this->WorkPlans->get($workPlan_id, [
+					'contain' => []
+				]);
+				$reportData['is_reported'] = 1;
+				
+				if(isset($data['SubmitMissed']))
+				{
+					if(isset($data['missed_reason'][$workPlan_id]) && $data['missed_reason'][$workPlan_id] != "")
+					{
+						$reportData['missed_reason']=$data['missed_reason'][$workPlan_id];
+						if(isset($data['alt_date'][$workPlan_id]) && $data['alt_date'][$workPlan_id] != "")
+						{
+							$newWorkPlan = $this->WorkPlans->newEntity();
+							$newData = array('user_id' => $uid, 'work_type_id' => '2', 'city_id' => $workPlan['city_id']);
+							$newData['start_date'] = $data['alt_date'][$workPlan_id]." 00:00:00";
+							$newData['end_date'] = $data['alt_date'][$workPlan_id]." 23:59:00";
+							$newData['is_planned'] = 1;
+							$newData['doctor_id'] = $workPlan['doctor_id'];
+							$newData = $this->WorkPlans->patchEntity($newWorkPlan, $newData);
+							pj($newWorkPlan);
+							
+							//if (!$this->WorkPlans->save($newWorkPlan)) {break;}
+						}
+					}
+					$reportData['is_missed'] = 1;
+					$success = 'The work plan has been saved.';
+				}
+			
+				$reportData['last_updated'] = date("Y-m-d H:i:s");
+			
+				pj($workPlan);pj($reportData);exit;
 
 				$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
 				if ($this->WorkPlans->save($workPlan)) {
@@ -577,6 +645,7 @@ class WorkPlansController extends AppController
 					$plan_data['doctor_id'] = $doctor_id;
 					$plan_data['is_unplanned'] = 1;
 					$plan_data['is_approved'] = 1;
+					$plan_data['work_with'] = $_POST['work_with'];
 					$workPlans_array[] = $plan_data;
 				}
 

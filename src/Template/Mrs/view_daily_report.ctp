@@ -47,11 +47,6 @@
 						</div>
 						<?php }?>
 					</form>
-					<hr>
-					<table border=0 cellpadding="5" cellspacing="5">
-					<tr class="reported"><td>Saved Reports</td></tr>
-					<tr class="reported unplanned"><td>Saved Reports (Unplanned Doctors)</td></tr>
-					</table>
                 </div>
 
             </div>

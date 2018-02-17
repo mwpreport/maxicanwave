@@ -248,7 +248,7 @@ h3{
 .common-btn{
     background: transparent;
     border: 1px solid #ccc;
-    padding: 8px 15px;
+    padding: 8px 12px;
     border-radius: 6px;
     width: 100%;
     display: inline-block;
@@ -611,11 +611,17 @@ input[type="checkbox"]:disabled + label span {
 }
 .white-popup-block {
     background: #FFF;
-    max-width: 600px;
     margin: 0 auto;
     position: relative;
 }
-.small_popup .popup-content {
+.small_popup{
+	max-width: 600px;
+}
+.large_popup{
+	width: 800px;
+	max-width: 100%;
+}
+.small_popup .popup-content, .large_popup .popup-content {
     padding: 25px;
 }
 .danger-txt{
@@ -701,6 +707,9 @@ th a{color : #fff;}
 
 #report_section input[type="checkbox"]{display:inline-block;}
 #missed_doctors_table input[type="checkbox"]{display:inline-block;}
+.doctor_product input[type="checkbox"]{display:inline-block;}
+#missed_doctors_table th:first-child{width:30%}
+#missed_doctors_table th:last-child{width:25%}
 #report_section th{padding:3px;}
 #report_section th:first-child, #report_section td:first-child{width:30px}
 #report_section th:last-child, #report_section td:last-child{width:20%}
