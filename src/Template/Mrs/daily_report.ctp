@@ -11,10 +11,8 @@
                         <hr>
                     </div>
                 </div>
-				<?php
-				
-				?>
                 <div class="clearfix"></div>
+                
                 <div class="daily-report-radio-cnt">
 						<div class="col-md-12 mar-bottom-20">
 							<div class="row">
@@ -59,12 +57,6 @@
 							<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
 							<input type="hidden" value="<?php echo $reportDate;?>" name="reportDate">
 								<div class="col-md-12 mar-bottom-20">
-									<?php
-									$html = "";
-									if(count($WorkPlansD))
-									{
-									}
-									?>
 									<?php if(count($WorkPlansD)<1){?>
 									<div class="table-responsive">
 										<p>No Planned Doctors on this date</p>
@@ -73,7 +65,7 @@
 									<div class="table-responsive">
 										<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3>
 										<table id="doctors_table" class="table table-striped table-bordered table-hover">
-											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th></tr></thead>
+											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products to Detail</th><th>Visit Time</th><th>Business</th><th>Action</th></tr></thead>
 											<tbody>
 										<?php
 										$work_with = '<select name="work_with[%s]"><option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option></select>';
@@ -95,12 +87,12 @@
 											<td><?=$WorkPlanD->doctor->name?></td>
 											<td><?=$WorkPlanD->city->city_name?></td>
 											<td><?=str_replace("%s",$WorkPlanD->id,$work_with_selected)?></td>
+											<td><?php if(count($sample_products)>0) echo  implode(", ",$sample_products);?></td>
 											<td>
-												<?php 
-													if(count($sample_products)>0) {echo  implode(", ",$sample_products);}
-												?>
 												<a href="#doctor_product_<?=$WorkPlanD->id?>" id="pdt_link_<?=$WorkPlanD->id?>" class="popup-modal">Detail Reporting</a>
 											</td>
+											<td><?=$WorkPlanD->visit_time?></td>
+											<td><?=$WorkPlanD->business?></td>
 											</tr>
 										<?php }?>
 										</tbody></table>
