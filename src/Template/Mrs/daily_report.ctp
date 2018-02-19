@@ -86,7 +86,7 @@
 											$products_array = unserialize($WorkPlanD->products);
 											$sample_products =array();
 											foreach($products as $product)
-											if (in_array($product->id, $products_array)) $sample_products[]= $product->name;
+											if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
 											?>
 											<tr class="<?=(($WorkPlanD->is_reported)?"reported":"")?> <?=(($WorkPlanD->is_missed)?"missed":"")?>">
 											<td>
@@ -99,7 +99,7 @@
 												<?php 
 													if(count($sample_products)>0) {echo  implode(", ",$sample_products);}
 												?>
-												<br><a href="#doctor_product_<?=$WorkPlanD->id?>" id="pdt_link_<?=$WorkPlanD->id?>" class="popup-modal">Detail Reporting</a>
+												<a href="#doctor_product_<?=$WorkPlanD->id?>" id="pdt_link_<?=$WorkPlanD->id?>" class="popup-modal">Detail Reporting</a>
 											</td>
 											</tr>
 										<?php }?>
@@ -455,11 +455,19 @@
 				<div class="popup-body">
 					<div class="row">
 						<div class="col-sm-12 mar-bottom-20">
-							<div class="form-group col-sm-6">
+							<div class="form-group col-sm-4">
 								<label for="city_id">Doctor Name</label>
 								<input type="text" name="name" id="name" class="form-control required">
 							</div>
-							<div class="form-group col-sm-6">
+							<div class="form-group col-sm-4">
+								<label for="city_id">Email</label>
+								<input type="text" name="email" id="email" class="form-control required">
+							</div>
+							<div class="form-group col-sm-4">
+								<label for="city_id">Mobile</label>
+								<input type="text" name="mobile" id="mobile" class="form-control required">
+							</div>
+							<div class="form-group col-sm-4">
 								<label for="city_id">City</label>
 								<select name="city_id" class="form-control required" onchange="loadStockists(this.form.id)" id="city_id" aria-invalid="true">
 									<option value="">Select</option>
@@ -470,7 +478,7 @@
 									<?php }	?>
 								</select>  
 							</div>
-							<div class="form-group col-sm-6">
+							<div class="form-group col-sm-4">
 								<label for="speciality_id">Speciality</label>
 								<select name="speciality_id" class="form-control required" onchange="loadStockists(this.form.id)" id="speciality_id" aria-invalid="true">
 									<option value="">Select</option>
@@ -481,7 +489,7 @@
 									<?php }	?>
 								</select>  
 							</div>
-							<div class="form-group col-sm-6">
+							<div class="form-group col-sm-4">
 								<label for="work_with">Work With</label>
 								<select name="work_with" class="form-control required" id="work_with" aria-invalid="true">
 									<option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option> 
@@ -497,8 +505,8 @@
 								foreach($products as $product)
 								{?>
 									<li class="col-sm-6">
-									<label class="col-sm-6"> <input type="checkbox"  name="products[]" value="<?=$product->id?>"> <?= $product->name?></label>
-									<label> <input type="text"  name="products_qty[]" value=""></label>
+									<label class="col-sm-6"> <input type="checkbox" name="product_id[]" id="product_id_<?=$product->id?>" value="<?=$product->id?>" onclick="productClick(this)"> <?= $product->name?></label>
+									<label> <input type="text" name="product_qty[<?=$product->id?>]" class="required" id="product_qty_<?=$product->id?>" value="" disabled></label>
 									</li>
 								<?php }?>
 								</ul>
@@ -510,7 +518,7 @@
 							<div class="form-group col-sm-6">
 								<div class="col-sm-6">
 								<label>Visit Time</label>
-								<input type="text" name="visi_time" value=""><br>
+								<input type="text" name="visit_time" value=""><br>
 								</div>
 								<div class="col-sm-6">
 								<label>Doctor Business</label>
@@ -577,12 +585,11 @@
 			<div class="mfp-hide white-popup-block large_popup doctor_product" id="doctor_product_<?=$WorkPlanD->id?>">
 				<div class="popup-content">
 					<form class="" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>" class="ProductForm" method="POST" id="doctor_product_<?=$WorkPlanD->id?>Form" >
-					<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
-					<input type="hidden" name="work_type_id" value="2">
-					<input type="hidden" name="workplan_id['<?=$WorkPlanD->id?>']" value="<?=$WorkPlanD->id?>">
+					<input type="hidden" name="reportDate" value="<?php echo $reportDate;?>">
+					<input type="hidden" name="workplan_id[<?=$WorkPlanD->id?>]" value="<?=$WorkPlanD->id?>">
 					<div class="popup-header">
 						<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-						<div class="hr-title"><h4>Add Stockists</h4><hr /></div>
+						<div class="hr-title"><h4>Detail Reporting</h4><hr /></div>
 					</div>
 					<div class="popup-body">
 						<div class="row">
@@ -610,39 +617,45 @@
 									{?>
 										<li class="col-md-6">
 											<?php
-											if (in_array($product->id, $products_array)){
-											$sample_products[$product->id]= $product->name;
+											if (array_key_exists($product->id, $products_array)){
+											$sample_product_id[$product->id]= $product->name;
 											?>
-											<label class="col-sm-6"> <input type="checkbox"  name="products[<?=$WorkPlanD->id?>]" checked class="products_<?=$WorkPlanD->id?>" value="<?=$product->id?>"> <?= $product->name?></label>
+											<label class="col-sm-6"> <input type="checkbox"  name="product_id[]" class="products_<?=$WorkPlanD->id?>" id="product_id_<?=$product->id?>" value="<?=$product->id?>" onclick="productClick(this)" checked> <?= $product->name?></label>
+											<label> <input type="text" name="product_qty[<?=$product->id?>]" class="required" id="product_qty_<?=$product->id?>" value="<?=$products_array[$product->id]?>"></label>
 											<?php }else { ?>
-											<label class="col-sm-6"> <input type="checkbox"  name="products[<?=$WorkPlanD->id?>]" value="<?=$product->id?>"> <?= $product->name?></label>
+											<label class="col-sm-6"> <input type="checkbox"  name="product_id[]" class="products_<?=$WorkPlanD->id?>" id="product_id_<?=$product->id?>" value="<?=$product->id?>" onclick="productClick(this)"> <?= $product->name?></label>
+											<label> <input type="text" name="product_qty[<?=$product->id?>]" class="required" id="product_qty_<?=$product->id?>" value="" disabled></label>
 											<?php }?>
-											<label> <input type="text"  name="products_qty[<?=$WorkPlanD->id?>]" value=""></label>
 										</li>
 									<?php }?>
 									</ul>
 								</div>
 								<div class="form-group col-sm-6">
 									<label class="col-sm-6">Discussion</label>
-									<textarea name="discussion"></textarea>
+									<textarea name="discussion"><?= $WorkPlanD->discussion?></textarea>
 								</div>
 								<div class="form-group col-sm-6">
 									<div class="col-sm-6">
 									<label>Visit Time</label>
-									<input type="text" name="visi_time" value=""><br>
+									<input type="text" name="visit_time" value="<?= $WorkPlanD->visit_time?>"><br>
 									</div>
 									<div class="col-sm-6">
 									<label>Doctor Business</label>
-									<input type="text" name="business" value="">
+									<input type="text" name="business" value="<?= $WorkPlanD->business?>">
 									</div>
 								</div>
 							</div>
+							<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
+							<div class="col-md-6 col-sm-6 col-xs-6"><button type="submit" name="SubmitSave" class="btn blue-btn btn-block">Save</button></div>
 						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-						<div class="col-md-6 col-sm-6 col-xs-6"><button type="submit" name="SubmitSave" class="btn blue-btn btn-block">Save</button></div>
 					</div>
 					</form>
 					</div>
+			<script>
+				$("#doctor_product_<?=$WorkPlanD->id?>Form").validate({
+					ignore: ":hidden"
+				});
+			</script>
 			</div>
 			<?php }
 		}?>
@@ -706,13 +719,12 @@
 		ignore: ":hidden"
 		
 	});
-
 	$("input[id^='workType_']").click(function(){
 		if ($(this).is(':checked'))
 		{
 			$("div[id^='workType_section_']").addClass("hide");
 			$("#workType_section_"+$(this).val()).removeClass("hide");
-			$('input[type="checkbox"]').prop('checked', false);
+			$('input[type="checkbox"].workplan_id').prop('checked', false);
 		}
 	});
 	
@@ -760,6 +772,18 @@
 		$(elem).closest("form").find("input:checkbox").prop('checked', true);
 		else
 		$(elem).closest("form").find("input:checkbox").prop('checked', false);
+	}
+	
+	function productClick(elem){
+		var id=$(elem).val();
+		if($(elem).prop("checked") == true)
+		$(elem).closest("form").find('#product_qty_'+id).prop('disabled', false);
+		else
+		{
+		$(elem).closest("form").find('#product_qty_'+id+"-error").addClass("hide");
+		$(elem).closest("form").find('#product_qty_'+id).val('');
+		$(elem).closest("form").find('#product_qty_'+id).prop('disabled', true);
+		}
 	}
 	
 	function productShow(id){

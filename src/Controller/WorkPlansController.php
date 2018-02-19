@@ -22,7 +22,7 @@ class WorkPlansController extends AppController
         $this->loadModel('Workreports');
         $this->loadModel('WorkTypes');
         $this->loadModel('Users');
-        $this->loadModel('City');
+        $this->loadModel('Cities');
         $this->loadModel('Doctors');
         $this->loadModel('Roles');
 		$this->loadModel('Products');
@@ -503,8 +503,21 @@ class WorkPlansController extends AppController
 					if(isset($data['work_with'][$workPlan_id]))
 					$reportData['work_with']=$data['work_with'][$workPlan_id];
 					
-					if(1==0)
-					$reportData['products']=serialize(explode(",",$data['pdt_val'][$workPlan_id]));
+					$product_array=array();
+					if(isset($data['product_id']))
+					{
+						foreach($data['product_id'] as $product_id)
+						$product_array[$product_id] = $data['product_qty'][$product_id];
+						
+						$reportData['products']=serialize($product_array);
+					}
+					
+					if(isset($data['discussion']))
+					$reportData['discussion']=$data['discussion'];
+					if(isset($data['visit_time']))
+					$reportData['visit_time']=$data['visit_time'];
+					if(isset($data['business']))
+					$reportData['business']=$data['business'];
 				
 					$success = 'The work plan has been saved.';
 				}
@@ -594,7 +607,7 @@ class WorkPlansController extends AppController
 			
 				$reportData['last_updated'] = date("Y-m-d H:i:s");
 			
-				pj($workPlan);pj($reportData);exit;
+				//pj($workPlan);pj($reportData);exit;
 
 				$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
 				if ($this->WorkPlans->save($workPlan)) {
@@ -688,9 +701,6 @@ class WorkPlansController extends AppController
 			{
 				$workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
 				if ($this->WorkPlans->save($workPlan)) {
-					$id = $workPlan->id;
-					$WorkTypes = $this->WorkPlans->WorkTypes->find()->select(['name', 'color'])->where(['id =' => $workPlan->work_type_id])->first();
-					$returnArray[] = array('id'=>$id, 'start'=>$workPlan->start_date ,'end'=>$workPlan->end_date ,'title'=>$WorkTypes['name'], 'color'=>$WorkTypes['color']); 
 					$this->Flash->success(__("Report Saved Successfull"));
 					echo json_encode(array("status"=>1,"msg"=>"Report Saved Successfull")); exit;
 				}
@@ -700,6 +710,64 @@ class WorkPlansController extends AppController
 			
         }
 		exit;   
+     }
+
+	 public function mrsAddPgoReport()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$uid = $this->Auth->user('id');
+		$workPlan = $this->WorkPlans->newEntity();
+		$doctor = $this->Doctors->newEntity();
+        
+		if ($this->request->is('post')) {
+		$reportDate = $_POST['start_date'];
+			$city = $this->Cities->find()->where(['id =' => $_POST['city_id']])->first();
+			$docArray = array('name' => $_POST['name'], 'email' => $_POST['email'], 'mobile' => $_POST['mobile'], 'city_id' => $_POST['city_id'], 'speciality_id' => $_POST['speciality_id'], 'state_id' => $city->state_id, 'is_approved' => 0, 'is_active' => 1);
+			$doctor = $this->Doctors->patchEntity($doctor, $docArray);
+			$doctor->user_id=$uid;
+			//debug($doctor);exit;
+			if ($this->Doctors->save($doctor)) {
+				$doctor_id = $doctor->id;
+				$data = array('user_id' => $uid, 'doctor_id' => $doctor_id, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'city_id' => $_POST['city_id']);
+				$data['start_date'] = $_POST['start_date']." 00:00:00";
+				$data['end_date'] = $_POST['start_date']." 23:59:00";
+				$data['is_reported'] = 1;
+				$data['last_updated'] = date("Y-m-d H:i:s");
+				$data['is_approved'] = 1;
+				$data['work_with'] = $_POST['work_with'];
+				$product_array=array();
+					if(isset($_POST['product_id']))
+					{
+						foreach($_POST['product_id'] as $product_id)
+						$product_array[$product_id] = $_POST['product_qty'][$product_id];
+						
+						$data['products']=serialize($product_array);
+					}
+					
+					if(isset($_POST['discussion']))
+					$data['discussion']=$_POST['discussion'];
+					if(isset($_POST['visit_time']))
+					$data['visit_time']=$_POST['visit_time'];
+					if(isset($_POST['business']))
+					$data['business']=$_POST['business'];
+				
+				$workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
+				if ($this->WorkPlans->save($workPlan)) {
+					$this->Flash->success(__("The PG & Others Saved to Report Successfull"));
+					return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+				}
+			}
+			else
+			{
+				$this->Flash->error(__('The PG & Others could not be saved. Please, try again.'));
+				return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+			}
+			
+        }
+			$this->Flash->error(__('Something went wrong. Please, try again.'));
+			return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport']);
+   
      }
 
     public function mrsDeleteReport()

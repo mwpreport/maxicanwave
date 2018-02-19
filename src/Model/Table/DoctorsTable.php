@@ -89,11 +89,6 @@ class DoctorsTable extends Table
             ->requirePresence('name', 'create')
             ->notEmpty('name');
 
-        $validator
-            ->scalar('qualification_id')
-            ->requirePresence('qualification_id', 'create')
-            ->notEmpty('qualification_id');
-
 		$validator
             ->scalar('add_qualification')
             ->allowEmpty('add_qualification');
@@ -112,10 +107,6 @@ class DoctorsTable extends Table
             ->notEmpty('mobile');
 
         $validator
-            ->requirePresence('phone', 'create')
-            ->allowEmpty('phone');
-
-        $validator
             ->scalar('clinic_name')
             ->allowEmpty('clinic_name');
 			
@@ -131,10 +122,6 @@ class DoctorsTable extends Table
             ->scalar('area')
             ->allowEmpty('area');
 
-        $validator
-            ->integer('pincode')
-            ->requirePresence('pincode', 'create')
-            ->notEmpty('pincode');
 			
         $validator
             ->date('dob')
