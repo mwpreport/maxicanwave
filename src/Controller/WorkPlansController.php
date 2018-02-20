@@ -659,6 +659,22 @@ class WorkPlansController extends AppController
 					$plan_data['is_unplanned'] = 1;
 					$plan_data['is_approved'] = 1;
 					$plan_data['work_with'] = $_POST['work_with'];
+					$product_array=array();
+					if(isset($_POST['product_id']))
+					{
+						foreach($_POST['product_id'] as $product_id)
+						$product_array[$product_id] = $_POST['product_qty'][$product_id];
+						
+						$plan_data['products']=serialize($product_array);
+					}
+					if(isset($_POST['discussion']))
+					$plan_data['discussion']=$_POST['discussion'];
+					if(isset($_POST['visit_time']))
+					$plan_data['visit_time']=$_POST['visit_time'];
+					if(isset($_POST['business']))
+					$plan_data['business']=$_POST['business'];
+
+
 					$workPlans_array[] = $plan_data;
 				}
 
@@ -723,7 +739,7 @@ class WorkPlansController extends AppController
 		if ($this->request->is('post')) {
 		$reportDate = $_POST['start_date'];
 			$city = $this->Cities->find()->where(['id =' => $_POST['city_id']])->first();
-			$docArray = array('name' => $_POST['name'], 'email' => $_POST['email'], 'mobile' => $_POST['mobile'], 'city_id' => $_POST['city_id'], 'speciality_id' => $_POST['speciality_id'], 'state_id' => $city->state_id, 'is_approved' => 0, 'is_active' => 1);
+			$docArray = array('name' => $_POST['name'], 'email' => $_POST['email'], 'mobile' => $_POST['mobile'], 'city_id' => $_POST['city_id'], 'speciality_id' => $_POST['speciality_id'], 'state_id' => $city->state_id, 'is_approved' => 0, 'is_active' => 0);
 			$doctor = $this->Doctors->patchEntity($doctor, $docArray);
 			$doctor->user_id=$uid;
 			//debug($doctor);exit;

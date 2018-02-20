@@ -65,7 +65,7 @@
 									<div class="table-responsive">
 										<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3>
 										<table id="doctors_table" class="table table-striped table-bordered table-hover">
-											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products to Detail</th><th>Visit Time</th><th>Business</th><th>Action</th></tr></thead>
+											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>Spe</th><th>City</th><th>Work With</th><th>Products to Detail</th><th>Visit Time</th><th>Business</th><th>Action</th></tr></thead>
 											<tbody>
 										<?php
 										$work_with = '<select name="work_with[%s]"><option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option></select>';
@@ -85,14 +85,15 @@
 												<input type="checkbox" <?=(($WorkPlanD->is_missed)?"disabled":"")?> class="workplan_id" name="workplan_id[<?=$WorkPlanD->id?>]" value="<?=$WorkPlanD->id?>">
 											</td>
 											<td><?=$WorkPlanD->doctor->name?></td>
+											<td><?=$WorkPlanD->doctor->speciality->code?></td>
 											<td><?=$WorkPlanD->city->city_name?></td>
 											<td><?=str_replace("%s",$WorkPlanD->id,$work_with_selected)?></td>
 											<td><?php if(count($sample_products)>0) echo  implode(", ",$sample_products);?></td>
+											<td><?=$WorkPlanD->visit_time?></td>
+											<td><?=$WorkPlanD->business?></td>
 											<td>
 												<a href="#doctor_product_<?=$WorkPlanD->id?>" id="pdt_link_<?=$WorkPlanD->id?>" class="popup-modal">Detail Reporting</a>
 											</td>
-											<td><?=$WorkPlanD->visit_time?></td>
-											<td><?=$WorkPlanD->business?></td>
 											</tr>
 										<?php }?>
 										</tbody></table>
@@ -300,7 +301,7 @@
         </section>
 		<?php if($date!=""){?>
 		<!-- pop starts here -->
-		<div class="mfp-hide white-popup-block small_popup" id="UnplannedAdd">
+		<div class="mfp-hide white-popup-block large_popup" id="UnplannedAdd">
 			<div class="popup-content">
 				<form class="" id="UnplannedAddForm" method="POST" >
 				<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
@@ -308,7 +309,7 @@
 				
 				<div class="popup-header">
 					<button type="button" class="close popup-modal-dismiss add-form"><span>&times;</span></button>
-					<div class="hr-title"><h4>Add Doctors</h4><hr /></div>
+					<div class="hr-title"><h4>Add Unplanned Doctors</h4><hr /></div>
 				</div>
 				<div class="popup-body">
 					<div class="row">
@@ -343,6 +344,40 @@
 								</select>
 							</div>
 						</div>
+						<div class="col-sm-12 mar-bottom-20">
+						<a href="javascript:void(0)" onclick="$('#unplan_details').removeClass('hide')">Details</a>
+						</div>
+						<div class="col-sm-12 mar-bottom-20 hide" id="unplan_details">
+							<div class="form-group col-sm-12">
+								<h4>Products To be detailed(Check given products and its quantity) :</h4>
+								<ul>
+								<?php
+								$products_array = array();
+								foreach($products as $product)
+								{?>
+									<li class="col-sm-6">
+									<label class="col-sm-6"> <input type="checkbox" name="product_id[]" id="product_id_<?=$product->id?>" value="<?=$product->id?>" onclick="productClick(this)"> <?= $product->name?></label>
+									<label> <input type="text" name="product_qty[<?=$product->id?>]" class="required" id="product_qty_<?=$product->id?>" value="" disabled></label>
+									</li>
+								<?php }?>
+								</ul>
+							</div>
+							<div class="form-group col-sm-6">
+								<label class="col-sm-6">Discussion</label>
+								<textarea name="discussion"></textarea>
+							</div>
+							<div class="form-group col-sm-6">
+								<div class="col-sm-6">
+								<label>Visit Time</label>
+								<input type="text" name="visit_time" value=""><br>
+								</div>
+								<div class="col-sm-6">
+								<label>Doctor Business</label>
+								<input type="text" name="business" value="">
+								</div>
+							</div>
+						</div>
+
 						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
 						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="UnplannedSubmit" class="btn blue-btn btn-block">Save</button></div>
 					</div>

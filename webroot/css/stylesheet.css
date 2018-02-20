@@ -707,6 +707,7 @@ th a{color : #fff;}
 
 #report_section input[type="checkbox"]{display:inline-block;}
 #missed_doctors_table input[type="checkbox"]{display:inline-block;}
+#UnplannedAdd input[type="checkbox"]{display:inline-block;}
 .doctor_product input[type="checkbox"]{display:inline-block;}
 #missed_doctors_table th:first-child{width:30%}
 #missed_doctors_table th:last-child{width:25%}

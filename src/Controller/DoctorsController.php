@@ -132,7 +132,7 @@ class DoctorsController extends AppController
 			->find()
 			->notMatching('DoctorsRelation', function ($q) use ($uid) {
 				return $q->where(['DoctorsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $city]);
+			})->where(['city_id =' => $city, 'Doctors.is_approved =' => 1, 'Doctors.is_active =' => 1]);
 		if($data['speciality']!="")
 		$doctors->where(['speciality_id =' => $data['speciality']]);
 		$doctors->toarray();
@@ -155,7 +155,7 @@ class DoctorsController extends AppController
 			->find()
 			->notMatching('DoctorsRelation', function ($q) use ($uid) {
 				return $q->where(['DoctorsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $city]);
+			})->where(['city_id =' => $city, 'Doctors.is_approved =' => 1, 'Doctors.is_active =' => 1]);
 		$doctors->toarray();
 		$listHtml='';
 		foreach ($doctors as $doctor)

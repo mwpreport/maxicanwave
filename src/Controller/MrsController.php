@@ -191,78 +191,68 @@ class MrsController extends AppController {
 			
 			$WorkPlansD = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities', 'Doctors'])	
-			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
+			
+			$WorkPlansUD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
+			
+			$WorkPlansPD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
 			
 			$WorkPlans = $this->WorkPlans
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
-			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
 			
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
 			->contain(['Cities', 'Chemists'])	
-			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
 			
 			$WorkPlansS = $this->WorkPlans
 			->find('all')
 			->contain(['Cities', 'Stockists'])	 
-			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 
 			$html = "";
 			if(count($WorkPlansD))
 			{
-				$work_with = '<select name="work_with[%s]"><option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option></select>';
-				$is_missed = '<select name="missed_reason[%s]"><option value="">No</option><option>Doctor Refused Appointment</option><option>Doctor on Leave</option><option>Doctor not in Station</option><option>Plan Changed</option><option>Meeting / CME</option><option>Others</option></select>';
-				$product_popup = '<div class="mfp-hide white-popup-block small_popup doctor_product" id="doctor_product_%s">
-				<div class="popup-content">
-					<div class="popup-header">
-						<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-						<div class="hr-title"><h4>Select Products Given as samples</h4><hr /></div>
-					</div>
-					<div class="popup-body">
-						<div class="row">
-							<div class="col-sm-12 mar-bottom-20">
-								<div class="radio-blk">
-								<select name="products[%s]" multiple="" id="products_%s"  onchange="productShow(%s)">%products</select>
-								</div>
-							</div>
-							<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss pull-right">OK</button></div>
-						</div>
-					</div>
-				</div>';
-
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Is Missed</th><th>Products</th><th>Action</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansD as $WorkPlanD)
 				{
 					
-					$work_with_selected = str_replace("<option>".$WorkPlanD->work_with."</option>","<option selected>".$WorkPlanD->work_with."</option>",$work_with);
-					$is_missed_selected = str_replace("<option>".$WorkPlanD->missed_reason."</option>","<option selected>".$WorkPlanD->missed_reason."</option>",$is_missed);;
 					$products_array = array();
 					if($WorkPlanD->products!="")
 					$products_array = unserialize($WorkPlanD->products);
-
-					$sample_products =array();$product_options="";
+					$sample_products =array();
 					foreach($products as $product)
-					{
-						if (in_array($product->id, $products_array))
-						{
-							$product_options.='<option value="'.$product->id.'" selected>'.$product->name.'</option>';
-							$sample_products[$product->id]= $product->name;
-						}
-						else
-						$product_options.='<option value="'.$product->id.'">'.$product->name.'</option>';
-							
-					}
-					if(count($sample_products)>0) {$pdt_lnk_text = implode(", ",$sample_products); $pdt_val_text=implode(",",array_keys($sample_products));}
-					else {$pdt_lnk_text = "Select Products"; $pdt_val_text="";}
-					$product_popup_selected = str_replace("%products",$product_options,$product_popup);
-					$html.='<tr class="'.(($WorkPlanD->is_reported)?"reported":"").' '.(($WorkPlanD->is_unplanned)?"unplanned":"").'"><td>'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.str_replace("%s",$WorkPlanD->id,$work_with_selected).'</td><td>'.str_replace("%s",$WorkPlanD->id,$is_missed_selected).'</td><td><a href="#doctor_product_'.$WorkPlanD->id.'" id="pdt_link_'.$WorkPlanD->id.'" class="popup-modal">'.$pdt_lnk_text.'</a><input type="hidden" id="pdt_val_'.$WorkPlanD->id.'" name=pdt_val['.$WorkPlanD->id.'] value="'.$pdt_val_text.'">'.str_replace("%s",$WorkPlanD->id,$product_popup_selected).'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanD->id.')">Remove</a></td></tr>';
+					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanD->visit_time.'</td><td>'.$WorkPlanD->business.'</td></tr>';
+				$i++;
+				}
+				$html.='</tbody></table>';
+			}
+			
+			if(count($WorkPlansUD))
+			{
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Un-Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th></tr></thead><tbody>';
+				$i = 1;
+				foreach ($WorkPlansUD as $WorkPlanUD)
+				{
+					
+					$products_array = array();
+					if($WorkPlanUD->products!="")
+					$products_array = unserialize($WorkPlanUD->products);
+					$sample_products =array();
+					foreach($products as $product)
+					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanUD->visit_time.'</td><td>'.$WorkPlanUD->business.'</td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
@@ -270,13 +260,11 @@ class MrsController extends AppController {
 
 			if(count($WorkPlans))
 			{
-				$is_planned = '<select name="is_planned[%s]"><option value="0">No</option><option value="1">Yes</option></select>';
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th><th>Is Planned</th><th>Action</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlans as $WorkPlan)
 				{
-					$is_planned_selected = str_replace('value="'.$WorkPlan->is_planned.'"','value="'.$WorkPlan->is_planned.'" selected',$is_planned);
-					$html.='<tr class="'.(($WorkPlan->is_reported)?"reported":"").' "><td>'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td>'.sprintf($is_planned_selected,$WorkPlan->id).'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlan->id.')">Remove</a></td></tr>';
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
@@ -284,11 +272,11 @@ class MrsController extends AppController {
 
 			if(count($WorkPlansC))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th>Action</th></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansC as $WorkPlanC)
 				{
-					$html.='<tr class="'.(($WorkPlanC->is_reported)?"reported":"").' "><td>'.$i.'</td><td>'.$WorkPlanC->chemist->name.'</td><td>'.$WorkPlanC->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanC->id.')">Remove</a></td></tr>';
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanC->chemist->name.'</td><td>'.$WorkPlanC->city->city_name.'</td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
@@ -296,11 +284,30 @@ class MrsController extends AppController {
 			
 			if(count($WorkPlansS))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Stockists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th>Action</th></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Stockists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansS as $WorkPlanS)
 				{
-					$html.='<tr class="'.(($WorkPlanS->is_reported)?"reported":"").' "><td>'.$i.'</td><td>'.$WorkPlanS->stockist->name.'</td><td>'.$WorkPlanS->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanS->id.')">Remove</a></td></tr>';
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanS->stockist->name.'</td><td>'.$WorkPlanS->city->city_name.'</td></tr>';
+				$i++;
+				}
+				$html.='</tbody></table>';
+			}
+						
+			if(count($WorkPlansPD))
+			{
+				$html.='<h3 class="mar-top-10 mar-bottom-10">PG & Others</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th></tr></thead><tbody>';
+				$i = 1;
+				foreach ($WorkPlansPD as $WorkPlanPD)
+				{
+					
+					$products_array = array();
+					if($WorkPlanPD->products!="")
+					$products_array = unserialize($WorkPlanPD->products);
+					$sample_products =array();
+					foreach($products as $product)
+					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->doctor->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
