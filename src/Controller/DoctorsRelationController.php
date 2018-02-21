@@ -32,9 +32,16 @@ class DoctorsRelationController extends AppController
         $this->paginate = [
             'contain' => ['Users', 'Doctors', 'DoctorTypes']
         ];
-        $doctorsRelation = $this->paginate($this->DoctorsRelation);
+		
+		if(isset($_GET['user']))
+        $filterUser = $_GET['user'];
+		else
+		$filterUser = 0;
+	
+        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $filterUser, 'DoctorsRelation.is_active =' => 1]));
+		$users = $this->Users->find('all')->where(['Users.role_id =' => 5,'Users.is_active =' => 1, 'Users.is_approved =' => 1, 'Users.is_deleted =' => 0])->toarray();
 
-        $this->set(compact('doctorsRelation'));
+        $this->set(compact('doctorsRelation', 'users', 'filterUser'));
         $this->set('_serialize', ['doctorsRelation']);
     }
 
@@ -62,7 +69,6 @@ class DoctorsRelationController extends AppController
      */
     public function add()
     {
-        $doctorsRelation = $this->DoctorsRelation->newEntity();
         if ($this->request->is('post')) {
 			$rData=array('user_id'=>$_POST['user_id'],'doctor_ids'=>$_POST['doctor_id'],'class'=>$_POST['class'],'is_active'=>1);
 			$uid = $rData['user_id'];
@@ -70,28 +76,32 @@ class DoctorsRelationController extends AppController
 			$doctorsCount=count($rData['doctor_ids']);
 			$totalCount=$previous_count+$doctorsCount;
 			$relationLimit = $this->Config->find()->select('value')->where(['scope' => 'mr_doctors_limit'])->first();
-			$doctorsRelation = $this->DoctorsRelation->newEntity();
 			if ($this->request->is('post') && $totalCount < $relationLimit->value) {
 				foreach ($rData['doctor_ids'] as $doctor_id){
+					$doctorsRelation = $this->DoctorsRelation->newEntity();
 					$data = array('user_id'=>$rData['user_id'],'doctor_id'=>$doctor_id,'class'=>$rData['class'],'is_active'=>1);
 					$doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $data);
 					$data_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid, 'doctor_id =' => $doctor_id])->count();
 					if($data_count<1)
 					{
-						print_r($data); exit;
 						if ($this->DoctorsRelation->save($doctorsRelation)) {
-							$id = $doctorsRelation->id;
-							$returnArray = array('id'=>$id, 'status'=>'success'); 
-							$this->Flash->success(__('The doctors relation(s) has been saved.'));
-							return $this->redirect(['action' => 'index']);
+							//
 						}
 						else
-						$this->Flash->error(__('The doctors relation could not be saved. Please, try again.'));
+						{
+							$this->Flash->error(__('The doctors relation could not be saved. Please, try again.'));
+							return $this->redirect(['action' => 'index']);
+						}
 					}
 				}
+				$this->Flash->success(__('The doctors relation(s) has been saved.'));
+				return $this->redirect(['action' => 'index']);
 			}
 			else
-			$this->Flash->error(__('You have reached you limit.'));
+			{
+				$this->Flash->error(__('You have reached you limit.'));
+				return $this->redirect(['action' => 'index']);
+			}
         }
 		$doctorTypes = $this->DoctorTypes->find('list')->toarray();
 		$states = $this->States->find('list')->toarray();

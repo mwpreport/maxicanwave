@@ -24,13 +24,21 @@
 							</div>
 						</div>
 						<div class="clearfix"></div>
-						<div class="col-md-12">
-							<select name="state_id" id="state_id" class="">
-								<?php foreach ($states as $state){
-								echo '<option value="'.$state->id.'" '.(($state->id==$filterState)?"selected":"").'>'.$state->name.'</option>';
-								} ?>
-							</select>
+						<div class="row">
+                            <div class="col-sm-12 mar-bottom-20">
+								<div class="form-group col-sm-6">
+								<div class="col-sm-6"><h4 for="state_id">State</h4></div>
+								<div class="col-sm-6">
+									<select name="state_id" id="state_id"  class="error form-control required">
+										<?php foreach ($states as $state){
+										echo '<option value="'.$state->id.'" '.(($state->id==$filterState)?"selected":"").'>'.$state->name.'</option>';
+										} ?>
+									</select>
+								</div>
+								</div>
+							</div>
 						</div>
+
 						<div class="col-md-12">
 							<div class="box box-primary">
 								<div class="box-body no-padding">
@@ -49,9 +57,9 @@
 												<td><?= $i ?></td>
 												<td><?= $city->has('state') ? $this->Html->link($city->state->name, ['controller' => 'States', 'action' => 'view', $city->state->id]) : '' ?></td>
 												<td><?= h($city->city_name) ?></td>
-												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $city->id],['escape' => false]) ?></td>
-												<td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $city->id],['escape' => false]) ?></td>
-												<td width="50"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $city->id], ['escape' => false,'confirm' => __('Are you sure you want to delete "{0}"?', $city->name)]) ?></td>
+												<td width="60"><?= $this->Html->link(__('<img src="'.$this->Url->build(["controller" => ""]).'/images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $city->id],['escape' => false]) ?></td>
+												<td width="50"><?= $this->Html->link(__('<img src="'.$this->Url->build(["controller" => ""]).'/images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $city->id],['escape' => false]) ?></td>
+												<td width="50"><?= $this->Form->postLink(__('<img src="'.$this->Url->build(["controller" => ""]).'/images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $city->id], ['escape' => false,'confirm' => __('Are you sure you want to delete "{0}"?', $city->name)]) ?></td>
 											</tr>
 											<?php $i++; endforeach; ?>
 										</tbody>

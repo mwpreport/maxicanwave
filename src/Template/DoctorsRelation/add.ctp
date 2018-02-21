@@ -25,7 +25,7 @@
 						<div class="clearfix"></div>
 						<div class="col-md-12">
 								<div class="box-body no-padding">
-									<form id="newform" method="POST" action="../doctors-relation/add/">
+									<form id="newform" method="POST" action="<?= $this->Url->build(["controller" => "DoctorsRelation", "action" => "add"])?>">
 										<div class="form-group mar-bottom-40">
 											<div class="col-sm-6">
 												<?php echo $this->Form->select('state_id', $states , ['id' => 'state_id', 'class' => 'form-control', 'onchange' => 'loadCitiesOption()', 'empty' => 'Select State']);?>  
@@ -39,7 +39,7 @@
 											<?php echo $this->Form->select('user_id', [], ['id' => 'user_id', 'class' => 'form-control', 'onchange' => 'loadDoctorsOption()','empty' => 'Select MR']);?>
 											</div>
 											<div class="col-sm-6">
-											<?php echo $this->Form->select('doctor_id', [], ['id' => 'doctor_id', 'class' => 'form-control','empty' => 'Select Doctor','multiple' => 'multiple']);?>
+											<?php echo $this->Form->select('doctor_id', [], ['id' => 'doctor_id', 'class' => 'form-control','empty' => 'Select Doctors','multiple' => 'multiple']);?>
 											</div>
 										</div>
 										<div class="form-group">
@@ -47,7 +47,7 @@
 												<div class="radio-blk">
 													<label for="exampleInputClass" class="gray-txt">Class</label>
 													<input type="radio" name="class" id="classA" value="1"><label for="classA"><span></span>A</label>
-													<input type="radio" name="class" id="classB" value="0" checked="checked"><label for="classB"><span></span>B</label>
+													<input type="radio" name="class" id="classB" value="2" checked="checked"><label for="classB"><span></span>B</label>
 												</div>
 											</div>
 										</div>
@@ -73,7 +73,7 @@ $("#newform").validate();
 function loadCitiesOption(){
 	var state = $('#state_id').val();
 	$.ajax({
-		   url: '../cities/get_cities_option/',
+		   url: '<?= $this->Url->build(["controller" => "Cities", "action" => "getCitiesOption"])?>',
 		   dataType: "json",
 		   data: "state="+state,
 		   type: "POST",
@@ -91,7 +91,7 @@ function loadUsersOption()
 	if(user =="")
 	{
 		$.ajax({
-			   url: '../users/get_users_option/',
+			   url: '<?= $this->Url->build(["controller" => "Users", "action" => "getUsersOption"])?>',
 			   dataType: "json",
 			   data: "city="+city,
 			   type: "POST",
@@ -109,7 +109,7 @@ function loadDoctorsOption()
 	var city = $('#city_id').val();
 	var user = $('#user_id').val();
 	$.ajax({
-		   url: '../doctors/get_doctors_option/',
+		   url: '<?= $this->Url->build(["controller" => "Doctors", "action" => "getDoctorsOption"])?>',
 		   dataType: "json",
 		   data: "city="+city+"&user="+user,
 		   type: "POST",

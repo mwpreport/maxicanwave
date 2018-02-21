@@ -3,27 +3,44 @@
  * @var \App\View\AppView $this
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $config->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $config->id)]
-            )
-        ?></li>
-        <li><?= $this->Html->link(__('List Config'), ['action' => 'index']) ?></li>
-    </ul>
-</nav>
-<div class="config form large-9 medium-8 columns content">
-    <?= $this->Form->create($config) ?>
-    <fieldset>
-        <legend><?= __('Edit Config') ?></legend>
-        <?php
-            echo $this->Form->control('scope');
-            echo $this->Form->control('value');
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+		<!-- Main content -->
+		<section>
+			<div class="content">
+				<div class="white-wrapper no-padding-top">
+					<div class="row">
+						<div class="event-button-cont">
+						</div>
+						<div class="clearfix"></div>
+						<div class="col-md-12">
+							<div class="hr-title">
+								<h2><?= __('Update Config Data') ?></h2>
+								<hr>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<div class="col-md-12">
+								<div class="box-body no-padding">
+									<?= $this->Form->create($config, array('id' => 'editform')) ?>
+									<fieldset>
+										<?php
+											echo $this->Form->control('scope', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('value', ['class' => 'form-control mar-bottom-10']);
+										?>
+									</fieldset>
+									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']); ?>
+									<?= $this->Form->end() ?>
+								</div>
+						</div>
+						<div class="clearfix"></div>
+						<!-- /.col -->
+					</div>
+					<!-- /.row -->
+				</div>
+			</div> 
+		</section>
+		<!-- /.content -->
 </div>
+<!-- /.content-wrapper -->
+<script>$("#editform").validate();</script>
