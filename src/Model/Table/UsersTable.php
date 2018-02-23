@@ -47,6 +47,10 @@ class UsersTable extends Table
             'foreignKey' => 'city_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'lead_id',
+            'joinType' => 'INNER'
+        ]);
 
     }
 

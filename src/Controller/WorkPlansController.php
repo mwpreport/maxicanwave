@@ -19,6 +19,7 @@ class WorkPlansController extends AppController
 		$this->loadComponent('Auth');
 	
         $this->loadModel('WorkPlans');
+		$this->loadModel('WorkPlanApproval');
         $this->loadModel('Workreports');
         $this->loadModel('WorkTypes');
         $this->loadModel('Users');
@@ -459,6 +460,24 @@ class WorkPlansController extends AppController
 		exit;   
      }
 
+	public function submitPlan()
+	{
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$uid = $this->Auth->user('id');
+		$lead_id = $this->Auth->user('lead_id');
+		$workPlanApproval = $this->WorkPlanApproval->newEntity();
+        if ($this->request->is('post')) {
+			$data=array('date' => $_POST['date'], 'user_id' => $uid, 'lead_id' => $lead_id );
+            $workPlanApproval = $this->WorkPlanApproval->patchEntity($workPlanApproval, $data);
+            if ($this->WorkPlanApproval->save($workPlanApproval)) {
+                $this->Flash->success(__('Submited to approval Queue.'));
+            }
+            $this->Flash->error(__('Failed. Please, try again.'));
+        }
+            return $this->redirect(["controller" => "Mrs","action" => "monthlyplan"]);
+	}
+	
 	public function mrsGetReports()
     {
 		$this->autoRender = false;
@@ -555,6 +574,7 @@ class WorkPlansController extends AppController
 			return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
         }
 	}
+
  	public function mrsReportMissed()
     {
 		$this->autoRender = false;

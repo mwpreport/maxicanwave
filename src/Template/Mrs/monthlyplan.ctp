@@ -1,4 +1,5 @@
 <?php ?>
+<?php $is_editable = true; if(count($workPlanApproval)>0) $is_editable = false;?>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <div class="calendar-container">
@@ -7,14 +8,20 @@
                         <div class="content">
                             <div class="white-wrapper no-padding-top">
                                 <div class="row">
-                                    <div class="event-button-cont">
-                                        <ul>
-                                            <li><a href="#ModalAdd" onclick="reset_form()" class="popup-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add</a></li>
-                                            <li><a href="#ModalDelete" onclick="reset_form()" class="popup-modal"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
-                                            <li><a href="#ModalCopy" onclick="reset_form()" class="popup-modal"><i class="fa fa-check-circle" aria-hidden="true"></i> Copy Plan</a></li>  
-                                            <li><a href="#ModalLeave" onclick="reset_form()" class="popup-modal"><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</a></li>  
-                                        </ul>
-                                    </div>
+									<?php if($is_editable){?>
+										<div class="event-button-cont">
+											<ul>
+												<li><a href="#ModalAdd" onclick="reset_form()" class="popup-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add</a></li>
+												<li><a href="#ModalDelete" onclick="reset_form()" class="popup-modal"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+												<li><a href="#ModalCopy" onclick="reset_form()" class="popup-modal"><i class="fa fa-check-circle" aria-hidden="true"></i> Copy Plan</a></li>  
+												<li><a href="#ModalLeave" onclick="reset_form()" class="popup-modal"><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</a></li>  
+											</ul>
+										</div>
+									<?php }else{?>
+										<div class="col-md-12 mar-bottom-20 mar-top-20">
+											<h4 class="message success">Submitted for approval Queue</h4>
+										</div>
+									<?php }?>
                                     <div class="clearfix"></div>
                                     <div class="col-md-12">
                                         <div class="box box-primary">
@@ -25,11 +32,16 @@
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
+									<?php if($is_editable){?>
+									<form action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "submitPlan"])?>" method="post">
                                     <div class="form-group">
                                         <div class="col-md-offset-4 col-md-4 col-sm-offset-0 col-sm-12 col-xs-12">
-                                            <a href="" class="common-btn blue-btn">Send entire month's plan for approval</a>
+											<input type="hidden" name="date" value="<?= $thisDate?>">
+                                            <button type="submit" name="submitPlan" class="common-btn blue-btn">Send entire month's plan for approval</button>
                                         </div>
                                     </div>
+									</form>
+									<?php }?>
                                     <!-- /.col -->
                                 </div>
                                 <!-- /.row -->
@@ -499,12 +511,13 @@
                 });
 
                 // initialize the calendar
+				var is_editable = '<?php echo $is_editable?>';
                 $('#calendar').fullCalendar({  // assign calendar
 
 				header: {
-					left: 'prev',
+					left: '',
 					center: 'title',
-					right: 'next'
+					right: ''
 				},
 				defaultDate: startDate,
 				disableDragging : true,
@@ -518,7 +531,7 @@
 
 				select: function(start, end, jsEvent) {  // click on empty time slot
 					cDate= new Date(moment(start).format('YYYY-MM-DD 00:00:00'));
-					if(cDate >= startDate && cDate <= endDate)
+					if(cDate >= startDate && cDate <= endDate && is_editable)
 					{
 						reset_form();
 						$('#ModalAdd #start_date').val(moment(start).format('YYYY-MM-DD'));
@@ -530,7 +543,7 @@
 			   eventRender: function(event, element) { // click on event
 					element.bind('click', function() {
 						cDate= event.start;
-						if(cDate >= startDate && cDate <= endDate)
+						if(cDate >= startDate && cDate <= endDate && is_editable)
 						{
 							reset_form();
 							$('#ModalEdit #id').val(event.id);

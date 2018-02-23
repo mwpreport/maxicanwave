@@ -27,7 +27,7 @@
 						<div class="row">
                             <div class="col-sm-12 mar-bottom-20">
 								<div class="form-group col-sm-6">
-								<div class="col-sm-6"><h4 for="user_id">MR</h4></div>
+								<div class="col-sm-6"><h4 for="user_id">Select MR :</h4></div>
 								<div class="col-sm-6">
 									<select name="user_id" id="user_id" class="error form-control required">
 									<option>Select MR</option>

@@ -22,6 +22,7 @@ class MrsController extends AppController {
         $this->loadModel('Chemists');
         $this->loadModel('Stockists');
         $this->loadModel('WorkPlans');
+        $this->loadModel('WorkPlanApproval');
         $this->loadModel('WorkReports');
         $this->loadModel('WorkTypes');
         $this->loadModel('LeaveTypes');
@@ -71,6 +72,7 @@ class MrsController extends AppController {
         $this->viewBuilder()->layout('monthlyplan');
         $this->set('title', 'Monthly Plan');
         $uid = $this->Auth->user('id');
+		$lead_id = $this->Auth->user('lead_id');
         $userCity = $this->Auth->user('city_id');
         $user =  $this->Auth->user;
 		$state_id = $this->Auth->user('state_id');
@@ -78,7 +80,9 @@ class MrsController extends AppController {
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
         $leaveTypes = $this->LeaveTypes->find()->toarray();
-        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation'));        
+		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
+        $workPlanApproval = $this->WorkPlanApproval->find('all')->where(['WorkPlanApproval.user_id =' => $uid, 'WorkPlanApproval.lead_id =' => $lead_id, 'WorkPlanApproval.date =' => $thisDate])->toarray();
+        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate'));        
     }
     
     public function planGetDoctors()
