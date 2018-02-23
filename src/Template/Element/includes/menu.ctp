@@ -106,7 +106,9 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> DWP</a></li>
+					<?php if($role!=5){?>
+						<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Work plan Requests'), ['controller' => 'Mrs', 'action' => 'workPlanRequests'], ['escape' => false]) ?></li>
+					<?php }?>
                     <li><a href="#"><i class="fa fa-circle-o"></i> Expenses</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i> DV List</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i> Leave</a></li>

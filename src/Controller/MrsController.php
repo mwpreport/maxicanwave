@@ -85,6 +85,15 @@ class MrsController extends AppController {
         $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate'));        
     }
     
+	public function workPlanRequests(){
+        $this->set('title', 'Plan Requests for Approval');
+        $uid = $this->Auth->user('id');
+		$lead_id = $this->Auth->user('lead_id');
+		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
+        $workPlansApproval = $this->paginate($this->WorkPlanApproval->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['WorkPlanApproval.lead_id =' => $uid, 'WorkPlanApproval.date =' => $thisDate]));
+        $this->set(compact('workPlansApproval', 'thisDate'));        
+    }
+    
     public function planGetDoctors()
     {
         $this->autoRender = false;
