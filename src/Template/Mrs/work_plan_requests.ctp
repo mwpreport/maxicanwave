@@ -26,7 +26,7 @@
 					<th scope="col"><?= $this->Paginator->sort('S.No') ?></th>
 					<th scope="col"><?= $this->Paginator->sort('user_id', 'MR') ?></th>
 					<th scope="col"><?= $this->Paginator->sort('City') ?></th>
-					<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
+					<th scope="col" class="actions"><?= __('Options') ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -34,10 +34,8 @@
 				<tr>
 					<td><?= $this->Number->format($i) ?></td>
 					<td><?= $workPlanApproval->has('user') ? $workPlanApproval->user->firstname." ".$workPlanApproval->user->lastname : '' ?></td>
-					<td><?= $workPlanApproval->has('user') ? $workPlanApproval->user->city->name : '' ?></td>
-					<td width="60"><a href="javascript:void(0)" onclick="loadProfile(<?= $doctorsRelation->doctor_id ?>);"><img src="../images/eye.png" width="29" height="18" alt="profile"></a></td>
-					<td width="50"><a href="#ModalEdit" class="popup-modal" onclick="loadProfileForm(<?= $doctorsRelation->id ?>);"><img src="../images/edit@2x.png" width="18" height="18" alt="edit"></a></td>
-					<td width="50"><?= $this->Form->postLink(__('<img src="../images/del@2x.png" width="14" height="18" alt="trash">'), ['controller' => 'DoctorsRelation','action' => 'mrsDelete', $doctorsRelation->id], ['escape' => false, 'confirm' => __('Are you sure you want to delete?')]) ?></td>
+					<td><?= $workPlanApproval->user->city->city_name?></td>
+					<td><?= $this->Form->postLink(__('<img src="'.$this->Url->image('../images/eye.png').'" width="29" height="18" alt="View">'), ['action' => 'workPlan', $workPlanApproval->id], ['escape' => false]) ?></td>
 				</tr>
 				<?php $i++; endforeach; ?>
 			</tbody>

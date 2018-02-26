@@ -81,8 +81,30 @@ class MrsController extends AppController {
         $doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
         $leaveTypes = $this->LeaveTypes->find()->toarray();
 		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
-        $workPlanApproval = $this->WorkPlanApproval->find('all')->where(['WorkPlanApproval.user_id =' => $uid, 'WorkPlanApproval.lead_id =' => $lead_id, 'WorkPlanApproval.date =' => $thisDate])->toarray();
+        $workPlanApproval = $this->WorkPlanApproval->find('all')->where(['WorkPlanApproval.user_id =' => $uid, 'WorkPlanApproval.lead_id =' => $lead_id, 'WorkPlanApproval.date =' => $thisDate])->first();
         $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate'));        
+    }
+    
+	public function workPlan($id = null){
+		$workPlanApproval = $this->WorkPlanApproval->find('all')->where(['id =' => $id])->first();
+		$uid = $this->Auth->user('id');
+		if ($workPlanApproval) {
+			$this->viewBuilder()->layout('monthlyplan');
+			$user = $this->Users->find('all')->where(['id =' => $workPlanApproval->user_id])->first();
+			$this->set('title', 'Monthly Plan of '.$user->firstname);
+			$user_id = $user->id;
+			$lead_id = $user->lead_id;
+			$userCity = $user->city_id;
+			$state_id = $user->state_id;
+			$workTypes = $this->WorkTypes->find()->order(['list' => 'ASC'])->toarray();
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $user_id, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
+			$leaveTypes = $this->LeaveTypes->find()->toarray();
+			$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
+			$this->set(compact('user_id', 'userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate'));        
+		}
+		else
+		return $this->redirect(["controller" => "Mrs","action" => "workPlanRequests"]);
     }
     
 	public function workPlanRequests(){
@@ -90,7 +112,7 @@ class MrsController extends AppController {
         $uid = $this->Auth->user('id');
 		$lead_id = $this->Auth->user('lead_id');
 		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
-        $workPlansApproval = $this->paginate($this->WorkPlanApproval->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['WorkPlanApproval.lead_id =' => $uid, 'WorkPlanApproval.date =' => $thisDate]));
+        $workPlansApproval = $this->paginate($this->WorkPlanApproval->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['WorkPlanApproval.lead_id =' => $uid, 'WorkPlanApproval.date =' => $thisDate, 'WorkPlanApproval.is_approved =' => 0, 'WorkPlanApproval.is_rejected =' => 0]));
         $this->set(compact('workPlansApproval', 'thisDate'));        
     }
     

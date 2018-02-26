@@ -8,30 +8,18 @@
                         <div class="content">
                             <div class="white-wrapper no-padding-top">
                                 <div class="row">
-									<?php if(count($workPlanApproval)<1){?>
-										<div class="event-button-cont">
-											<ul>
-												<li><a href="#ModalAdd" onclick="reset_form()" class="popup-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add</a></li>
-												<li><a href="#ModalDelete" onclick="reset_form()" class="popup-modal"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
-												<li><a href="#ModalCopy" onclick="reset_form()" class="popup-modal"><i class="fa fa-check-circle" aria-hidden="true"></i> Copy Plan</a></li>  
-												<li><a href="#ModalLeave" onclick="reset_form()" class="popup-modal"><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</a></li>  
-											</ul>
-										</div>
-									<?php }else{?>
 										<div class="col-md-12 mar-bottom-20 mar-top-20">
 											<h4 class="message success">
 											<?php
+											if($workPlanApproval->is_approved == 0)
+												echo "Submitted for approval Queue";
+											if($workPlanApproval->is_rejected == 1)
+											{echo "Request Rejected";$is_editable = false;}
 											if($workPlanApproval->is_approved == 1)
 											{echo "Approved";$is_editable = false;}
-											if($workPlanApproval->is_approved == 0)
-											{echo "Submitted for approval Queue";  $is_editable = false;}
-											if($workPlanApproval->is_rejected == 1)
-												echo "Your approval request rejected, Please fix and submit again.";
-											
 											?>
 											</h4>
 										</div>
-									<?php }?>
                                     <div class="clearfix"></div>
                                     <div class="col-md-12">
                                         <div class="box box-primary">
@@ -43,11 +31,12 @@
                                     </div>
                                     <div class="clearfix"></div>
 									<?php if($is_editable){?>
-									<form action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "submitPlan"])?>" method="post">
+									<form action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "planApproval"])?>" method="post">
                                     <div class="form-group">
-                                        <div class="col-md-offset-4 col-md-4 col-sm-offset-0 col-sm-12 col-xs-12">
-											<input type="hidden" name="date" value="<?= $thisDate?>">
-                                            <button type="submit" name="submitPlan" class="common-btn blue-btn">Send entire month's plan for approval</button>
+                                        <div class="col-md-offset-3 col-md-6 col-sm-offset-0 col-sm-12 col-xs-12">
+											<input type="hidden" name="id" value="<?= $workPlanApproval['id']?>">
+                                            <div class="col-sm-6"><button type="submit" name="RejectPlan" class="common-btn blue-btn">Reject</button></div>
+                                            <div class="col-sm-6"><button type="submit" name="ApprovePlan" class="common-btn blue-btn">Approve</button></div>
                                         </div>
                                     </div>
 									</form>
@@ -58,134 +47,25 @@
                             </div>
                         </div> 
                     </section>
-                    <section>
-                        <div class="content">
-                            <div class="monthly-reports white-wrapper">
-                                <div class="daily-report-radio-cnt">
-                                    <form>
-                                        <ul>
-                                            <li class="col-md-12"><h3 class="mar-top-20 mar-bottom-20">Reports (Plan Summary)</h3></li>
-                                            <li class="col-md-3"><input type="radio" name="theRadioGroupName" id="doctor-wise-plan" value="doctor-wise-plan" checked="checked"><label for="doctor-wise-plan"><span></span>Doctor Wise Plan</label></li>
-                                            <li class="col-md-3"><input type="radio" name="theRadioGroupName" id="svl-doctor" value="svl-doctor" checked="checked"><label for="svl-doctor"><span></span>SVL Doctor</label></li>
-                                            <li class="col-md-3"><input type="radio" name="theRadioGroupName" id="speciality" value="speciality" checked="checked"><label for="speciality"><span></span>Speciality</label></li>
-                                            <li class="col-md-3"><input type="radio" name="theRadioGroupName" id="entire-doctor-list" value="entire-doctor-list" checked="checked"><label for="entire-doctor-list"><span></span>Entire Doctor List Plan</label></li>
-                                        </ul>
-                                    </form>
-                                    <div class="clearfix"></div>
-                                    <div class="col-sm-12 mar-top-20">
-                                    <a href="javascript:void(0)"  onclick="getRadioValue()"  class="common-btn blue-btn btn-125">Submit</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
                     <!-- /.content -->
                 </div>
 
             </div>
             <!-- /.content-wrapper -->
             <!-- pop starts here -->
-            <div class="mfp-hide white-popup-block small_popup" id="ModalAdd">
-                <div class="popup-content">
-					<form class="" id="ModalAddForm" method="POST" >
-                    <div class="popup-header">
-                        <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-                        <div class="hr-title"><h4>Add Plan</h4><hr /></div>
-                    </div>
-                    <div class="popup-body">
-                        <div class="row">
-                            <div class="col-sm-12 mar-bottom-20">
-                                <div class="form-group">
-                                    <label for="work_type_id">Work Type</label>
-                                    <select name="work_type_id" class="error form-control required" id="work_type_id" aria-invalid="true">
-                                        <option value="">Select</option>
-										<?php
-										foreach ($workTypes as $workType)
-										{?>
-										<option value="<?= $workType['id']?>"><?= $workType['name']?></option>
-										<?php }	?>
-                                    </select>  
-                                </div>
-
-                                <div class="form-group date-section">
-									<div class="col-sm-6 pad-left-0">
-										<label for="start_date">Select <span class="w1 hide dhide">From</span> Date</label>
-										<div class="input-group date">
-											<div class="input-group-addon">
-												<i class="fa fa-calendar"></i>
-											</div>
-											<input type="text" name="start_date" autocomplete="false" class="form-control required" id="start_date">
-										</div>
-                                    </div>
-                                    <div class="col-sm-6 w1 pad-right-0 hide dhide">
-										<label for="end_date">Select To Date</label>
-										<div class="input-group date">
-											<div class="input-group-addon">
-												<i class="fa fa-calendar"></i>
-											</div>
-											<input type="text" name="end_date" autocomplete="false" class="form-control required" id="end_date">
-										</div>
-                                    </div>
-                                </div>
-                                <div class="form-group xw1 dshow">
-                                    <label for="city_id">City</label>
-                                    <select name="city_id" class="form-control required" id="city_id" aria-invalid="true">
-                                        <option value="">Select</option>
-										<?php
-										foreach ($cities as $citiy)
-										{?>
-										<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?>><?= $citiy['city_name']?></option>
-										<?php }	?>
-                                    </select>  
-                                </div>
-                                <div class="form-group w2 hide dhide">
-                                    <label for="doctor_id">Select Doctor</label>
-                                    <select name="doctor_id[]" class="form-control required" id="doctor_id" aria-invalid="true" multiple="multiple">
-										<?php
-										foreach ($doctorsRelation as $doctor)
-										{?>
-										<option value="<?= $doctor['doctor_id']?>"><?= $doctor->doctor->name?></option>
-										<?php }	?>
-                                    </select>  
-                                </div>
-								<div class="form-group w1 hide dhide">
-									<label for="plan_reason">Type of Leave</label>
-									<select name="plan_reason" class="form-control required" id="plan_reason" aria-invalid="true">
-										<option value="">Select</option>
-										<?php
-										foreach ($leaveTypes as $leaveType)
-										{?>
-										<option value="<?= $leaveType['id']?>"><?= $leaveType['name']?></option>
-										<?php }	?>
-									</select>  
-								</div>
-								<div class="form-group w1 w8 hide dhide">
-									<label for="plan_details">More Detials/Comment</label>
-									<textarea class="form-control required" name="plan_details" id="plan_details" rows="5"></textarea>
-								</div>
-                            </div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="addSubmit" class="btn blue-btn btn-block">Save</button></div>
-                        </div>
-                    </div>
-					</form>
-                </div>
-            </div>
-            <!-- pop ends here -->
-            <!-- pop starts here -->
             <div class="mfp-hide white-popup-block small_popup" id="ModalEdit">
                 <div class="popup-content">
 					<form class="" id="ModalEditForm" method="POST" >
                     <div class="popup-header">
                         <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-                        <div class="hr-title"><h4>Update Plan</h4><hr /></div>
+                        <div class="hr-title"><h4>Plan Details</h4><hr /></div>
                     </div>
                     <div class="popup-body">
                         <div class="row">
                             <div class="col-sm-12 mar-bottom-20">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Work Type</label>
-                                    <select name="work_type_id" class="required form-control" id="work_type_id" aria-invalid="true">
+                                    <select disabled name="work_type_id" class="required form-control" id="work_type_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
 										foreach ($workTypes as $workType)
@@ -201,7 +81,7 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="start_date" autocomplete="false" class="form-control required" id="start_date">
+											<input disabled type="text" name="start_date" autocomplete="false" class="form-control required" id="start_date">
 										</div>
                                     </div>
                                     <div class="col-sm-6 w11 pad-right-0 hide dhide">
@@ -210,13 +90,13 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="end_date" autocomplete="false" class="form-control required" id="end_date">
+											<input disabled type="text" name="end_date" autocomplete="false" class="form-control required" id="end_date">
 										</div>
                                     </div>
                                 </div>
                                 <div class="form-group xw1 dshow">
                                     <label for="city_id">City</label>
-                                    <select name="city_id" class="required form-control" id="city_id" aria-invalid="true">
+                                    <select disabled name="city_id" class="required form-control" id="city_id" aria-invalid="true">
                                         <option value="">Select</option>
 										<?php
 										foreach ($cities as $citiy)
@@ -227,7 +107,7 @@
                                 </div>
                                 <div class="form-group w2 hide dhide">
                                     <label for="doctor_id">Select Doctor</label>
-									<select name="doctor_id" class="form-control required" id="doctor_id" aria-invalid="true">
+									<select disabled name="doctor_id" class="form-control required" id="doctor_id" aria-invalid="true">
 										<?php
 										foreach ($doctorsRelation as $doctor)
 										{?>
@@ -237,7 +117,7 @@
                                 </div>
 								<div class="form-group w1 hide dhide">
 									<label for="plan_reason">Type of Leave</label>
-									<select name="plan_reason" class="required form-control" id="plan_reason" aria-invalid="true">
+									<select disabled name="plan_reason" class="required form-control" id="plan_reason" aria-invalid="true">
 										<option value="">Select</option>
 										<?php
 										foreach ($leaveTypes as $leaveType)
@@ -248,167 +128,12 @@
 								</div>
 								<div class="form-group w1 w8 hide dhide">
 									<label for="plan_details">More Detials/Comment</label>
-									<textarea class="form-control required" name="plan_details" id="plan_details" rows="5"></textarea>
+									<textarea disabled class="form-control required" name="plan_details" id="plan_details" rows="5"></textarea>
 								</div>
                             </div>
                             <input type="hidden" name="id" class="form-control" id="id">
+                            <div class="col-md-4 col-sm-4 col-xs-4"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Close</button></div>
                             <div class="col-md-4 col-sm-4 col-xs-4"><button type="button" id="deleteButton" class="btn blue-btn btn-block margin-right-35">Delete</button></div>
-                            <div class="col-md-4 col-sm-4 col-xs-4"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-                            <div class="col-md-4 col-sm-4 col-xs-4"> <button type="submit" id="updateSubmit" class="btn blue-btn btn-block">Save</button></div>
-                        </div>
-                    </div>
-					</form>
-                </div>
-            </div>
-            <!-- pop ends here -->
-            <!-- pop starts here -->
-            <div class="mfp-hide white-popup-block small_popup" id="ModalDelete">
-                <div class="popup-content">
-					<form class="" id="ModalDeleteForm" method="POST" >
-                    <div class="popup-header">
-                        <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-                        <div class="hr-title"><h4>Delete Field</h4><hr /></div>
-                    </div>
-                    <div class="popup-body">
-                        <div class="row">
-                            <div class="col-sm-12 mar-bottom-20">
-                                <div class="form-group">
-                                    <label for="plan_details">Select Date</label>
-                                    <div class="input-group date">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                        <input type="text" autocomplete="false" class="form-control pull-right required" id="delete_date">
-                                    </div>
-                                </div>
-                                <div class="table-responsive" id="delete_plan_list">
-                                    
-                                            
-                                        
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="dateDeleteButton" class="btn blue-btn btn-block">Delete</button></div>
-                        </div>
-                    </div>
-					</form>
-                </div>
-            </div>
-            <!-- pop ends here -->
-            <!-- pop starts here -->
-            <div class="mfp-hide white-popup-block small_popup" id="ModalCopy">
-                <div class="popup-content">
-					<form class="" id="ModalCopyForm" method="POST" >
-                    <div class="popup-header">
-                        <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-                        <div class="hr-title"><h4>Copy Plan</h4><hr /></div>
-                    </div>
-                    <div class="popup-body">
-                        <div class="row">
-                            <div class="copy-from-to-container mar-bottom-20">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="copyfrom">Copy From</label>
-                                        <div class="input-group date">
-                                            <div class="input-group-addon">
-                                                <i class="fa fa-calendar"></i>
-                                            </div>
-                                            <input type="text" autocomplete="false" class="form-control pull-right required" id="copyfrom" name="copyfrom">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="copyto">Copy To</label>
-                                        <div class="input-group date">
-                                            <div class="input-group-addon">
-                                                <i class="fa fa-calendar"></i>
-                                            </div>
-                                            <input type="text" autocomplete="false" class="form-control pull-right required" id="copyto" name="copyto">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="col-sm-12 mar-bottom-20">
-                                <div class="table-responsive" id="copy_plan_list">
-                                </div>
-                            </div>
-                            <div class="copy-btn-container mar-bottom-20">
-                                <!--<div class="col-md-4 col-sm-4 col-xs-4"><button type="button" class="btn blue-btn btn-block margin-right-35">View Plan</button></div>-->
-                                <div class="col-md-6 col-sm-6 col-xs-6"> <button type="button" class="btn blue-btn btn-block popup-modal-dismiss">Cancel</button></div>
-                                <div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" class="btn blue-btn btn-block" id="planCopyButton">Copy Plan</button></div>
-                            </div>                            
-                        </div>
-                    </div>
-					</form>
-                </div>
-            </div>
-            <!-- pop ends here -->
-            <!-- pop starts here -->
-            <div class="mfp-hide white-popup-block small_popup" id="ModalLeave">
-                <div class="popup-content">
-					<form class="" id="ModalLeaveForm" method="POST" >
-                    <div class="popup-header">
-                        <button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-                        <div class="hr-title"><h4>Leave Plan</h4><hr /></div>
-                    </div>
-                    <div class="popup-body">
-                        <div class="row">
-                            <div class="leave-plan mar-bottom-20">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="start_date">From Date</label>
-                                        <div class="input-group date">
-                                            <div class="input-group-addon">
-                                                <i class="fa fa-calendar"></i>
-                                            </div>
-                                            <input type="text" class="form-control pull-right required" id="start_date" name="start_date" autocomplete="false">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="end_date">To Date</label>
-                                        <div class="input-group date">
-                                            <div class="input-group-addon">
-                                                <i class="fa fa-calendar"></i>
-                                            </div>
-                                            <input type="text" class="form-control pull-right required" id="end_date" name="end_date" autocomplete="false">
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="col-sm-6 mar-top-20">
-                                    <div class="form-group">
-                                        <label for="plan_reason">Type of Leave</label>
-                                        <select name="plan_reason" class="required form-control" id="plan_reason" aria-invalid="true">
-											<option value="">Select</option>
-											<?php
-											foreach ($leaveTypes as $leaveType)
-											{?>
-											<option value="<?= $leaveType['id']?>"><?= $leaveType['name']?></option>
-											<?php }	?>
-										</select>  
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 mar-top-20">
-                                    <div class="form-group">
-                                        <label for="plan_details">Reason for Leave</label>
-                                        <textarea class="form-control required" rows="5" name="plan_details"></textarea>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="copy-btn-container mar-bottom-20">
-								<input type="hidden" name="work_type_id" value="1">
-								<input type="hidden" name="city_id" value="<?= $userCity?>">
-                                <div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-                                <div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="leaveSubmit" class="btn blue-btn btn-block">Submit</button></div>
-                                <div class="clearfix"></div>
-                            </div>
                         </div>
                     </div>
 					</form>
@@ -537,19 +262,9 @@
 				selectHelper: true,
 				showNonCurrentDates : false,
 
-				events: "<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsView"])?>",  // request to load current events
+				events: "<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsView", "user_id" => $user_id])?>",  // request to load current events
 
-				select: function(start, end, jsEvent) {  // click on empty time slot
-					cDate= new Date(moment(start).format('YYYY-MM-DD 00:00:00'));
-					if(cDate >= startDate && cDate <= endDate && is_editable)
-					{
-						reset_form();
-						$('#ModalAdd #start_date').val(moment(start).format('YYYY-MM-DD'));
-						$('#ModalAdd #end_date').datepicker('remove');
-						$('#ModalAdd #end_date').datepicker({autoclose: true, startDate: moment(start).format('YYYY-MM-DD'), endDate: endDate});
-						$.magnificPopup.open({ items: {src: '#ModalAdd'}, type: 'inline' });
-					}
-			   },
+				
 			   eventRender: function(event, element) { // click on event
 					element.bind('click', function() {
 						cDate = new Date(moment(event.start).format('YYYY-MM-DD 00:00:00'));

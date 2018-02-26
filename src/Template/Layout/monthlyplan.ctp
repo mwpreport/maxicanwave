@@ -5,16 +5,16 @@
         <title>Calendar</title>
         <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->Url->image('favicon.ico')?>">
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../css/font-awesome.min.css">
+        <link rel="stylesheet" href="<?php echo $this->Url->css('bootstrap.min.css')?>">
+        <link rel="stylesheet" href="<?php echo $this->Url->css('font-awesome.min.css')?>">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-        <link rel="stylesheet" href="../plugins/fullcalendar/fullcalendar.min.css">
-        <link rel="stylesheet" href="../plugins/fullcalendar/fullcalendar.print.css" media="print">
-        <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
-        <link rel="stylesheet" href="../dist/css/skins/skin-red-light.min.css">
-        <link rel="stylesheet" href="../plugins/magnific/magnific-popup.css" type="text/css">
-        <link rel="stylesheet" href="../plugins/datepicker/datepicker3.css">
-        <link rel="stylesheet" href="../css/stylesheet.css">
+        <link rel="stylesheet" href="<?php echo $this->Url->css('../plugins/fullcalendar/fullcalendar.min.css')?>">
+        <link rel="stylesheet" href="<?php echo $this->Url->css('../plugins/fullcalendar/fullcalendar.print.css')?>" media="print">
+        <link rel="stylesheet" href="<?php echo $this->Url->css('../dist/css/AdminLTE.min.css')?>">
+        <link rel="stylesheet" href="<?php echo $this->Url->css('../dist/css/skins/skin-red-light.min.css')?>">
+        <link rel="stylesheet" href="<?php echo $this->Url->css('../plugins/magnific/magnific-popup.css')?>" type="text/css">
+        <link rel="stylesheet" href="<?php echo $this->Url->css('../plugins/datepicker/datepicker3.css')?>">
+        <link rel="stylesheet" href="<?php echo $this->Url->css('stylesheet.css')?>">
     </head>
     <body class="skin-red-light sidebar-mini">
         <div class="wrapper">

@@ -145,6 +145,8 @@ class WorkPlansController extends AppController
 		$uid = $this->Auth->user('id');
         $startDate=$_GET['start']." 00:00:00";
         $endDate=$_GET['end']." 23:59:00";
+		if(isset($_GET['user_id']))
+			$uid = $_GET['user_id'];
         $workPlans = $this->WorkPlans->find()->contain(['Doctors'])
 					->where(['start_date >= ' => $startDate,'end_date < ' => $endDate])
 					->where(['WorkPlans.user_id' => $uid, 'WorkPlans.is_planned =' => 1, 'WorkPlans.is_deleted =' => 0]);
@@ -476,6 +478,48 @@ class WorkPlansController extends AppController
             $this->Flash->error(__('Failed. Please, try again.'));
         }
             return $this->redirect(["controller" => "Mrs","action" => "monthlyplan"]);
+	}
+	
+	public function planApproval()
+	{
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$uid = $this->Auth->user('id');
+		$id = $_POST['id'];
+		$workPlanApproval = $this->WorkPlanApproval->find('all')->where(['id =' => $id])->first();
+
+		$workPlanData = array();
+		if(isset($_POST['RejectPlan']))
+		{
+			$workPlanData['is_rejected'] = 1;
+			$success = 'Plan Rejected.';
+		}
+		
+		if(isset($_POST['ApprovePlan']))
+		{
+			$workPlanData['is_approved'] = 1;
+			$workPlanData['is_rejected'] = 0;
+            $success = 'Plan Approved.';
+		}
+		$workPlanApproval = $this->WorkPlanApproval->patchEntity($workPlanApproval, $workPlanData);
+		if ($this->WorkPlanApproval->save($workPlanApproval))
+		{
+			$this->Flash->success(__($success));
+			if($workPlanApproval->is_approved == 1)
+			{
+				$startDate = date("Y-m-d", strtotime($workPlanApproval->date));
+				$endDate = date("Y-m", strtotime($workPlanApproval->date))."-31";
+		
+				$WorkPlansTable = $this->WorkPlans;
+				if ($WorkPlansTable->updateAll( array('is_approved' => 1), array('start_date >=' => $startDate, 'start_date <=' => $endDate, 'is_planned =' => 1))) {
+				}
+			}
+		}
+		else
+		$this->Flash->success(__('Something went wrong. Please try again.'));
+			
+        		
+		return $this->redirect(["controller" => "Mrs","action" => "workPlanRequests"]);
 	}
 	
 	public function mrsGetReports()
