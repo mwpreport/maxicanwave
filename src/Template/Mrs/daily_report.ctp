@@ -194,7 +194,7 @@
 								</div>
 								<div class="col-md-12 mar-bottom-20">
 								<hr />
-									<form class="workplanForm" id="<?php echo $workType->name?>AddForm" method="POST" >
+									<form class="workplanForm" id="<?php echo $workType->id?>AddForm" method="POST" >
 										<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
 										<input type="hidden" name="work_type_id" value="<?php echo $workType->id?>">
 										<div class="row">
@@ -213,7 +213,7 @@
 													</div>
 													<div class="col-md-4 col-sm-4 col-xs-4">
 														<label>&nbsp;</label>
-														<button type="submit" class="btn blue-btn btn-block margin-right-35"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add <?php echo $workType->name?></button>
+														<button type="submit" class="common-btn blue-btn btn-block margin-right-35"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add <?php echo $workType->name?></button>
 													</div>
 												</div>
 												<!-- /.input group -->
@@ -222,12 +222,22 @@
 									</form>
 								</div>
 							</div>
+							<script>
+							$("#<?php echo $workType->id?>AddForm").validate({
+								ignore: ":hidden",
+								submitHandler: function (form) {
+									doSubmit("#<?php echo $workType->id?>AddForm")
+									return false; // required to block normal submit since you used ajax
+								}
+							});
+
+							</script>
 							<?php }?>
 							<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_1">
 								<div class="col-md-12 mar-bottom-20">
 									<?php 
 										$html = "";
-										if(count($workTypePlans[1]))
+										if(isset($workTypePlans[1]))if(count($workTypePlans[1]))
 										{
 											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" name="check_all" value="1"></th><th>Work Type</th><th>On</th></thead><tbody>';
 											foreach ($workTypePlans[1] as $workTypePlan)
@@ -271,12 +281,28 @@
 									<form class="workplanForm" id="LeaveAddForm" method="POST" >
 										<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
 										<input type="hidden" name="work_type_id" value="1">
+										<input type="hidden" name="city_id" value="<?= $userCity?>">
 										<div class="row">
 											<div class="form-group">
 												<div class="col-sm-12 mar-bottom-20">
-													<div class="col-md-6 col-sm-6 col-xs-6 form-group">
+													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
+														<label for="city_id">Type of Leave</label>
+														<select name="plan_reason" class="form-control required" id="plan_reason" aria-invalid="true">
+															<option value="">Select</option>
+															<?php
+															foreach ($leaveTypes as $leaveType)
+															{?>
+															<option value="<?= $leaveType['id']?>"><?= $leaveType['name']?></option>
+															<?php }	?>
+														</select>  
+													</div>
+													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
+														<label for="city_id">More Detials</label>
+														<textarea class="form-control required" name="plan_details" id="plan_details" rows="3"></textarea>  
+													</div>
+													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
 														<label>&nbsp;</label>
-														<button type="submit" class="btn blue-btn btn-block margin-right-35"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Leave</button>
+														<button type="submit" class="common-btn blue-btn btn-block margin-right-35"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Leave</button>
 													</div>
 												</div>
 												<!-- /.input group -->
@@ -745,6 +771,13 @@
 	$("#DoctorsMissedForm").validate({
 		ignore: ":hidden"
 		
+	});
+	$("#LeaveAddForm").validate({
+		ignore: ":hidden",
+		submitHandler: function (form) {
+			doSubmit("#LeaveAddForm")
+			return false; // required to block normal submit since you used ajax
+		}
 	});
 	$("input[id^='workType_']").click(function(){
 		if ($(this).is(':checked'))

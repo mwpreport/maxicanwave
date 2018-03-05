@@ -122,15 +122,16 @@ class WorkPlansController extends AppController
 	
 	protected function _checkLeave($start_date, $end_date, $work_type_id, $id)
     {
+		$uid = $this->Auth->user('id');
 		if($work_type_id ==1)
 		{
-			$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date])->orWhere(['start_date <=' => $end_date,'end_date >=' => $end_date])->andWhere(['id <>' => $id])->toarray();
+			$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date])->orWhere(['start_date <=' => $end_date,'end_date >=' => $end_date])->andWhere(['id <>' => $id, 'user_id =' => $uid])->toarray();
 			if(count($workPlans)>0)
 			return array(0,'Remove existing plans to plan this day as leave.');
 		}
 		else
 		{
-			$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date,'work_type_id =' => 1,'id <>' => $id])->toarray();
+			$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date,'work_type_id =' => 1,'id <>' => $id, 'user_id =' => $uid])->toarray();
 			if(count($workPlans)>0)
 			return array(0,'You cannot plan on leave days.');
 		}
@@ -202,7 +203,7 @@ class WorkPlansController extends AppController
 			if($data['work_type_id'] ==1)
 			{
 				
-				$dates[]=$this->_datePeriod($data['start_date'], $data['end_date']);
+				$dates = $this->_datePeriod($data['start_date'], $data['end_date']);
 				foreach ($dates as $date)
 				{
 					$plan_data = $data;
@@ -698,22 +699,16 @@ class WorkPlansController extends AppController
 			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'city_id' => $_POST['city_id']);
 			$data['start_date'] = $_POST['start_date']." 00:00:00";
 			$data['end_date'] = $_POST['start_date']." 23:59:00";
+			$data['plan_reason'] = isset($_POST['plan_reason'])? $_POST['plan_reason'] : "";
+			$data['plan_details'] = isset($_POST['plan_details'])? $_POST['plan_details'] : "";
+
 			$data['is_reported'] = 1;
 			$data['last_updated'] = date("Y-m-d H:i:s");
 			
-			/*
-            list($status, $error)=$this->_checkLeave($data['start_date'],$data['end_date'],$data['work_type_id'],0);
-            if(!$status)
-            {echo json_encode(array("status"=>$status,"msg"=>$error)); exit;}
-            */
 			if($data['work_type_id'] == "" && !isset($_POST['chemist_id']) && !isset($_POST['stockist_id']))
 			{echo json_encode(array("status"=>0,"msg"=>'The report could not be saved. Please, try again.')); exit;}
             
-			if($data['work_type_id'] ==1)
-			{
-				// for emergency leave
-			}
-			elseif($data['work_type_id'] == 2 && isset($_POST['doctor_id']))
+			if($data['work_type_id'] == 2 && isset($_POST['doctor_id']))
 			{
 				$doctor_ids = isset($_POST['doctor_id']) ? $_POST['doctor_id'] : array();
 				foreach ($doctor_ids as $doctor_id)
@@ -735,7 +730,7 @@ class WorkPlansController extends AppController
 					$plan_data['discussion']=$_POST['discussion'];
 					if(isset($_POST['visit_time']))
 					$plan_data['visit_time']=$_POST['visit_time'];
-					if(isset($_POST['business']))
+					if(isset($_POST['business']) && $_POST['business'] !="")
 					$plan_data['business']=$_POST['business'];
 
 
@@ -777,7 +772,7 @@ class WorkPlansController extends AppController
 				$this->Flash->success(__("Stockist(s) Saved Successfully"));
 				echo json_encode(array("status"=>1,"msg"=>"Stockist(s) Saved Successfully")); exit;
 			}
-			elseif($data['work_type_id'] != 2 && $data['work_type_id'] != 1 && $data['work_type_id'] != "")
+			elseif($data['work_type_id'] != 2 && $data['work_type_id'] != "")
 			{
 				$workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
 				if ($this->WorkPlans->save($workPlan)) {

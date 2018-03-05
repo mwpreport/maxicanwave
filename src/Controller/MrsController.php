@@ -202,7 +202,8 @@ class MrsController extends AppController {
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
 			
 		}
-        $this->set(compact('userCity', 'cities', 'specialities', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
+		$leaveTypes = $this->LeaveTypes->find()->toarray();
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
 		
     }
     
@@ -242,7 +243,13 @@ class MrsController extends AppController {
 			$WorkPlans = $this->WorkPlans
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
-			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2, 'WorkPlans.work_type_id <>' => 1])->toArray();
+
+			$WorkPlansL = $this->WorkPlans
+			->find('all')
+			->contain(['LeaveTypes'])	
+			->contain(['WorkTypes', 'Cities'])	
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
 			
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
@@ -288,6 +295,18 @@ class MrsController extends AppController {
 					foreach($products as $product)
 					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
 					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanUD->visit_time.'</td><td>'.$WorkPlanUD->business.'</td></tr>';
+				$i++;
+				}
+				$html.='</tbody></table>';
+			}
+
+			if(count($WorkPlansL))
+			{
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Type of Leave</th><th>More details</th></tr></thead><tbody>';
+				$i = 1;
+				foreach ($WorkPlansL as $WorkPlanL)
+				{
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanL->leave_type->name.'</td><td>'.$WorkPlanL->plan_details.'</td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';

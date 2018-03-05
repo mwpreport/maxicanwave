@@ -525,7 +525,7 @@
                 $('#calendar').fullCalendar({  // assign calendar
 
 				header: {
-					left: '',
+					left: 'prev',
 					center: 'title',
 					right: ''
 				},

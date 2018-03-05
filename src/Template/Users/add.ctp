@@ -44,6 +44,7 @@
 											echo $this->Form->control('is_active', ['class' => 'form-control mar-bottom-10','type' => 'select','options' => $yesno]);
 										?>
 									</fieldset>
+									<input type="hidden" name="is_approved" value="1">
 									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']); ?>
 									<?= $this->Form->end() ?>
 								</div>
