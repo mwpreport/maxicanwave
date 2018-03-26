@@ -36,7 +36,7 @@
 											echo $this->Form->control('email', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('mobile', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('phone', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('clinic_name', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('clinic_name', ['label' => 'Hospital/ Institution/ Clinic Name','class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('door_no', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('street', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('area', ['class' => 'form-control mar-bottom-10']);

@@ -59,6 +59,7 @@ class DoctorsController extends AppController
             $doctor = $this->Doctors->patchEntity($doctor, $this->request->getData());
             $doctor->user_id=$uid;
             if ($this->Doctors->save($doctor)) {
+				$this->generateCode($doctor->id);
                 $this->Flash->success(__('The doctor has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -70,6 +71,17 @@ class DoctorsController extends AppController
         $states = $this->Doctors->States->find('list');
         $this->set(compact('doctor', 'specialities', 'qualifications', 'states', 'cities'));
         $this->set('_serialize', ['doctor']);
+    }
+	
+	public function generateCode($id)
+    {
+		$doctor = $this->Doctors->get($id, [
+            'contain' => ['States']
+        ]);
+		$data['code'] = "DC".$doctor->state->state_code.sprintf("%05s",$id);
+		$doctor = $this->Doctors->patchEntity($doctor, $data);
+            $this->Doctors->save($doctor);
+            return;
     }
 
     /**

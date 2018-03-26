@@ -59,6 +59,7 @@ class ChemistsController extends AppController
             $chemist = $this->Chemists->patchEntity($chemist, $this->request->getData());
             $chemist->user_id=$uid;
             if ($this->Chemists->save($chemist)) {
+				$this->generateCode($chemist->id);
                 $this->Flash->success(__('The chemist has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -68,6 +69,17 @@ class ChemistsController extends AppController
         $states = $this->Chemists->States->find('list');
         $this->set(compact('chemist', 'states'));
         $this->set('_serialize', ['chemist']);
+    }
+
+	public function generateCode($id)
+    {
+		$chemist = $this->Chemists->get($id, [
+            'contain' => ['States']
+        ]);
+		$data['code'] = "CH".$chemist->state->state_code.sprintf("%05s",$id);
+		$chemist = $this->Chemists->patchEntity($chemist, $data);
+            $this->Chemists->save($chemist);
+            return;
     }
 
     /**

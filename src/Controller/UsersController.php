@@ -71,6 +71,7 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
+				$this->generateCode($user->id);
                 $this->Flash->success(__('The user has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -84,6 +85,17 @@ class UsersController extends AppController
         $this->set(compact('user', 'roles', 'states','cities','state_id'));
 
         $this->set('_serialize', ['user']);
+    }
+
+	public function generateCode($id)
+    {
+		$user = $this->Users->get($id, [
+            'contain' => ['States']
+        ]);
+		$data['code'] = "MWP".$user->state->state_code.sprintf("%05s",$id);
+		$user = $this->Users->patchEntity($user, $data);
+            $this->Users->save($user);
+            return;
     }
 
     /**
@@ -111,8 +123,8 @@ class UsersController extends AppController
         $roles = $this->Users->Roles->find('list')->where(['id >' => $authuser['role_id']])->toarray();
         $states = $this->Users->States->find('list');
         $cities = $this->Users->Cities->find('list')->where(['state_id =' => $user['state_id']])->toarray();
-        $leadRole = $user['role']-1;
-        $leads = $users = $this->Users->find('all')->where(['role_id =' => $leadRole])->toarray();
+        $leadRole = $user['role_id']-1;
+        $leads = $users = $this->Users->find('list')->where(['role_id =' => $leadRole])->toarray();
         $this->set(compact('user', 'roles', 'states', 'cities', 'leads'));
         $this->set('_serialize', ['user']);
     }

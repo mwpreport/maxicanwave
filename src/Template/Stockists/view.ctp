@@ -36,8 +36,12 @@
 											<td><?= h($stockist->code) ?></td>
 										</tr>
 										<tr>
-											<th scope="row"><?= __('Name') ?></th>
+											<th scope="row"><?= __('Stockist Name') ?></th>
 											<td><?= h($stockist->name) ?></td>
+										</tr>
+										<tr>
+											<th scope="row"><?= __('Owner') ?></th>
+											<td><?= h($stockist->owner) ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Contact Person') ?></th>
@@ -71,16 +75,36 @@
 											</td>
 										</tr>
 										<tr>
+											<th scope="row"><?= __('DL.NO') ?></th>
+											<td><?= $stockist->dl_no ?></td>
+										</tr>
+										<tr>
+											<th scope="row"><?= __('GST.NO') ?></th>
+											<td><?= $stockist->gst_no ?></td>
+										</tr>
+										<tr>
+											<th scope="row"><?= __('Bank Account Details') ?></th>
+											<td>
+											<?php
+											if($stockist->bank_name != "")
+												echo h($stockist->bank_name).(($stockist->branch != "")? " - ".h($stockist->branch):"").(($stockist->ifsc != "")? " (".h($stockist->ifsc).")":"")."<br>";
+											if($stockist->account_holder != "")
+												echo "Account Holder : ". h($stockist->account_holder) ."<br>";
+											if($stockist->account_no != "")
+												echo "Account.No : ". h($stockist->account_no) ."<br>";
+											if($stockist->account_type != "")
+												echo "Type of Account : ". h($stockist->account_type) ."<br>";
+											?>
+											
+											</td>
+										</tr>
+										<tr>
 											<th scope="row"><?= __('Is Approved') ?></th>
 											<td><?= ($stockist->is_approved == 1) ? "Yes" : "No" ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Is Active') ?></th>
 											<td><?= ($stockist->is_active == 1) ? "Yes" : "No" ?></td>
-										</tr>
-										<tr>
-											<th scope="row"><?= __('Last Updated') ?></th>
-											<td><?= h($stockist->last_updated) ?></td>
 										</tr>
 									</table>
 								</div>

@@ -59,6 +59,7 @@ class StockistsController extends AppController
             $stockist = $this->Stockists->patchEntity($stockist, $this->request->getData());
             $stockist->user_id=$uid;
             if ($this->Stockists->save($stockist)) {
+				$this->generateCode($stockist->id);
                 $this->Flash->success(__('The stockist has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -68,6 +69,17 @@ class StockistsController extends AppController
         $states = $this->Stockists->States->find('list');
         $this->set(compact('stockist', 'states'));
         $this->set('_serialize', ['stockist']);
+    }
+
+	public function generateCode($id)
+    {
+		$stockist = $this->Stockists->get($id, [
+            'contain' => ['States']
+        ]);
+		$data['code'] = "ST".$stockist->state->state_code.sprintf("%05s",$id);
+		$stockist = $this->Stockists->patchEntity($stockist, $data);
+            $this->Stockists->save($stockist);
+            return;
     }
 
     /**
