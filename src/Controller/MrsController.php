@@ -59,7 +59,7 @@ class MrsController extends AppController {
 			->find()
 			->notMatching('DoctorsRelation', function ($q) use ($uid) {
 				return $q->where(['DoctorsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $userCity]);
+			})->where(['city_id =' => $userCity, 'is_approved =' => '1']);
         //pj($doctors);exit;
         $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors', 'doctorTypes'));            
     }

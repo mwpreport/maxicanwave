@@ -33,8 +33,10 @@ class UsersController extends AppController
 		$this->paginate = [
             'contain' => ['Roles', 'States', 'Cities'],
 			'conditions' => ['Users.id <>' => $authuser['id'],'Users.role_id <>' => 1,'Users.is_deleted =' => 0]
-        ];
+        ];	
         $users = $this->paginate($this->Users);
+		foreach ($users as $user)
+		$this->generateCode($user->id);
 
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
@@ -52,6 +54,8 @@ class UsersController extends AppController
         $user = $this->Users->get($id, [
             'contain' => ['Roles', 'States', 'Cities']
         ]);
+		foreach ($user as $user)
+		$this->generateCode($use->id);
 
         $this->set('user', $user);
         $this->set('_serialize', ['user']);

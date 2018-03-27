@@ -30,10 +30,10 @@
 						<div class="clearfix"></div>
 						<div class="col-md-12">
 								<div class="box-body no-padding">
-									<table class="table table-striped">
+									<table class="table table-striped text-align-left">
 										<tr>
-											<th scope="row"><?= __('Id') ?></th>
-											<td><?= $this->Number->format($user->id) ?></td>
+											<th scope="row"><?= __('Code') ?></th>
+											<td><?= $user->code ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Username') ?></th>

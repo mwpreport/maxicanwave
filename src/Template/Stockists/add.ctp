@@ -28,7 +28,6 @@
 									<?= $this->Form->create($stockist, array('id' => 'newform')) ?>
 									<fieldset>
 										<?php
-											echo $this->Form->control('code', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('name', ['label' => 'Stockist Name', 'class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('owner', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('contact_person', ['class' => 'form-control mar-bottom-10']);

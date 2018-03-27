@@ -30,7 +30,11 @@
 						<div class="clearfix"></div>
 						<div class="col-md-12">
 								<div class="box-body no-padding">
-									<table class="table table-striped">
+									<table class="table table-striped text-align-left">
+										<tr>
+											<th scope="row"><?= __('Code') ?></th>
+											<td><?= h($doctor->code) ?></td>
+										</tr>
 										<tr>
 											<th scope="row"><?= __('Name') ?></th>
 											<td><?= h($doctor->name) ?></td>
@@ -62,12 +66,17 @@
 										<tr>
 											<th scope="row"><?= __('Address') ?></th>
 											<td>
-											<?= h($doctor->clinic_name) ?><br>
-											<?= h($doctor->door_no) ?> - <?= h($doctor->street) ?>,<br>
-											<?= h($doctor->area) ?>,<br>
-											<?= $doctor->has('city') ? $this->Html->link($doctor->city->city_name, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '' ?> - <?= $this->Number->format($doctor->pincode) ?>.<br>
-											<?= $doctor->has('state') ? $this->Html->link($doctor->state->name, ['controller' => 'States', 'action' => 'view', $doctor->state->id]) : '' ?>
-											
+											<?php
+											if($doctor->name != "")
+												echo h($doctor->name)."<br>";
+											if($doctor->door_no != "" || $doctor->door_no != "")
+												echo (($doctor->door_no != "")? h($doctor->door_no)." - ":"") .(($doctor->street != "")? h($doctor->street):"")."<br>";
+											if($doctor->area != "")
+												echo h($doctor->area) ."<br>";
+											if($doctor->city != "" || $doctor->pincode != "")
+											echo ($doctor->has('city') ? $this->Html->link($doctor->city->city_name, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '').(($this->Number->format($doctor->pincode) != 0)? " - ".h($this->Number->format($doctor->pincode)):"")."<br>";
+											echo $doctor->has('state') ? $this->Html->link($doctor->state->name, ['controller' => 'States', 'action' => 'view', $doctor->state->id]) : '';
+											?>
 											</td>
 										</tr>
 										<tr>

@@ -34,7 +34,6 @@
 									<?= $this->Form->create($chemist, array('id' => 'editform')) ?>
 									<fieldset>
 										<?php
-											echo $this->Form->control('code', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('name', ['label' => 'Pharmacy Name', 'class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('contact_person', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('email', ['class' => 'form-control mar-bottom-10']);

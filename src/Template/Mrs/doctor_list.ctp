@@ -107,8 +107,8 @@
 					<th scope="col"><?= $this->Paginator->sort('code', 'ID') ?></th>
 					<th scope="col"><?= $this->Paginator->sort('doctor_id', 'Name') ?></th>
 					<th scope="col"><?= $this->Paginator->sort('speciality_id','Speciality') ?></th>
-					<th scope="col"><?= $this->Paginator->sort('class') ?></th>
 					<th scope="col"><?= $this->Paginator->sort('city_id', 'Place') ?></th>
+					<th scope="col"><?= $this->Paginator->sort('class') ?></th>
 					<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
 				</tr>
 			</thead>

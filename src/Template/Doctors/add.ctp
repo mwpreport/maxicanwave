@@ -28,7 +28,6 @@
 									<?= $this->Form->create($doctor, array('id' => 'newform')) ?>
 									<fieldset>
 										<?php
-											echo $this->Form->control('code', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('name', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('speciality_id', ['class' => 'form-control mar-bottom-10', 'options' => $specialities, 'empty' => 'Select Speciality']);
 											echo $this->Form->control('qualification_id', ['class' => 'form-control mar-bottom-10', 'options' => $qualifications, 'empty' => 'Select Qualification']);

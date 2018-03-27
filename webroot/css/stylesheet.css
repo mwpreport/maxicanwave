@@ -721,7 +721,8 @@ tr.reported.unplanned td:first-child {background: #3CB371;}
 #report_section td{padding:0;}
 #report_section table select{width:100px;}
 .doctor_product select[multiple]{width:50%;}
-
+.table.text-align-left td, .table.text-align-left th{text-align:left}
+.table.text-align-left th{padding-left: 20px;}
 
 @media (max-width: 767px) {
     .loginpage .login-left{

@@ -30,7 +30,7 @@
 						<div class="clearfix"></div>
 						<div class="col-md-12">
 								<div class="box-body no-padding">
-									<table class="table table-striped">
+									<table class="table table-striped text-align-left">
 										<tr>
 											<th scope="row"><?= __('Code') ?></th>
 											<td><?= h($stockist->code) ?></td>
@@ -66,12 +66,17 @@
 										<tr>
 											<th scope="row"><?= __('Address') ?></th>
 											<td>
-											<?= h($stockist->name) ?><br>
-											<?= h($stockist->door_no) ?> - <?= h($stockist->street) ?>,<br>
-											<?= h($stockist->area) ?>,<br>
-											<?= $stockist->has('city') ? $this->Html->link($stockist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $stockist->city->id]) : '' ?> - <?= $this->Number->format($stockist->pincode) ?>.<br>
-											<?= $stockist->has('state') ? $this->Html->link($stockist->state->name, ['controller' => 'States', 'action' => 'view', $stockist->state->id]) : '' ?>
-											
+											<?php
+											if($stockist->name != "")
+												echo h($stockist->name)."<br>";
+											if($stockist->door_no != "" || $stockist->door_no != "")
+												echo (($stockist->door_no != "")? h($stockist->door_no)." - ":"") .(($stockist->street != "")? h($stockist->street):"")."<br>";
+											if($stockist->area != "")
+												echo h($stockist->area) ."<br>";
+											if($stockist->city != "" || $stockist->pincode != "")
+											echo ($stockist->has('city') ? $this->Html->link($stockist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $stockist->city->id]) : '').(($this->Number->format($stockist->pincode) != 0)? " - ".h($this->Number->format($stockist->pincode)):"")."<br>";
+											echo $stockist->has('state') ? $this->Html->link($stockist->state->name, ['controller' => 'States', 'action' => 'view', $stockist->state->id]) : '';
+											?>
 											</td>
 										</tr>
 										<tr>

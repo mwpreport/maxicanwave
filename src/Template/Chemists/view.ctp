@@ -30,7 +30,7 @@
 						<div class="clearfix"></div>
 						<div class="col-md-12">
 								<div class="box-body no-padding">
-									<table class="table table-striped">
+									<table class="table table-striped text-align-left">
 										<tr>
 											<th scope="row"><?= __('Code') ?></th>
 											<td><?= h($chemist->code) ?></td>
@@ -62,12 +62,17 @@
 										<tr>
 											<th scope="row"><?= __('Address') ?></th>
 											<td>
-											<?= h($chemist->name) ?><br>
-											<?= h($chemist->door_no) ?> - <?= h($chemist->street) ?>,<br>
-											<?= h($chemist->area) ?>,<br>
-											<?= $chemist->has('city') ? $this->Html->link($chemist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $chemist->city->id]) : '' ?> - <?= $this->Number->format($chemist->pincode) ?>.<br>
-											<?= $chemist->has('state') ? $this->Html->link($chemist->state->name, ['controller' => 'States', 'action' => 'view', $chemist->state->id]) : '' ?>
-											
+											<?php
+											if($chemist->name != "")
+												echo h($chemist->name)."<br>";
+											if($chemist->door_no != "" || $chemist->door_no != "")
+												echo (($chemist->door_no != "")? h($chemist->door_no)." - ":"") .(($chemist->street != "")? h($chemist->street):"")."<br>";
+											if($chemist->area != "")
+												echo h($chemist->area) ."<br>";
+											if($chemist->city != "" || $chemist->pincode != "")
+											echo ($chemist->has('city') ? $this->Html->link($chemist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $chemist->city->id]) : '').(($this->Number->format($chemist->pincode) != 0)? " - ".h($this->Number->format($chemist->pincode)):"")."<br>";
+											echo $chemist->has('state') ? $this->Html->link($chemist->state->name, ['controller' => 'States', 'action' => 'view', $chemist->state->id]) : '';
+											?>
 											</td>
 										</tr>
 										<tr>
