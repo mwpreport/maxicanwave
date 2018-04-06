@@ -152,6 +152,40 @@ class MrsController extends AppController {
         $specialities = $this->Specialities->find('all')->toarray();
 		$products = $this->Products->find('all')->toarray();
 		$date = "";
+		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->order(['list' => 'ASC'])->toarray();
+		$WorkPlans = array();
+		$doctorsRelation = array();
+
+		if(isset($_GET['date']))
+		{
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
+						
+			$WorkPlans = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities'])	
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
+			
+		}
+		$leaveTypes = $this->LeaveTypes->find()->toarray();
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date'));        
+		
+    }
+
+    public function dailyReportField()
+    {
+        $this->set('title', 'Daily Report');
+        $uid = $this->Auth->user('id');
+        $userCity = $this->Auth->user('city_id');
+        $user =  $this->Auth->user;
+		$state_id = $this->Auth->user('state_id');
+        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+        $specialities = $this->Specialities->find('all')->toarray();
+		$products = $this->Products->find('all')->toarray();
+		$date = "";
 		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
 		$WorkPlansD = array();
 		$WorkPlans = array();
@@ -159,9 +193,9 @@ class MrsController extends AppController {
 		$chemists = array();
 		$stockists = array();
 
-		if(isset($_GET['date']))
+		if(isset($_POST['reportDate']))
 		{
-			$date = $_GET['date'];
+			$date = $_POST['reportDate'];
 			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
@@ -200,10 +234,13 @@ class MrsController extends AppController {
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansC); $reported_stockists[]=0;
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
-			
-		}
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
         $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
+			
+		}
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
+	
 		
     }
     
