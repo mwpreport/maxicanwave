@@ -543,7 +543,10 @@ class WorkPlansController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
 			$data = $this->request->getData();
-			//pj($data);
+			//pj($data); exit;
+			$return = 'dailyReport';
+			if($data['return'] == "dailyReportField")
+			$return = $data['return'];
 			$reportDate = $data['reportDate'];
 			$workPlan_ids = array();
 			if(isset($data['workplan_id']))
@@ -596,8 +599,11 @@ class WorkPlansController extends AppController
 				}
 				if(isset($data['SubmitRemove']))
 				{
-					$reportData['is_reported'] = 0;
-					$reportData['is_deleted'] = 1;
+					if($workPlan->is_planned == 1 && $workPlan->is_reported == 1)
+						$reportData['is_reported'] = 0;
+					//else
+					//	$reportData['is_deleted'] = 1;
+
 					$success = 'Removed Successfully.';
 				}
 			
@@ -611,12 +617,12 @@ class WorkPlansController extends AppController
 				else
 				{
 					$this->Flash->error(__('Something went wrong. Please, try again.'));
-					return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+					return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
 				}
 					
 			} //exit;
 			$this->Flash->success(__($success));
-			return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+			return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
         }
 	}
 
@@ -855,11 +861,20 @@ class WorkPlansController extends AppController
 			$workPlan = $this->WorkPlans->get($id, [
 				'contain' => []
 			]);
-            $workPlan = $this->WorkPlans->patchEntity($workPlan, array('is_deleted' => '1'));
-            if ($this->WorkPlans->save($workPlan)) {
-                $this->Flash->success(__('Deleted Successfully.'));
+			if($workPlan->is_planned == 1)
+			{
+				$workPlan = $this->WorkPlans->patchEntity($workPlan, array('is_reported' => '0'));
+				$action = $this->WorkPlans->save($workPlan);
+			}
+			else
+			{
+				$action = $this->WorkPlans->delete($WorkPlans);
+			}
+			if (isset($action)) {
+				$this->Flash->success(__('Deleted Successfully.'));
 				echo json_encode(array("status"=>1,"msg"=>"Report Saved Successfull")); exit;
-            }
+			}
+			
         }
             $this->Flash->error(__('Unable to delete. Please, try again.'));
 			echo json_encode(array("status"=>0,"msg"=>"Unable to delete. Please, try again.")); exit;

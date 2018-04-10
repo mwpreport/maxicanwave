@@ -193,9 +193,9 @@ class MrsController extends AppController {
 		$chemists = array();
 		$stockists = array();
 
-		if(isset($_POST['reportDate']))
+		if(isset($_GET['date']))
 		{
-			$date = $_POST['reportDate'];
+			$date = $_GET['date'];
 			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
@@ -207,7 +207,7 @@ class MrsController extends AppController {
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
 			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray()); $reported_doctors[]=0;
-			$WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
+			$WorkPlansD = $WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
 			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors'])->toArray();
 
 
@@ -235,6 +235,7 @@ class MrsController extends AppController {
 			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansC); $reported_stockists[]=0;
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
+
         $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
 			
 		}
@@ -280,7 +281,7 @@ class MrsController extends AppController {
 			$WorkPlans = $this->WorkPlans
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
-			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2, 'WorkPlans.work_type_id <>' => 1])->toArray();
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
 
 			$WorkPlansL = $this->WorkPlans
 			->find('all')
@@ -297,116 +298,11 @@ class MrsController extends AppController {
 			->find('all')
 			->contain(['Cities', 'Stockists'])	 
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
-
-			$html = "";
-			if(count($WorkPlansD))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlansD as $WorkPlanD)
-				{
-					
-					$products_array = array();
-					if($WorkPlanD->products!="")
-					$products_array = unserialize($WorkPlanD->products);
-					$sample_products =array();
-					foreach($products as $product)
-					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanD->visit_time.'</td><td>'.$WorkPlanD->business.'</td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
-			
-			if(count($WorkPlansUD))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Un-Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlansUD as $WorkPlanUD)
-				{
-					
-					$products_array = array();
-					if($WorkPlanUD->products!="")
-					$products_array = unserialize($WorkPlanUD->products);
-					$sample_products =array();
-					foreach($products as $product)
-					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanUD->visit_time.'</td><td>'.$WorkPlanUD->business.'</td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
-
-			if(count($WorkPlansL))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Type of Leave</th><th>More details</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlansL as $WorkPlanL)
-				{
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanL->leave_type->name.'</td><td>'.$WorkPlanL->plan_details.'</td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
-
-			if(count($WorkPlans))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlans as $WorkPlan)
-				{
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
-
-			if(count($WorkPlansC))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlansC as $WorkPlanC)
-				{
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanC->chemist->name.'</td><td>'.$WorkPlanC->city->city_name.'</td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
-			
-			if(count($WorkPlansS))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Stockists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlansS as $WorkPlanS)
-				{
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanS->stockist->name.'</td><td>'.$WorkPlanS->city->city_name.'</td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
-						
-			if(count($WorkPlansPD))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">PG & Others</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlansPD as $WorkPlanPD)
-				{
-					
-					$products_array = array();
-					if($WorkPlanPD->products!="")
-					$products_array = unserialize($WorkPlanPD->products);
-					$sample_products =array();
-					foreach($products as $product)
-					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->doctor->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
 			
 		}
-		if($html == ""){$html.="<p>No reports on this date</p>";}
-        $this->set(compact('html', 'date'));        
+		
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+        
 		
     }
 	

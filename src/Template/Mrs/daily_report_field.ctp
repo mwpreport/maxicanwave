@@ -40,9 +40,9 @@
 									</div>
 									<?php }else {?>
 									<div class="table-responsive">
-										<h3 class="mar-top-10 mar-bottom-10">Planned Doctors <?=$WorkPlansD->id?></h3>
+										<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3>
 										<table id="doctors_table" class="table table-striped table-bordered table-hover">
-											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>Spe</th><th>City</th><th>Work With</th><th>Products to Detail</th><th>Visit Time</th><th>Business</th><th>Action</th></tr></thead>
+											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>Spe</th><th>City</th><th>Work With</th><th>Products to Detail</th><th>Visit Time</th><th>Business</th></tr></thead>
 											<tbody>
 										<?php
 										$work_with = '<select name="work_with[%s]"><option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option></select>';
@@ -61,16 +61,13 @@
 											<td>
 												<input type="checkbox" <?=(($WorkPlanD->is_missed)?"disabled":"")?> class="workplan_id" name="workplan_id[<?=$WorkPlanD->id?>]" value="<?=$WorkPlanD->id?>">
 											</td>
-											<td><?=$WorkPlanD->doctor->name?></td>
+											<td><a href="#doctor_product_<?=$WorkPlanD->id?>" id="pdt_link_<?=$WorkPlanD->id?>" class="popup-modal"><?=$WorkPlanD->doctor->name?></a></td>
 											<td><?=$WorkPlanD->doctor->speciality->code?></td>
 											<td><?=$WorkPlanD->city->city_name?></td>
 											<td><?=str_replace("%s",$WorkPlanD->id,$work_with_selected)?></td>
 											<td><?php if(count($sample_products)>0) echo  implode(", ",$sample_products);?></td>
 											<td><?=$WorkPlanD->visit_time?></td>
 											<td><?=$WorkPlanD->business?></td>
-											<td>
-												<a href="#doctor_product_<?=$WorkPlanD->id?>" id="pdt_link_<?=$WorkPlanD->id?>" class="popup-modal">Detail Reporting</a>
-											</td>
 											</tr>
 										<?php }?>
 										</tbody></table>
@@ -81,13 +78,16 @@
 										<div class="row">
 											<div class="form-group  mar-top-30">
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitSave" id="w2SubmitSave">Save</button>
+													<input type="hidden" id="return" name="return" value="dailyReportField" >
+													<input type="submit" id="w2SubmitSave" name="SubmitSave" class="hide" >
+													<button class="common-btn blue-btn pull-left" value="w2SubmitSave" type="button" name="" id="w2ButtonSave">Save</button>
 												</div>
 												<div class="col-sm-3">
 													<button class="common-btn blue-btn pull-left" type="button" name="SubmitMissed" id="w2SubmitMissed">Missed</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitRemove" id="w2SubmitRemove">Remove Visit List</button>
+													<input type="submit" id="w2SubmitRemove" name="SubmitRemove" class="hide" >
+													<button class="common-btn blue-btn pull-left" value="w2SubmitRemove" type="button" name="" id="w2ButtonRemove">Remove Visit List</button>
 												</div>
 											</div>
 										</div>
@@ -595,6 +595,17 @@
 		}
 	});
 	
+	$("#w2ButtonSave,#w2ButtonRemove").click(function(){
+		var target_id = $(this).val();
+		if ($('input[type="checkbox"].workplan_id').is(':checked'))
+		{
+			$( "#"+target_id ).click();
+		}
+		else{
+			alert("Please check a Doctor");
+		}
+	});
+		
 	$("#w2SubmitMissed").click(function(){
 		$('#DoctorsMissedForm')[0].reset();
 		if ($('input[type="checkbox"].workplan_id').is(':checked'))

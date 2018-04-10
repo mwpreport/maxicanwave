@@ -57,9 +57,9 @@
 												<td><?= $i ?></td>
 												<td><?= $city->has('state') ? $this->Html->link($city->state->name, ['controller' => 'States', 'action' => 'view', $city->state->id]) : '' ?></td>
 												<td><?= h($city->city_name) ?></td>
-												<td width="60"><?= $this->Html->link(__('<img src="'.$this->Url->build(["controller" => ""]).'/images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $city->id],['escape' => false]) ?></td>
-												<td width="50"><?= $this->Html->link(__('<img src="'.$this->Url->build(["controller" => ""]).'/images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $city->id],['escape' => false]) ?></td>
-												<td width="50"><?= $this->Form->postLink(__('<img src="'.$this->Url->build(["controller" => ""]).'/images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $city->id], ['escape' => false,'confirm' => __('Are you sure you want to delete "{0}"?', $city->name)]) ?></td>
+												<td width="60"><?= $this->Html->link(__('<img src="'.$this->Url->image('../images/eye@2x.png').'" width="29" height="18" alt="profile">'), ['action' => 'view', $city->id],['escape' => false]) ?></td>
+												<td width="50"><?= $this->Html->link(__('<img src="'.$this->Url->image('../images/edit@2x.png').'" width="18" height="18" alt="edit">'), ['action' => 'edit', $city->id],['escape' => false]) ?></td>
+												<td width="50"><?= $this->Form->postLink(__('<img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash">'), ['action' => 'delete', $city->id], ['escape' => false,'confirm' => __('Are you sure you want to delete "{0}"?', $city->name)]) ?></td>
 											</tr>
 											<?php $i++; endforeach; ?>
 										</tbody>

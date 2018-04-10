@@ -51,8 +51,8 @@
 						<?php }?>
 						<div id="report_section">
 							<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_2">
-							<form method="post" action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>">
-							<input type="hidden" value="<?php echo $reportDate;?>" name="reportDate">
+							<form method="post" action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>?date=<?php echo $reportDate;?>">
+							<input type="hidden" value="<?php echo $reportDate;?>" name="date">
 								<div class="col-md-12 mar-bottom-20">
 								
 									<div class="clearfix"></div>
@@ -60,7 +60,7 @@
 										<div class="row">
 											<div class="form-group  mar-top-30">
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitSave" id="w2SubmitSave">Submit</button>
+													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitField" id="w2SubmitSave">Submit</button>
 												</div>
 												<div class="col-sm-3">
 													<a class="common-btn blue-btn margin-right-35 pull-right" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" target="blank"><b>View Reported Calls</b></a>
@@ -88,7 +88,7 @@
 											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned '.$workType->name.'</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Work Type</th><th>City</th></thead><tbody>';
 											foreach ($workTypePlans[$workType->id] as $workTypePlan)
 											{
-												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' '.(($workTypePlan->is_missed)?"missed":"").' "><td><input type="checkbox" '.(($workTypePlan->is_missed)?"disabled":"").' name="workplan_id['.$workTypePlan->id.']" value="'.$workTypePlan->id.'"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
+												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' '.(($workTypePlan->is_missed)?"missed":"").'"><td><input class=" workplan_id_'.$workType->id.'" type="checkbox" '.(($workTypePlan->is_missed)?"disabled":"").' name="workplan_id['.$workTypePlan->id.']" value="'.$workTypePlan->id.'"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
 											}
 											$html.='</tbody></table>';
 										}
@@ -108,15 +108,34 @@
 										<div class="row">
 											<div class="form-group  mar-top-30">
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitSave" id="w<?php echo $workType->id?>SubmitSave">Save</button>
+													<input type="hidden" id="return" name="return" value="dailyReport" >
+													<input type="submit" id="w<?php echo $workType->id?>SubmitSave" name="SubmitSave" class="hide" >
+													<button class="common-btn blue-btn pull-left" value="w<?php echo $workType->id?>SubmitSave" type="button" name="" id="w<?php echo $workType->id?>ButtonSave">Save</button>
 												</div>
 												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitMissed" id="w<?php echo $workType->id?>SubmitMissed">Missed</button>
+													<input type="submit" id="w<?php echo $workType->id?>SubmitMissed" name="SubmitMissed" class="hide" >
+													<button class="common-btn blue-btn pull-left" value="w<?php echo $workType->id?>SubmitMissed" type="button" name="" id="w<?php echo $workType->id?>ButtonMissed">Missed</button>
+												</div>
+												<div class="col-sm-3">
+													<input type="submit" id="w<?php echo $workType->id?>SubmitRemove" name="SubmitRemove" class="hide" >
+													<button class="common-btn blue-btn pull-left" value="w<?php echo $workType->id?>SubmitRemove" type="button" name="" id="w<?php echo $workType->id?>ButtonRemove">Remove Visit List</button>
 												</div>
 											</div>
 										</div>
 									</div>
 									</form>
+									<script>
+										$("#w<?php echo $workType->id?>ButtonSave,#w<?php echo $workType->id?>ButtonMissed,#w<?php echo $workType->id?>ButtonRemove").click(function(){
+											var target_id = $(this).val();
+											if ($('input[type="checkbox"].workplan_id_<?php echo $workType->id?>').is(':checked'))
+											{
+												$( "#"+target_id ).click();
+											}
+											else{
+												alert("Please check a Plan");
+											}
+										});
+									</script>
 									<?php }?>
 								</div>
 								<div class="col-md-12 mar-bottom-20">
