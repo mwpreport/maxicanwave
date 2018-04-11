@@ -63,6 +63,10 @@ class WorkPlansTable extends Table
             'foreignKey' => 'stockist_id',
             'joinType' => 'LEFT'
         ]);
+        $this->belongsTo('PgOthers', [
+            'foreignKey' => 'pgother_id',
+            'joinType' => 'LEFT'
+        ]);
         $this->belongsTo('LeaveTypes', [
             'foreignKey' => 'plan_reason',
             'joinType' => 'INNER'

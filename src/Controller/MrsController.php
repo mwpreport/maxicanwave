@@ -21,6 +21,7 @@ class MrsController extends AppController {
         $this->loadModel('Doctors');
         $this->loadModel('Chemists');
         $this->loadModel('Stockists');
+        $this->loadModel('PgOthers');
         $this->loadModel('WorkPlans');
         $this->loadModel('WorkPlanApproval');
         $this->loadModel('WorkReports');
@@ -275,8 +276,69 @@ class MrsController extends AppController {
 			
 			$WorkPlansPD = $this->WorkPlans
 			->find('all')
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])	
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+			
+			$WorkPlans = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities'])	
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
+
+			$WorkPlansL = $this->WorkPlans
+			->find('all')
+			->contain(['LeaveTypes'])	
+			->contain(['WorkTypes', 'Cities'])	
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
+			
+			$WorkPlansC = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Chemists'])	
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+			
+			$WorkPlansS = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Stockists'])	 
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+			
+		}
+		
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+        
+		
+    }
+
+    public function finalSubmitReport()
+    {
+        $this->set('title', 'Final Submit');
+        $uid = $this->Auth->user('id');
+        $userCity = $this->Auth->user('city_id');
+        $user =  $this->Auth->user;
+		$state_id = $this->Auth->user('state_id');
+        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+		$products = $this->Products->find('all')->toarray();
+		$date = "";
+		$html = "";
+		if(isset($_GET['date']))
+		{
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
+			
+			$WorkPlansD = $this->WorkPlans
+			->find('all')
 			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
-			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
+			
+			$WorkPlansUD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
+			
+			$WorkPlansPD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])	
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
 			
 			$WorkPlans = $this->WorkPlans
 			->find('all')

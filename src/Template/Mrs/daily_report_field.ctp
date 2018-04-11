@@ -17,7 +17,7 @@
 						<div class="col-md-12 mar-bottom-20">
 							<div class="row">
 							<?php $reportDate = ""; if($date!="") $reportDate = date("Y-m-d", strtotime($date));?>
-							<form action="#" method="post" >
+							<form action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" method="post" >
 								<div class="form-group">
 									<div class="col-sm-6">
 									 <input type="hidden" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo $reportDate;?>">
@@ -111,7 +111,7 @@
 													<a  href="#StockistAdd" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Stockists</a>
 												</div>
 												<div class="col-sm-3">
-													<a  href="#PGOthers" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> PG & Others</a>
+													<a  href="#PGOthers" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unlisted Doctors</a>
 												</div>
 											</div>
 										</div>
@@ -318,14 +318,6 @@
 							<div class="form-group col-sm-4">
 								<label for="city_id">Doctor Name</label>
 								<input type="text" name="name" id="name" class="form-control required">
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="city_id">Email</label>
-								<input type="text" name="email" id="email" class="form-control required">
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="city_id">Mobile</label>
-								<input type="text" name="mobile" id="mobile" class="form-control required">
 							</div>
 							<div class="form-group col-sm-4">
 								<label for="city_id">City</label>

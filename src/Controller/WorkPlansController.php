@@ -25,6 +25,7 @@ class WorkPlansController extends AppController
         $this->loadModel('Users');
         $this->loadModel('Cities');
         $this->loadModel('Doctors');
+        $this->loadModel('PgOthers');
         $this->loadModel('Roles');
 		$this->loadModel('Products');
 		
@@ -799,18 +800,18 @@ class WorkPlansController extends AppController
         $this->viewBuilder()->layout(false);
 		$uid = $this->Auth->user('id');
 		$workPlan = $this->WorkPlans->newEntity();
-		$doctor = $this->Doctors->newEntity();
+		$doctor = $this->PgOthers->newEntity();
         
 		if ($this->request->is('post')) {
 		$reportDate = $_POST['start_date'];
 			$city = $this->Cities->find()->where(['id =' => $_POST['city_id']])->first();
-			$docArray = array('name' => $_POST['name'], 'email' => $_POST['email'], 'mobile' => $_POST['mobile'], 'city_id' => $_POST['city_id'], 'speciality_id' => $_POST['speciality_id'], 'state_id' => $city->state_id, 'is_approved' => 0, 'is_active' => 0);
-			$doctor = $this->Doctors->patchEntity($doctor, $docArray);
+			$docArray = array('name' => $_POST['name'], 'city_id' => $_POST['city_id'], 'speciality_id' => $_POST['speciality_id'], 'state_id' => $city->state_id, 'is_approved' => 0, 'is_active' => 0);
+			$doctor = $this->PgOthers->patchEntity($doctor, $docArray);
 			$doctor->user_id=$uid;
 			//debug($doctor);exit;
-			if ($this->Doctors->save($doctor)) {
+			if ($this->PgOthers->save($doctor)) {
 				$doctor_id = $doctor->id;
-				$data = array('user_id' => $uid, 'doctor_id' => $doctor_id, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'city_id' => $_POST['city_id']);
+				$data = array('user_id' => $uid, 'pgother_id' => $doctor_id, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'city_id' => $_POST['city_id']);
 				$data['start_date'] = $_POST['start_date']." 00:00:00";
 				$data['end_date'] = $_POST['start_date']." 23:59:00";
 				$data['is_reported'] = 1;
@@ -836,18 +837,18 @@ class WorkPlansController extends AppController
 				$workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
 				if ($this->WorkPlans->save($workPlan)) {
 					$this->Flash->success(__("The PG & Others Saved to Report Successfull"));
-					return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+					return $this->redirect(['controller' => 'Mrs','action' => 'dailyReportField','?' => ['date' => $reportDate]]);
 				}
 			}
 			else
 			{
 				$this->Flash->error(__('The PG & Others could not be saved. Please, try again.'));
-				return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+				return $this->redirect(['controller' => 'Mrs','action' => 'dailyReportField','?' => ['date' => $reportDate]]);
 			}
 			
         }
 			$this->Flash->error(__('Something went wrong. Please, try again.'));
-			return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport']);
+			return $this->redirect(['controller' => 'Mrs','action' => 'dailyReportField']);
    
      }
 
