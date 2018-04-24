@@ -555,7 +555,7 @@ class WorkPlansController extends AppController
 			if(count($workPlan_ids)<1)
 				{
 					$this->Flash->error(__('Please select any plan to process.'));
-					return $this->redirect(['controller' => 'mrs','action' => 'daily-report','?' => ['date' => $reportDate]]);
+					return $this->redirect(['controller' => 'mrs','action' => $return,'?' => ['date' => $reportDate]]);
 				}
 
 			foreach($workPlan_ids as $workPlan_id)
@@ -602,6 +602,8 @@ class WorkPlansController extends AppController
 				{
 					if($workPlan->is_planned == 1 && $workPlan->is_reported == 1)
 						$reportData['is_reported'] = 0;
+					if($workPlan->is_missed == 1 && $workPlan->is_missed == 1)
+						$reportData['is_missed'] = 0;
 					//else
 					//	$reportData['is_deleted'] = 1;
 
@@ -636,6 +638,9 @@ class WorkPlansController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
 			$data = $this->request->getData();
 			//pj($data);exit;
+			$return = 'dailyReport';
+			if($data['return'] == "dailyReportField")
+			$return = $data['return'];
 			$reportDate = $data['start_date'];
 			$workPlan_ids = array();
 			if(isset($data['m_workplan_id']))
@@ -643,7 +648,7 @@ class WorkPlansController extends AppController
 			if(count($workPlan_ids)<1)
 				{
 					$this->Flash->error(__('Please select any plan to process.'));
-					return $this->redirect(['controller' => 'mrs','action' => 'daily-report','?' => ['date' => $reportDate]]);
+					return $this->redirect(['controller' => 'mrs','action' => $return,'?' => ['date' => $reportDate]]);
 				}
 
 			foreach($workPlan_ids as $workPlan_id)
@@ -687,12 +692,12 @@ class WorkPlansController extends AppController
 				else
 				{
 					$this->Flash->error(__('Something went wrong. Please, try again.'));
-					return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+					return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
 				}
 					
 			} //exit;
 			$this->Flash->success(__($success));
-			return $this->redirect(['controller' => 'Mrs','action' => 'dailyReport','?' => ['date' => $reportDate]]);
+			return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
         }
 	}
 

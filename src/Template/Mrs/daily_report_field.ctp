@@ -59,9 +59,9 @@
 											?>
 											<tr class="<?=(($WorkPlanD->is_reported)?"reported":"")?> <?=(($WorkPlanD->is_missed)?"missed":"")?>">
 											<td>
-												<input type="checkbox" <?=(($WorkPlanD->is_missed)?"disabled":"")?> class="workplan_id" name="workplan_id[<?=$WorkPlanD->id?>]" value="<?=$WorkPlanD->id?>">
+												<input type="checkbox" class="workplan_id" name="workplan_id[<?=$WorkPlanD->id?>]" value="<?=$WorkPlanD->id?>">
 											</td>
-											<td><a href="#doctor_product_<?=$WorkPlanD->id?>" id="pdt_link_<?=$WorkPlanD->id?>" class="popup-modal"><?=$WorkPlanD->doctor->name?></a></td>
+											<td><?php if($WorkPlanD->is_missed) {echo $WorkPlanD->doctor->name;}else{?><a href="#doctor_product_<?=$WorkPlanD->id?>" id="pdt_link_<?=$WorkPlanD->id?>" class="popup-modal"><?=$WorkPlanD->doctor->name?></a><?php }?></td>
 											<td><?=$WorkPlanD->doctor->speciality->code?></td>
 											<td><?=$WorkPlanD->city->city_name?></td>
 											<td><?=str_replace("%s",$WorkPlanD->id,$work_with_selected)?></td>
@@ -420,6 +420,7 @@
 						<?php }?>
 					</div>
 					<div class="row">
+						<input type="hidden" id="return" name="return" value="dailyReportField" >
 						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" onclick="reset_missed_form()" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
 						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="SubmitMissed" name="SubmitMissed" class="btn blue-btn btn-block">Save</button></div>
 					</div>
@@ -497,6 +498,7 @@
 									</div>
 								</div>
 							</div>
+							<input type="hidden" id="return" name="return" value="dailyReportField" >
 							<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
 							<div class="col-md-6 col-sm-6 col-xs-6"><button type="submit" name="SubmitSave" class="btn blue-btn btn-block">Save</button></div>
 						</div>
@@ -531,7 +533,7 @@
 	});
 
 	$('#reportDate').on('changeDate', function (ev) {
-		window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>?date="+moment(ev.date).format('YYYY-MM-DD'));
+		window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>?date="+moment(ev.date).format('YYYY-MM-DD'));
 	});
 	
 	$('.popup-modal').magnificPopup({
@@ -717,7 +719,7 @@
 		   success: function(json) {
 			   if(json.status == 1)
 			   {	
-					window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+					window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>/?date=<?php echo $reportDate;?>");			   
 					$.magnificPopup.close();
 			   }
 			   else
@@ -739,7 +741,7 @@
 			   success: function(json) {
 				   if(json.status == 1)
 					{
-						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>/?date=<?php echo $reportDate;?>");			   
 					}
 				   else
 						alert(json.msg);

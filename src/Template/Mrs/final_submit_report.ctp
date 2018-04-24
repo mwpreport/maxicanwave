@@ -5,7 +5,7 @@
     <div class="content">
         <section>
             <div class="white-wrapper">
-				<?php if(){?>
+				<?php if(1==1){?>
 				<form action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "finalSaveDailyReport"])?>" method="post">
                 <div class="col-md-12">
                     <div class="hr-title">
@@ -118,7 +118,7 @@
 					$sample_products =array();
 					foreach($products as $product)
 					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
-					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->id.'"></td><td>'.$WorkPlanPD->doctor->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td><input name="visit_time['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->visit_time.'"></td><td><input name="business['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->id.'"></td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td><input name="visit_time['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->visit_time.'"></td><td><input name="business['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
@@ -132,8 +132,8 @@
 				
 				<div class="form-group">
 					<div class="col-md-offset-4 col-md-4 col-sm-offset-0 col-sm-12 col-xs-12">
-						<input type="hidden" name="date" value="<?= $reportDateDate?>">
-						<button type="submit" name="submitPlan" class="common-btn blue-btn">Send entire month's plan for approval</button>
+						<input type="hidden" name="date" value="<?= $reportDate?>">
+						<button type="submit" name="submitPlan" class="common-btn blue-btn">Submit</button>
 					</div>
 				</div>
 				</form>
