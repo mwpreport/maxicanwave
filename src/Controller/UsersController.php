@@ -32,8 +32,8 @@ class UsersController extends AppController
 		$authuser = $this->Auth->user();
 		$this->paginate = [
             'contain' => ['Roles', 'States', 'Cities'],
-			'conditions' => ['Users.id <>' => $authuser['id'],'Users.role_id <>' => 1,'Users.is_deleted =' => 0]
-        ];	
+			'conditions' => ['Users.id <>' => $authuser['id'],'Users.role_id >' => $authuser['role_id'],'Users.is_deleted =' => 0]
+        ];
         $users = $this->paginate($this->Users);
 		foreach ($users as $user)
 		$this->generateCode($user->id);
