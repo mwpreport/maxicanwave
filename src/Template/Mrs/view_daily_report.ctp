@@ -55,6 +55,25 @@
 				$html.='</tbody></table>';
 			}
 
+			if(count($WorkPlansPD))
+			{
+				$html.='<h3 class="mar-top-10 mar-bottom-10">PG & Others</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+				$i = 1;
+				foreach ($WorkPlansPD as $WorkPlanPD)
+				{
+					
+					$products_array = array();
+					if($WorkPlanPD->products!="")
+					$products_array = unserialize($WorkPlanPD->products);
+					$sample_products =array();
+					foreach($products as $product)
+					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+				$i++;
+				}
+				$html.='</tbody></table>';
+			}
+
 			if(count($WorkPlansL))
 			{
 				$html.='<h3 class="mar-top-10 mar-bottom-10">Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Type of Leave</th><th>More details</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
@@ -103,24 +122,6 @@
 				$html.='</tbody></table>';
 			}
 						
-			if(count($WorkPlansPD))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">PG & Others</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlansPD as $WorkPlanPD)
-				{
-					
-					$products_array = array();
-					if($WorkPlanPD->products!="")
-					$products_array = unserialize($WorkPlanPD->products);
-					$sample_products =array();
-					foreach($products as $product)
-					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
 			if($html == ""){$html.="<p>No reports on this date</p>";}
 		
 			echo $html;

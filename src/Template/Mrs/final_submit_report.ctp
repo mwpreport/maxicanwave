@@ -6,7 +6,7 @@
         <section>
             <div class="white-wrapper">
 				<?php if(1==1){?>
-				<form action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "finalSaveDailyReport"])?>" method="post">
+				<form id="finalSubmitFrom" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "finalSaveDailyReport"])?>" method="post">
                 <div class="col-md-12">
                     <div class="hr-title">
 						<?php $reportDate = ""; if($date!="") $reportDate = date("Y-m-d", strtotime($date));?>
@@ -21,7 +21,7 @@
 						$html = "";
 			if(count($WorkPlansD))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3><table id="doctors_table" class="doctors_table table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansD as $WorkPlanD)
 				{
@@ -32,7 +32,7 @@
 					$sample_products =array();
 					foreach($products as $product)
 					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
-					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td><input name="visit_time['.$WorkPlanD->id.']" value="'.$WorkPlanD->visit_time.'"></td><td><input name="business['.$WorkPlanD->id.']" value="'.$WorkPlanD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td><input class="required" name="visit_time['.$WorkPlanD->id.']" value="'.$WorkPlanD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanD->id.']" value="'.$WorkPlanD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
@@ -40,7 +40,7 @@
 			
 			if(count($WorkPlansUD))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Un-Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Un-Planned Doctors</h3><table id="un_doctors_table" class="doctors_table table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansUD as $WorkPlanUD)
 				{
@@ -51,7 +51,26 @@
 					$sample_products =array();
 					foreach($products as $product)
 					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
-					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->id.'"></td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td><input name="visit_time['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->visit_time.'"></td><td><input name="business['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanUD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->id.'"></td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td><input class="required" name="visit_time['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanUD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+				$i++;
+				}
+				$html.='</tbody></table>';
+			}
+
+			if(count($WorkPlansPD))
+			{
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Unlisted Doctors</h3><table id="pg_doctors_table" class="doctors_table table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+				$i = 1;
+				foreach ($WorkPlansPD as $WorkPlanPD)
+				{
+					
+					$products_array = array();
+					if($WorkPlanPD->products!="")
+					$products_array = unserialize($WorkPlanPD->products);
+					$sample_products =array();
+					foreach($products as $product)
+					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
+					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->id.'"></td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td><input class="required" name="visit_time['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
@@ -105,24 +124,6 @@
 				$html.='</tbody></table>';
 			}
 						
-			if(count($WorkPlansPD))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">PG & Others</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlansPD as $WorkPlanPD)
-				{
-					
-					$products_array = array();
-					if($WorkPlanPD->products!="")
-					$products_array = unserialize($WorkPlanPD->products);
-					$sample_products =array();
-					foreach($products as $product)
-					if (array_key_exists($product->id, $products_array)) $sample_products[]= $product->name;
-					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->id.'"></td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td><input name="visit_time['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->visit_time.'"></td><td><input name="business['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
 			if($html == ""){$html.="<p>No reports on this date</p>";}
 		
 			echo $html;
@@ -146,6 +147,11 @@
     <!-- /.content -->
 </div>
 <script>
+	$("#finalSubmitFrom").validate({
+		ignore: ":hidden"
+		
+	});
+
 	function doDelete(eventID){  // delete event 
 		if (confirm("Are you sure on deleting this?"))
 		{

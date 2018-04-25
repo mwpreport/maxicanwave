@@ -20,6 +20,7 @@ class WorkPlansController extends AppController
 	
         $this->loadModel('WorkPlans');
 		$this->loadModel('WorkPlanApproval');
+		$this->loadModel('WorkPlanSubmit');
         $this->loadModel('Workreports');
         $this->loadModel('WorkTypes');
         $this->loadModel('Users');
@@ -546,7 +547,7 @@ class WorkPlansController extends AppController
 			$data = $this->request->getData();
 			//pj($data); exit;
 			$return = 'dailyReport';
-			if($data['return'] == "dailyReportField")
+			if(isset($data['return']))
 			$return = $data['return'];
 			$reportDate = $data['reportDate'];
 			$workPlan_ids = array();
@@ -639,7 +640,7 @@ class WorkPlansController extends AppController
 			$data = $this->request->getData();
 			//pj($data);exit;
 			$return = 'dailyReport';
-			if($data['return'] == "dailyReportField")
+			if(isset($data['return']))
 			$return = $data['return'];
 			$reportDate = $data['start_date'];
 			$workPlan_ids = array();
@@ -888,5 +889,63 @@ class WorkPlansController extends AppController
 
     public function finalSaveDailyReport()
 	{
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+			$data = $this->request->getData();
+			//pj($data); exit;
+			$return = 'dailyReport';
+			if(isset($data['return']))
+			$return = $data['return'];
+			$reportDate = $data['date'];
+			$workPlan_ids = array();
+			if(isset($data['workplan_id']))
+			$workPlan_ids = array_keys($data['workplan_id']);
+			if(count($workPlan_ids)<1)
+				{
+					$this->Flash->error(__('No reports to save.'));
+					return $this->redirect(['controller' => 'mrs','action' => $return,'?' => ['date' => $reportDate]]);
+				}
+			foreach($workPlan_ids as $workPlan_id)
+			{	
+				$reportData=array();
+				$workPlan = $this->WorkPlans->get($workPlan_id, [
+					'contain' => []
+				]);
+				$reportData['is_submitted'] = 1;
+				if(isset($data['visit_time'][$workPlan_id]))
+				$reportData['visit_time'] = $data['visit_time'][$workPlan_id];
+				if(isset($data['business'][$workPlan_id]))
+				$reportData['business'] = $data['business'][$workPlan_id];
+				
+				$reportData['last_updated'] = date("Y-m-d H:i:s");
+			
+				//pj($reportData);exit;
+
+				$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
+				if ($this->WorkPlans->save($workPlan)) {
+				}
+				else
+				{
+					$this->Flash->error(__('Something went wrong. Please, try again.'));
+					return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
+				}
+					
+			} //exit;
+			
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$workPlanSubmit = $this->WorkPlanSubmit->newEntity();
+				$data=array('date' => $reportDate, 'user_id' => $uid, 'lead_id' => $lead_id );
+				$workPlanSubmit = $this->WorkPlanSubmit->patchEntity($workPlanSubmit, $data);
+				if ($this->WorkPlanSubmit->save($workPlanSubmit)) {
+					$this->Flash->success(__('Reports Submited.'));
+					return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
+				}
+				
+			$this->Flash->error(__('Failed. Please, try again.'));
+			return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
+        }
 	}
 }

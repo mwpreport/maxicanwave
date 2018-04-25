@@ -35,7 +35,11 @@
 							</div>
 						</form>
 						</div>
-						<?php if($date!=""){?>
+						<?php if($date!=""){
+						if($workPlanSubmit)
+						{echo '<h4 class="message success">Report Submitted for this date</h4>';}
+						else{
+						?>
 						<div class="col-sm-12 mar-bottom-20">
 							<ul>
 								<li class="col-md-12"><h3 class="mar-top-20 mar-bottom-20">Type of Work</h3></li>
@@ -48,7 +52,7 @@
 							<div class="clearfix"></div><hr />
 
 						</div>
-						<?php }?>
+						<?php }}?>
 						<div id="report_section">
 							<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_2">
 							<form method="post" action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>?date=<?php echo $reportDate;?>">

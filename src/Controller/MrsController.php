@@ -24,6 +24,7 @@ class MrsController extends AppController {
         $this->loadModel('PgOthers');
         $this->loadModel('WorkPlans');
         $this->loadModel('WorkPlanApproval');
+        $this->loadModel('WorkPlanSubmit');
         $this->loadModel('WorkReports');
         $this->loadModel('WorkTypes');
         $this->loadModel('LeaveTypes');
@@ -116,6 +117,15 @@ class MrsController extends AppController {
         $workPlansApproval = $this->paginate($this->WorkPlanApproval->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['WorkPlanApproval.lead_id =' => $uid, 'WorkPlanApproval.date =' => $thisDate, 'WorkPlanApproval.is_approved =' => 0, 'WorkPlanApproval.is_rejected =' => 0]));
         $this->set(compact('workPlansApproval', 'thisDate'));        
     }
+	
+	public function workPlanSubmits(){
+        $this->set('title', 'Plan Requests for Approval');
+        $uid = $this->Auth->user('id');
+		$lead_id = $this->Auth->user('lead_id');
+		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
+        $workPlansSubmit = $this->paginate($this->WorkPlanSubmit->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['WorkPlanSubmit.lead_id =' => $uid, 'WorkPlanSubmit.date =' => $thisDate, 'WorkPlanSubmit.is_approved =' => 0, 'WorkPlanSubmit.is_rejected =' => 0]));
+        $this->set(compact('workPlansSubmit', 'thisDate'));        
+    }
     
     public function planGetDoctors()
     {
@@ -146,6 +156,7 @@ class MrsController extends AppController {
     {
         $this->set('title', 'Daily Report');
         $uid = $this->Auth->user('id');
+		$lead_id = $this->Auth->user('lead_id');
         $userCity = $this->Auth->user('city_id');
         $user =  $this->Auth->user;
 		$state_id = $this->Auth->user('state_id');
@@ -169,10 +180,12 @@ class MrsController extends AppController {
 			->contain(['WorkTypes', 'Cities'])	
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+
 			
 		}
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'workPlanSubmit', 'date'));        
 		
     }
 
