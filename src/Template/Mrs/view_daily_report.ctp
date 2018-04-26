@@ -19,22 +19,25 @@
 						$html = "";
 			if(count($WorkPlansD))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansD as $WorkPlanD)
 				{
-					$products_array = array(); $samples_array = array();
+					$products_array = array(); $samples_array = array(); $gifts_array = array();
 					if($WorkPlanD->products!="")
 					$products_array = unserialize($WorkPlanD->products);
 					if($WorkPlanD->samples!="")
 					$samples_array = unserialize($WorkPlanD->samples);
-					$detail_products =array(); $sample_products =array();
+					if($WorkPlanD->gifts!="")
+					$gifts_array = unserialize($WorkPlanD->gifts);
+					$detail_products =array(); $sample_products =array(); $gift_products =array();
 					foreach($products as $product)
-					{
-					if (array_key_exists($product->id, $samples_array)) $sample_products[]= $product->name;
 					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					}
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanD->visit_time.'</td><td>'.$WorkPlanD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+					foreach($s_products as $s_product)
+					if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+					foreach($gifts as $gift)
+					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanD->visit_time.'</td><td>'.$WorkPlanD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
@@ -42,22 +45,25 @@
 			
 			if(count($WorkPlansUD))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Un-Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Un-Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansUD as $WorkPlanUD)
 				{
-					$products_array = array(); $samples_array = array();
+					$products_array = array(); $samples_array = array(); $gifts_array = array();
 					if($WorkPlanUD->products!="")
 					$products_array = unserialize($WorkPlanUD->products);
 					if($WorkPlanUD->samples!="")
 					$samples_array = unserialize($WorkPlanUD->samples);
-					$detail_products =array(); $sample_products =array();
+					if($WorkPlanUD->gifts!="")
+					$gifts_array = unserialize($WorkPlanUD->gifts);
+					$detail_products =array(); $sample_products =array(); $gift_products =array();
 					foreach($products as $product)
-					{
-					if (array_key_exists($product->id, $samples_array)) $sample_products[]= $product->name;
 					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					}
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanUD->visit_time.'</td><td>'.$WorkPlanUD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanUD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+					foreach($s_products as $s_product)
+					if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+					foreach($gifts as $gift)
+					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanUD->visit_time.'</td><td>'.$WorkPlanUD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanUD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';
@@ -65,23 +71,26 @@
 
 			if(count($WorkPlansPD))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">PG & Others</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">PG & Others</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansPD as $WorkPlanPD)
 				{
 					
-					$products_array = array(); $samples_array = array();
+					$products_array = array(); $samples_array = array(); $gifts_array = array();
 					if($WorkPlanPD->products!="")
 					$products_array = unserialize($WorkPlanPD->products);
 					if($WorkPlanPD->samples!="")
 					$samples_array = unserialize($WorkPlanPD->samples);
-					$detail_products =array(); $sample_products =array();
+					if($WorkPlanPD->gifts!="")
+					$gifts_array = unserialize($WorkPlanPD->gifts);
+					$detail_products =array(); $sample_products =array(); $gift_products =array();
 					foreach($products as $product)
-					{
-					if (array_key_exists($product->id, $samples_array)) $sample_products[]= $product->name;
 					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					}
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+					foreach($s_products as $s_product)
+					if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+					foreach($gifts as $gift)
+					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
 				$i++;
 				}
 				$html.='</tbody></table>';

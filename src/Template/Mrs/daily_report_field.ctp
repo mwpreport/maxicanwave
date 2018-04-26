@@ -42,7 +42,7 @@
 									<div class="table-responsive">
 										<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3>
 										<table id="doctors_table" class="table table-striped table-bordered table-hover">
-											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>Spe</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Visit Time</th><th>Business</th></tr></thead>
+											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>Spe</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th></tr></thead>
 											<tbody>
 										<?php
 										$work_with = '<select name="work_with[%s]"><option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option></select>';
@@ -50,17 +50,20 @@
 										{
 											
 											$work_with_selected = str_replace("<option>".$WorkPlanD->work_with."</option>","<option selected>".$WorkPlanD->work_with."</option>",$work_with);
-											$products_array = array(); $samples_array = array();
+											$products_array = array(); $samples_array = array(); $gifts_array = array();
 											if($WorkPlanD->products!="")
 											$products_array = unserialize($WorkPlanD->products);
 											if($WorkPlanD->samples!="")
 											$samples_array = unserialize($WorkPlanD->samples);
-											$detail_products =array(); $sample_products =array();
+											if($WorkPlanD->gifts!="")
+											$gifts_array = unserialize($WorkPlanD->gifts);
+											$detail_products =array(); $sample_products =array(); $gift_products =array();
 											foreach($products as $product)
-											{
-											if (array_key_exists($product->id, $samples_array)) $sample_products[]= $product->name;
 											if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-											}
+											foreach($s_products as $s_product)
+											if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+											foreach($gifts as $gift)
+											if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 											?>
 											<tr class="<?=(($WorkPlanD->is_reported)?"reported":"")?> <?=(($WorkPlanD->is_missed)?"missed":"")?>">
 											<td>
@@ -70,8 +73,9 @@
 											<td><?=$WorkPlanD->doctor->speciality->code?></td>
 											<td><?=$WorkPlanD->city->city_name?></td>
 											<td><?=str_replace("%s",$WorkPlanD->id,$work_with_selected)?></td>
-											<td><?php if(count($sample_products)>0) echo  implode(", ",$detail_products);?></td>
+											<td><?php if(count($detail_products)>0) echo  implode(", ",$detail_products);?></td>
 											<td><?php if(count($sample_products)>0) echo  implode(", ",$sample_products);?></td>
+											<td><?php if(count($gift_products)>0) echo  implode(", ",$gift_products);?></td>
 											<td><?=$WorkPlanD->visit_time?></td>
 											<td><?=$WorkPlanD->business?></td>
 											</tr>
@@ -191,7 +195,6 @@
 								<label>Products To be detailed :</label>
 								<select name="products[]" class="form-control required" id="products" aria-invalid="true" multiple="multiple">
 								<?php
-								$products_array = array();
 								foreach($products as $product)
 								echo '<option value="'.$product->id.'">'.$product->name.'</option>';
 								?>
@@ -201,12 +204,11 @@
 								<h4>Samples :</h4>
 								<ul>
 								<?php
-								$samples_array = array();
-								foreach($products as $product)
+								foreach($s_products as $s_product)
 								{?>
 									<li>
-									<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$product->id?>" value="<?=$product->id?>" onclick="productClick(this)"> <?= $product->name?></label>
-									<label> <input type="text" name="sample_qty[<?=$product->id?>]" class="required" id="sample_qty_<?=$product->id?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$s_product->id?>" value="<?=$s_product->id?>" onclick="productClick(this)"> <?= $s_product->name?></label>
+									<label> <input type="text" name="sample_qty[<?=$s_product->id?>]" class="required" id="sample_qty_<?=$s_product->id?>" value="" disabled></label>
 									</li>
 								<?php }?>
 								</ul>
@@ -384,7 +386,6 @@
 								<label>Products To be detailed :</label>
 								<select name="products[]" class="form-control required" id="products" aria-invalid="true" multiple="multiple">
 								<?php
-								$products_array = array();
 								foreach($products as $product)
 								echo '<option value="'.$product->id.'">'.$product->name.'</option>';
 								?>
@@ -395,12 +396,11 @@
 								<h4>Samples :</h4>
 								<ul>
 								<?php
-								$samples_array = array();
-								foreach($products as $product)
+								foreach($s_products as $s_product)
 								{?>
 									<li>
-									<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$product->id?>" value="<?=$product->id?>" onclick="productClick(this)"> <?= $product->name?></label>
-									<label> <input type="text" name="sample_qty[<?=$product->id?>]" class="required" id="sample_qty_<?=$product->id?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$s_product->id?>" value="<?=$s_product->id?>" onclick="productClick(this)"> <?= $s_product->name?></label>
+									<label> <input type="text" name="sample_qty[<?=$s_product->id?>]" class="required" id="sample_qty_<?=$s_product->id?>" value="" disabled></label>
 									</li>
 								<?php }?>
 								</ul>
@@ -533,18 +533,18 @@
 									$samples_array = array();
 									if($WorkPlanD->samples!="")
 									$samples_array = unserialize($WorkPlanD->samples);
-									foreach($products as $product)
+									foreach($s_products as $s_product)
 									{?>
 										<li>
 											<?php
-											if (array_key_exists($product->id, $samples_array)){
-											$sample_product_id[$product->id]= $product->name;
+											if (array_key_exists($s_product->id, $samples_array)){
+											$sample_product_id[$s_product->id]= $s_product->name;
 											?>
-											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$product->id?>" value="<?=$product->id?>" onclick="productClick(this)" checked> <?= $product->name?></label>
-											<label> <input type="text" name="sample_qty[<?=$product->id?>]" class="qty_txt required" id="sample_qty_<?=$product->id?>" value="<?=$samples_array[$product->id]?>"></label>
+											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$s_product->id?>" value="<?=$s_product->id?>" onclick="productClick(this)" checked> <?= $s_product->name?></label>
+											<label> <input type="text" name="sample_qty[<?=$s_product->id?>]" class="qty_txt required" id="sample_qty_<?=$s_product->id?>" value="<?=$samples_array[$s_product->id]?>"></label>
 											<?php }else { ?>
-											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$product->id?>" value="<?=$product->id?>" onclick="productClick(this)"> <?= $product->name?></label>
-											<label> <input type="text" name="sample_qty[<?=$product->id?>]" class="qty_txt required" id="sample_qty_<?=$product->id?>" value="" disabled></label>
+											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$s_product->id?>" value="<?=$s_product->id?>" onclick="productClick(this)"> <?= $s_product->name?></label>
+											<label> <input type="text" name="sample_qty[<?=$s_product->id?>]" class="qty_txt required" id="sample_qty_<?=$s_product->id?>" value="" disabled></label>
 											<?php }?>
 										</li>
 									<?php }?>

@@ -200,6 +200,7 @@ class MrsController extends AppController {
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $specialities = $this->Specialities->find('all')->toarray();
 		$products = $this->Products->find('all')->toarray();
+		$s_products = $this->Products->find('all')->contain(['WorkTypes', 'Cities'])->toarray();
 		$gifts = $this->Gifts->find('all')->toarray();
 		$date = "";
 		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
@@ -252,7 +253,7 @@ class MrsController extends AppController {
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
 
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 's_products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
 			
 		}
 		else
@@ -270,6 +271,8 @@ class MrsController extends AppController {
 		$state_id = $this->Auth->user('state_id');
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
 		$products = $this->Products->find('all')->toarray();
+		$s_products = $this->Products->find('all')->toarray();
+		$gifts = $this->Gifts->find('all')->toarray();
 		$date = "";
 		$html = "";
 		if(isset($_GET['date']))
@@ -317,7 +320,7 @@ class MrsController extends AppController {
 			
 		}
 		
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 's_products',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
         
 		
     }
@@ -331,6 +334,8 @@ class MrsController extends AppController {
 		$state_id = $this->Auth->user('state_id');
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
 		$products = $this->Products->find('all')->toarray();
+		$s_products = $this->Products->find('all')->toarray();
+		$gifts = $this->Gifts->find('all')->toarray();
 		$date = "";
 		$html = "";
 		if(isset($_GET['date']))
@@ -378,7 +383,7 @@ class MrsController extends AppController {
 			
 		}
 		
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 's_products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
         
 		
     }
