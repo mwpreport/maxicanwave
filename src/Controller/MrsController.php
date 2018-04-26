@@ -31,6 +31,7 @@ class MrsController extends AppController {
         $this->loadModel('DoctorsRelation');
         $this->loadModel('DoctorTypes');
         $this->loadModel('Products');
+        $this->loadModel('Gifts');
     }
     
     public function beforeFilter(Event $event){
@@ -199,6 +200,7 @@ class MrsController extends AppController {
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $specialities = $this->Specialities->find('all')->toarray();
 		$products = $this->Products->find('all')->toarray();
+		$gifts = $this->Gifts->find('all')->toarray();
 		$date = "";
 		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
 		$WorkPlansD = array();
@@ -250,7 +252,7 @@ class MrsController extends AppController {
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
 
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
 			
 		}
 		else
@@ -394,8 +396,8 @@ class MrsController extends AppController {
 			->find('all')
 			->contain(['WorkTypes', 'Cities', 'Doctors'])	
 			->select('doctor_id')->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
-		$doctor_ids=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD);
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
+		$doctor_ids=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray());
 		$doctor_ids[]=0;
 
 		$doctors = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $doctor_ids, 'Doctors.city_id' => $city_id])->contain(['Doctors']);

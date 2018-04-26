@@ -29,6 +29,7 @@ class WorkPlansController extends AppController
         $this->loadModel('PgOthers');
         $this->loadModel('Roles');
 		$this->loadModel('Products');
+		$this->loadModel('Gifts');
 		
     }
 
@@ -573,12 +574,27 @@ class WorkPlansController extends AppController
 					$reportData['work_with']=$data['work_with'][$workPlan_id];
 					
 					$product_array=array();
-					if(isset($data['product_id']))
+					if(isset($data['products']))
 					{
-						foreach($data['product_id'] as $product_id)
-						$product_array[$product_id] = $data['product_qty'][$product_id];
+						$reportData['products']=serialize($data['products']);
+					}
+					
+					$sample_array=array();
+					if(isset($data['sample_id']))
+					{
+						foreach($data['sample_id'] as $sample_id)
+						$sample_array[$sample_id] = $data['sample_qty'][$sample_id];
 						
-						$reportData['products']=serialize($product_array);
+						$reportData['samples']=serialize($sample_array);
+					}
+					
+					$gift_array=array();
+					if(isset($data['gift_id']))
+					{
+						foreach($data['gift_id'] as $gift_id)
+						$gift_array[$gift_id] = $data['gift_qty'][$gift_id];
+						
+						$reportData['gifts']=serialize($gift_array);
 					}
 					
 					if(isset($data['discussion']))
@@ -732,13 +748,27 @@ class WorkPlansController extends AppController
 					$plan_data['is_approved'] = 1;
 					$plan_data['work_with'] = $_POST['work_with'];
 					$product_array=array();
-					if(isset($_POST['product_id']))
+					if(isset($_POST['products']))
 					{
-						foreach($_POST['product_id'] as $product_id)
-						$product_array[$product_id] = $_POST['product_qty'][$product_id];
-						
-						$plan_data['products']=serialize($product_array);
+						$plan_data['products']=serialize($_POST['products']);
 					}
+					$sample_array=array();
+					if(isset($_POST['sample_id']))
+					{
+						foreach($_POST['sample_id'] as $sample_id)
+						$sample_array[$sample_id] = $_POST['sample_qty'][$sample_id];
+						
+						$plan_data['samples']=serialize($sample_array);
+					}
+					$gift_array=array();
+					if(isset($_POST['gift_id']))
+					{
+						foreach($_POST['gift_id'] as $gift_id)
+						$gift_array[$gift_id] = $_POST['gift_qty'][$gift_id];
+						
+						$plan_data['gifts']=serialize($gift_array);
+					}
+					
 					if(isset($_POST['discussion']))
 					$plan_data['discussion']=$_POST['discussion'];
 					if(isset($_POST['visit_time']))
@@ -825,12 +855,25 @@ class WorkPlansController extends AppController
 				$data['is_approved'] = 1;
 				$data['work_with'] = $_POST['work_with'];
 				$product_array=array();
-					if(isset($_POST['product_id']))
+					if(isset($_POST['products']))
 					{
-						foreach($_POST['product_id'] as $product_id)
-						$product_array[$product_id] = $_POST['product_qty'][$product_id];
+						$data['products']=serialize($_POST['products']);
+					}
+				$sample_array=array();
+					if(isset($_POST['sample_id']))
+					{
+						foreach($_POST['sample_id'] as $sample_id)
+						$sample_array[$sample_id] = $_POST['sample_qty'][$sample_id];
 						
-						$data['products']=serialize($product_array);
+						$data['samples']=serialize($sample_array);
+					}
+					$gift_array=array();
+					if(isset($_POST['gift_id']))
+					{
+						foreach($_POST['gift_id'] as $gift_id)
+						$gift_array[$gift_id] = $_POST['gift_qty'][$gift_id];
+						
+						$data['gifts']=serialize($gift_array);
 					}
 					
 					if(isset($_POST['discussion']))
@@ -875,7 +918,7 @@ class WorkPlansController extends AppController
 			}
 			else
 			{
-				$action = $this->WorkPlans->delete($WorkPlans);
+				$action = $this->WorkPlans->delete($workPlan);
 			}
 			if (isset($action)) {
 				$this->Flash->success(__('Deleted Successfully.'));
