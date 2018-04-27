@@ -35,9 +35,9 @@
 									<?= $this->Form->create($assignedGift, array('id' => 'editform')) ?>
 									<fieldset>
 										<?php
-											echo $this->Form->control('gift_id', ['options' => $gifts, 'empty' => true]);
-											echo $this->Form->control('user_id', ['options' => $users, 'empty' => true]);
-											echo $this->Form->control('count');
+											echo $this->Form->control('user_id', ['class' => 'form-control mar-bottom-10', 'options' => $users, 'empty' => true]);
+											echo $this->Form->control('gift_id', ['class' => 'form-control mar-bottom-10', 'options' => $gifts, 'empty' => true]);
+											echo $this->Form->control('count', ['class' => 'form-control mar-bottom-10']);
 										?>
 									</fieldset>
 									<?= $this->Form->button(__('Submit')) ?>

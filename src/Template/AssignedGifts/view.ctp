@@ -31,12 +31,12 @@
 								<div class="box-body no-padding">
 								<table class="vertical-table">
 									<tr>
-										<th scope="row"><?= __('Gift') ?></th>
-										<td><?= $assignedGift->has('gift') ? $this->Html->link($assignedGift->gift->name, ['controller' => 'Gifts', 'action' => 'view', $assignedGift->gift->id]) : '' ?></td>
-									</tr>
-									<tr>
 										<th scope="row"><?= __('User') ?></th>
 										<td><?= $assignedGift->has('user') ? $this->Html->link($assignedGift->user->firstname, ['controller' => 'Users', 'action' => 'view', $assignedGift->user->id]) : '' ?></td>
+									</tr>
+									<tr>
+										<th scope="row"><?= __('Gift') ?></th>
+										<td><?= $assignedGift->has('gift') ? $this->Html->link($assignedGift->gift->name, ['controller' => 'Gifts', 'action' => 'view', $assignedGift->gift->id]) : '' ?></td>
 									</tr>
 									<tr>
 										<th scope="row"><?= __('Id') ?></th>

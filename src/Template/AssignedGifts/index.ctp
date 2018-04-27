@@ -30,8 +30,8 @@
 										<thead>
 											<tr>
 												<th scope="col"><?= $this->Paginator->sort('id') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('gift_id') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('gift_id') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('count') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('dt') ?></th>
 												<th scope="col" colspan="3" class="actions"><?= __('Actions') ?></th>
@@ -41,8 +41,8 @@
 											<?php foreach ($assignedGifts as $assignedGift): ?>
 											<tr>
 												<td><?= $this->Number->format($assignedGift->id) ?></td>
-												<td><?= $assignedGift->has('gift') ? $this->Html->link($assignedGift->gift->name, ['controller' => 'Gifts', 'action' => 'view', $assignedGift->gift->id]) : '' ?></td>
 												<td><?= $assignedGift->has('user') ? $this->Html->link($assignedGift->user->firstname, ['controller' => 'Users', 'action' => 'view', $assignedGift->user->id]) : '' ?></td>
+												<td><?= $assignedGift->has('gift') ? $this->Html->link($assignedGift->gift->name, ['controller' => 'Gifts', 'action' => 'view', $assignedGift->gift->id]) : '' ?></td>
 												<td><?= $this->Number->format($assignedGift->count) ?></td>
 												<td><?= h($assignedGift->dt) ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $assignedGift->id],['escape' => false]) ?></td>

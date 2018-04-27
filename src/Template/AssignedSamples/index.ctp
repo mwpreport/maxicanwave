@@ -30,8 +30,8 @@
 										<thead>
 											<tr>
 												<th scope="col"><?= $this->Paginator->sort('id') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('product_id') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('product_id') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('count') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('dt') ?></th>
 												<th scope="col" colspan="3" class="actions"><?= __('Actions') ?></th>
@@ -41,8 +41,8 @@
 											<?php foreach ($assignedSamples as $assignedSample): ?>
 											<tr>
 												<td><?= $this->Number->format($assignedSample->id) ?></td>
-												<td><?= $assignedSample->has('product') ? $this->Html->link($assignedSample->product->name, ['controller' => 'Products', 'action' => 'view', $assignedSample->product->id]) : '' ?></td>
 												<td><?= $assignedSample->has('user') ? $this->Html->link($assignedSample->user->firstname, ['controller' => 'Users', 'action' => 'view', $assignedSample->user->id]) : '' ?></td>
+												<td><?= $assignedSample->has('product') ? $this->Html->link($assignedSample->product->name, ['controller' => 'Products', 'action' => 'view', $assignedSample->product->id]) : '' ?></td>
 												<td><?= $this->Number->format($assignedSample->count) ?></td>
 												<td><?= h($assignedSample->dt) ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $assignedSample->id],['escape' => false]) ?></td>

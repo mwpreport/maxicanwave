@@ -32,6 +32,8 @@ class MrsController extends AppController {
         $this->loadModel('DoctorTypes');
         $this->loadModel('Products');
         $this->loadModel('Gifts');
+        $this->loadModel('AssignedSamples');
+        $this->loadModel('AssignedGifts');
     }
     
     public function beforeFilter(Event $event){
@@ -200,8 +202,8 @@ class MrsController extends AppController {
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $specialities = $this->Specialities->find('all')->toarray();
 		$products = $this->Products->find('all')->toarray();
-		$s_products = $this->Products->find('all')->contain(['WorkTypes', 'Cities'])->toarray();
-		$gifts = $this->Gifts->find('all')->toarray();
+		$s_products = $this->AssignedSamples->find('all')->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => 'AssignedSamples.count'])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->toarray();
+		$gifts = $this->AssignedGifts->find('all')->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => 'AssignedGifts.count'])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->toarray();
 		$date = "";
 		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
 		$WorkPlansD = array();
@@ -209,7 +211,6 @@ class MrsController extends AppController {
 		$doctorsRelation = array();
 		$chemists = array();
 		$stockists = array();
-
 		if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];

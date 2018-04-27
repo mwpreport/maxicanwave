@@ -59,13 +59,17 @@ class AssignedGiftsController extends AppController
     {
         $assignedGift = $this->AssignedGifts->newEntity();
         if ($this->request->is('post')) {
-            $assignedGift = $this->AssignedGifts->patchEntity($assignedGift, $this->request->getData());
+			$data = $this->request->getData();
+			$haveGift = $this->AssignedGifts->find('all')->where(['user_id =' => $data['user_id'], 'product_id =' => $data['product_id']])->first();
+			if($haveGift)
+			{$assignedGift = $this->AssignedGifts->get($haveGift->id); $data['count'] = $data['count']+$haveGift['count'];}
+            $assignedGift = $this->AssignedGifts->patchEntity($assignedGift, $data);
             if ($this->AssignedGifts->save($assignedGift)) {
-                $this->Flash->success(__('The assigned gift has been saved.'));
+                $this->Flash->success(__('The gift has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The assigned gift could not be saved. Please, try again.'));
+            $this->Flash->error(__('The gift could not be saved. Please, try again.'));
         }
         $gifts = $this->AssignedGifts->Gifts->find('list');
         $users = $this->Users->find('list')->where(['Users.role_id =' => '5'])->toarray();
@@ -88,11 +92,11 @@ class AssignedGiftsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $assignedGift = $this->AssignedGifts->patchEntity($assignedGift, $this->request->getData());
             if ($this->AssignedGifts->save($assignedGift)) {
-                $this->Flash->success(__('The assigned gift has been saved.'));
+                $this->Flash->success(__('The gift has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The assigned gift could not be saved. Please, try again.'));
+            $this->Flash->error(__('The gift could not be saved. Please, try again.'));
         }
         $gifts = $this->AssignedGifts->Gifts->find('list');
         $users = $this->Users->find('list')->where(['Users.role_id =' => '5'])->toarray();

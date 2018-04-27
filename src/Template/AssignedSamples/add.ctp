@@ -28,9 +28,9 @@
 									<?= $this->Form->create($assignedSample, array('id' => 'newform')) ?>
 									<fieldset>
 										<?php
-											echo $this->Form->control('product_id', ['options' => $products, 'empty' => true]);
-											echo $this->Form->control('user_id', ['options' => $users, 'empty' => true]);
-											echo $this->Form->control('count');
+											echo $this->Form->control('user_id', ['class' => 'form-control mar-bottom-10', 'options' => $users, 'empty' => true]);
+											echo $this->Form->control('product_id', ['class' => 'form-control mar-bottom-10', 'options' => $products, 'empty' => true]);
+											echo $this->Form->control('count', ['class' => 'form-control mar-bottom-10']);
 										?>
 									</fieldset>
 									<?= $this->Form->button(__('Submit')) ?>
