@@ -42,7 +42,7 @@
 									<div class="table-responsive">
 										<h3 class="mar-top-10 mar-bottom-10">Planned Doctors</h3>
 										<table id="doctors_table" class="table table-striped table-bordered table-hover">
-											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>Spe</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th></tr></thead>
+											<thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Doctor Name</th><th>Class</th><th>Spe</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th></tr></thead>
 											<tbody>
 										<?php
 										$work_with = '<select name="work_with[%s]"><option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option></select>';
@@ -70,6 +70,7 @@
 												<input type="checkbox" class="workplan_id" name="workplan_id[<?=$WorkPlanD->id?>]" value="<?=$WorkPlanD->id?>">
 											</td>
 											<td><?php if($WorkPlanD->is_missed) {echo $WorkPlanD->doctor->name;}else{?><a href="#doctor_product_<?=$WorkPlanD->id?>" id="pdt_link_<?=$WorkPlanD->id?>" class="popup-modal"><?=$WorkPlanD->doctor->name?></a><?php }?></td>
+											<td><?=$class[$WorkPlanD->doctor->class]?></td>
 											<td><?=$WorkPlanD->doctor->speciality->code?></td>
 											<td><?=$WorkPlanD->city->city_name?></td>
 											<td><?=str_replace("%s",$WorkPlanD->id,$work_with_selected)?></td>

@@ -45,6 +45,10 @@ class DoctorsTable extends Table
             'foreignKey' => 'speciality_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('DoctorTypes', [
+            'foreignKey' => 'class',
+            'joinType' => 'INNER'
+        ]);
         $this->belongsTo('States', [
             'foreignKey' => 'state_id',
             'joinType' => 'INNER'

@@ -201,6 +201,8 @@ class MrsController extends AppController {
 		$state_id = $this->Auth->user('state_id');
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $specialities = $this->Specialities->find('all')->toarray();
+		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
 		$products = $this->Products->find('all')->toarray();
 		$s_products = $this->AssignedSamples->find('all')->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => 'AssignedSamples.count'])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->toarray();
 		$gifts = $this->AssignedGifts->find('all')->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => 'AssignedGifts.count'])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->toarray();
@@ -254,7 +256,7 @@ class MrsController extends AppController {
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
 
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 's_products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 's_products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
 			
 		}
 		else
@@ -271,6 +273,8 @@ class MrsController extends AppController {
         $user =  $this->Auth->user;
 		$state_id = $this->Auth->user('state_id');
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+        $doctorTypes = $this->DoctorTypes->find('all')->toarray();
+		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
 		$products = $this->Products->find('all')->toarray();
 		$s_products = $this->Products->find('all')->toarray();
 		$gifts = $this->Gifts->find('all')->toarray();
@@ -321,7 +325,7 @@ class MrsController extends AppController {
 			
 		}
 		
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 's_products',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+        $this->set(compact('userCity', 'cities', 'class', 'products', 's_products',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
         
 		
     }
@@ -335,6 +339,8 @@ class MrsController extends AppController {
 		$state_id = $this->Auth->user('state_id');
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
 		$products = $this->Products->find('all')->toarray();
+		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
 		$s_products = $this->Products->find('all')->toarray();
 		$gifts = $this->Gifts->find('all')->toarray();
 		$date = "";
@@ -384,7 +390,7 @@ class MrsController extends AppController {
 			
 		}
 		
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 's_products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+        $this->set(compact('userCity', 'cities', 'class', 'products', 's_products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
         
 		
     }
