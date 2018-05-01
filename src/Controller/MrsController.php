@@ -33,7 +33,9 @@ class MrsController extends AppController {
         $this->loadModel('Products');
         $this->loadModel('Gifts');
         $this->loadModel('AssignedSamples');
+        $this->loadModel('IssuedSamples');
         $this->loadModel('AssignedGifts');
+        $this->loadModel('IssuedGifts');
     }
     
     public function beforeFilter(Event $event){
@@ -69,6 +71,34 @@ class MrsController extends AppController {
         $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors', 'doctorTypes'));            
     }
 	
+    public function planReport(){
+        $this->set('title', 'Doctor Wise Plans');
+        $uid = $this->Auth->user('id');
+        $userCity = $this->Auth->user('city_id');
+        $user =  $this->Auth->user;
+		$state_id = $this->Auth->user('state_id');
+        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+        $specialities = $this->Specialities->find('all')->toarray();
+		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+		$month = date('M, Y');
+		$start_date = date("Y-m")."-01";
+		$end_date = date("Y-m")."-31";
+		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+
+		$WorkPlansD = $this->WorkPlans
+		->find('all')
+		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	
+		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported <>' => '1', 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => '1'])
+		->where(['WorkPlans.start_date >=' => $start_date])
+		->andWhere(['WorkPlans.start_date <=' => $end_date])
+		->group('WorkPlans.doctor_id')
+		->toArray();
+        //pj($WorkPlansD);
+		$this->set(compact('userCity', 'cities', 'specialities', 'class', 'WorkPlansD', 'month'));        
+
+		
+    }      
+
     public function doctorSelection(){
         $this->set('title', 'Doctor Visit Report');        
     }      
@@ -204,8 +234,17 @@ class MrsController extends AppController {
 		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
 		$products = $this->Products->find('all')->toarray();
-		$s_products = $this->AssignedSamples->find('all')->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => 'AssignedSamples.count'])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->toarray();
-		$gifts = $this->AssignedGifts->find('all')->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => 'AssignedGifts.count'])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->toarray();
+		$samples = $this->AssignedSamples->find('all');
+		$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
+		$i_samples = $this->IssuedSamples->find('all');
+		$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
+		foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
+		$gifts = $this->AssignedGifts->find('all');
+		$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
+		$i_gifts = $this->IssuedGifts->find('all');
+		$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
+		foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
+		//pj($i_gift);
 		$date = "";
 		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
 		$WorkPlansD = array();
@@ -229,9 +268,17 @@ class MrsController extends AppController {
 			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray()); $reported_doctors[]=0;
 			$WorkPlansD = $WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
 			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors'])->toArray();
-
-
 			
+			$WorkPlansUD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
+
+			$WorkPlansPD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])	
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+
 			$WorkPlans = $this->WorkPlans
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
@@ -252,11 +299,11 @@ class MrsController extends AppController {
 			->contain(['Cities', 'Stockists'])	 
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
-			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansC); $reported_stockists[]=0;
+			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansS); $reported_stockists[]=0;
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
 
-        $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 's_products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlans', 'date'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansPD', 'WorkPlansS', 'WorkPlansC', 'WorkPlans', 'date'));        
 			
 		}
 		else
@@ -276,7 +323,7 @@ class MrsController extends AppController {
         $doctorTypes = $this->DoctorTypes->find('all')->toarray();
 		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
 		$products = $this->Products->find('all')->toarray();
-		$s_products = $this->Products->find('all')->toarray();
+		$samples = $this->Products->find('all')->toarray();
 		$gifts = $this->Gifts->find('all')->toarray();
 		$date = "";
 		$html = "";
@@ -325,7 +372,7 @@ class MrsController extends AppController {
 			
 		}
 		
-        $this->set(compact('userCity', 'cities', 'class', 'products', 's_products',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+        $this->set(compact('userCity', 'cities', 'class', 'products', 'samples',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
         
 		
     }
@@ -341,7 +388,7 @@ class MrsController extends AppController {
 		$products = $this->Products->find('all')->toarray();
 		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-		$s_products = $this->Products->find('all')->toarray();
+		$samples = $this->Products->find('all')->toarray();
 		$gifts = $this->Gifts->find('all')->toarray();
 		$date = "";
 		$html = "";
@@ -390,7 +437,7 @@ class MrsController extends AppController {
 			
 		}
 		
-        $this->set(compact('userCity', 'cities', 'class', 'products', 's_products', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+        $this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
         
 		
     }

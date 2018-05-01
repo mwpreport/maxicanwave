@@ -30,6 +30,10 @@ class WorkPlansController extends AppController
         $this->loadModel('Roles');
 		$this->loadModel('Products');
 		$this->loadModel('Gifts');
+        $this->loadModel('AssignedSamples');
+        $this->loadModel('IssuedSamples');
+        $this->loadModel('AssignedGifts');
+        $this->loadModel('IssuedGifts');
 		
     }
 
@@ -543,7 +547,7 @@ class WorkPlansController extends AppController
     {
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
-
+		$uid = $this->Auth->user('id');
         if ($this->request->is(['patch', 'post', 'put'])) {
 			$data = $this->request->getData();
 			//pj($data); exit;
@@ -613,6 +617,13 @@ class WorkPlansController extends AppController
 						$reportData['missed_reason']=$data['missed_reason'][$workPlan_id];
 					}
 					$reportData['is_missed'] = 1;
+					$reportData['work_with'] = "";
+					$reportData['products'] = "";
+					$reportData['samples'] = "";
+					$reportData['gifts'] = "";
+					$reportData['visit_time'] = null;
+					$reportData['business'] = null;
+					$reportData['discussion	'] = null;
 					$success = 'The work plan has been saved.';
 				}
 				if(isset($data['SubmitRemove']))
@@ -621,6 +632,13 @@ class WorkPlansController extends AppController
 						$reportData['is_reported'] = 0;
 					if($workPlan->is_missed == 1 && $workPlan->is_missed == 1)
 						$reportData['is_missed'] = 0;
+					$reportData['products'] = "";
+					$reportData['samples'] = "";
+					$reportData['gifts'] = "";
+					$reportData['visit_time'] = null;
+					$reportData['business'] = null;
+					$reportData['discussion	'] = null;
+					
 					//else
 					//	$reportData['is_deleted'] = 1;
 
@@ -633,6 +651,22 @@ class WorkPlansController extends AppController
 
 				$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
 				if ($this->WorkPlans->save($workPlan)) {
+					if(isset($data['SubmitSave']))
+					{
+						if(isset($reportData['gifts']) && !empty($reportData['gifts']))
+						{
+							$this->saveIssuedGifts($gift_array, $workPlan, null);
+						}
+						if(isset($reportData['samples']) && !empty($reportData['samples']))
+						{
+							$this->saveIssuedSamples($sample_array, $workPlan, null);
+						}
+					}
+					else
+					{
+						$this->IssuedGifts->deleteAll(array('IssuedGifts.plan_id'=>$workPlan->id));
+						$this->IssuedSamples->deleteAll(array('IssuedSamples.plan_id'=>$workPlan->id));
+					}
 				}
 				else
 				{
@@ -681,6 +715,14 @@ class WorkPlansController extends AppController
 					if(isset($data['missed_reason'][$workPlan_id]) && $data['missed_reason'][$workPlan_id] != "")
 					{
 						$reportData['missed_reason']=$data['missed_reason'][$workPlan_id];
+						$reportData['products'] = "";
+						$reportData['work_with'] = "";
+						$reportData['samples'] = "";
+						$reportData['gifts'] = "";
+						$reportData['visit_time'] = null;
+						$reportData['business'] = null;
+						$reportData['discussion	'] = null;
+
 						if(isset($data['alt_date'][$workPlan_id]) && $data['alt_date'][$workPlan_id] != "")
 						{
 							$newWorkPlan = $this->WorkPlans->newEntity();
@@ -688,11 +730,12 @@ class WorkPlansController extends AppController
 							$newData['start_date'] = $data['alt_date'][$workPlan_id]." 00:00:00";
 							$newData['end_date'] = $data['alt_date'][$workPlan_id]." 23:59:00";
 							$newData['is_planned'] = 1;
+							$newData['is_approved'] = 1;
 							$newData['doctor_id'] = $workPlan['doctor_id'];
 							$newData = $this->WorkPlans->patchEntity($newWorkPlan, $newData);
-							pj($newWorkPlan);
+							//pj($newWorkPlan); exit;
 							
-							//if (!$this->WorkPlans->save($newWorkPlan)) {break;}
+							if (!$this->WorkPlans->save($newWorkPlan)) {break;}
 						}
 					}
 					$reportData['is_missed'] = 1;
@@ -705,6 +748,8 @@ class WorkPlansController extends AppController
 
 				$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
 				if ($this->WorkPlans->save($workPlan)) {
+						$this->IssuedGifts->deleteAll(array('IssuedGifts.plan_id'=>$workPlan->id));
+						$this->IssuedSamples->deleteAll(array('IssuedSamples.plan_id'=>$workPlan->id));
 				}
 				else
 				{
@@ -739,92 +784,76 @@ class WorkPlansController extends AppController
             
 			if($data['work_type_id'] == 2 && isset($_POST['doctor_id']))
 			{
-				$doctor_ids = isset($_POST['doctor_id']) ? $_POST['doctor_id'] : array();
-				foreach ($doctor_ids as $doctor_id)
+				$reportData = $data;
+				$reportData['doctor_id'] = $_POST['doctor_id'];
+				$reportData['is_unplanned'] = 1;
+				$reportData['is_approved'] = 1;
+				$reportData['work_with'] = $_POST['work_with'];
+				$product_array=array();
+				if(isset($_POST['products']))
 				{
-					$plan_data = $data;
-					$plan_data['doctor_id'] = $doctor_id;
-					$plan_data['is_unplanned'] = 1;
-					$plan_data['is_approved'] = 1;
-					$plan_data['work_with'] = $_POST['work_with'];
-					$product_array=array();
-					if(isset($_POST['products']))
-					{
-						$plan_data['products']=serialize($_POST['products']);
-					}
-					$sample_array=array();
-					if(isset($_POST['sample_id']))
-					{
-						foreach($_POST['sample_id'] as $sample_id)
-						$sample_array[$sample_id] = $_POST['sample_qty'][$sample_id];
-						
-						$plan_data['samples']=serialize($sample_array);
-					}
-					$gift_array=array();
-					if(isset($_POST['gift_id']))
-					{
-						foreach($_POST['gift_id'] as $gift_id)
-						$gift_array[$gift_id] = $_POST['gift_qty'][$gift_id];
-						
-						$plan_data['gifts']=serialize($gift_array);
-					}
-					
-					if(isset($_POST['discussion']))
-					$plan_data['discussion']=$_POST['discussion'];
-					if(isset($_POST['visit_time']))
-					$plan_data['visit_time']=$_POST['visit_time'];
-					if(isset($_POST['business']) && $_POST['business'] !="")
-					$plan_data['business']=$_POST['business'];
-
-
-					$workPlans_array[] = $plan_data;
+					$reportData['products']=serialize($_POST['products']);
 				}
+				$sample_array=array();
+				if(isset($_POST['sample_id']))
+				{
+					foreach($_POST['sample_id'] as $sample_id)
+					$sample_array[$sample_id] = $_POST['sample_qty'][$sample_id];
+					
+					$reportData['samples']=serialize($sample_array);
+				}
+				$gift_array=array();
+				if(isset($_POST['gift_id']))
+				{
+					foreach($_POST['gift_id'] as $gift_id)
+					$gift_array[$gift_id] = $_POST['gift_qty'][$gift_id];
+					
+					$reportData['gifts']=serialize($gift_array);
+				}
+				
+				if(isset($_POST['discussion']))
+				$reportData['discussion']=$_POST['discussion'];
+				if(isset($_POST['visit_time']))
+				$reportData['visit_time']=$_POST['visit_time'];
+				if(isset($_POST['business']) && $_POST['business'] !="")
+				$reportData['business']=$_POST['business'];
 
-				$entities = $this->WorkPlans->newEntities($workPlans_array);
-				$_results = $this->WorkPlans->saveMany($entities);
-				$this->Flash->success(__('Unplanned Doctor(s) Saved Successfully'));
-				echo json_encode(array("status"=>1,"msg"=>"Unplanned Doctor(s) Saved Successfully")); exit;
+				$success_msg = "Unplanned Doctor(s) Saved Successfully";
 			}
 			elseif($data['work_type_id'] == "" && isset($_POST['chemist_id']))
 			{
-				$chemist_ids = isset($_POST['chemist_id']) ? $_POST['chemist_id'] : array();
-				foreach ($chemist_ids as $chemist_id)
-				{
-					$plan_data = $data;
-					$plan_data['chemist_id'] = $chemist_id;
-					$workPlans_array[] = $plan_data;
-				}
-
-				$entities = $this->WorkPlans->newEntities($workPlans_array);
-				$_results = $this->WorkPlans->saveMany($entities);
-				$this->Flash->success(__("Chemist(s) Saved Successfully"));
-				echo json_encode(array("status"=>1,"msg"=>"Chemist(s) Saved Successfully")); exit;
+				$reportData = $data;
+				$reportData['chemist_id'] = $_POST['chemist_id'];
+				$success_msg = "Chemist(s) Saved Successfully";
 			}
 			elseif($data['work_type_id'] == "" && isset($_POST['stockist_id']))
 			{
-				$stockist_ids = isset($_POST['stockist_id']) ? $_POST['stockist_id'] : array();
-				foreach ($stockist_ids as $stockist_id)
-				{
-					$plan_data = $data;
-					$plan_data['stockist_id'] = $stockist_id;
-					$workPlans_array[] = $plan_data;
-				}
-
-				$entities = $this->WorkPlans->newEntities($workPlans_array);
-				$_results = $this->WorkPlans->saveMany($entities);
-				$this->Flash->success(__("Stockist(s) Saved Successfully"));
-				echo json_encode(array("status"=>1,"msg"=>"Stockist(s) Saved Successfully")); exit;
+				$reportData = $data;
+				$reportData['stockist_id'] = $_POST['stockist_id'];
+				$success_msg = "Stockist Saved Successfully";
 			}
 			elseif($data['work_type_id'] != 2 && $data['work_type_id'] != "")
 			{
-				$workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
-				if ($this->WorkPlans->save($workPlan)) {
-					$this->Flash->success(__("Report Saved Successfull"));
-					echo json_encode(array("status"=>1,"msg"=>"Report Saved Successfull")); exit;
-				}
-				else
-				{$this->Flash->error(__('The report could not be saved. Please, try again.'));echo json_encode(array("status"=>0,"msg"=>'The report could not be saved. Please, try again.')); exit;}
+				$reportData = $data;
+				$success_msg = "Report Saved Successfull";
 			}
+				
+			$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
+			if ($this->WorkPlans->save($workPlan)) {
+					if(isset($reportData['gifts']) && !empty($reportData['gifts']))
+					{
+						$this->saveIssuedGifts($gift_array, $workPlan, null);
+					}
+					if(isset($reportData['samples']) && !empty($reportData['samples']))
+					{
+						$this->saveIssuedSamples($sample_array, $workPlan, null);
+					}					
+
+				$this->Flash->success(__($success_msg));
+				echo json_encode(array("status"=>1,"msg"=>$success_msg)); exit;
+			}
+			else
+			{$this->Flash->error(__('The report could not be saved. Please, try again.'));echo json_encode(array("status"=>0,"msg"=>'The report could not be saved. Please, try again.')); exit;}
 			
         }
 		exit;   
@@ -847,17 +876,17 @@ class WorkPlansController extends AppController
 			//debug($doctor);exit;
 			if ($this->PgOthers->save($doctor)) {
 				$doctor_id = $doctor->id;
-				$data = array('user_id' => $uid, 'pgother_id' => $doctor_id, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'city_id' => $_POST['city_id']);
-				$data['start_date'] = $_POST['start_date']." 00:00:00";
-				$data['end_date'] = $_POST['start_date']." 23:59:00";
-				$data['is_reported'] = 1;
-				$data['last_updated'] = date("Y-m-d H:i:s");
-				$data['is_approved'] = 1;
-				$data['work_with'] = $_POST['work_with'];
+				$reportData = array('user_id' => $uid, 'pgother_id' => $doctor_id, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'city_id' => $_POST['city_id']);
+				$reportData['start_date'] = $_POST['start_date']." 00:00:00";
+				$reportData['end_date'] = $_POST['start_date']." 23:59:00";
+				$reportData['is_reported'] = 1;
+				$reportData['last_updated'] = date("Y-m-d H:i:s");
+				$reportData['is_approved'] = 1;
+				$reportData['work_with'] = $_POST['work_with'];
 				$product_array=array();
 					if(isset($_POST['products']))
 					{
-						$data['products']=serialize($_POST['products']);
+						$reportData['products']=serialize($_POST['products']);
 					}
 				$sample_array=array();
 					if(isset($_POST['sample_id']))
@@ -865,7 +894,7 @@ class WorkPlansController extends AppController
 						foreach($_POST['sample_id'] as $sample_id)
 						$sample_array[$sample_id] = $_POST['sample_qty'][$sample_id];
 						
-						$data['samples']=serialize($sample_array);
+						$reportData['samples']=serialize($sample_array);
 					}
 					$gift_array=array();
 					if(isset($_POST['gift_id']))
@@ -873,18 +902,27 @@ class WorkPlansController extends AppController
 						foreach($_POST['gift_id'] as $gift_id)
 						$gift_array[$gift_id] = $_POST['gift_qty'][$gift_id];
 						
-						$data['gifts']=serialize($gift_array);
+						$reportData['gifts']=serialize($gift_array);
 					}
 					
 					if(isset($_POST['discussion']))
-					$data['discussion']=$_POST['discussion'];
+					$reportData['discussion']=$_POST['discussion'];
 					if(isset($_POST['visit_time']))
-					$data['visit_time']=$_POST['visit_time'];
+					$reportData['visit_time']=$_POST['visit_time'];
 					if(isset($_POST['business']))
-					$data['business']=$_POST['business'];
+					$reportData['business']=$_POST['business'];
 				
-				$workPlan = $this->WorkPlans->patchEntity($workPlan, $data);
+				$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
 				if ($this->WorkPlans->save($workPlan)) {
+					if(isset($reportData['gifts']) && !empty($reportData['gifts']))
+					{
+						$this->saveIssuedGifts($gift_array, $workPlan, "pg");
+					}
+					if(isset($reportData['samples']) && !empty($reportData['samples']))
+					{
+						$this->saveIssuedSamples($sample_array, $workPlan, "pg");
+					}					
+
 					$this->Flash->success(__("The PG & Others Saved to Report Successfull"));
 					return $this->redirect(['controller' => 'Mrs','action' => 'dailyReportField','?' => ['date' => $reportDate]]);
 				}
@@ -990,5 +1028,52 @@ class WorkPlansController extends AppController
 			$this->Flash->error(__('Failed. Please, try again.'));
 			return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
         }
+	}
+	
+	public function saveIssuedSamples($sample_array, $workPlan, $type)
+	{
+		$uid = $this->Auth->user('id');
+		foreach ($sample_array as  $sample => $count)
+		{
+			$haveSample = $this->IssuedSamples->find('all')->where(['plan_id =' => $workPlan->id, 'product_id =' => $sample])->first();
+			if($haveSample)
+			{
+				$issuedSample = $this->IssuedSamples->get($haveSample->id);
+				$issuedSample = $this->IssuedSamples->patchEntity($issuedSample, ['count'=> $count ]);
+			}
+			else
+			{
+				$issuedSample = $this->IssuedSamples->newEntity();
+				$issuedSample = $this->IssuedSamples->patchEntity($issuedSample, ['plan_id' => $workPlan->id, 'product_id' => $sample, 'user_id' => $uid, 'count'=> $count ]);
+				if(is_null($type))
+				$issuedSample['doctor_id'] = $workPlan->doctor_id;
+				else
+				$issuedSample['pgother_id'] = $workPlan->pgother_id;
+			}
+			$this->IssuedSamples->save($issuedSample);
+		}
+	}
+	public function saveIssuedGifts($gift_array, $workPlan, $type)
+	{
+		$uid = $this->Auth->user('id');
+		foreach ($gift_array as  $gift => $count)
+		{
+			$haveGift = $this->IssuedGifts->find('all')->where(['plan_id =' => $workPlan->id, 'gift_id =' => $gift])->first();
+			if($haveGift)
+			{
+				$issuedGift = $this->IssuedGifts->get($haveGift->id);
+				$issuedGift = $this->IssuedGifts->patchEntity($issuedGift, ['count'=> $count ]);
+			}
+			else
+			{
+				$issuedGift = $this->IssuedGifts->newEntity();
+				$issuedGift = $this->IssuedGifts->patchEntity($issuedGift, ['plan_id' => $workPlan->id, 'gift_id' => $gift, 'user_id' => $uid, 'doctor_id'=> $workPlan->doctor_id, 'count'=> $count ]);
+				if(is_null($type))
+				$IssuedGifts['doctor_id'] = $workPlan->doctor_id;
+				else
+				$IssuedGifts['pgother_id'] = $workPlan->pgother_id;
+			}
+			$this->IssuedGifts->save($issuedGift);
+		}
 	}
 }

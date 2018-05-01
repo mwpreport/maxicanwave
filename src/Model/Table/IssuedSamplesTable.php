@@ -48,7 +48,10 @@ class IssuedSamplesTable extends Table
         $this->belongsTo('Doctors', [
             'foreignKey' => 'doctor_id'
         ]);
-        $this->belongsTo('Products', [
+		$this->belongsTo('PgOthers', [
+            'foreignKey' => 'pgother_id'
+        ]);
+        $this->belongsTo('WorkPlans', [
             'foreignKey' => 'plan_id',
             'joinType' => 'INNER'
         ]);
@@ -85,7 +88,8 @@ class IssuedSamplesTable extends Table
         $rules->add($rules->existsIn(['product_id'], 'Products'));
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['doctor_id'], 'Doctors'));
-        $rules->add($rules->existsIn(['plan_id'], 'Products'));
+        $rules->add($rules->existsIn(['pgother_id'], 'PgOthers'));
+        $rules->add($rules->existsIn(['plan_id'], 'WorkPlans'));
 
         return $rules;
     }

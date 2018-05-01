@@ -60,10 +60,10 @@ class AssignedGiftsController extends AppController
         $assignedGift = $this->AssignedGifts->newEntity();
         if ($this->request->is('post')) {
 			$data = $this->request->getData();
-			$haveGift = $this->AssignedGifts->find('all')->where(['user_id =' => $data['user_id'], 'product_id =' => $data['product_id']])->first();
+/* 			$haveGift = $this->AssignedGifts->find('all')->where(['user_id =' => $data['user_id'], 'gift_id =' => $data['gift_id']])->first();
 			if($haveGift)
 			{$assignedGift = $this->AssignedGifts->get($haveGift->id); $data['count'] = $data['count']+$haveGift['count'];}
-            $assignedGift = $this->AssignedGifts->patchEntity($assignedGift, $data);
+ */            $assignedGift = $this->AssignedGifts->patchEntity($assignedGift, $data);
             if ($this->AssignedGifts->save($assignedGift)) {
                 $this->Flash->success(__('The gift has been saved.'));
 

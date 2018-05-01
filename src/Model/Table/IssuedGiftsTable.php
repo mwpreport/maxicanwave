@@ -48,7 +48,10 @@ class IssuedGiftsTable extends Table
         $this->belongsTo('Doctors', [
             'foreignKey' => 'doctor_id'
         ]);
-        $this->belongsTo('Gifts', [
+        $this->belongsTo('PgOthers', [
+            'foreignKey' => 'pgother_id'
+        ]);
+        $this->belongsTo('WorkPlans', [
             'foreignKey' => 'plan_id',
             'joinType' => 'INNER'
         ]);
@@ -85,7 +88,8 @@ class IssuedGiftsTable extends Table
         $rules->add($rules->existsIn(['gift_id'], 'Gifts'));
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['doctor_id'], 'Doctors'));
-        $rules->add($rules->existsIn(['plan_id'], 'Gifts'));
+        $rules->add($rules->existsIn(['pgother_id'], 'PgOthers'));
+        $rules->add($rules->existsIn(['plan_id'], 'WorkPlans'));
 
         return $rules;
     }

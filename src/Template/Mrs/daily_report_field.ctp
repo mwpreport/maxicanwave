@@ -60,8 +60,8 @@
 											$detail_products =array(); $sample_products =array(); $gift_products =array();
 											foreach($products as $product)
 											if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-											foreach($s_products as $s_product)
-											if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+											foreach($samples as $sample)
+											if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
 											foreach($gifts as $gift)
 											if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 											?>
@@ -171,7 +171,7 @@
 							</div>
 							<div class="form-group col-sm-4">
 								<label for="doctor_id">Select Doctor</label>
-								<select name="doctor_id[]" class="form-control required" id="doctor_id" aria-invalid="true">
+								<select name="doctor_id" class="form-control required" id="doctor_id" aria-invalid="true">
 								<option value="">Select Doctors</option>
 									<?php
 									if(count($doctorsRelation)>0)
@@ -201,33 +201,39 @@
 								?>
 								</select>
 							</div>
+							<?php if(count($samples)){?>
 							<div class="form-group col-sm-6">
 								<h4>Samples :</h4>
 								<ul>
 								<?php
-								foreach($s_products as $s_product)
-								{?>
+								foreach($samples as $sample)
+								{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;
+									?>
 									<li>
-									<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$s_product->id?>" value="<?=$s_product->id?>" onclick="productClick(this)"> <?= $s_product->name?></label>
-									<label> <input type="text" name="sample_qty[<?=$s_product->id?>]" class="required" id="sample_qty_<?=$s_product->id?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)"> <?= $sample->name?></label>
+									<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=$bal?>" class="required" id="sample_qty_<?=$sample->id?>" value="" disabled></label>
 									</li>
-								<?php }?>
+								<?php $bal =0;}?>
 								</ul>
 							</div>
+							<?php }?>
+							<?php if(count($gifts)){?>
 							<div class="form-group col-sm-6">
 								<h4>Gifts :</h4>
 								<ul>
 								<?php
 								$gift_array = array();
 								foreach($gifts as $gift)
-								{?>
+								{  $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;
+								?>
 									<li>
 									<label class="col-sm-6"> <input type="checkbox" name="gift_id[]" id="gift_id_<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)"> <?= $gift->name?></label>
-									<label> <input type="text" name="gift_qty[<?=$gift->id?>]" class="required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=$bal?>" class="required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
 									</li>
-								<?php }?>
+								<?php $bal =0;}?>
 								</ul>
 							</div>
+							<?php }?>
 							<div class="form-group col-sm-12">
 								<div class="form-group col-sm-6">
 									<label class="col-sm-6">Discussion</label>
@@ -248,6 +254,38 @@
 
 						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
 						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="UnplannedSubmit" class="btn blue-btn btn-block">Save</button></div>
+						<hr>
+						<div class="col-sm-12 mar-bottom-20">
+						<?php 
+						$html ="";
+						if(count($WorkPlansUD))
+						{
+							$html.='<h3 class="mar-top-10 mar-bottom-10">Un-Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+							$i = 1;
+							foreach ($WorkPlansUD as $WorkPlanUD)
+							{
+								$products_array = array(); $samples_array = array(); $gifts_array = array();
+								if($WorkPlanUD->products!="")
+								$products_array = unserialize($WorkPlanUD->products);
+								if($WorkPlanUD->samples!="")
+								$samples_array = unserialize($WorkPlanUD->samples);
+								if($WorkPlanUD->gifts!="")
+								$gifts_array = unserialize($WorkPlanUD->gifts);
+								$detail_products =array(); $sample_products =array(); $gift_products =array();
+								foreach($products as $product)
+								if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
+								foreach($samples as $sample)
+								if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
+								foreach($gifts as $gift)
+								if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
+								$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$class[$WorkPlanUD->doctor->class].'</td><td>'.$WorkPlanUD->doctor->speciality->code.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanUD->visit_time.'</td><td>'.$WorkPlanUD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanUD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+							$i++;
+							}
+							$html.='</tbody></table>';
+						}
+						if($html!="") echo $html;
+						?>
+						</div>
 					</div>
 				</div>
 				</form>
@@ -279,7 +317,7 @@
 							</div>
 							<div class="form-group col-sm-6">
 								<label for="chemist_id">Select Chemists</label>
-								<select name="chemist_id[]" class="form-control required" id="chemist_id" aria-invalid="true">
+								<select name="chemist_id" class="form-control required" id="chemist_id" aria-invalid="true">
 								<option value="">Select Chemists</option>
 									<?php
 									foreach ($chemists as $chemist)
@@ -291,6 +329,24 @@
 						</div>
 						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
 						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="ChemistSubmit" class="btn blue-btn btn-block">Save</button></div>
+						<hr>
+						<div class="col-sm-12 mar-bottom-20">
+						<?php 
+						$html ="";
+						if(count($WorkPlansC))
+						{
+							$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+							$i = 1;
+							foreach ($WorkPlansC as $WorkPlanC)
+							{
+								$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanC->chemist->name.'</td><td>'.$WorkPlanC->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanC->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+							$i++;
+							}
+							$html.='</tbody></table>';
+						}
+						if($html!="") echo $html;
+						?>
+						</div>
 					</div>
 				</div>
 				</form>
@@ -321,7 +377,7 @@
 							</div>
 							<div class="form-group col-sm-6">
 								<label for="stockit_id">Select Stockists</label>
-								<select name="stockist_id[]" class="form-control required" id="stockist_id" aria-invalid="true">
+								<select name="stockist_id" class="form-control required" id="stockist_id" aria-invalid="true">
 								<option value="">Select Stockists</option>
 									<?php
 									foreach ($stockists as $stockist)
@@ -333,6 +389,24 @@
 						</div>
 						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
 						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="StockistSubmit" class="btn blue-btn btn-block">Save</button></div>
+						<hr>
+						<div class="col-sm-12 mar-bottom-20">
+						<?php 
+						$html ="";
+						if(count($WorkPlansS))
+						{
+							$html.='<h3 class="mar-top-10 mar-bottom-10">Stockists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+							$i = 1;
+							foreach ($WorkPlansS as $WorkPlanS)
+							{
+								$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanS->stockist->name.'</td><td>'.$WorkPlanS->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanS->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+							$i++;
+							}
+							$html.='</tbody></table>';
+						}
+						if($html!="") echo $html;
+						?>
+						</div>
 					</div>
 				</div>
 				</form>
@@ -393,33 +467,38 @@
 								</select>
 							</div>
 						<div class="col-sm-12 mar-bottom-20">
+							<?php if(count($samples)){?>
 							<div class="form-group col-sm-6">
 								<h4>Samples :</h4>
 								<ul>
 								<?php
-								foreach($s_products as $s_product)
-								{?>
+								foreach($samples as $sample)
+								{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;
+									?>
 									<li>
-									<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$s_product->id?>" value="<?=$s_product->id?>" onclick="productClick(this)"> <?= $s_product->name?></label>
-									<label> <input type="text" name="sample_qty[<?=$s_product->id?>]" class="required" id="sample_qty_<?=$s_product->id?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)"> <?= $sample->name?></label>
+									<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=$bal?>" class="required" id="sample_qty_<?=$sample->id?>" value="" disabled></label>
 									</li>
-								<?php }?>
+								<?php $bal =0;}?>
 								</ul>
 							</div>
+							<?php }?>
+							<?php if(count($gifts)){?>
 							<div class="form-group col-sm-6">
 								<h4>Gifts :</h4>
 								<ul>
 								<?php
-								$gift_array = array();
 								foreach($gifts as $gift)
-								{?>
+								{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;
+									?>
 									<li>
 									<label class="col-sm-6"> <input type="checkbox" name="gift_id[]" id="gift_id_<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)"> <?= $gift->name?></label>
-									<label> <input type="text" name="gift_qty[<?=$gift->id?>]" class="required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=$bal?>" class="required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
 									</li>
-								<?php }?>
+								<?php $bal =0;}?>
 								</ul>
 							</div>
+							<?php }?>
 							<div class="form-group col-sm-12">
 								<div class="form-group col-sm-6">
 									<label class="col-sm-6">Discussion</label>
@@ -439,6 +518,39 @@
 						</div>
 						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
 						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="PGOSubmit" class="btn blue-btn btn-block">Save</button></div>
+						<hr>
+						<div class="col-sm-12 mar-bottom-20">
+						<?php 
+						$html ="";
+						if(count($WorkPlansPD))
+						{
+							$html.='<h3 class="mar-top-10 mar-bottom-10">Unlisted Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Spec</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+							$i = 1;
+							foreach ($WorkPlansPD as $WorkPlanPD)
+							{
+								
+								$products_array = array(); $samples_array = array(); $gifts_array = array();
+								if($WorkPlanPD->products!="")
+								$products_array = unserialize($WorkPlanPD->products);
+								if($WorkPlanPD->samples!="")
+								$samples_array = unserialize($WorkPlanPD->samples);
+								if($WorkPlanPD->gifts!="")
+								$gifts_array = unserialize($WorkPlanPD->gifts);
+								$detail_products =array(); $sample_products =array(); $gift_products =array();
+								foreach($products as $product)
+								if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
+								foreach($samples as $sample)
+								if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
+								foreach($gifts as $gift)
+								if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
+								$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->pg_other->speciality->code.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+							$i++;
+							}
+							$html.='</tbody></table>';
+						}
+						if($html!="") echo $html;
+						?>
+						</div>
 					</div>
 				</div>
 				</form>
@@ -527,6 +639,7 @@
 								</div>
 							</div>
 							<div class="col-sm-12 mar-bottom-20">
+								<?php if(count($samples)){?>
 								<div class="form-group col-sm-6">
 									<h4>Samples :</h4>
 									<ul>
@@ -534,23 +647,26 @@
 									$samples_array = array();
 									if($WorkPlanD->samples!="")
 									$samples_array = unserialize($WorkPlanD->samples);
-									foreach($s_products as $s_product)
-									{?>
+									foreach($samples as $sample)
+									{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;
+									?>
 										<li>
 											<?php
-											if (array_key_exists($s_product->id, $samples_array)){
-											$sample_product_id[$s_product->id]= $s_product->name;
+											if (array_key_exists($sample->id, $samples_array)){
+											$sample_product_id[$sample->id]= $sample->name;
 											?>
-											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$s_product->id?>" value="<?=$s_product->id?>" onclick="productClick(this)" checked> <?= $s_product->name?></label>
-											<label> <input type="text" name="sample_qty[<?=$s_product->id?>]" class="qty_txt required" id="sample_qty_<?=$s_product->id?>" value="<?=$samples_array[$s_product->id]?>"></label>
+											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)" checked> <?= $sample->name?></label>
+											<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=($bal+$samples_array[$sample->id])?>" class="qty_txt required" id="sample_qty_<?=$sample->id?>" value="<?=$samples_array[$sample->id]?>"></label>
 											<?php }else { ?>
-											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$s_product->id?>" value="<?=$s_product->id?>" onclick="productClick(this)"> <?= $s_product->name?></label>
-											<label> <input type="text" name="sample_qty[<?=$s_product->id?>]" class="qty_txt required" id="sample_qty_<?=$s_product->id?>" value="" disabled></label>
+											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)"> <?= $sample->name?></label>
+											<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=$bal?>" class="qty_txt required" id="sample_qty_<?=$sample->id?>" value="" disabled></label>
 											<?php }?>
 										</li>
-									<?php }?>
+									<?php $bal =0;}?>
 									</ul>
 								</div>
+								<?php }?>
+								<?php if(count($gifts)){?>
 								<div class="form-group col-sm-6">
 									<h4>Gifts :</h4>
 									<ul>
@@ -559,22 +675,24 @@
 									if($WorkPlanD->gifts!="")
 									$gifts_array = unserialize($WorkPlanD->gifts);
 									foreach($gifts as $gift)
-									{?>
+									{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;
+									?>
 										<li>
 											<?php
 											if (array_key_exists($gift->id, $gifts_array)){
 											$sample_product_id[$gift->id]= $gift->name;
 											?>
 											<label class="col-sm-6"> <input type="checkbox"  name="gift_id[]" class="gifts_<?=$WorkPlanD->id?>" id="gift_id<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)" checked> <?= $gift->name?></label>
-											<label> <input type="text" name="gift_qty[<?=$gift->id?>]" class="qty_txt required" id="gift_qty_<?=$gift->id?>" value="<?=$gifts_array[$gift->id]?>"></label>
+											<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=($bal+$gifts_array[$gift->id])?>" class="qty_txt required" id="gift_qty_<?=$gift->id?>" value="<?=$gifts_array[$gift->id]?>"></label>
 											<?php }else { ?>
 											<label class="col-sm-6"> <input type="checkbox"  name="gift_id[]" class="gifts_<?=$WorkPlanD->id?>" id="gift_id<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)"> <?= $gift->name?></label>
-											<label> <input type="text" name="gift_qty[<?=$gift->id?>]" class="qty_txt required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
-											<?php }?>
+											<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=$bal?>" class="qty_txt required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
+											<?php $bal =0;}?>
 										</li>
 									<?php }?>
 									</ul>
 								</div>
+								<?php }?>
 								<div class="form-group col-sm-12">
 									<div class="form-group col-sm-6">
 										<label class="col-sm-6">Discussion</label>

@@ -33,8 +33,8 @@
 					$detail_products =array(); $sample_products =array(); $gift_products =array();
 					foreach($products as $product)
 					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					foreach($s_products as $s_product)
-					if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+					foreach($samples as $sample)
+					if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
 					foreach($gifts as $gift)
 					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$class[$WorkPlanD->doctor->class].'</td><td>'.$WorkPlanD->doctor->speciality->code.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanD->visit_time.'</td><td>'.$WorkPlanD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
@@ -59,8 +59,8 @@
 					$detail_products =array(); $sample_products =array(); $gift_products =array();
 					foreach($products as $product)
 					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					foreach($s_products as $s_product)
-					if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+					foreach($samples as $sample)
+					if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
 					foreach($gifts as $gift)
 					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$class[$WorkPlanUD->doctor->class].'</td><td>'.$WorkPlanUD->doctor->speciality->code.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanUD->visit_time.'</td><td>'.$WorkPlanUD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanUD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
@@ -86,8 +86,8 @@
 					$detail_products =array(); $sample_products =array(); $gift_products =array();
 					foreach($products as $product)
 					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					foreach($s_products as $s_product)
-					if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+					foreach($samples as $sample)
+					if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
 					foreach($gifts as $gift)
 					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->pg_other->speciality->code.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
@@ -158,6 +158,7 @@
     </div>
     <!-- /.content -->
 </div>
+
 <script>
 	function doDelete(eventID){  // delete event 
 		if (confirm("Are you sure on deleting this?"))

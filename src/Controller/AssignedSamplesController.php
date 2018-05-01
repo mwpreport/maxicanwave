@@ -60,9 +60,6 @@ class AssignedSamplesController extends AppController
         $assignedSample = $this->AssignedSamples->newEntity();
         if ($this->request->is('post')) {
 			$data = $this->request->getData();
-			$haveSample = $this->AssignedSamples->find('all')->where(['user_id =' => $data['user_id'], 'product_id =' => $data['product_id']])->first();
-			if($haveSample)
-			{$assignedSample = $this->AssignedSamples->get($haveSample->id); $data['count'] = $data['count']+$haveSample['count'];}
             $assignedSample = $this->AssignedSamples->patchEntity($assignedSample, $data);
             if ($this->AssignedSamples->save($assignedSample)) {
                 $this->Flash->success(__('The assigned sample has been saved.'));

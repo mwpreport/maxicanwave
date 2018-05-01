@@ -36,8 +36,8 @@
 					$detail_products =array(); $sample_products =array(); $gift_products =array();
 					foreach($products as $product)
 					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					foreach($s_products as $s_product)
-					if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+					foreach($samples as $sample)
+					if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
 					foreach($gifts as $gift)
 					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 
@@ -64,8 +64,8 @@
 					$detail_products =array(); $sample_products =array(); $gift_products =array();
 					foreach($products as $product)
 					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					foreach($s_products as $s_product)
-					if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+					foreach($samples as $sample)
+					if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
 					foreach($gifts as $gift)
 					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->id.'"></td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$class[$WorkPlanUD->doctor->class].'</td><td>'.$WorkPlanUD->doctor->speciality->code.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td><input class="required" name="visit_time['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanUD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
@@ -91,8 +91,8 @@
 					$detail_products =array(); $sample_products =array(); $gift_products =array();
 					foreach($products as $product)
 					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					foreach($s_products as $s_product)
-					if (array_key_exists($s_product->id, $samples_array)) $sample_products[]= $s_product->name;
+					foreach($samples as $sample)
+					if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
 					foreach($gifts as $gift)
 					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->id.'"></td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->pg_other->speciality->code.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td><input class="required" name="visit_time['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->business.'"></td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';

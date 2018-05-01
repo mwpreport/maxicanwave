@@ -687,7 +687,7 @@ input[type="checkbox"]:disabled + label span {
 }
 
 /*flash and error messages*/
-label.error{font-weight:normal; color:#dd4b39; font-size:13px;}
+label.error{font-weight:normal; color:#dd4b39; font-size:12px;}
 /*label.error:before {
     content: "\e014";
     display: inline-block;
@@ -724,7 +724,7 @@ tr.reported.unplanned td:first-child {background: #3CB371;}
 .doctor_product select[multiple]{width:50%;}
 .table.text-align-left td, .table.text-align-left th{text-align:left}
 .table.text-align-left th{padding-left: 20px;}
-
+.qty_txt {}
 @media (max-width: 767px) {
     .loginpage .login-left{
         display: none;
