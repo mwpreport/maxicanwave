@@ -72,6 +72,9 @@ class MrsController extends AppController {
     }
 	
     public function planReport(){
+		if(!isset($_POST['plan_report_type']))
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'monthlyplan']);
+		
         $this->set('title', 'Doctor Wise Plans');
         $uid = $this->Auth->user('id');
         $userCity = $this->Auth->user('city_id');
@@ -91,14 +94,24 @@ class MrsController extends AppController {
 		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported <>' => '1', 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => '1'])
 		->where(['WorkPlans.start_date >=' => $start_date])
 		->andWhere(['WorkPlans.start_date <=' => $end_date])
-		->group('WorkPlans.doctor_id')
-		->toArray();
-        //pj($WorkPlansD);
-		$this->set(compact('userCity', 'cities', 'specialities', 'class', 'WorkPlansD', 'month'));        
+		->group('WorkPlans.doctor_id')->toArray();
+		foreach($WorkPlansD as $WorkPlan) $visits[$WorkPlan->doctor_id] = $this->getVisits($WorkPlan->doctor_id,$uid,$start_date,$end_date);
+        //pj($visits);
+		$this->set(compact('userCity', 'cities', 'specialities', 'class', 'visits', 'WorkPlansD', 'month'));        
 
 		
     }      
 
+    public function getVisits($doctor_id,$uid,$start_date,$end_date){
+		$WorkPlansD = $this->WorkPlans->find('all')
+		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	
+		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported <>' => '1', 'WorkPlans.doctor_id =' => $doctor_id, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => '1'])
+		->where(['WorkPlans.start_date >=' => $start_date])
+		->andWhere(['WorkPlans.start_date <=' => $end_date])->toArray();
+		$visits = array_map(function($d) { return date("d", strtotime($d->start_date)); }, $WorkPlansD);
+		return (implode("/",$visits));
+	}
+	
     public function doctorSelection(){
         $this->set('title', 'Doctor Visit Report');        
     }      

@@ -142,7 +142,7 @@
 									</script>
 									<?php }?>
 								</div>
-								<div class="col-md-12 mar-bottom-20">
+								<div class="col-md-12 mar-bottom-10">
 								<hr />
 									<form class="workplanForm" id="<?php echo $workType->id?>AddForm" method="POST" >
 										<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
@@ -172,6 +172,9 @@
 											</div>
 										</div>
 									</form>
+								</div>
+								<div class="col-md-12 hide" id="success_plan" >
+									<a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>" > Click </a> 
 								</div>
 							</div>
 							<script>
@@ -309,31 +312,6 @@
 		$.magnificPopup.close();
 	});
 	
-	$("#UnplannedAddForm").validate({
-		ignore: ":hidden",
-		submitHandler: function (form) {
-			doSubmit("#UnplannedAddForm")
-			return false; // required to block normal submit since you used ajax
-		}
-	});
-	$("#ChemistAddForm").validate({
-		ignore: ":hidden",
-		submitHandler: function (form) {
-			doSubmit("#ChemistAddForm")
-			return false; // required to block normal submit since you used ajax
-		}
-	});
-	$("#StockistAddForm").validate({
-		ignore: ":hidden",
-		submitHandler: function (form) {
-			doSubmit("#StockistAddForm")
-			return false; // required to block normal submit since you used ajax
-		}
-	});
-	$("#DoctorsMissedForm").validate({
-		ignore: ":hidden"
-		
-	});
 	$("#LeaveAddForm").validate({
 		ignore: ":hidden",
 		submitHandler: function (form) {
@@ -350,21 +328,6 @@
 		}
 	});
 	
-	$("#w2SubmitMissed").click(function(){
-		$('#DoctorsMissedForm')[0].reset();
-		if ($('input[type="checkbox"].workplan_id').is(':checked'))
-		{
-			var yourArray = [];
-			$('input[type="checkbox"].workplan_id:checked').each(function(){
-				$('#missed_'+$(this).val()).show();
-				$('#m_workplan_id_'+$(this).val()).prop('checked', true);
-			});
-			$('#DoctorsMissedLink').click();
-		}
-		else{
-			alert("Please check a Doctor");
-		}
-	});
 	
 	$("input[id^='m_cancel_plan_']").click(function(){
 		if ($(this).is(':checked'))
@@ -396,70 +359,7 @@
 		$(elem).closest("form").find("input:checkbox").prop('checked', false);
 	}
 	
-	function productClick(elem){
-		var id=$(elem).val();
-		if($(elem).prop("checked") == true)
-		$(elem).closest("form").find('#product_qty_'+id).prop('disabled', false);
-		else
-		{
-		$(elem).closest("form").find('#product_qty_'+id+"-error").addClass("hide");
-		$(elem).closest("form").find('#product_qty_'+id).val('');
-		$(elem).closest("form").find('#product_qty_'+id).prop('disabled', true);
-		}
-	}
 	
-	function productShow(id){
-		var str = ""; var i=0;
-		$('input[type="checkbox"].products_'+id+':checked').each(function () {
-		if(i>0) str += ", ";
-		str += $(this).val();
-		i++;
-		});
-		if(str != "")
-		{$("#pdt_link_"+id).html(str);$("#pdt_val_"+id).val($("#products_"+id).val());}
-		else
-		{$("#pdt_link_"+id).html("Select Products");}
-	}
-
-	function loadDoctors(id){
-		var city_id = $('#'+id+' #city_id').val();
-		var start_date = $('#'+id+' #start_date').val();
-		$.ajax({
-			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetDoctors"])?>',
-			   data: "city_id="+city_id+"&start_date="+start_date,
-			   type: "POST",
-			   success: function(json) {
-				   $('#doctor_id').html(json);
-			   }
-		});
-	}
-
-	function loadChemists(id){
-		var city_id = $('#'+id+' #city_id').val();
-		var start_date = $('#'+id+' #start_date').val();
-		$.ajax({
-			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetChemists"])?>',
-			   data: "city_id="+city_id+"&start_date="+start_date,
-			   type: "POST",
-			   success: function(json) {
-				   $('#chemist_id').html(json);
-			   }
-		});
-	}
-
-	function loadStockists(id){
-		var city_id = $('#'+id+' #city_id').val();
-		var start_date = $('#'+id+' #start_date').val();
-		$.ajax({
-			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetStockists"])?>',
-			   data: "city_id="+city_id+"&start_date="+start_date,
-			   type: "POST",
-			   success: function(json) {
-				   $('#stockist_id').html(json);
-			   }
-		});
-	}
-
 	function doSubmit(form){ // add event
 	   $.ajax({
 		   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAddReport"])?>',
@@ -469,8 +369,8 @@
 		   success: function(json) {
 			   if(json.status == 1)
 			   {	
-					window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date=<?php echo $reportDate;?>");			   
-					$.magnificPopup.close();
+					//window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+					$("#success_plan").removeClass('hide');
 			   }
 			   else
 			   {

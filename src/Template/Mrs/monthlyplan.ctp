@@ -62,20 +62,20 @@
                         <div class="content">
                             <div class="monthly-reports white-wrapper">
                                 <div class="daily-report-radio-cnt">
-                                    <form>
+                                    <form action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planReport"])?>" method="post">
                                         <ul>
                                             <li class="col-md-12"><h3 class="mar-top-20 mar-bottom-20">Reports (Plan Summary)</h3></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="doctor-wise-plan" value="doctor-wise-plan" checked="checked"><label for="doctor-wise-plan"><span></span>Doctor Wise Plan</label></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="svl-doctor" value="svl-doctor" checked="checked"><label for="svl-doctor"><span></span>SVL Doctor</label></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="speciality" value="speciality" checked="checked"><label for="speciality"><span></span>Speciality</label></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="entire-doctor-list" value="entire-doctor-list" checked="checked"><label for="entire-doctor-list"><span></span>Entire Doctor List Plan</label></li>
+                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="doctor-wise-plan" value="Doctor Wise Plan" checked="checked"><label for="doctor-wise-plan"><span></span>Doctor Wise Plan</label></li>
+                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="svl-doctor" value="SVL Doctor" ><label for="svl-doctor"><span></span>SVL Doctor</label></li>
+                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="speciality" value="Speciality" ><label for="speciality"><span></span>Speciality</label></li>
+                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="entire-doctor-list" value="Entire Doctor List Plan" ><label for="entire-doctor-list"><span></span>Entire Doctor List Plan</label></li>
                                         </ul>
-                                    </form>
-                                    <div class="clearfix"></div>
-                                    <div class="col-sm-12 mar-top-20">
-                                    <a href="javascript:void(0)"  onclick="getRadioValue()"  class="common-btn blue-btn btn-125">Submit</a>
-                                    </div>
-                                </div>
+										<div class="clearfix"></div>
+										<div class="col-sm-12 mar-top-20">
+										<button type="submit" class="common-btn blue-btn btn-125">Submit</button>
+										</div>
+                                     </form>
+                               </div>
                             </div>
                         </div>
                     </section>

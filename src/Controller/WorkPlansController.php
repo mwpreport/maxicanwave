@@ -836,6 +836,7 @@ class WorkPlansController extends AppController
 			{
 				$reportData = $data;
 				$success_msg = "Report Saved Successfull";
+				$noflash=true;
 			}
 				
 			$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
@@ -849,7 +850,7 @@ class WorkPlansController extends AppController
 						$this->saveIssuedSamples($sample_array, $workPlan, null);
 					}					
 
-				$this->Flash->success(__($success_msg));
+				if(!$noflash) $this->Flash->success(__($success_msg));
 				echo json_encode(array("status"=>1,"msg"=>$success_msg)); exit;
 			}
 			else

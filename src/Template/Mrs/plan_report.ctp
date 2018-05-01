@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div>
-                            <form>
+                            <!--<form>
                                 <div class="form-group mar-bottom-40">
                                     <div class="col-sm-12">
                                         <div class="radio-blk">
@@ -67,7 +67,7 @@
                                         <a href="" class="common-btn blue-btn btn-125">Submit</a>
                                     </div>
                                 </div>
-                            </form>
+                            </form>-->
                         </div>
                     </section>
                    
@@ -103,8 +103,8 @@
 											<td><?=$class[$WorkPlanD->doctor->class]?></td>
 											<td><?=$WorkPlanD->doctor->speciality->code?></td>
 											<td><?=$WorkPlanD->city->city_name?></td>
-											<td></td>
-											<td></td>
+											<td><?=$visits[$WorkPlanD->doctor_id]?></td>
+											<td><?=count(explode("/",$visits[$WorkPlanD->doctor_id]))?></td>
 											</tr>
 										<?php $i++;}?>
                                             </tbody>
