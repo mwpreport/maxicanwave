@@ -174,7 +174,10 @@
 									</form>
 								</div>
 								<div class="col-md-12 hide" id="success_plan" >
-									<a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>" > Click </a> 
+								<p class="message">
+									<span class="message success" id="success_msg"></span>
+									Have you done any field work on this date? Is yes <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>" > Click here </a> or Click on <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" >Final Submit</a> and proceed to next date. 
+								</p>
 								</div>
 							</div>
 							<script>
@@ -370,6 +373,7 @@
 			   if(json.status == 1)
 			   {	
 					//window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+					$("#success_msg").html(json.msg+"<br>");
 					$("#success_plan").removeClass('hide');
 			   }
 			   else

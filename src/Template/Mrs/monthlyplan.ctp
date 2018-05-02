@@ -870,24 +870,3 @@
 		}
 
         </script>
-        <script>
-        function getRadioValue() {
-            var selectedOption = $("input:radio[name=plan_report_type]:checked").val();
-			var url = '<?php echo $this->Url->build(["controller" => "Mrs","action" => "planReport"])?>';
-            if(selectedOption){
-                if(selectedOption == 'doctor-wise-plan'){
-                    window.location.href = url;
-                }else if(selectedOption == 'svl-doctor'){
-                    window.location.href = url;
-                }else if(selectedOption == 'speciality'){
-                    window.location.href = url;
-                }else if(selectedOption == 'entire-doctor-list'){
-                    window.location.href = url;
-                }
-            }else{
-                alert('Please select the radio');
-            }
-            
- 
-        }
-    </script>
