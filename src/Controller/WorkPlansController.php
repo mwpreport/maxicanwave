@@ -769,6 +769,7 @@ class WorkPlansController extends AppController
         $this->viewBuilder()->layout(false);
 		$uid = $this->Auth->user('id');
 		$workPlan = $this->WorkPlans->newEntity();
+		$noflash=false;
         if ($this->request->is('post')) {
 			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'city_id' => $_POST['city_id']);
 			$data['start_date'] = $_POST['start_date']." 00:00:00";
