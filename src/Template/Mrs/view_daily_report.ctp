@@ -7,8 +7,8 @@
             <div class="white-wrapper">
                 <div class="col-md-12">
                     <div class="hr-title">
-						<?php $reportDate = ""; if($date!="") $reportDate = date("Y-m-d", strtotime($date));?>
-                        <h2>Daily Report of <?= $reportDate?></h2>
+						<?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
+                        <h2>Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?></h2>
                         <hr>
                     </div>
                 </div>

@@ -7,7 +7,8 @@
             <div class="white-wrapper">
                 <div class="col-md-12">
                     <div class="hr-title">
-                        <h2>Daily Report</h2>
+						<?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
+                        <h2>Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?></h2>
                         <hr>
                     </div>
                 </div>
@@ -16,7 +17,6 @@
                 <div class="daily-report-radio-cnt">
 						<div class="col-md-12 mar-bottom-20">
 							<div class="row">
-							<?php $reportDate = ""; if($date!="") $reportDate = date("Y-m-d", strtotime($date));?>
 							<form action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" method="post" >
 								<div class="form-group">
 									<div class="col-sm-6">
@@ -113,7 +113,8 @@
 											<hr>
 											<div class="form-group  mar-top-10">
 												<div class="col-sm-3">
-													<a  href="#UnplannedAdd" class="popup-modal common-btn blue-btn pull-left"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unplanned Doctors</a>
+													<!--<a  href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "UnplannedDoctors",'?' => ['date' => $reportDate]])?>" class="common-btn blue-btn pull-left"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unplanned Doctors</a>-->
+													<a href="#UnplannedAdd" class="popup-modal common-btn blue-btn pull-left"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unplanned Doctors</a>
 												</div>
 												<div class="col-sm-3">
 													<a  href="#ChemistAdd" class="popup-modal common-btn blue-btn pull-left"><i class="fa fa-plus-circle" aria-hidden="true"></i> Chemists</a>
@@ -980,5 +981,4 @@
 <?= $this->fetch('script') ?>
 <script type="text/javascript">
 $('.multiselect-ui').multiselect({ });
-
 </script>

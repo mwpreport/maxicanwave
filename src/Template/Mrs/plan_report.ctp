@@ -100,8 +100,8 @@
 											<td><?=$i?></td>
 											<td><?=$WorkPlanD->doctor->code?></td>
 											<td><?=$WorkPlanD->doctor->name?></td>
-											<td><?=$class[$WorkPlanD->doctor->class]?></td>
 											<td><?=$WorkPlanD->doctor->speciality->code?></td>
+											<td><?=$class[$WorkPlanD->doctor->class]?></td>
 											<td><?=$WorkPlanD->city->city_name?></td>
 											<td><?=$visits[$WorkPlanD->doctor_id]?></td>
 											<td><?=count(explode("/",$visits[$WorkPlanD->doctor_id]))?></td>

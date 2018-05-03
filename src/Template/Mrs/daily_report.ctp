@@ -7,7 +7,8 @@
             <div class="white-wrapper">
                 <div class="col-md-12">
                     <div class="hr-title">
-                        <h2>Daily Report</h2>
+                        <?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
+                        <h2>Daily Report of <?= ($date!="")? "of ".date("Y-m-d (l)", strtotime($date)):"" ?></h2>
                         <hr>
                     </div>
                 </div>
@@ -32,8 +33,8 @@
 									</div>
 									<!-- /.input group -->
 								</div>
+							</form>
 							</div>
-						</form>
 						</div>
 						<?php if($date!=""){
 						if($workPlanSubmit)
@@ -162,7 +163,7 @@
 														</select>  
 													</div>
 													<div class="col-md-3 col-sm-3 col-xs-3"><label>&nbsp;</label>
-														<button type="submit" class="common-btn blue-btn btn-block margin-right-35"><i class="fa fa-plus-circle" aria-hidden="true"></i> <?php echo $workType->name?></button>
+														<button type="submit" class="common-btn blue-btn btn-block margin-right-35">Submit</button>
 													</div>
 													<div class="col-md-3 col-sm-3 col-xs-3"><label>&nbsp;</label>
 														<a class="common-btn blue-btn margin-right-35 pull-right" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" target="blank"><b>View Reported Calls</b></a>
@@ -257,7 +258,7 @@
 													</div>
 													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
 														<label>&nbsp;</label>
-														<button type="submit" class="common-btn blue-btn btn-block margin-right-35"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Leave</button>
+														<button type="submit" class="common-btn blue-btn btn-block margin-right-35">Submit</button>
 													</div>
 												</div>
 												<!-- /.input group -->
