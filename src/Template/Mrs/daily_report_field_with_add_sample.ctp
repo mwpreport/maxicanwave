@@ -206,12 +206,9 @@
 							<div class="form-group col-sm-6">
 								<h4>Samples :</h4>
 								<ul id="ud_samples">
-								<?php 
-								$sample_limit = (count($samples)<3)? count($samples) : 3;
-								for($i=0; $i< $sample_limit; $i++){ ?>
 									<li>
 									<label class="col-sm-6">
-										<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('ud_samples','<?=$i?>')">
+										<select name="sample_id[]" id="sample_id_1" class="sample_id" onchange="productClick(this,1)">
 										<option value="">Select</option>
 										<?php
 										$bal =0;
@@ -221,22 +218,19 @@
 										<?php }?>
 										</select>
 									</label>
-									<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="required" id="sample_qty_<?=$i?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="required" id="sample_qty_1" value="" disabled></label>
 									</li>
-								<?php }?>
 								</ul>
+								<a href="javascript:void(0)" id="addSample" onclick="addSample('ud_samples')" >Add Sample</a>
 							</div>
 							<?php }?>
 							<?php if(count($gifts)){?>
 							<div class="form-group col-sm-6">
 								<h4>Gifts :</h4>
 								<ul id="ud_gifts">
-								<?php
-								$gift_limit = (count($gifts)<3)? count($gifts) : 3;
-								for($i=0; $i< $gift_limit; $i++){ ?>
 									<li>
 									<label class="col-sm-6">
-										<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('ud_gifts','<?=$i?>')">
+										<select name="gift_id[]" id="gift_id_1" class="gift_id" onchange="giftClick(this,1)">
 										<option value="">Select</option>
 										<?php
 										$bal =0;
@@ -246,10 +240,10 @@
 										<?php }?>
 										</select>
 									</label>
-									<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="required" id="gift_qty_<?=$i?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="required" id="gift_qty_1" value="" disabled></label>
 									</li>
-								<?php }?>
 								</ul>
+								<a href="javascript:void(0)" id="addGift" onclick="addGift('ud_gifts')" >Add Sample</a>
 							</div>
 							<?php }?>
 							<div class="form-group col-sm-12">
@@ -488,50 +482,32 @@
 							<?php if(count($samples)){?>
 							<div class="form-group col-sm-6">
 								<h4>Samples :</h4>
-								<ul id="pd_samples">
-								<?php 
-								$sample_limit = (count($samples)<3)? count($samples) : 3;
-								for($i=0; $i< $sample_limit; $i++){ ?>
+								<ul>
+								<?php
+								foreach($samples as $sample)
+								{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;
+									?>
 									<li>
-									<label class="col-sm-6">
-										<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('pd_samples','<?=$i?>')">
-										<option value="">Select</option>
-										<?php
-										$bal =0;
-										foreach($samples as $sample)
-										{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;?>
-										<option value="<?=$sample->id?>" data-bal="<?=$bal?>"><?=$sample->name?></option>
-										<?php }?>
-										</select>
-									</label>
-									<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="required" id="sample_qty_<?=$i?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)"> <?= $sample->name?></label>
+									<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=$bal?>" class="required" id="sample_qty_<?=$sample->id?>" value="" disabled></label>
 									</li>
-								<?php }?>
+								<?php $bal =0;}?>
 								</ul>
 							</div>
 							<?php }?>
 							<?php if(count($gifts)){?>
 							<div class="form-group col-sm-6">
 								<h4>Gifts :</h4>
-								<ul id="pd_gifts">
+								<ul>
 								<?php
-								$gift_limit = (count($gifts)<3)? count($gifts) : 3;
-								for($i=0; $i< $gift_limit; $i++){ ?>
+								foreach($gifts as $gift)
+								{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;
+									?>
 									<li>
-									<label class="col-sm-6">
-										<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('pd_gifts','<?=$i?>')">
-										<option value="">Select</option>
-										<?php
-										$bal =0;
-										foreach($gifts as $gift)
-										{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;?>
-										<option value="<?=$gift->id?>" data-bal="<?=$bal?>"><?=$gift->name?></option>
-										<?php }?>
-										</select>
-									</label>
-									<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="required" id="gift_qty_<?=$i?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="checkbox" name="gift_id[]" id="gift_id_<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)"> <?= $gift->name?></label>
+									<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=$bal?>" class="required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
 									</li>
-								<?php }?>
+								<?php $bal =0;}?>
 								</ul>
 							</div>
 							<?php }?>
@@ -678,62 +654,52 @@
 								<?php if(count($samples)){?>
 								<div class="form-group col-sm-6">
 									<h4>Samples :</h4>
-									<ul id="d_samples">
-									<?php 
+									<ul>
+									<?php
 									$samples_array = array();
 									if($WorkPlanD->samples!="")
 									$samples_array = unserialize($WorkPlanD->samples);
-									$sample_limit = (count($samples)<3)? count($samples) : 3;
-									for($i=0; $i< $sample_limit; $i++){ ?>
+									foreach($samples as $sample)
+									{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;
+									?>
 										<li>
-										<label class="col-sm-6">
-											<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('d_samples','<?=$i?>')">
-											<option value="">Select</option>
 											<?php
-											$bal =0; $sample_id = ""; $sample_qty = "";
-											foreach($samples as $sample)
-											{ 
-												$bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;
-												$exists = false;
-												if(empty($sample_id) && array_key_exists($sample->id, $samples_array)) {$exists=true; $sample_id = $sample->id; $sample_qty = $samples_array[$sample->id];}
+											if (array_key_exists($sample->id, $samples_array)){
+											$sample_product_id[$sample->id]= $sample->name;
 											?>
-											<option value="<?=$sample->id?>" <?=($exists)?"selected":""?> data-bal="<?=($exists)?($bal+$samples_array[$sample->id]):$bal?>"><?=$sample->name?></option>
-											<?php if($exists) unset($samples_array[$sample_id]);}?>
-											</select>
-										</label>
-										<label class="col-sm-6"> <input type="text" name="sample_qty[]" class="required" id="sample_qty_<?=$i?>" max="" value="<?=(!empty($sample_qty))?$sample_qty:""?>" <?=(empty($sample_qty))?"disabled":""?>></label>
+											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)" checked> <?= $sample->name?></label>
+											<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=($bal+$samples_array[$sample->id])?>" class="qty_txt required" id="sample_qty_<?=$sample->id?>" value="<?=$samples_array[$sample->id]?>"></label>
+											<?php }else { ?>
+											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanD->id?>" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)"> <?= $sample->name?></label>
+											<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=$bal?>" class="qty_txt required" id="sample_qty_<?=$sample->id?>" value="" disabled></label>
+											<?php }?>
 										</li>
-									<?php }?>
+									<?php $bal =0;}?>
 									</ul>
 								</div>
 								<?php }?>
 								<?php if(count($gifts)){?>
 								<div class="form-group col-sm-6">
 									<h4>Gifts :</h4>
-									<ul id="d_gifts">
-									<?php 
+									<ul>
+									<?php
 									$gifts_array = array();
 									if($WorkPlanD->gifts!="")
 									$gifts_array = unserialize($WorkPlanD->gifts);
-									$gift_limit = (count($gifts)<3)? count($gifts) : 3;
-									for($i=0; $i< $gift_limit; $i++){ ?>
+									foreach($gifts as $gift)
+									{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;
+									?>
 										<li>
-										<label class="col-sm-6">
-											<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('d_gifts','<?=$i?>')">
-											<option value="">Select</option>
 											<?php
-											$bal =0; $gift_id = ""; $gift_qty = "";
-											foreach($gifts as $gift)
-											{ 
-												$bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;
-												$exists = false;
-												if(empty($gift_id) && array_key_exists($gift->id, $gifts_array)) {$exists=true; $gift_id = $gift->id; $gift_qty = $gifts_array[$gift->id];}
+											if (array_key_exists($gift->id, $gifts_array)){
+											$sample_product_id[$gift->id]= $gift->name;
 											?>
-											<option value="<?=$gift->id?>" <?=($exists)?"selected":""?> data-bal="<?=($exists)?($bal+$gifts_array[$gift->id]):$bal?>"><?=$gift->name?></option>
-											<?php if($exists) unset($gifts_array[$gift_id]);}?>
-											</select>
-										</label>
-										<label class="col-sm-6"> <input type="text" name="gift_qty[]" class="required" id="gift_qty_<?=$i?>" max="" value="<?=(!empty($gift_qty))?$gift_qty:""?>" <?=(empty($gift_qty))?"disabled":""?>></label>
+											<label class="col-sm-6"> <input type="checkbox"  name="gift_id[]" class="gifts_<?=$WorkPlanD->id?>" id="gift_id<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)" checked> <?= $gift->name?></label>
+											<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=($bal+$gifts_array[$gift->id])?>" class="qty_txt required" id="gift_qty_<?=$gift->id?>" value="<?=$gifts_array[$gift->id]?>"></label>
+											<?php }else { ?>
+											<label class="col-sm-6"> <input type="checkbox"  name="gift_id[]" class="gifts_<?=$WorkPlanD->id?>" id="gift_id<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)"> <?= $gift->name?></label>
+											<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=$bal?>" class="qty_txt required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
+											<?php $bal =0;}?>
 										</li>
 									<?php }?>
 									</ul>
@@ -904,42 +870,65 @@
 		$(elem).closest("form").find("input:checkbox").prop('checked', false);
 	}
 	
-	function productClick(ul,id){
-		var product = $("#"+ul + " #sample_id_" + id).val();
-		var bal = $("#"+ul + " #sample_id_" + id).find(':selected').data('bal');
-		var exits = false;
-		
-		if(product == "")
+	function addSample(ul){
+		var n = $("#"+ul + " li").length;
+		var limit = 3; if(<?=count($samples)?> < limit) limit = <?=count($samples)?>;
+		if($("#"+ul + " #sample_qty_" + (n)).val()=="" || $("#"+ul + " #sample_id_" + (n)).val()=="")
 		{
-			$("#"+ul + " #sample_qty_" + id+"-error").addClass("hide");
-			$("#"+ul + " #sample_qty_" + id).val('').prop('disabled', true).attr('max', '');
-			return;
+			alert("Please fill sample information");
+		}
+		else
+		{
+			var li = $("#"+ul + " li:last").html();
+			var n_li = "<li>"+li+"</li>"
+			var selected = $("#"+ul + " #sample_id_" + (n)).find(':selected').val()
+			n_li = n_li.replace("sample_id_" + (n), "sample_id_" + (n + 1));
+			n_li = n_li.replace("sample_qty_" + (n), "sample_qty_" + (n + 1));
+			n_li = n_li.replace("this," + (n), "this," + (n + 1));
+			$("#"+ul).append(n_li);
+			if((n+1) == limit) $("#addSample").hide();
+			$("#"+ul + " #sample_id_" + (n + 1) +" option[value='"+selected+"']").remove();
 		}
 		
-		$( "#"+ul + " .sample_id" ).each(function( index ) { if(index != id && product == $( this ).val()) exits = true; })
-		if(exits)
-		{alert("This Sample is already selected"); $("#"+ul + " #sample_id_" + id).val(""); return;}
-		
-		$("#"+ul + " #sample_qty_" + id).prop('disabled', false).attr('max', bal);
 	}
 	
-	function giftClick(ul,id){
-		var gift = $("#"+ul + " #gift_id_" + id).val();
-		var bal = $("#"+ul + " #gift_id_" + id).find(':selected').data('bal');
-		var exits = false;
-		
-		if(gift == "")
+	function addGift(ul){
+		var n = $("#"+ul + " li").length;
+		var limit = 3; if(<?=count($samples)?> < limit) limit = <?=count($samples)?>;
+		if($("#"+ul + " #gift_qty_" + (n)).val()=="" || $("#"+ul + " #gift_id_" + (n)).val()=="")
 		{
-			$("#"+ul + " #gift_qty_" + id+"-error").addClass("hide");
-			$("#"+ul + " #gift_qty_" + id).val('').prop('disabled', true).attr('max', '');
-			return;
+			alert("Please fill gift information");
 		}
-		
-		$( "#"+ul + " .gift_id" ).each(function( index ) { if(index != id && gift == $( this ).val()) exits = true; })
-		if(exits)
-		{alert("This Gift is already selected"); $("#"+ul + " #gift_id_" + id).val(""); return;}
-		
-		$("#"+ul + " #gift_qty_" + id).prop('disabled', false).attr('max', bal);
+		else
+		{
+			var li = $("#"+ul + " li:last").html();
+			var n_li = "<li>"+li+"</li>"
+			var selected = $("#"+ul + " #gift_id_" + (n)).find(':selected').val()
+			n_li = n_li.replace("gift_id_" + (n), "gift_id_" + (n + 1));
+			n_li = n_li.replace("gift_qty_" + (n), "gift_qty_" + (n + 1));
+			n_li = n_li.replace("this," + (n), "this," + (n + 1));
+			$("#"+ul).append(n_li);
+			if((n+1) == limit) $("#addGift").hide();
+			$("#"+ul + " #gift_id_" + (n + 1) +" option[value='"+selected+"']").remove();
+		}
+	}
+	
+	function productClick(elem,id){
+		var product = $(elem).val();
+		var bal = $(elem).find(':selected').data('bal');
+		if(product != "")
+		$(elem).closest("form").find('#sample_qty_'+id).prop('disabled', false).attr('max', bal);
+		else
+		$(elem).closest("form").find('#sample_qty_'+id+"-error").addClass("hide").val('').prop('disabled', true).attr('max', '');
+	}
+	
+	function giftClick(elem,id){
+		var gift = $(elem).val();
+		var bal = $(elem).find(':selected').data('bal');
+		if(gift != "")
+		$(elem).closest("form").find('#gift_qty_'+id).prop('disabled', false).attr('max', bal);
+		else
+		$(elem).closest("form").find('#gift_qty_'+id+"-error").addClass("hide").val('').prop('disabled', true).attr('max', '');
 	}
 	
 	function loadDoctors(id){

@@ -32,14 +32,13 @@
 						<div id="report_section">
 							<div class="col-sm-12 mar-bottom-20" id="workType_section_2">
 							<h3 class="mar-top-10 mar-bottom-10">Add Un-Planned Doctors</h3>
-							<form class="" id="UnplannedAddForm" method="POST" >
-							<input type="hidden" name="start_date" id="start_date" value="<?php echo $reportDate;?>">
-							<input type="hidden" name="work_type_id" value="2">
 								<div class="row">
 									<div class="col-sm-12 mar-bottom-20">
-										<div class="form-group col-sm-4">
-											<label for="city_id">City</label>
-											<select name="city_id" onchange="loadDoctors(this.form.id)" class="form-control required" id="city_id" aria-invalid="true">
+										<form class="" id="UnplannedAddFormSelect" method="POST">
+										<input type="hidden" name="start_date" id="start_date" value="<?php echo $reportDate;?>">
+										<div class="form-group col-sm-3">
+											<label for="city_id_select">City</label>
+											<select name="city_id_select" onchange="loadDoctors(this.form.id)" class="form-control required" id="city_id_select" aria-invalid="true">
 												<option value="">Select</option>
 												<?php
 												foreach ($cities as $citiy)
@@ -48,9 +47,9 @@
 												<?php }	?>
 											</select>  
 										</div>
-										<div class="form-group col-sm-4">
-											<label for="doctor_id">Select Doctor</label>
-											<select name="doctor_id" class="form-control required" id="doctor_id" aria-invalid="true">
+										<div class="form-group col-sm-3">
+											<label for="doctor_id_select">Select Doctor</label>
+											<select name="doctor_id_select" class="form-control required" id="doctor_id_select" aria-invalid="true">
 											<option value="">Select Doctors</option>
 												<?php
 												if(count($doctorsRelation)>0)
@@ -60,22 +59,32 @@
 												<?php }	?>
 											</select>  
 										</div>
-										<div class="form-group col-sm-4">
-											<label for="work_with">Work With</label>
-											<select name="work_with" class="form-control required" id="work_with" aria-invalid="true">
+										<div class="form-group col-sm-3">
+											<label for="work_with_select">Work With</label>
+											<select name="work_with_select" class="form-control required" id="work_with_select" aria-invalid="true">
 											<option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option> 
 											</select>
 										</div>
+										<div class="form-group col-sm-3">
+											<label>&nbsp;</label>
+											<button type="submit" class="btn blue-btn btn-block">Details</button>
+										</div>
+										</form>
 									</div>
-									<div class="col-sm-12 mar-bottom-20">
-									<a href="#UnplannedAdd" class="popup-modal btn blue-btn btn-block" onclick="$('#unplan_details').removeClass('hide')">Details</a>
-									</div>
+									<a href="#UnplannedAdd" id="UnplannedAddLink" class="popup-modal btn blue-btn btn-block">&nbsp;</a>
+
 									<div class="mfp-hide white-popup-block large_popup" id="UnplannedAdd">
 										<div class="popup-header">
 											<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
 											<div class="hr-title"><h4>Detail Reporting</h4><hr /></div>
 										</div>
 										<div class="popup-content">
+											<form class="" id="UnplannedAddForm" method="POST" >
+											<input type="hidden" name="start_date" id="start_date" value="<?php echo $reportDate;?>">
+											<input type="hidden" name="work_type_id" id="work_type_id" value="2">
+											<input type="hidden" name="city_id" id="city_id" value="<?=$userCity?>">
+											<input type="hidden" name="doctor_id" id="doctor_id" value="">
+											<input type="hidden" name="work_with" id="work_with" value="Alone">
 											<div class="popup-body">
 												<div class="row">
 													<div class="col-sm-12 mar-bottom-20">
@@ -99,33 +108,50 @@
 														<?php if(count($samples)){?>
 														<div class="form-group col-sm-6">
 															<h4>Samples :</h4>
-															<ul>
-															<?php
-															foreach($samples as $sample)
-															{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;
-																?>
+															<ul id="ud_samples">
+															<?php 
+															$sample_limit = (count($samples)<3)? count($samples) : 3;
+															for($i=0; $i< $sample_limit; $i++){ ?>
 																<li>
-																<label class="col-sm-6"> <input type="checkbox" name="sample_id[]" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)"> <?= $sample->name?></label>
-																<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=$bal?>" class="required" id="sample_qty_<?=$sample->id?>" value="" disabled></label>
+																<label class="col-sm-6">
+																	<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('ud_samples','<?=$i?>')">
+																	<option value="">Select</option>
+																	<?php
+																	$bal =0;
+																	foreach($samples as $sample)
+																	{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;?>
+																	<option value="<?=$sample->id?>" data-bal="<?=$bal?>"><?=$sample->name?></option>
+																	<?php }?>
+																	</select>
+																</label>
+																<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="required" id="sample_qty_<?=$i?>" value="" disabled></label>
 																</li>
-															<?php $bal =0;}?>
+															<?php }?>
 															</ul>
 														</div>
 														<?php }?>
 														<?php if(count($gifts)){?>
 														<div class="form-group col-sm-6">
 															<h4>Gifts :</h4>
-															<ul>
+															<ul id="ud_gifts">
 															<?php
-															$gift_array = array();
-															foreach($gifts as $gift)
-															{  $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;
-															?>
+															$gift_limit = (count($gifts)<3)? count($gifts) : 3;
+															for($i=0; $i< $gift_limit; $i++){ ?>
 																<li>
-																<label class="col-sm-6"> <input type="checkbox" name="gift_id[]" id="gift_id_<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)"> <?= $gift->name?></label>
-																<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=$bal?>" class="required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
+																<label class="col-sm-6">
+																	<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('ud_gifts','<?=$i?>')">
+																	<option value="">Select</option>
+																	<?php
+																	$bal =0;
+																	foreach($gifts as $gift)
+																	{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;?>
+																	<option value="<?=$gift->id?>" data-bal="<?=$bal?>"><?=$gift->name?></option>
+																	<?php }?>
+																	</select>
+																</label>
+																<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="required" id="gift_qty_<?=$i?>" value="" disabled></label>
 																</li>
-															<?php $bal =0;}?>
+															<?php }?>
 															</ul>
 														</div>
 														<?php }?>
@@ -148,19 +174,16 @@
 													</div>
 													<input type="hidden" id="return" name="return" value="dailyReportField" >
 													<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-													<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="UnplannedSubmit" class="btn blue-btn btn-block">Save</button></div>
+													<div class="col-md-6 col-sm-6 col-xs-6"><button type="submit" id="UnplannedSubmit" class="btn blue-btn btn-block">Save</button></div>
 												</div>
 											</div>
+											</form>
 										</div>
 									</div>
-		
-
 								</div>
-							</form>
-
 							</div>
 							<hr>
-							<div class="col-sm-12 mar-bottom-20" id="workType_section_2">
+							<div class="col-sm-12 mar-bottom-20">
 								<div class="col-md-12 mar-bottom-20">
 									<?php if(count($WorkPlansUD)<1){?>
 									<div class="table-responsive">
@@ -253,52 +276,54 @@
 								<?php if(count($samples)){?>
 								<div class="form-group col-sm-6">
 									<h4>Samples :</h4>
-									<ul>
-									<?php
+									<ul id="ud_samples">
+									<?php 
 									$samples_array = array();
 									if($WorkPlanUD->samples!="")
 									$samples_array = unserialize($WorkPlanUD->samples);
-									foreach($samples as $sample)
-									{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;
-									?>
+									$sample_limit = (count($samples)<3)? count($samples) : 3;
+									for($i=0; $i< $sample_limit; $i++){ ?>
 										<li>
+										<label class="col-sm-6">
+											<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('ud_samples','<?=$i?>')">
+											<option value="">Select</option>
 											<?php
-											if (array_key_exists($sample->id, $samples_array)){
-											$sample_product_id[$sample->id]= $sample->name;
-											?>
-											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanUD->id?>" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)" checked> <?= $sample->name?></label>
-											<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=($bal+$samples_array[$sample->id])?>" class="qty_txt required" id="sample_qty_<?=$sample->id?>" value="<?=$samples_array[$sample->id]?>"></label>
-											<?php }else { ?>
-											<label class="col-sm-6"> <input type="checkbox"  name="sample_id[]" class="samples_<?=$WorkPlanUD->id?>" id="sample_id_<?=$sample->id?>" value="<?=$sample->id?>" onclick="productClick(this)"> <?= $sample->name?></label>
-											<label class="col-sm-6"> <input type="text" name="sample_qty[<?=$sample->id?>]" max="<?=$bal?>" class="qty_txt required" id="sample_qty_<?=$sample->id?>" value="" disabled></label>
+											$bal =0;
+											foreach($samples as $sample)
+											{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;?>
+											<option value="<?=$sample->id?>" <?=(array_key_exists($sample->id, $samples_array))?"selected":""?> data-bal="<?=(array_key_exists($sample->id, $samples_array))?($bal+$samples_array[$sample->id]):$bal?>"><?=$sample->name?></option>
 											<?php }?>
+											</select>
+										</label>
+										<label class="col-sm-6"> <input type="text" name="sample_qty[]" class="required" id="sample_qty_<?=$i?>" max="" value="<?=(array_key_exists($sample->id, $samples_array))?$samples_array[$sample->id]:""?>" <?=(array_key_exists($sample->id, $samples_array))?"disabled":""?>></label>
 										</li>
-									<?php $bal =0;}?>
+									<?php }?>
 									</ul>
 								</div>
 								<?php }?>
 								<?php if(count($gifts)){?>
 								<div class="form-group col-sm-6">
 									<h4>Gifts :</h4>
-									<ul>
-									<?php
+									<ul id="ud_gifts">
+									<?php 
 									$gifts_array = array();
 									if($WorkPlanUD->gifts!="")
 									$gifts_array = unserialize($WorkPlanUD->gifts);
-									foreach($gifts as $gift)
-									{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;
-									?>
+									$gift_limit = (count($gifts)<3)? count($gifts) : 3;
+									for($i=0; $i< $gift_limit; $i++){ ?>
 										<li>
+										<label class="col-sm-6">
+											<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('ud_gifts','<?=$i?>')">
+											<option value="">Select</option>
 											<?php
-											if (array_key_exists($gift->id, $gifts_array)){
-											$sample_product_id[$gift->id]= $gift->name;
-											?>
-											<label class="col-sm-6"> <input type="checkbox"  name="gift_id[]" class="gifts_<?=$WorkPlanUD->id?>" id="gift_id<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)" checked> <?= $gift->name?></label>
-											<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=($bal+$gifts_array[$gift->id])?>" class="qty_txt required" id="gift_qty_<?=$gift->id?>" value="<?=$gifts_array[$gift->id]?>"></label>
-											<?php }else { ?>
-											<label class="col-sm-6"> <input type="checkbox"  name="gift_id[]" class="gifts_<?=$WorkPlanUD->id?>" id="gift_id<?=$gift->id?>" value="<?=$gift->id?>" onclick="giftClick(this)"> <?= $gift->name?></label>
-											<label class="col-sm-6"> <input type="text" name="gift_qty[<?=$gift->id?>]" max="<?=$bal?>" class="qty_txt required" id="gift_qty_<?=$gift->id?>" value="" disabled></label>
-											<?php $bal =0;}?>
+											$bal =0;
+											foreach($gifts as $gift)
+											{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;?>
+											<option value="<?=$gift->id?>" <?=(array_key_exists($gift->id, $gifts_array))?"selected":""?> data-bal="<?=(array_key_exists($gift->id, $gifts_array))?($bal+$gifts_array[$gift->id]):$bal?>"><?=$gift->name?></option>
+											<?php }?>
+											</select>
+										</label>
+										<label class="col-sm-6"> <input type="text" name="gift_qty[]" class="required" id="gift_qty_<?=$i?>" max="" value="<?=(array_key_exists($gift->id, $gifts_array))?$gifts_array[$gift->id]:""?>" <?=(array_key_exists($gift->id, $gifts_array))?"disabled":""?>></label>
 										</li>
 									<?php }?>
 									</ul>
@@ -370,6 +395,21 @@
 		$.magnificPopup.close();
 	});
 	
+	$("#UnplannedAddFormSelect").validate({
+		ignore: ":hidden",
+		submitHandler: function (form) {
+			//$('#UnplannedAddLink').click();
+			if ($('#UnplannedAdd').length) {
+				$.magnificPopup.open({
+					items: {
+						src: '#UnplannedAdd' 
+					},
+					type: 'inline'
+				});
+			}
+			return false; // required to block normal submit since you used ajax
+		}
+	});
 	$("#UnplannedAddForm").validate({
 		ignore: ":hidden",
 		submitHandler: function (form) {
@@ -391,12 +431,21 @@
 		}
 	});
   
-	$("#doctor_id").change(function(e){
-		var name = $("#doctor_id option:selected").text();
-		var spec = $('#doctor_id option:selected').attr('data-spec');
-		//add a new contact
+	$("#doctor_id_select").change(function(e){
+		var val = $("#doctor_id_select").val();
+		var name = $("#doctor_id_select option:selected").text();
+		var spec = $('#doctor_id_select option:selected').attr('data-spec');
+		$("#doctor_id").val(val);
 		$("#doctor_name").html(name);
 		$("#doctor_spec").html(spec);
+	});
+	$("#city_id_select").change(function(e){
+		var val = $("#city_id_select").val();
+		$("#city_id").val(val);
+	});
+	$("#work_with_select").change(function(e){
+		var val = $("#work_with_select").val();
+		$("#work_with").val(val);
 	});
 	
 	function reset_form(){
@@ -416,52 +465,53 @@
 		$(elem).closest("form").find("input:checkbox").prop('checked', false);
 	}
 	
-	function productClick(elem){
-		var id=$(elem).val();
-		if($(elem).prop("checked") == true)
-		$(elem).closest("form").find('#sample_qty_'+id).prop('disabled', false);
-		else
+	function productClick(ul,id){
+		var product = $("#"+ul + " #sample_id_" + id).val();
+		var bal = $("#"+ul + " #sample_id_" + id).find(':selected').data('bal');
+		var exits = false;
+		
+		if(product == "")
 		{
-		$(elem).closest("form").find('#sample_qty_'+id+"-error").addClass("hide");
-		$(elem).closest("form").find('#sample_qty_'+id).val('');
-		$(elem).closest("form").find('#sample_qty_'+id).prop('disabled', true);
+			$("#"+ul + " #sample_qty_" + id+"-error").addClass("hide");
+			$("#"+ul + " #sample_qty_" + id).val('').prop('disabled', true).attr('max', '');
+			return;
 		}
+		
+		$( "#"+ul + " .sample_id" ).each(function( index ) { if(index != id && product == $( this ).val()) exits = true; })
+		if(exits)
+		{alert("This Sample is already selected"); $("#"+ul + " #sample_id_" + id).val(""); return;}
+		
+		$("#"+ul + " #sample_qty_" + id).prop('disabled', false).attr('max', bal);
 	}
 	
-	function giftClick(elem){
-		var id=$(elem).val();
-		if($(elem).prop("checked") == true)
-		$(elem).closest("form").find('#gift_qty_'+id).prop('disabled', false);
-		else
+	function giftClick(ul,id){
+		var gift = $("#"+ul + " #gift_id_" + id).val();
+		var bal = $("#"+ul + " #gift_id_" + id).find(':selected').data('bal');
+		var exits = false;
+		
+		if(gift == "")
 		{
-		$(elem).closest("form").find('#gift_qty_'+id+"-error").addClass("hide");
-		$(elem).closest("form").find('#gift_qty_'+id).val('');
-		$(elem).closest("form").find('#gift_qty_'+id).prop('disabled', true);
+			$("#"+ul + " #gift_qty_" + id+"-error").addClass("hide");
+			$("#"+ul + " #gift_qty_" + id).val('').prop('disabled', true).attr('max', '');
+			return;
 		}
+		
+		$( "#"+ul + " .gift_id" ).each(function( index ) { if(index != id && gift == $( this ).val()) exits = true; })
+		if(exits)
+		{alert("This Gift is already selected"); $("#"+ul + " #gift_id_" + id).val(""); return;}
+		
+		$("#"+ul + " #gift_qty_" + id).prop('disabled', false).attr('max', bal);
 	}
 	
-	function productShow(id){
-		var str = ""; var i=0;
-		$('input[type="checkbox"].samples_'+id+':checked').each(function () {
-		if(i>0) str += ", ";
-		str += $(this).val();
-		i++;
-		});
-		if(str != "")
-		{$("#pdt_link_"+id).html(str);$("#pdt_val_"+id).val($("#samples_"+id).val());}
-		else
-		{$("#pdt_link_"+id).html("Select Products");}
-	}
-
 	function loadDoctors(id){
-		var city_id = $('#'+id+' #city_id').val();
+		var city_id = $('#'+id+' #city_id_select').val();
 		var start_date = $('#'+id+' #start_date').val();
 		$.ajax({
 			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetDoctors"])?>',
 			   data: "city_id="+city_id+"&start_date="+start_date,
 			   type: "POST",
 			   success: function(json) {
-				   $('#doctor_id').html(json);
+				   $('#doctor_id_select').html(json);
 			   }
 		});
 	}
