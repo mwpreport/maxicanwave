@@ -221,7 +221,7 @@
 										<?php }?>
 										</select>
 									</label>
-									<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="required" id="sample_qty_<?=$i?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="sample_qty required" id="sample_qty_<?=$i?>" value="" disabled></label>
 									</li>
 								<?php }?>
 								</ul>
@@ -246,7 +246,7 @@
 										<?php }?>
 										</select>
 									</label>
-									<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="required" id="gift_qty_<?=$i?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="gift_qty required" id="gift_qty_<?=$i?>" value="" disabled></label>
 									</li>
 								<?php }?>
 								</ul>
@@ -442,11 +442,11 @@
 				<div class="popup-body">
 					<div class="row">
 						<div class="col-sm-12 mar-bottom-20">
-							<div class="form-group col-sm-4">
+							<div class="form-group col-sm-3">
 								<label for="city_id">Doctor Name</label>
 								<input type="text" name="name" id="name" class="form-control required">
 							</div>
-							<div class="form-group col-sm-4">
+							<div class="form-group col-sm-3">
 								<label for="city_id">City</label>
 								<select name="city_id" class="form-control required" onchange="loadStockists(this.form.id)" id="city_id" aria-invalid="true">
 									<option value="">Select</option>
@@ -457,7 +457,7 @@
 									<?php }	?>
 								</select>  
 							</div>
-							<div class="form-group col-sm-4">
+							<div class="form-group col-sm-3">
 								<label for="speciality_id">Speciality</label>
 								<select name="speciality_id" class="form-control required" onchange="loadStockists(this.form.id)" id="speciality_id" aria-invalid="true">
 									<option value="">Select</option>
@@ -468,7 +468,7 @@
 									<?php }	?>
 								</select>  
 							</div>
-							<div class="form-group col-sm-4">
+							<div class="form-group col-sm-3">
 								<label for="work_with">Work With</label>
 								<select name="work_with" class="form-control required" id="work_with" aria-invalid="true">
 									<option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option> 
@@ -504,7 +504,7 @@
 										<?php }?>
 										</select>
 									</label>
-									<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="required" id="sample_qty_<?=$i?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="sample_qty required" id="sample_qty_<?=$i?>" value="" disabled></label>
 									</li>
 								<?php }?>
 								</ul>
@@ -529,7 +529,7 @@
 										<?php }?>
 										</select>
 									</label>
-									<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="required" id="gift_qty_<?=$i?>" value="" disabled></label>
+									<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="gift_qty required" id="gift_qty_<?=$i?>" value="" disabled></label>
 									</li>
 								<?php }?>
 								</ul>
@@ -644,7 +644,7 @@
 			{?>
 			<div class="mfp-hide white-popup-block large_popup doctor_product" id="doctor_product_<?=$WorkPlanD->id?>">
 				<div class="popup-content">
-					<form class="" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>" class="ProductForm" method="POST" id="doctor_product_<?=$WorkPlanD->id?>Form" >
+					<form action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>" class="doctor_product_from" method="POST" id="doctor_product_<?=$WorkPlanD->id?>Form" >
 					<input type="hidden" name="reportDate" value="<?php echo $reportDate;?>">
 					<input type="hidden" name="workplan_id[<?=$WorkPlanD->id?>]" value="<?=$WorkPlanD->id?>">
 					<div class="popup-header">
@@ -678,7 +678,7 @@
 								<?php if(count($samples)){?>
 								<div class="form-group col-sm-6">
 									<h4>Samples :</h4>
-									<ul id="d_samples">
+									<ul id="d_samples_<?=$WorkPlanD->id?>">
 									<?php 
 									$samples_array = array();
 									if($WorkPlanD->samples!="")
@@ -687,21 +687,21 @@
 									for($i=0; $i< $sample_limit; $i++){ ?>
 										<li>
 										<label class="col-sm-6">
-											<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('d_samples','<?=$i?>')">
+											<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('d_samples_<?=$WorkPlanD->id?>','<?=$i?>')">
 											<option value="">Select</option>
 											<?php
-											$bal =0; $sample_id = ""; $sample_qty = "";
+											$bal =0; $sample_id = ""; $sample_qty = ""; $sample_bal = "";
 											foreach($samples as $sample)
 											{ 
 												$bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;
 												$exists = false;
-												if(empty($sample_id) && array_key_exists($sample->id, $samples_array)) {$exists=true; $sample_id = $sample->id; $sample_qty = $samples_array[$sample->id];}
+												if(empty($sample_id) && array_key_exists($sample->id, $samples_array)) {$exists=true; $sample_id = $sample->id; $sample_qty = $samples_array[$sample->id]; $sample_bal = $bal+$samples_array[$sample->id];}
 											?>
-											<option value="<?=$sample->id?>" <?=($exists)?"selected":""?> data-bal="<?=($exists)?($bal+$samples_array[$sample->id]):$bal?>"><?=$sample->name?></option>
+											<option value="<?=$sample->id?>" <?=($exists)?"selected":""?> data-bal="<?=($exists)?$sample_bal:$bal?>"><?=$sample->name?></option>
 											<?php if($exists) unset($samples_array[$sample_id]);}?>
 											</select>
 										</label>
-										<label class="col-sm-6"> <input type="text" name="sample_qty[]" class="required" id="sample_qty_<?=$i?>" max="" value="<?=(!empty($sample_qty))?$sample_qty:""?>" <?=(empty($sample_qty))?"disabled":""?>></label>
+										<label class="col-sm-6"> <input type="text" name="sample_qty[]" class="sample_qty required" id="sample_qty_<?=$i?>" max="<?=$sample_bal?>" value="<?=(!empty($sample_qty))?$sample_qty:""?>" <?=(empty($sample_qty))?"disabled":""?>></label>
 										</li>
 									<?php }?>
 									</ul>
@@ -710,7 +710,7 @@
 								<?php if(count($gifts)){?>
 								<div class="form-group col-sm-6">
 									<h4>Gifts :</h4>
-									<ul id="d_gifts">
+									<ul id="d_gifts_<?=$WorkPlanD->id?>">
 									<?php 
 									$gifts_array = array();
 									if($WorkPlanD->gifts!="")
@@ -719,21 +719,21 @@
 									for($i=0; $i< $gift_limit; $i++){ ?>
 										<li>
 										<label class="col-sm-6">
-											<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('d_gifts','<?=$i?>')">
+											<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('d_gifts_<?=$WorkPlanD->id?>','<?=$i?>')">
 											<option value="">Select</option>
 											<?php
-											$bal =0; $gift_id = ""; $gift_qty = "";
+											$bal =0; $gift_id = ""; $gift_qty = ""; $gift_bal = "";
 											foreach($gifts as $gift)
 											{ 
 												$bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;
 												$exists = false;
-												if(empty($gift_id) && array_key_exists($gift->id, $gifts_array)) {$exists=true; $gift_id = $gift->id; $gift_qty = $gifts_array[$gift->id];}
+												if(empty($gift_id) && array_key_exists($gift->id, $gifts_array)) {$exists=true; $gift_id = $gift->id; $gift_qty = $gifts_array[$gift->id]; $gift_bal = $bal+$gifts_array[$sample->id];}
 											?>
-											<option value="<?=$gift->id?>" <?=($exists)?"selected":""?> data-bal="<?=($exists)?($bal+$gifts_array[$gift->id]):$bal?>"><?=$gift->name?></option>
+											<option value="<?=$gift->id?>" <?=($exists)?"selected":""?> data-bal="<?=($exists)?$gift_bal:$bal?>"><?=$gift->name?></option>
 											<?php if($exists) unset($gifts_array[$gift_id]);}?>
 											</select>
 										</label>
-										<label class="col-sm-6"> <input type="text" name="gift_qty[]" class="required" id="gift_qty_<?=$i?>" max="" value="<?=(!empty($gift_qty))?$gift_qty:""?>" <?=(empty($gift_qty))?"disabled":""?>></label>
+										<label class="col-sm-6"> <input type="text" name="gift_qty[]" class="gift_qty required" id="gift_qty_<?=$i?>" max="<?=$gift_bal?>" value="<?=(!empty($gift_qty))?$gift_qty:""?>" <?=(empty($gift_qty))?"disabled":""?>></label>
 										</li>
 									<?php }?>
 									</ul>
@@ -888,7 +888,13 @@
 	});
   
 	function reset_form(){
-		$('#StockistAddForm, #ChemistAddForm, #UnplannedAddForm')[0].reset();
+		//$('#StockistAddForm, #ChemistAddForm')[0].reset();
+		$('.doctor_product_from')[0].reset();
+		$('.doctor_product_from .multiselect-ui').multiselect('refresh');
+		$('#PGOAddForm')[0].reset();
+		$('#PGOAddForm .multiselect-ui').multiselect('refresh');
+		$('#PGOAddForm .sample_qty, #PGOAddForm .gift_qty').prop('disabled', true).attr('max', '');
+
 	}
 	function reset_missed_form(){
 		$("tr[id^='missed_']").hide();
@@ -907,39 +913,42 @@
 	function productClick(ul,id){
 		var product = $("#"+ul + " #sample_id_" + id).val();
 		var bal = $("#"+ul + " #sample_id_" + id).find(':selected').data('bal');
-		var exits = false;
-		
+		var exits = false; var error = false;
 		if(product == "")
+		error = true;
+		
+		$( "#"+ul + " .sample_id" ).each(function( index ) { if(index != id && product != "" && product == $( this ).val()) exits = true; })
+		if(exits)
+		{alert("This Sample is already selected"); $("#"+ul + " #sample_id_" + id).val(""); error = true;}
+		if(error)
 		{
 			$("#"+ul + " #sample_qty_" + id+"-error").addClass("hide");
 			$("#"+ul + " #sample_qty_" + id).val('').prop('disabled', true).attr('max', '');
 			return;
 		}
 		
-		$( "#"+ul + " .sample_id" ).each(function( index ) { if(index != id && product == $( this ).val()) exits = true; })
-		if(exits)
-		{alert("This Sample is already selected"); $("#"+ul + " #sample_id_" + id).val(""); return;}
-		
-		$("#"+ul + " #sample_qty_" + id).prop('disabled', false).attr('max', bal);
+		$("#"+ul + " #sample_qty_" + id).prop('disabled', false).attr('max', bal); return;
 	}
 	
 	function giftClick(ul,id){
 		var gift = $("#"+ul + " #gift_id_" + id).val();
 		var bal = $("#"+ul + " #gift_id_" + id).find(':selected').data('bal');
-		var exits = false;
+		var exits = false; var error = false;
 		
 		if(gift == "")
+		error = true;
+		
+		$( "#"+ul + " .gift_id" ).each(function( index ) { if(index != id && gift != "" && gift == $( this ).val()) exits = true;})
+		if(exits)
+		{alert("This Gift is already selected"); $("#"+ul + " #gift_id_" + id).val(""); error = true;}
+		if(error)
 		{
 			$("#"+ul + " #gift_qty_" + id+"-error").addClass("hide");
 			$("#"+ul + " #gift_qty_" + id).val('').prop('disabled', true).attr('max', '');
 			return;
 		}
 		
-		$( "#"+ul + " .gift_id" ).each(function( index ) { if(index != id && gift == $( this ).val()) exits = true; })
-		if(exits)
-		{alert("This Gift is already selected"); $("#"+ul + " #gift_id_" + id).val(""); return;}
-		
-		$("#"+ul + " #gift_qty_" + id).prop('disabled', false).attr('max', bal);
+		$("#"+ul + " #gift_qty_" + id).prop('disabled', false).attr('max', bal); return;
 	}
 	
 	function loadDoctors(id){

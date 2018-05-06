@@ -12,7 +12,8 @@
 					<div class="row">
 						<div class="event-button-cont">
 							<ul class="side-nav">
-								<li><?= $this->Html->link(__('<i class="fa fa-plus-circle" aria-hidden="true"></i> New'), ['action' => 'add'], ['escape' => false]) ?></li>
+								<?php $user_param = ($filterUser != 0)? ['action' => 'add', '?' => ['user' => $filterUser]]:['action' => 'add']; ?>
+								<li><?= $this->Html->link(__('<i class="fa fa-plus-circle" aria-hidden="true"></i> Add'), $user_param, ['escape' => false]) ?></li>
 							</ul>
 						</div>
 						<div class="clearfix"></div>
@@ -22,6 +23,21 @@
 								<hr>
 							</div>
 						</div>
+						<div class="row">
+                            <div class="col-sm-12 mar-bottom-20">
+								<div class="form-group col-sm-6">
+								<div class="col-sm-4"><h4 for="user_id">Select MR</h4></div>
+								<div class="col-sm-8">
+									<select name="user_id" id="user_id"  class="error form-control required">
+									<option value="">Select MR</option>
+										<?php foreach ($users as $user){
+										echo '<option value="'.$user->id.'" '.(($user->id==$filterUser)?"selected":"").'>'.$user->firstname.' ('.$user->code.')</option>';
+										} ?>
+									</select>
+								</div>
+								</div>
+							</div>
+						</div>
 						<div class="clearfix"></div>
 						<div class="col-md-12">
 							<div class="box box-primary">
@@ -29,25 +45,19 @@
 									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th scope="col"><?= $this->Paginator->sort('id') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('gift_id') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('count') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('dt') ?></th>
-												<th scope="col" colspan="3" class="actions"><?= __('Actions') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('S.No') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('Gift') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('Count') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('Balance') ?></th>
 											</tr>
 										</thead>
 										<tbody>
-											<?php foreach ($assignedGifts as $assignedGift): ?>
+											<?php $i=1; foreach ($assignedGifts as $assignedGift): ?>
 											<tr>
-												<td><?= $this->Number->format($assignedGift->id) ?></td>
-												<td><?= $assignedGift->has('user') ? $this->Html->link($assignedGift->user->firstname, ['controller' => 'Users', 'action' => 'view', $assignedGift->user->id]) : '' ?></td>
-												<td><?= $assignedGift->has('gift') ? $this->Html->link($assignedGift->gift->name, ['controller' => 'Gifts', 'action' => 'view', $assignedGift->gift->id]) : '' ?></td>
-												<td><?= $this->Number->format($assignedGift->count) ?></td>
-												<td><?= h($assignedGift->dt) ?></td>
-												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $assignedGift->id],['escape' => false]) ?></td>
-												<td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $assignedGift->id],['escape' => false]) ?></td>
-												<td width="50"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $assignedGift->id], ['escape' => false,'confirm' => __('Are you sure you want to delete?')]) ?></td>
+												<td><?= $i ?></td>
+												<td><?= $assignedGift->name?></td>
+												<td><?= $assignedGift->count ?></td>
+												<td><?= $i_gift[$assignedGift->id] ?></td>
 											</tr>
 											<?php endforeach; ?>
 										</tbody>
@@ -75,3 +85,8 @@
 		<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<script>
+	$('#user_id').on('change', function (ev) {
+		window.location.replace("<?php echo $this->Url->build(["controller" => "AssignedGifts","action" => "index"])?>/?user="+$('#user_id').val());
+	});
+</script>

@@ -71,14 +71,14 @@
 										</div>
 										</form>
 									</div>
-									<a href="#UnplannedAdd" id="UnplannedAddLink" class="popup-modal btn blue-btn btn-block">&nbsp;</a>
+									<!--<a href="#UnplannedAdd" id="UnplannedAddLink" class="popup-modal btn blue-btn btn-block">&nbsp;</a>-->
 
 									<div class="mfp-hide white-popup-block large_popup" id="UnplannedAdd">
-										<div class="popup-header">
-											<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-											<div class="hr-title"><h4>Detail Reporting</h4><hr /></div>
-										</div>
 										<div class="popup-content">
+											<div class="popup-header">
+												<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
+												<div class="hr-title"><h4>Detail Reporting</h4><hr /></div>
+											</div>
 											<form class="" id="UnplannedAddForm" method="POST" >
 											<input type="hidden" name="start_date" id="start_date" value="<?php echo $reportDate;?>">
 											<input type="hidden" name="work_type_id" id="work_type_id" value="2">
@@ -124,7 +124,7 @@
 																	<?php }?>
 																	</select>
 																</label>
-																<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="required" id="sample_qty_<?=$i?>" value="" disabled></label>
+																<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="sample_qty required" id="sample_qty_<?=$i?>" value="" disabled></label>
 																</li>
 															<?php }?>
 															</ul>
@@ -149,7 +149,7 @@
 																	<?php }?>
 																	</select>
 																</label>
-																<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="required" id="gift_qty_<?=$i?>" value="" disabled></label>
+																<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="gift_qty required" id="gift_qty_<?=$i?>" value="" disabled></label>
 																</li>
 															<?php }?>
 															</ul>
@@ -276,7 +276,7 @@
 								<?php if(count($samples)){?>
 								<div class="form-group col-sm-6">
 									<h4>Samples :</h4>
-									<ul id="ud_samples">
+									<ul id="ud_samples_<?=$WorkPlanUD->id?>">
 									<?php 
 									$samples_array = array();
 									if($WorkPlanUD->samples!="")
@@ -285,7 +285,7 @@
 									for($i=0; $i< $sample_limit; $i++){ ?>
 										<li>
 										<label class="col-sm-6">
-											<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('ud_samples','<?=$i?>')">
+											<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('ud_samples_<?=$WorkPlanUD->id?>','<?=$i?>')">
 											<option value="">Select</option>
 											<?php
 											$bal =0;
@@ -304,7 +304,7 @@
 								<?php if(count($gifts)){?>
 								<div class="form-group col-sm-6">
 									<h4>Gifts :</h4>
-									<ul id="ud_gifts">
+									<ul id="ud_gifts_<?=$WorkPlanUD->id?>">
 									<?php 
 									$gifts_array = array();
 									if($WorkPlanUD->gifts!="")
@@ -313,7 +313,7 @@
 									for($i=0; $i< $gift_limit; $i++){ ?>
 										<li>
 										<label class="col-sm-6">
-											<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('ud_gifts','<?=$i?>')">
+											<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('ud_gifts_<?=$WorkPlanUD->id?>','<?=$i?>')">
 											<option value="">Select</option>
 											<?php
 											$bal =0;
@@ -449,14 +449,11 @@
 	});
 	
 	function reset_form(){
-		$('#StockistAddForm, #ChemistAddForm, #UnplannedAddForm')[0].reset();
+		$('#UnplannedAddForm')[0].reset();
+		$('#UnplannedAddForm .multiselect-ui').multiselect('refresh');
+		$('#UnplannedAddForm .sample_qty, #UnplannedAddForm .gift_qty').prop('disabled', true).attr('max', '');
 	}
-	function reset_missed_form(){
-		$("tr[id^='missed_']").hide();
-		$('#DoctorsMissedForm')[0].reset();
-		$('#DoctorsMissedForm input[type="checkbox"]').prop('checked', false);
-	}
-	
+
 	function toggleCheck(elem)
 	{
 		if($(elem).prop("checked") == true)
@@ -468,39 +465,42 @@
 	function productClick(ul,id){
 		var product = $("#"+ul + " #sample_id_" + id).val();
 		var bal = $("#"+ul + " #sample_id_" + id).find(':selected').data('bal');
-		var exits = false;
-		
+		var exits = false; var error = false;
 		if(product == "")
+		error = true;
+		
+		$( "#"+ul + " .sample_id" ).each(function( index ) { if(index != id && product != "" && product == $( this ).val()) exits = true; })
+		if(exits)
+		{alert("This Sample is already selected"); $("#"+ul + " #sample_id_" + id).val(""); error = true;}
+		if(error)
 		{
 			$("#"+ul + " #sample_qty_" + id+"-error").addClass("hide");
 			$("#"+ul + " #sample_qty_" + id).val('').prop('disabled', true).attr('max', '');
 			return;
 		}
 		
-		$( "#"+ul + " .sample_id" ).each(function( index ) { if(index != id && product == $( this ).val()) exits = true; })
-		if(exits)
-		{alert("This Sample is already selected"); $("#"+ul + " #sample_id_" + id).val(""); return;}
-		
-		$("#"+ul + " #sample_qty_" + id).prop('disabled', false).attr('max', bal);
+		$("#"+ul + " #sample_qty_" + id).prop('disabled', false).attr('max', bal); return;
 	}
 	
 	function giftClick(ul,id){
 		var gift = $("#"+ul + " #gift_id_" + id).val();
 		var bal = $("#"+ul + " #gift_id_" + id).find(':selected').data('bal');
-		var exits = false;
+		var exits = false; var error = false;
 		
 		if(gift == "")
+		error = true;
+		
+		$( "#"+ul + " .gift_id" ).each(function( index ) { if(index != id && gift != "" && gift == $( this ).val()) exits = true;})
+		if(exits)
+		{alert("This Gift is already selected"); $("#"+ul + " #gift_id_" + id).val(""); error = true;}
+		if(error)
 		{
 			$("#"+ul + " #gift_qty_" + id+"-error").addClass("hide");
 			$("#"+ul + " #gift_qty_" + id).val('').prop('disabled', true).attr('max', '');
 			return;
 		}
 		
-		$( "#"+ul + " .gift_id" ).each(function( index ) { if(index != id && gift == $( this ).val()) exits = true; })
-		if(exits)
-		{alert("This Gift is already selected"); $("#"+ul + " #gift_id_" + id).val(""); return;}
-		
-		$("#"+ul + " #gift_qty_" + id).prop('disabled', false).attr('max', bal);
+		$("#"+ul + " #gift_qty_" + id).prop('disabled', false).attr('max', bal); return;
 	}
 	
 	function loadDoctors(id){

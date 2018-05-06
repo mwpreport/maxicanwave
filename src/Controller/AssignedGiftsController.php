@@ -16,6 +16,7 @@ class AssignedGiftsController extends AppController
     public function initialize() {
         parent::initialize();
         $this->loadModel('Users');
+		$this->loadModel('IssuedGifts');
     }       
     /**
      * Index method
@@ -27,9 +28,27 @@ class AssignedGiftsController extends AppController
         $this->paginate = [
             'contain' => ['Gifts', 'Users']
         ];
-        $assignedGifts = $this->paginate($this->AssignedGifts);
+		$authuser = $this->Auth->user();
 
-        $this->set(compact('assignedGifts'));
+        if(isset($_GET['user']))
+        $filterUser = $_GET['user'];
+        else
+        $filterUser = 0;
+		
+		$gifts = $this->AssignedGifts->find('all');
+		$gifts = $gifts->select(['id' => 'gift_id', 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $filterUser])->contain(['Gifts'])->group('AssignedGifts.gift_id');
+
+		
+		$i_gifts = $this->IssuedGifts->find('all');
+		$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $filterUser])->group('IssuedGifts.gift_id')->toarray();
+		foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
+
+        $assignedGifts = $this->paginate($gifts);
+		$users = $this->Users->find('all')->where(['Users.role_id =' => '5']);
+		if($authuser['role_id'] != 1)
+		$users = $users->where(['Users.lead_id =' => $authuser['id']]);
+
+        $this->set(compact('assignedGifts','users', 'filterUser', 'i_gift'));
         $this->set('_serialize', ['assignedGifts']);
     }
 
@@ -57,7 +76,15 @@ class AssignedGiftsController extends AppController
      */
     public function add()
     {
-        $assignedGift = $this->AssignedGifts->newEntity();
+		$authuser = $this->Auth->user();
+
+        if(isset($_GET['user']))
+        $filterUser = $_GET['user'];
+        else
+        $filterUser = 0;
+
+		$assignedGift = $this->AssignedGifts->newEntity();
+
         if ($this->request->is('post')) {
 			$data = $this->request->getData();
 /* 			$haveGift = $this->AssignedGifts->find('all')->where(['user_id =' => $data['user_id'], 'gift_id =' => $data['gift_id']])->first();
@@ -72,8 +99,10 @@ class AssignedGiftsController extends AppController
             $this->Flash->error(__('The gift could not be saved. Please, try again.'));
         }
         $gifts = $this->AssignedGifts->Gifts->find('list');
-        $users = $this->Users->find('list')->where(['Users.role_id =' => '5'])->toarray();
-        $this->set(compact('assignedGift', 'gifts', 'users'));
+        $users = $this->Users->find('all')->where(['Users.role_id =' => '5']);
+		if($authuser['role_id'] != 1)
+		$users = $users->where(['Users.lead_id =' => $authuser['id']]);
+        $this->set(compact('assignedGift', 'gifts', 'users', 'filterUser'));
         $this->set('_serialize', ['assignedGift']);
     }
 
