@@ -62,13 +62,12 @@
                         <div class="content">
                             <div class="monthly-reports white-wrapper">
                                 <div class="daily-report-radio-cnt">
-                                    <form action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planReport"])?>" method="post">
+                                    <form action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planSummary"])?>" method="post">
                                         <ul>
                                             <li class="col-md-12"><h3 class="mar-top-20 mar-bottom-20">Reports (Plan Summary)</h3></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="doctor-wise-plan" value="Doctor Wise Plan" checked="checked"><label for="doctor-wise-plan"><span></span>Doctor Wise Plan</label></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="svl-doctor" value="SVL Doctor" ><label for="svl-doctor"><span></span>SVL Doctor</label></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="speciality" value="Speciality" ><label for="speciality"><span></span>Speciality</label></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="entire-doctor-list" value="Entire Doctor List Plan" ><label for="entire-doctor-list"><span></span>Entire Doctor List Plan</label></li>
+                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="doctor-wise-plan" value="Doctor_Wise_Plan" checked="checked"><label for="doctor-wise-plan"><span></span>Doctor Wise Plan</label></li>
+                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="un-planned" value="Un-Planned_Doctors" ><label for="un-planned"><span></span>Un-Planned Doctors</label></li>
+                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="entire-doctor-list" value="Entire_Doctor_List_Plan" ><label for="entire-doctor-list"><span></span>Entire Doctor List Plan</label></li>
                                         </ul>
 										<div class="clearfix"></div>
 										<div class="col-sm-12 mar-top-20">
