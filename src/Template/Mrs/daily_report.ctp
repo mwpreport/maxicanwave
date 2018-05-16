@@ -174,12 +174,6 @@
 										</div>
 									</form>
 								</div>
-								<div class="col-md-12 hide" id="success_plan" >
-								<p class="message">
-									<span class="message success" id="success_msg"></span>
-									Have you done any field work on this date? Is yes <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>" > Click here </a> or Click on <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" >Final Submit</a> and proceed to next date. 
-								</p>
-								</div>
 							</div>
 							<script>
 							$("#<?php echo $workType->id?>AddForm").validate({
@@ -192,6 +186,13 @@
 
 							</script>
 							<?php }?>
+							<div class="col-md-12 hide" id="success_plan" >
+								<p class="message">
+									<span class="message success" id="success_msg"></span>
+									Have you done any field work on this date? Is yes <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>" > Click here </a> or Click on <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" >Final Submit</a> and proceed to next date. 
+								</p>
+							</div>
+
 							<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_1">
 								<div class="col-md-12 mar-bottom-20">
 									<?php 

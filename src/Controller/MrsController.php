@@ -260,7 +260,6 @@ class MrsController extends AppController {
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-
 			
 		}
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
@@ -270,37 +269,42 @@ class MrsController extends AppController {
 
     public function dailyReportField()
     {
-        $this->set('title', 'Daily Report');
-        $uid = $this->Auth->user('id');
-        $userCity = $this->Auth->user('city_id');
-        $user =  $this->Auth->user;
-		$state_id = $this->Auth->user('state_id');
-        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $specialities = $this->Specialities->find('all')->toarray();
-		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
-		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-		$products = $this->Products->find('all')->toarray();
-		$samples = $this->AssignedSamples->find('all');
-		$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
-		$i_samples = $this->IssuedSamples->find('all');
-		$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
-		foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
-		$gifts = $this->AssignedGifts->find('all');
-		$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
-		$i_gifts = $this->IssuedGifts->find('all');
-		$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
-		foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
-		//pj($i_gift);
-		$date = "";
-		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
-		$WorkPlansD = array();
-		$WorkPlans = array();
-		$doctorsRelation = array();
-		$chemists = array();
-		$stockists = array();
-		if(isset($_GET['date']))
+        if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit){return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$specialities = $this->Specialities->find('all')->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$products = $this->Products->find('all')->toarray();
+			$samples = $this->AssignedSamples->find('all');
+			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
+			$i_samples = $this->IssuedSamples->find('all');
+			$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
+			foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
+			$gifts = $this->AssignedGifts->find('all');
+			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
+			$i_gifts = $this->IssuedGifts->find('all');
+			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
+			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
+			//pj($i_gift);
+			$date = "";
+			$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
+			$WorkPlansD = array();
+			$WorkPlans = array();
+			$doctorsRelation = array();
+			$chemists = array();
+			$stockists = array();
+
 			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
@@ -354,43 +358,45 @@ class MrsController extends AppController {
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
-	
 		
     }
     
     public function UnplannedDoctors()
     {
-        $this->set('title', 'Daily Report');
-        $uid = $this->Auth->user('id');
-        $userCity = $this->Auth->user('city_id');
-        $user =  $this->Auth->user;
-		$state_id = $this->Auth->user('state_id');
-        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $specialities = $this->Specialities->find('all')->toarray();
-		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
-		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-		$products = $this->Products->find('all')->toarray();
-		$samples = $this->AssignedSamples->find('all');
-		$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
-		$i_samples = $this->IssuedSamples->find('all');
-		$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
-		foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
-		$gifts = $this->AssignedGifts->find('all');
-		$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
-		$i_gifts = $this->IssuedGifts->find('all');
-		$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
-		foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
-		//pj($i_gift);
-		$date = "";
-		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
-		$WorkPlansD = array();
-		$WorkPlansUD = array();
-		$doctorsRelation = array();
-		$chemists = array();
-		$stockists = array();
 		if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit){return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$specialities = $this->Specialities->find('all')->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$products = $this->Products->find('all')->toarray();
+			$samples = $this->AssignedSamples->find('all');
+			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
+			$i_samples = $this->IssuedSamples->find('all');
+			$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
+			foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
+			$gifts = $this->AssignedGifts->find('all');
+			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
+			$i_gifts = $this->IssuedGifts->find('all');
+			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
+			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
+			//pj($i_gift);
+			$date = "";
+			$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
+			$WorkPlansD = array();
+			$WorkPlansUD = array();
+			$doctorsRelation = array();
+			$chemists = array();
+			$stockists = array();
 			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
@@ -416,28 +422,30 @@ class MrsController extends AppController {
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
-	
 		
     }
     
     public function viewDailyReport()
     {
-        $this->set('title', 'Daily Report');
-        $uid = $this->Auth->user('id');
-        $userCity = $this->Auth->user('city_id');
-        $user =  $this->Auth->user;
-		$state_id = $this->Auth->user('state_id');
-        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $doctorTypes = $this->DoctorTypes->find('all')->toarray();
-		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-		$products = $this->Products->find('all')->toarray();
-		$samples = $this->Products->find('all')->toarray();
-		$gifts = $this->Gifts->find('all')->toarray();
-		$date = "";
-		$html = "";
 		if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit){return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$products = $this->Products->find('all')->toarray();
+			$samples = $this->Products->find('all')->toarray();
+			$gifts = $this->Gifts->find('all')->toarray();
+			$date = "";
+			$html = "";
 			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
@@ -478,31 +486,34 @@ class MrsController extends AppController {
 			->contain(['Cities', 'Stockists'])	 
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 			
+			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
 		}
-		
-        $this->set(compact('userCity', 'cities', 'class', 'products', 'samples',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
-        
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
 		
     }
 
     public function finalSubmitReport()
     {
-        $this->set('title', 'Final Submit');
-        $uid = $this->Auth->user('id');
-        $userCity = $this->Auth->user('city_id');
-        $user =  $this->Auth->user;
-		$state_id = $this->Auth->user('state_id');
-        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-		$products = $this->Products->find('all')->toarray();
-		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
-		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-		$samples = $this->Products->find('all')->toarray();
-		$gifts = $this->Gifts->find('all')->toarray();
-		$date = "";
-		$html = "";
 		if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];
+			$this->set('title', 'Final Submit');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit){return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$products = $this->Products->find('all')->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$samples = $this->Products->find('all')->toarray();
+			$gifts = $this->Gifts->find('all')->toarray();
+			$date = "";
+			$html = "";
 			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
@@ -543,10 +554,10 @@ class MrsController extends AppController {
 			->contain(['Cities', 'Stockists'])	 
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 			
+			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
 		}
-		
-        $this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
-        
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
 		
     }
 	
