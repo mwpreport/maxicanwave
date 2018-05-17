@@ -163,7 +163,7 @@
 															<div class="form-group col-sm-6">
 																<div class="col-sm-6">
 																<label>Visit Time</label>
-																<input type="text" name="visit_time" value=""><br>
+																<input type="text" name="visit_time" class="time" value=""><br>
 																</div>
 																<div class="col-sm-6">
 																<label>Doctor Business</label>
@@ -337,7 +337,7 @@
 									<div class="form-group col-sm-6">
 										<div class="col-sm-6">
 										<label>Visit Time</label>
-										<input type="text" name="visit_time" value="<?= $WorkPlanUD->visit_time?>"><br>
+										<input type="text" name="visit_time" class="time" value="<?= $WorkPlanUD->visit_time?>"><br>
 										</div>
 										<div class="col-sm-6">
 										<label>Doctor Business</label>
@@ -557,7 +557,7 @@
 		}
 	}
 
-
+	$('.time').mask('99:99');
 </script>
 <?php echo $this->Html->script(['multiselect.js']); ?>        
 <?= $this->fetch('script') ?>

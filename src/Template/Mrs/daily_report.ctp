@@ -162,6 +162,22 @@
 															<?php }	?>
 														</select>  
 													</div>
+													<?php if($workType->id == 8){?>
+													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
+														<label for="plan_details">More Details</label>
+														<textarea class="form-control required" name="plan_details" id="plan_details" rows="4"></textarea>
+													</div>
+													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
+														<label for="start_time">Time</label>
+														<input class="form-control required time" placeholder="From (HH:MM)" name="start_time" id="start_time" /> - 
+													</div>
+													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
+														<label for="end_time">&nbsp;</label>
+														<input class="form-control required time" placeholder="To (HH:MM)" name="end_time" id="end_time" />
+													</div>
+												</div>	
+												<div class="col-sm-12 mar-bottom-20">
+													<?php }?>
 													<div class="col-md-3 col-sm-3 col-xs-3"><label>&nbsp;</label>
 														<button type="submit" class="common-btn blue-btn btn-block margin-right-35">Submit</button>
 													</div>
@@ -254,9 +270,19 @@
 														</select>  
 													</div>
 													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
-														<label for="city_id">More Detials</label>
+														<label for="plan_details">More Detials</label>
 														<textarea class="form-control required" name="plan_details" id="plan_details" rows="3"></textarea>  
 													</div>
+													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
+														<label for="start_date">From</label>
+														<input class="form-control required " placeholder="From" name="start_date" id="start_date" /> - 
+													</div>
+													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
+														<label for="end_date">To</label>
+														<input class="form-control " placeholder="To" name="end_date" id="end_date" />
+													</div>
+												</div>	
+												<div class="col-sm-12 mar-bottom-20">
 													<div class="col-md-3 col-sm-3 col-xs-3 form-group">
 														<label>&nbsp;</label>
 														<button type="submit" class="common-btn blue-btn btn-block margin-right-35">Submit</button>
@@ -330,6 +356,8 @@
 			$("div[id^='workType_section_']").addClass("hide");
 			$("#workType_section_"+$(this).val()).removeClass("hide");
 			$('input[type="checkbox"].workplan_id').prop('checked', false);
+			$("#success_msg").html("");
+			$("#success_plan").addClass('hide');
 		}
 	});
 	
@@ -375,6 +403,7 @@
 			   if(json.status == 1)
 			   {	
 					//window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+					$(form)[0].reset();
 					$("#success_msg").html(json.msg+"<br>");
 					$("#success_plan").removeClass('hide');
 			   }
@@ -406,5 +435,5 @@
 		}
 	}
 
-
+	$('.time').mask('99:99');
 </script>

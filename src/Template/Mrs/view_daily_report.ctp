@@ -108,18 +108,6 @@
 				$html.='</tbody></table>';
 			}
 
-			if(count($WorkPlans))
-			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlans as $WorkPlan)
-				{
-					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlan->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
-
 			if(count($WorkPlansC))
 			{
 				$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
@@ -144,6 +132,18 @@
 				$html.='</tbody></table>';
 			}
 						
+			if(count($WorkPlans))
+			{
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Other Plans</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+				$i = 1;
+				foreach ($WorkPlans as $WorkPlan)
+				{
+					$html.='<tr><td>'.$i.'</td><td>'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlan->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+				$i++;
+				}
+				$html.='</tbody></table>';
+			}
+
 			if($html == ""){$html.="<p>No reports on this date</p>";}
 		
 			echo $html;

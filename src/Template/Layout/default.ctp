@@ -53,6 +53,7 @@
                 'https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js',
                 '/plugins/morris/morris.min',
                 '/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min',
+                '/js/jquery.mask.js',
                 '/dist/js/pages/dashboard'
 			 ]); ?>        
     <?= $this->fetch('script') ?>

@@ -260,6 +260,7 @@ class MrsController extends AppController {
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+
 			
 		}
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
@@ -269,14 +270,15 @@ class MrsController extends AppController {
 
     public function dailyReportField()
     {
-        if(isset($_GET['date']))
+		if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];
+			//echo $date; exit;
 			$this->set('title', 'Daily Report');
 			$uid = $this->Auth->user('id');
 			$lead_id = $this->Auth->user('lead_id');
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-			if($workPlanSubmit){return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 			
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
@@ -297,15 +299,12 @@ class MrsController extends AppController {
 			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
 			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
 			//pj($i_gift);
-			$date = "";
 			$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
 			$WorkPlansD = array();
 			$WorkPlans = array();
 			$doctorsRelation = array();
 			$chemists = array();
 			$stockists = array();
-
-			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
 			
@@ -358,6 +357,7 @@ class MrsController extends AppController {
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
+	
 		
     }
     
@@ -366,11 +366,13 @@ class MrsController extends AppController {
 		if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];
+			//echo $date; exit;
 			$this->set('title', 'Daily Report');
 			$uid = $this->Auth->user('id');
 			$lead_id = $this->Auth->user('lead_id');
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-			if($workPlanSubmit){return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
 			$state_id = $this->Auth->user('state_id');
@@ -390,14 +392,12 @@ class MrsController extends AppController {
 			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
 			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
 			//pj($i_gift);
-			$date = "";
 			$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
 			$WorkPlansD = array();
 			$WorkPlansUD = array();
 			$doctorsRelation = array();
 			$chemists = array();
 			$stockists = array();
-			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
 			
@@ -422,6 +422,7 @@ class MrsController extends AppController {
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
+	
 		
     }
     
@@ -430,11 +431,13 @@ class MrsController extends AppController {
 		if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];
+			//echo $date; exit;
 			$this->set('title', 'Daily Report');
 			$uid = $this->Auth->user('id');
 			$lead_id = $this->Auth->user('lead_id');
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-			if($workPlanSubmit){return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
 			$state_id = $this->Auth->user('state_id');
@@ -444,9 +447,7 @@ class MrsController extends AppController {
 			$products = $this->Products->find('all')->toarray();
 			$samples = $this->Products->find('all')->toarray();
 			$gifts = $this->Gifts->find('all')->toarray();
-			$date = "";
 			$html = "";
-			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
 			
@@ -498,11 +499,13 @@ class MrsController extends AppController {
 		if(isset($_GET['date']))
 		{
 			$date = $_GET['date'];
+			//echo $date; exit;
 			$this->set('title', 'Final Submit');
 			$uid = $this->Auth->user('id');
 			$lead_id = $this->Auth->user('lead_id');
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-			if($workPlanSubmit){return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
 			$state_id = $this->Auth->user('state_id');
@@ -512,9 +515,7 @@ class MrsController extends AppController {
 			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
 			$samples = $this->Products->find('all')->toarray();
 			$gifts = $this->Gifts->find('all')->toarray();
-			$date = "";
 			$html = "";
-			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
 			
@@ -558,7 +559,7 @@ class MrsController extends AppController {
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
-		
+
     }
 	
     public function reportGetDoctors()

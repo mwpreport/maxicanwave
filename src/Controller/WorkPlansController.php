@@ -787,6 +787,7 @@ class WorkPlansController extends AppController
 			$data['end_date'] = $_POST['start_date']." 23:59:00";
 			$data['plan_reason'] = isset($_POST['plan_reason'])? $_POST['plan_reason'] : "";
 			$data['plan_details'] = isset($_POST['plan_details'])? $_POST['plan_details'] : "";
+			$data['plan_time'] = isset($_POST['start_time']) && isset($_POST['end_time'])? $_POST['start_time']."-".$_POST['end_time'] : "";
 
 			$data['is_reported'] = 1;
 			$data['last_updated'] = date("Y-m-d H:i:s");
