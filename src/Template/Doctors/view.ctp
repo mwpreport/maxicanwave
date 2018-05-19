@@ -80,14 +80,6 @@
 											</td>
 										</tr>
 										<tr>
-											<th scope="row"><?= __('Is Approved') ?></th>
-											<td><?= ($doctor->is_approved == 1) ? "Yes" : "No" ?></td>
-										</tr>
-										<tr>
-											<th scope="row"><?= __('Is Active') ?></th>
-											<td><?= ($doctor->is_active == 1) ? "Yes" : "No" ?></td>
-										</tr>
-										<tr>
 											<th scope="row"><?= __('Last Updated') ?></th>
 											<td><?= h($doctor->last_updated) ?></td>
 										</tr>

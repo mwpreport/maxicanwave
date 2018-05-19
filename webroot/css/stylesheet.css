@@ -719,6 +719,7 @@ th a{color : #fff;}
 table.doctors_table input{width:100px;}
 tr.reported td:first-child {background: #98FB98;}
 tr.reported.missed td:first-child {background: #ffb3b3;}
+tr.unplanned td:first-child {background: #ffb3b3;}
 tr.reported.unplanned td:first-child {background: #3CB371;}
 #report_section td{padding:0;}
 #report_section table select{width:100px;}

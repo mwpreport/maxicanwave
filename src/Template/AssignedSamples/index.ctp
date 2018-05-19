@@ -48,8 +48,7 @@
 											<tr>
 												<th scope="col"><?= $this->Paginator->sort('S.No') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('Product') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('Count') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('Balance') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('Item Count') ?></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -57,8 +56,7 @@
 											<tr>
 												<td><?= $i ?></td>
 												<td><?= $assignedSample->name?></td>
-												<td><?= $assignedSample->count ?></td>
-												<td><?= $i_sample[$assignedSample->id] ?></td>
+												<td><?= $assignedSample->count-$i_sample[$assignedSample->id] ?></td>
 											</tr>
 											<?php endforeach; ?>
 										</tbody>

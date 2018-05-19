@@ -39,6 +39,15 @@
 						<?php if($date!=""){
 						if($workPlanSubmit)
 						{echo '<h4 class="message success">Report Submitted for this date</h4>';}
+						elseif($hasLeave)
+						{?>
+							<div class="col-md-12">
+								<p class="message">
+									<span class="message success">This is was planned as leave.</span>
+									Have you done any field work on this date? Is yes <a href="javascript:void(0)" onclick="remove_leave()" > Click here </a> to make this date not a leave.
+								</p>
+							</div>
+						<?php }
 						else{
 						?>
 						<div class="col-sm-12 mar-bottom-20">
@@ -93,7 +102,7 @@
 											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned '.$workType->name.'</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Work Type</th><th>City</th></thead><tbody>';
 											foreach ($workTypePlans[$workType->id] as $workTypePlan)
 											{
-												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' '.(($workTypePlan->is_missed)?"missed":"").'"><td><input class=" workplan_id_'.$workType->id.'" type="checkbox" '.(($workTypePlan->is_missed)?"disabled":"").' name="workplan_id['.$workTypePlan->id.']" value="'.$workTypePlan->id.'"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
+												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' '.(($workTypePlan->is_missed)?"missed":"").'"><td><input class=" workplan_id_'.$workType->id.'" type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="'.$workTypePlan->id.'"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
 											}
 											$html.='</tbody></table>';
 										}
@@ -211,45 +220,6 @@
 
 							<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_1">
 								<div class="col-md-12 mar-bottom-20">
-									<?php 
-										$html = "";
-										if(isset($workTypePlans[1]))if(count($workTypePlans[1]))
-										{
-											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" name="check_all" value="1"></th><th>Work Type</th><th>On</th></thead><tbody>';
-											foreach ($workTypePlans[1] as $workTypePlan)
-											{
-												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' '.(($workTypePlan->is_missed)?"missed":"").' "><td><input type="checkbox" '.(($workTypePlan->is_missed)?"disabled":"").' name="workplan_id['.$workTypePlan->id.']" value="'.$workTypePlan->id.'"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$reportDate.'</td></tr>';
-											}
-											$html.='</tbody></table>';
-										}
-									?>
-									<?php if($html == ""){?>
-									<div class="table-responsive">
-										<p>No Planned Leave on this date</p>
-									</div>
-									<?php }else {?>
-									<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
-									<input type="hidden" value="<?php echo $reportDate;?>" name="reportDate">
-									<div class="table-responsive">
-										<?php echo $html;?>
-									</div>
-									<div class="clearfix"></div>
-									<div class="center-button-container">
-										<div class="row">
-											<div class="form-group  mar-top-30">
-												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" value="w1SubmitSave">Save</button>
-												</div>
-												<div class="col-sm-3">
-													<button class="common-btn blue-btn pull-left" type="submit" value="w1SubmitMissed">Missed</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									</form>
-									<?php }?>
-								</div>
-								<div class="col-md-12 mar-bottom-20">
 								<hr />
 									<form class="workplanForm" id="LeaveAddForm" method="POST" >
 										<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
@@ -320,9 +290,14 @@
 	var endDate = new Date(y, m + 1, 0);
 
 	//Date picker
-	$('#reportDate').datepicker({
+	$('#reportDate, #start_date, #end_date').datepicker({
 		autoclose: true, startDate: startDate, endDate: endDate
 	});
+	$('#start_date').on('changeDate', function (ev) {
+					$('#end_date').datepicker('remove');
+					$('#end_date').datepicker({autoclose: true, startDate: ev.date, endDate: endDate});					
+	});
+	
 	$('#missed_doctors_table [type="text"]').datepicker({
 		autoclose: true, startDate: new Date(y, m, d + 1), endDate: endDate
 	});
@@ -346,7 +321,22 @@
 	$("#LeaveAddForm").validate({
 		ignore: ":hidden",
 		submitHandler: function (form) {
-			doSubmit("#LeaveAddForm")
+			$.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAddReportLeave"])?>',
+			   dataType: "json",
+			   data: $(form).serialize()+"&action=add",
+			   type: "POST",
+			   success: function(json) {
+				   if(json.status == 1)
+				   {	
+						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport",'?' => ['date' => $reportDate]])?>");			   
+				   }
+				   else
+				   {
+						alert(json.error);
+				   }
+			   }
+		   });
 			return false; // required to block normal submit since you used ajax
 		}
 	});
@@ -402,7 +392,7 @@
 		   success: function(json) {
 			   if(json.status == 1)
 			   {	
-					//window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+					//window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport",'?' => ['date' => $reportDate]])?>");			   
 					$(form)[0].reset();
 					$("#success_msg").html(json.msg+"<br>");
 					$("#success_plan").removeClass('hide');
@@ -415,21 +405,21 @@
 	   });
 	}
 	
-	function doDelete(eventID){  // delete event 
-		if (confirm("Are you sure on deleting this?"))
+	function remove_leave(){  // delete event 
+		if (confirm("Are you sure to make this date active?"))
 		{
 		   $.ajax({
-			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDeleteReport"])?>',
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDelete"])?>',
 			   dataType: "json",
-			   data: 'action=delete&id='+eventID,
+			   data: 'action=delete&id=<?=$hasLeave?>',
 			   type: "POST",
 			   success: function(json) {
-				   if(json.status == 1)
+				   if(json == 1)
 					{
-						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport",'?' => ['date' => $reportDate]])?>");			   
 					}
 				   else
-						alert(json.msg);
+						alert("Unable to process!");
 			   }
 		   });
 		}

@@ -8,7 +8,7 @@
                 <div class="col-md-12">
                     <div class="hr-title">
 						<?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
-                        <h2>Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport"])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
+                        <h2>Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport",'?' => ['date' => $reportDate]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
                         <hr>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
 								<div class="form-group">
 									<div class="col-sm-6">
 									 <input type="hidden" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo $reportDate;?>">
-									 <div class="col-sm-6"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35" target="blank"><b>View Reported Calls</b></a></div>
+									 <div class="col-sm-6"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 ajax-popup-link" target="blank"><b>View Reported Calls</b></a></div>
 									 <div class="col-sm-6"><button class="btn blue-btn btn-block margin-right-35 pull-right" type="submit">Final Submit</a></div>
 									</div>
 									<!-- /.input group -->
@@ -353,7 +353,7 @@
 						$html ="";
 						if(count($WorkPlansC))
 						{
-							$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+							$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Chemists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
 							$i = 1;
 							foreach ($WorkPlansC as $WorkPlanC)
 							{
@@ -798,6 +798,21 @@
 		type: 'inline',
 		preloader: false,
 		modal: true
+	});
+	$('.ajax-popup-link').magnificPopup({
+		type: 'ajax',
+		preloader: false
+	});
+	$('.iframe-popup-link').magnificPopup({
+		type: 'iframe',
+		preloader: false,
+		modal: true,
+		iframe: {
+			markup: '<div class="mfp-iframe-scaler">'+
+					'<div class="mfp-close"></div>'+
+					'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+					'</div>'
+		  }
 	});
 	
 	$(document).on('click', '.popup-modal-dismiss', function (e) {

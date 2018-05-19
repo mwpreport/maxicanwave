@@ -136,11 +136,6 @@ class DoctorsTable extends Table
             ->allowEmpty('dow');
 
         $validator
-            ->integer('is_approved')
-            ->requirePresence('is_approved', 'create')
-            ->notEmpty('is_approved');
-
-        $validator
             ->scalar('state_id')
             ->requirePresence('state_id', 'create')
             ->notEmpty('state_id');
@@ -150,12 +145,6 @@ class DoctorsTable extends Table
             ->requirePresence('city_id', 'create')
             ->notEmpty('city_id');
 			
-
-        $validator
-            ->integer('is_active')
-            ->requirePresence('is_active', 'create')
-            ->notEmpty('is_active');
-
         $validator
             ->integer('is_deleted')
             ->allowEmpty('is_deleted');

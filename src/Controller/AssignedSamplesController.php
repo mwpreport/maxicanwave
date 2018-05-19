@@ -44,7 +44,7 @@ class AssignedSamplesController extends AppController
 		foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
 
         $assignedSamples = $this->paginate($samples);
-		$users = $this->Users->find('all')->where(['Users.role_id =' => '5']);
+		$users = $this->Users->find('all')->where(['Users.role_id =' => '5','Users.is_active =' => 1, 'Users.is_deleted =' => 0]);
 		if($authuser['role_id'] != 1)
 		$users = $users->where(['Users.lead_id =' => $authuser['id']]);
 
@@ -90,7 +90,7 @@ class AssignedSamplesController extends AppController
             if ($this->AssignedSamples->save($assignedSample)) {
                 $this->Flash->success(__('The assigned sample has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'index', '?' => ['user' => $assignedSample->user_id]]);
             }
             $this->Flash->error(__('The assigned sample could not be saved. Please, try again.'));
         }

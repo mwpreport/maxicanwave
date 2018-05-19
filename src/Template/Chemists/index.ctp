@@ -34,8 +34,6 @@
 												<th scope="col"><?= $this->Paginator->sort('Code') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('name') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('location') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('is_approved') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('is_active') ?></th>
 												<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
 											</tr>
 										</thead>
@@ -46,8 +44,6 @@
 												<td><?= h($chemist->code) ?></td>
 												<td><?= h($chemist->name) ?></td>
 												<td><?= $chemist->has('city') ? $this->Html->link($chemist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $chemist->city->id]) : '' ?>, <?= $chemist->has('state') ? $this->Html->link($chemist->state->name, ['controller' => 'States', 'action' => 'view', $chemist->state->id]) : '' ?></td>
-												<td><?= ($chemist->is_approved == 1) ? "yes" : "No" ?></td>
-												<td><?= ($chemist->is_active == 1) ? "yes" : "No" ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $chemist->id],['escape' => false]) ?></td>
 												<td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $chemist->id],['escape' => false]) ?></td>
 												<td width="50"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $chemist->id], ['escape' => false,'confirm' => __('Are you sure you want to delete "{0}"?', $chemist->name)]) ?></td>

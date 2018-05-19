@@ -34,11 +34,15 @@
 								<div class="box-body no-padding">
 									<?= $this->Form->create($gift, array('id' => 'editform')) ?>
 									<fieldset>
+										<div class="form-group mar-bottom-10"><div class="col-sm-6">
 										<?php
 											echo $this->Form->control('name', ['class' => 'form-control mar-bottom-10']);
 										?>
+										</div></div>
 									</fieldset>
+									<div class="form-group mar-bottom-10"><div class="col-sm-6">
 									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']); ?>
+									</div></div>
 									<?= $this->Form->end() ?>
 								</div>
 						</div>

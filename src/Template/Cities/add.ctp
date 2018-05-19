@@ -28,11 +28,13 @@
 									<?= $this->Form->create($city, array('id' => 'newform')) ?>
 									<fieldset>
 										<?php
-											echo $this->Form->control('state_id', ['class' => 'form-control mar-bottom-10']);
-											echo $this->Form->control('city_name', ['class' => 'form-control mar-bottom-10']);
+											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('state_id', ['class' => 'form-control']).'</div>';
+											echo '<div class="col-sm-4">'.$this->Form->control('city_name', ['class' => 'form-control']).'</div></div>';
 										?>
 									</fieldset>
+									<div class="form-group mar-bottom-10"> <div class="col-sm-8">
 									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']); ?>
+									</div></div>
 									<?= $this->Form->end() ?>
 								</div>
 						</div>

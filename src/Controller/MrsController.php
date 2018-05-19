@@ -66,7 +66,7 @@ class MrsController extends AppController {
 			->find()
 			->notMatching('DoctorsRelation', function ($q) use ($uid) {
 				return $q->where(['DoctorsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $userCity, 'is_approved =' => '1']);
+			})->where(['city_id =' => $userCity]);
         //pj($doctors);exit;
         $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors', 'doctorTypes'));            
     }
@@ -263,8 +263,9 @@ class MrsController extends AppController {
 
 			
 		}
+		$hasLeave = $this->_hasLeave($date);
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'workPlanSubmit', 'date'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'workPlanSubmit', 'date','hasLeave'));        
 		
     }
 
@@ -277,8 +278,9 @@ class MrsController extends AppController {
 			$this->set('title', 'Daily Report');
 			$uid = $this->Auth->user('id');
 			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 			
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
@@ -370,8 +372,9 @@ class MrsController extends AppController {
 			$this->set('title', 'Daily Report');
 			$uid = $this->Auth->user('id');
 			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 			
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
@@ -430,13 +433,15 @@ class MrsController extends AppController {
     {
 		if(isset($_GET['date']))
 		{
+			$this->viewBuilder()->layout('iframe');
 			$date = $_GET['date'];
 			//echo $date; exit;
 			$this->set('title', 'Daily Report');
 			$uid = $this->Auth->user('id');
 			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 			
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
@@ -503,6 +508,8 @@ class MrsController extends AppController {
 			$this->set('title', 'Final Submit');
 			$uid = $this->Auth->user('id');
 			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
+			$hasUnSavedPlans = $this->_hasUnSavedPlans($date);
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
 			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 			
@@ -555,7 +562,7 @@ class MrsController extends AppController {
 			->contain(['Cities', 'Stockists'])	 
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 			
-			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD', 'hasUnSavedPlans'));        
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
@@ -634,6 +641,26 @@ class MrsController extends AppController {
 		$listHtml.='<option value="'.$stockist['id'].'">'.$stockist['name'].'</option>';
 		
 		echo $listHtml; exit;
+    }
+
+	protected function _hasLeave($start_date)
+    {
+		$uid = $this->Auth->user('id');
+		$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date,'work_type_id =' => 1, 'user_id =' => $uid])->first();
+		if(count($workPlans)>0)
+		return $workPlans->id;
+
+		return false;
+    }
+    
+	protected function _hasUnSavedPlans($start_date)
+    {
+		$uid = $this->Auth->user('id');
+		$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date, 'user_id =' => $uid, 'is_reported =' => 0])->toArray();
+		if(count($workPlans)>0)
+		return true;
+
+		return false;
     }
 
 	}

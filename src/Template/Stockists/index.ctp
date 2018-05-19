@@ -34,8 +34,6 @@
 												<th scope="col"><?= $this->Paginator->sort('Code') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('name') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('location') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('is_approved') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('is_active') ?></th>
 												<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
 											</tr>
 										</thead>
@@ -46,8 +44,6 @@
 												<td><?= h($stockist->code) ?></td>
 												<td><?= h($stockist->name) ?></td>
 												<td><?= $stockist->has('city') ? $this->Html->link($stockist->city->city_name, ['controller' => 'Cities', 'action' => 'view', $stockist->city->id]) : '' ?>, <?= $stockist->has('state') ? $this->Html->link($stockist->state->name, ['controller' => 'States', 'action' => 'view', $stockist->state->id]) : '' ?></td>
-												<td><?= ($stockist->is_approved == 1) ? "yes" : "No" ?></td>
-												<td><?= ($stockist->is_active == 1) ? "yes" : "No" ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $stockist->id],['escape' => false]) ?></td>
 												<td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $stockist->id],['escape' => false]) ?></td>
 												<td width="50"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $stockist->id], ['escape' => false,'confirm' => __('Are you sure you want to delete "{0}"?', $stockist->name)]) ?></td>

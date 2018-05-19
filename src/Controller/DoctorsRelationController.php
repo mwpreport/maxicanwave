@@ -38,8 +38,8 @@ class DoctorsRelationController extends AppController
 		else
 		$filterUser = 0;
 	
-        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $filterUser, 'DoctorsRelation.is_active =' => 1]));
-		$users = $this->Users->find('all')->where(['Users.role_id =' => 5,'Users.is_active =' => 1, 'Users.is_approved =' => 1, 'Users.is_deleted =' => 0])->toarray();
+        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $filterUser]));
+		$users = $this->Users->find('all')->where(['Users.role_id =' => 5,'Users.is_active =' => 1, 'Users.is_deleted =' => 0])->toarray();
 
         $this->set(compact('doctorsRelation', 'users', 'filterUser'));
         $this->set('_serialize', ['doctorsRelation']);
@@ -70,16 +70,16 @@ class DoctorsRelationController extends AppController
     public function add()
     {
         if ($this->request->is('post')) {
-			$rData=array('user_id'=>$_POST['user_id'],'doctor_ids'=>$_POST['doctor_id'],'class'=>$_POST['class'],'is_active'=>1);
+			$rData=array('user_id'=>$_POST['user_id'],'doctor_ids'=>$_POST['doctor_id'],'class'=>$_POST['class']);
 			$uid = $rData['user_id'];
-			$previous_count = $this->DoctorsRelation->find()->where(['is_active' => true, 'user_id =' => $uid])->count();
+			$previous_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid])->count();
 			$doctorsCount=count($rData['doctor_ids']);
 			$totalCount=$previous_count+$doctorsCount;
 			$relationLimit = $this->Config->find()->select('value')->where(['scope' => 'mr_doctors_limit'])->first();
 			if ($this->request->is('post') && $totalCount < $relationLimit->value) {
 				foreach ($rData['doctor_ids'] as $doctor_id){
 					$doctorsRelation = $this->DoctorsRelation->newEntity();
-					$data = array('user_id'=>$rData['user_id'],'doctor_id'=>$doctor_id,'class'=>$rData['class'],'is_active'=>1);
+					$data = array('user_id'=>$rData['user_id'],'doctor_id'=>$doctor_id,'class'=>$rData['class']);
 					$doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $data);
 					$data_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid, 'doctor_id =' => $doctor_id])->count();
 					if($data_count<1)
@@ -172,11 +172,11 @@ class DoctorsRelationController extends AppController
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
 		$uid = $this->Auth->user('id');
-		$row_count = $this->DoctorsRelation->find()->where(['is_active' => true, 'user_id =' => $uid])->count();
+		$row_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid])->count();
 		$relationLimit = $this->Config->find()->select('value')->where(['scope' => 'mr_doctors_limit'])->first();
         $doctorsRelation = $this->DoctorsRelation->newEntity();
         if ($this->request->is('post') && $row_count < $relationLimit->value) {
-			$data=array('user_id'=>$uid,'doctor_id'=>$_POST['doctor_id'],'class'=>$_POST['class'],'is_active'=>1);
+			$data=array('user_id'=>$uid,'doctor_id'=>$_POST['doctor_id'],'class'=>$_POST['class']);
             $doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $data);
 			$data_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid, 'doctor_id =' => $data['doctor_id']])->count();
             if($data_count<1)

@@ -87,8 +87,9 @@
                                             foreach ($doctors as $doctor)
 											{
 												if($filter == "Doctor_Wise_Plan") {if(empty($visits[$doctor->doctor_id])) continue;}
-												elseif($filter == "Un-Planned_Doctors") {if(!empty($visits[$doctor->doctor_id])) continue;}?>
-											<tr>
+												elseif($filter == "Un-Planned_Doctors") {if(!empty($visits[$doctor->doctor_id])) continue;}
+											?>
+											<tr class="<?=(empty($visits[$doctor->doctor_id]))?"unplanned":""?>">
 											<td><?=$i?></td>
 											<td><?=$doctor->doctor->code?></td>
 											<td><?=$doctor->doctor->name?></td>

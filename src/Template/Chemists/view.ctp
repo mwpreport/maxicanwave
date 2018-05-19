@@ -48,10 +48,6 @@
 											<td><?= $this->Number->format($chemist->id) ?></td>
 										</tr>
 										<tr>
-											<th scope="row"><?= __('Email') ?></th>
-											<td><?= $chemist->email ?></td>
-										</tr>
-										<tr>
 											<th scope="row"><?= __('Mobile') ?></th>
 											<td><?= $this->Number->format($chemist->mobile) ?></td>
 										</tr>
@@ -74,14 +70,6 @@
 											echo $chemist->has('state') ? $this->Html->link($chemist->state->name, ['controller' => 'States', 'action' => 'view', $chemist->state->id]) : '';
 											?>
 											</td>
-										</tr>
-										<tr>
-											<th scope="row"><?= __('Is Approved') ?></th>
-											<td><?= ($chemist->is_approved == 1) ? "Yes" : "No" ?></td>
-										</tr>
-										<tr>
-											<th scope="row"><?= __('Is Active') ?></th>
-											<td><?= ($chemist->is_active == 1) ? "Yes" : "No" ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Last Updated') ?></th>

@@ -16,8 +16,6 @@ use Cake\ORM\Entity;
  * @property int $state_id
  * @property int $city_id
  * @property int $pincode
- * @property int $is_approved
- * @property int $is_active
  * @property int $is_deleted
  * @property \Cake\I18n\FrozenTime $last_updated
  * @property \Cake\I18n\FrozenTime $dt

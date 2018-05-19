@@ -81,7 +81,7 @@ class ChemistsTable extends Table
 
         $validator
             ->requirePresence('email', 'create')
-            ->notEmpty('email');
+            ->allowEmpty('email');
 
         $validator
             ->requirePresence('mobile', 'create')
@@ -117,16 +117,6 @@ class ChemistsTable extends Table
             ->scalar('city_id')
             ->requirePresence('city_id', 'create')
             ->notEmpty('city_id');
-
-		$validator
-            ->integer('is_approved')
-            ->requirePresence('is_approved', 'create')
-            ->notEmpty('is_approved');
-
-        $validator
-            ->integer('is_active')
-            ->requirePresence('is_active', 'create')
-            ->notEmpty('is_active');
 
         $validator
             ->integer('is_deleted')

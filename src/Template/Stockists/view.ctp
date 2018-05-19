@@ -103,14 +103,6 @@
 											
 											</td>
 										</tr>
-										<tr>
-											<th scope="row"><?= __('Is Approved') ?></th>
-											<td><?= ($stockist->is_approved == 1) ? "Yes" : "No" ?></td>
-										</tr>
-										<tr>
-											<th scope="row"><?= __('Is Active') ?></th>
-											<td><?= ($stockist->is_active == 1) ? "Yes" : "No" ?></td>
-										</tr>
 									</table>
 								</div>
 						</div>

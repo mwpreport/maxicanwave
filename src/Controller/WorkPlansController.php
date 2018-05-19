@@ -127,25 +127,6 @@ class WorkPlansController extends AppController
 
 	}
 	
-	protected function _checkLeave($start_date, $end_date, $work_type_id, $id)
-    {
-		$uid = $this->Auth->user('id');
-		if($work_type_id ==1)
-		{
-			$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date])->orWhere(['start_date <=' => $end_date,'end_date >=' => $end_date])->andWhere(['id <>' => $id, 'user_id =' => $uid])->toarray();
-			if(count($workPlans)>0)
-			return array(0,'Remove existing plans to plan this day as leave.');
-		}
-		else
-		{
-			$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date,'work_type_id =' => 1,'id <>' => $id, 'user_id =' => $uid])->toarray();
-			if(count($workPlans)>0)
-			return array(0,'You cannot plan on leave days.');
-		}
-		return array(1,'');
-    }
-
-
     public function mrsView($id = null)
     {
 		$this->autoRender = false;
@@ -870,7 +851,48 @@ class WorkPlansController extends AppController
 		exit;   
      }
 
-	 public function mrsAddPgoReport()
+    public function mrsAddReportLeave()
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$uid = $this->Auth->user('id');
+		$workPlan = $this->WorkPlans->newEntity();
+        if ($this->request->is('post')) {
+			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'city_id' => $_POST['city_id']);
+			$data['plan_reason'] = isset($_POST['plan_reason'])? $_POST['plan_reason'] : "";
+			$data['plan_details'] = isset($_POST['plan_details'])? $_POST['plan_details'] : "";
+			$data['is_reported'] = 1;
+			$data['start_date'] = $_POST['start_date']." 00:00:00";
+			if( $_POST['end_date']=="")$_POST['end_date'] = $_POST['start_date'];
+			$data['end_date'] = $_POST['end_date']." 23:59:00";
+			$data['last_updated'] = date("Y-m-d H:i:s");
+			
+			
+
+            list($status, $error)=$this->_checkLeaveReport($data['start_date'],$data['end_date']);
+            if(!$status)
+            {echo json_encode(array("status"=>$status,"error"=>$error)); exit;}
+			
+				
+			$dates = $this->_datePeriod($data['start_date'], $data['end_date']);
+			foreach ($dates as $date)
+			{
+				$plan_data = $data;
+				$plan_data['start_date'] = $date." 00:00:00";
+				$plan_data['end_date'] = $date." 23:59:00";
+				$workPlans_array[] = $plan_data;
+			}
+
+			$entities = $this->WorkPlans->newEntities($workPlans_array);
+			$_results = $this->WorkPlans->saveMany($entities);
+			
+			echo json_encode(array("status"=>1,"error"=>"")); exit;
+				
+		}
+		exit;
+	}
+	
+	public function mrsAddPgoReport()
     {
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
@@ -881,7 +903,7 @@ class WorkPlansController extends AppController
 		if ($this->request->is('post')) {
 		$reportDate = $_POST['start_date'];
 			$city = $this->Cities->find()->where(['id =' => $_POST['city_id']])->first();
-			$docArray = array('name' => $_POST['name'], 'city_id' => $_POST['city_id'], 'speciality_id' => $_POST['speciality_id'], 'state_id' => $city->state_id, 'is_approved' => 0, 'is_active' => 0);
+			$docArray = array('name' => $_POST['name'], 'city_id' => $_POST['city_id'], 'speciality_id' => $_POST['speciality_id'], 'state_id' => $city->state_id);
 			$doctor = $this->PgOthers->patchEntity($doctor, $docArray);
 			$doctor->user_id=$uid;
 			//debug($doctor);exit;
@@ -1100,5 +1122,43 @@ class WorkPlansController extends AppController
 		$this->IssuedGifts->deleteAll($condition,false); 
 	}
 	
+	protected function _checkLeave($start_date, $end_date, $work_type_id, $id)
+    {
+		$uid = $this->Auth->user('id');
+		if($work_type_id ==1)
+		{
+			$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date])->orWhere(['start_date <=' => $end_date,'end_date >=' => $end_date])->andWhere(['id <>' => $id, 'user_id =' => $uid])->toarray();
+			if(count($workPlans)>0)
+			return array(0,'Remove existing plans to plan this day as leave.');
+		}
+		else
+		{
+			$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date,'work_type_id =' => 1,'id <>' => $id, 'user_id =' => $uid])->toarray();
+			if(count($workPlans)>0)
+			return array(0,'You cannot plan on leave days.');
+		}
+		return array(1,'');
+    }
+
+	protected function _checkLeaveReport($start_date, $end_date)
+    {
+		$uid = $this->Auth->user('id');
+		$workPlans = $this->WorkPlans->find()->where(['start_date <=' => $start_date,'end_date >=' => $start_date])->orWhere(['start_date <=' => $end_date,'end_date >=' => $end_date])->andWhere(['is_missed =' => '0', 'user_id =' => $uid])->toarray();
+		if(count($workPlans)>0)
+		return array(0,'Remove plans or reports saved on selected date(s) to report as leave.');
+		
+		return array(1,'');
+    }
+
+	protected function _hasLeave($start_date)
+    {
+		$uid = $this->Auth->user('id');
+		$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date,'work_type_id =' => 1, 'user_id =' => $uid])->toarray();
+		if(count($workPlans)>0)
+		return true;
+
+		return false;
+    }
+
 
 }

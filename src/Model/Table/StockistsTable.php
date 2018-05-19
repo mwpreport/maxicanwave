@@ -113,16 +113,6 @@ class StockistsTable extends Table
             ->requirePresence('city_id', 'create')
             ->notEmpty('city_id');
 
-		$validator
-            ->integer('is_approved')
-            ->requirePresence('is_approved', 'create')
-            ->notEmpty('is_approved');
-
-        $validator
-            ->integer('is_active')
-            ->requirePresence('is_active', 'create')
-            ->notEmpty('is_active');
-
         $validator
             ->integer('is_deleted')
             ->allowEmpty('is_deleted');

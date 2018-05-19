@@ -43,10 +43,6 @@
 											<th scope="row"><?= __('Class') ?></th>
 											<td><?= $doctorsRelation->doctor_type->name ?></td>
 										</tr>
-										<tr>
-											<th scope="row"><?= __('Is Active') ?></th>
-											<td><?= $this->Number->format($doctorsRelation->is_active) ?></td>
-										</tr>
 									</table>
 								</div>
 						</div>

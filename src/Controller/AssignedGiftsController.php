@@ -44,7 +44,7 @@ class AssignedGiftsController extends AppController
 		foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
 
         $assignedGifts = $this->paginate($gifts);
-		$users = $this->Users->find('all')->where(['Users.role_id =' => '5']);
+		$users = $this->Users->find('all')->where(['Users.role_id =' => '5','Users.is_active =' => 1, 'Users.is_deleted =' => 0]);
 		if($authuser['role_id'] != 1)
 		$users = $users->where(['Users.lead_id =' => $authuser['id']]);
 
@@ -94,7 +94,7 @@ class AssignedGiftsController extends AppController
             if ($this->AssignedGifts->save($assignedGift)) {
                 $this->Flash->success(__('The gift has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'index', '?' => ['user' => $assignedSample->user_id]]);
             }
             $this->Flash->error(__('The gift could not be saved. Please, try again.'));
         }

@@ -35,12 +35,14 @@
 									<?= $this->Form->create($assignedGift, array('id' => 'editform')) ?>
 									<fieldset>
 										<?php
-											echo $this->Form->control('user_id', ['class' => 'form-control mar-bottom-10', 'options' => $users, 'empty' => true]);
-											echo $this->Form->control('gift_id', ['class' => 'form-control mar-bottom-10', 'options' => $gifts, 'empty' => true]);
-											echo $this->Form->control('count', ['class' => 'form-control mar-bottom-10']);
+											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('user_id', ['class' => 'form-control mar-bottom-10', 'options' => $users, 'empty' => true]).'</div>';
+											echo '<div class="col-sm-4">'.$this->Form->control('gift_id', ['class' => 'form-control mar-bottom-10', 'options' => $gifts, 'empty' => true]).'</div>';
+											echo '<div class="col-sm-4">'.$this->Form->control('count', ['class' => 'form-control mar-bottom-10']).'</div></div>';
 										?>
 									</fieldset>
-									<?= $this->Form->button(__('Submit')) ?>
+									<div class="form-group pull-right"> <div class="col-sm-12">
+									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']) ?>
+									</div></div>
 									<?= $this->Form->end() ?>
 								</div>
 						</div>

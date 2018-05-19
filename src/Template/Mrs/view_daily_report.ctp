@@ -110,7 +110,7 @@
 
 			if(count($WorkPlansC))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Chemists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
 				$i = 1;
 				foreach ($WorkPlansC as $WorkPlanC)
 				{

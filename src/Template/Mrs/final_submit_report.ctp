@@ -19,83 +19,90 @@
 					<div class="table-responsive" id="report_section">
 						<?php
 						$html = "";
-			if(count($WorkPlansD))
+			if(count($WorkPlansD) || count($WorkPlansUD) || count($WorkPlansPD))
 			{
-				$html.='<h3 class="mar-top-10 mar-bottom-10">Field Work</h3><table id="doctors_table" class="doctors_table table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Work With</th><th>Visit Time</th><th>Business</th></tr></thead><tbody>';
-				$i = 1;
-				foreach ($WorkPlansD as $WorkPlanD)
+			$html.='<h3 class="mar-top-10 mar-bottom-10">Field Works</h3><table id="doctors_table" class="doctors_table table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Work With</th><th>Visit Time</th><th>Business</th></tr></thead><tbody>';
+			$i = 1;
+				if(count($WorkPlansD))
 				{
-					
-					$products_array = array(); $samples_array = array(); $gifts_array = array();
-					if($WorkPlanD->products!="")
-					$products_array = unserialize($WorkPlanD->products);
-					if($WorkPlanD->samples!="")
-					$samples_array = unserialize($WorkPlanD->samples);
-					if($WorkPlanD->gifts!="")
-					$gifts_array = unserialize($WorkPlanD->gifts);
-					$detail_products =array(); $sample_products =array(); $gift_products =array();
-					foreach($products as $product)
-					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					foreach($samples as $sample)
-					if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
-					foreach($gifts as $gift)
-					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
+					foreach ($WorkPlansD as $WorkPlanD)
+					{
+						
+						$products_array = array(); $samples_array = array(); $gifts_array = array();
+						if($WorkPlanD->products!="")
+						$products_array = unserialize($WorkPlanD->products);
+						if($WorkPlanD->samples!="")
+						$samples_array = unserialize($WorkPlanD->samples);
+						if($WorkPlanD->gifts!="")
+						$gifts_array = unserialize($WorkPlanD->gifts);
+						$detail_products =array(); $sample_products =array(); $gift_products =array();
+						foreach($products as $product)
+						if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
+						foreach($samples as $sample)
+						if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
+						foreach($gifts as $gift)
+						if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 
-					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$class[$WorkPlanD->doctor->class].'</td><td>'.$WorkPlanD->doctor->speciality->code.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanD->id.']" value="'.$WorkPlanD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanD->id.']" value="'.$WorkPlanD->business.'"></td></tr>';
-				$i++;
+						$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$class[$WorkPlanD->doctor->class].'</td><td>'.$WorkPlanD->doctor->speciality->code.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanD->id.']" value="'.$WorkPlanD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanD->id.']" value="'.$WorkPlanD->business.'"></td></tr>';
+					$i++;
+					}
+					
 				}
 				
+				if(count($WorkPlansUD))
+				{
+					foreach ($WorkPlansUD as $WorkPlanUD)
+					{
+						
+						$products_array = array(); $samples_array = array(); $gifts_array = array();
+						if($WorkPlanUD->products!="")
+						$products_array = unserialize($WorkPlanUD->products);
+						if($WorkPlanUD->samples!="")
+						$samples_array = unserialize($WorkPlanUD->samples);
+						if($WorkPlanUD->gifts!="")
+						$gifts_array = unserialize($WorkPlanUD->gifts);
+						$detail_products =array(); $sample_products =array(); $gift_products =array();
+						foreach($products as $product)
+						if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
+						foreach($samples as $sample)
+						if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
+						foreach($gifts as $gift)
+						if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
+						$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->id.'"></td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$class[$WorkPlanUD->doctor->class].'</td><td>'.$WorkPlanUD->doctor->speciality->code.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->business.'"></td></tr>';	
+					$i++;
+					}
+				}
+
+				if(count($WorkPlansPD))
+				{
+					foreach ($WorkPlansPD as $WorkPlanPD)
+					{
+						
+						$products_array = array(); $samples_array = array(); $gifts_array = array();
+						if($WorkPlanPD->products!="")
+						$products_array = unserialize($WorkPlanPD->products);
+						if($WorkPlanPD->samples!="")
+						$samples_array = unserialize($WorkPlanPD->samples);
+						if($WorkPlanPD->gifts!="")
+						$gifts_array = unserialize($WorkPlanPD->gifts);
+						$detail_products =array(); $sample_products =array(); $gift_products =array();
+						foreach($products as $product)
+						if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
+						foreach($samples as $sample)
+						if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
+						foreach($gifts as $gift)
+						if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
+						$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->id.'"></td><td>'.$WorkPlanPD->pg_other->name.'</td><td>-</td><td>'.$WorkPlanPD->pg_other->speciality->code.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->business.'"></td></tr>';
+					$i++;
+					}
+				}
+			$html.='</tbody></table>';
+			}
+			else
+			{
+				$html.='<h3 class="mar-top-10 mar-bottom-10">You dont have any field works, but still you can Final Submit. Are you sure?</h3> ';
 			}
 			
-			if(count($WorkPlansUD))
-			{
-				foreach ($WorkPlansUD as $WorkPlanUD)
-				{
-					
-					$products_array = array(); $samples_array = array(); $gifts_array = array();
-					if($WorkPlanUD->products!="")
-					$products_array = unserialize($WorkPlanUD->products);
-					if($WorkPlanUD->samples!="")
-					$samples_array = unserialize($WorkPlanUD->samples);
-					if($WorkPlanUD->gifts!="")
-					$gifts_array = unserialize($WorkPlanUD->gifts);
-					$detail_products =array(); $sample_products =array(); $gift_products =array();
-					foreach($products as $product)
-					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					foreach($samples as $sample)
-					if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
-					foreach($gifts as $gift)
-					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
-					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->id.'"></td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$class[$WorkPlanUD->doctor->class].'</td><td>'.$WorkPlanUD->doctor->speciality->code.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->business.'"></td></tr>';	
-				$i++;
-				}
-			}
-
-			if(count($WorkPlansPD))
-			{
-				foreach ($WorkPlansPD as $WorkPlanPD)
-				{
-					
-					$products_array = array(); $samples_array = array(); $gifts_array = array();
-					if($WorkPlanPD->products!="")
-					$products_array = unserialize($WorkPlanPD->products);
-					if($WorkPlanPD->samples!="")
-					$samples_array = unserialize($WorkPlanPD->samples);
-					if($WorkPlanPD->gifts!="")
-					$gifts_array = unserialize($WorkPlanPD->gifts);
-					$detail_products =array(); $sample_products =array(); $gift_products =array();
-					foreach($products as $product)
-					if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-					foreach($samples as $sample)
-					if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
-					foreach($gifts as $gift)
-					if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
-					$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->id.'"></td><td>'.$WorkPlanPD->pg_other->name.'</td><td>-</td><td>'.$WorkPlanPD->pg_other->speciality->code.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->business.'"></td></tr>';
-				$i++;
-				}
-				$html.='</tbody></table>';
-			}
-
 			if(count($WorkPlansL))
 			{
 				$html.='<h3 class="mar-top-10 mar-bottom-10 hide">Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover hide"><thead><tr><th width="">S.No</th><th>Type of Leave</th><th>More details</th></tr></thead><tbody>';
@@ -154,7 +161,14 @@
 				<div class="form-group">
 					<div class="col-md-offset-4 col-md-4 col-sm-offset-0 col-sm-12 col-xs-12">
 						<input type="hidden" name="date" value="<?= $reportDate?>">
+						<?php if($hasUnSavedPlans){?>
+						<p class="message error">You have some unsaved plans. Please save or mark them as missed to Final Submit</p>
+						<a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 ajax-popup-link" target="blank"><b>View Reported Calls</b></a>
+						<button type="submit" disabled name="submitPlan" class="common-btn blue-btn">Submit</button>
+						<?php } else {?>
+						<a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 ajax-popup-link" target="blank"><b>View Reported Calls</b></a>
 						<button type="submit" name="submitPlan" class="common-btn blue-btn">Submit</button>
+						<?php }?>
 					</div>
 				</div>
 				</form>

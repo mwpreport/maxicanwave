@@ -36,8 +36,6 @@
 												<th scope="col"><?= $this->Paginator->sort('speciality_id') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('qualification') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('Location') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('is_approved') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('is_active') ?></th>
 												<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
 											</tr>
 										</thead>
@@ -50,8 +48,6 @@
 												<td><?= $doctor->has('speciality') ? $this->Html->link($doctor->speciality->name, ['controller' => 'Specialities', 'action' => 'view', $doctor->speciality->id]) : '' ?></td>
 												<td><?= h($doctor->qualification->name) ?></td>
 												<td><?= $doctor->has('city') ? $this->Html->link($doctor->city->city_name, ['controller' => 'Cities', 'action' => 'view', $doctor->city->id]) : '' ?>, <?= $doctor->has('state') ? $this->Html->link($doctor->state->name, ['controller' => 'States', 'action' => 'view', $doctor->state->id]) : '' ?></td>
-												<td><?= ($doctor->is_approved == 1) ? "yes" : "No"?></td>
-												<td><?= ($doctor->is_active == 1) ? "yes" : "No" ?></td>
 												<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $doctor->id],['escape' => false]) ?></td>
 												<td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $doctor->id],['escape' => false]) ?></td>
 												<td width="50"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $doctor->id], ['escape' => false,'confirm' => __('Are you sure you want to delete "{0}"?', $doctor->name)]) ?></td>

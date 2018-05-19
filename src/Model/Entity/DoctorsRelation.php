@@ -10,7 +10,6 @@ use Cake\ORM\Entity;
  * @property int $user_id
  * @property int $doctor_id
  * @property int $class
- * @property int $is_active
  * @property \Cake\I18n\FrozenTime $dt
  *
  * @property \App\Model\Entity\User $user
@@ -32,7 +31,6 @@ class DoctorsRelation extends Entity
         'user_id' => true,
         'doctor_id' => true,
         'class' => true,
-        'is_active' => true,
         'dt' => true
     ];
 }
