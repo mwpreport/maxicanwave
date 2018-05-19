@@ -285,13 +285,13 @@ label{
     font-family: 'robotobold';
      background: #0071bc;
     color: #fff;
-    font-size: 18px;
+    font-size: 15px;
     padding: 14px 8px;
     text-align: center;
 }
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td{
     padding: 14px 8px;
-    font-size: 15px;
+    font-size: 14px;
     text-align: center;
 }
 .table-bordered>thead>tr>th{
@@ -728,6 +728,28 @@ tr.reported.unplanned td:first-child {background: #3CB371;}
 .table.text-align-left th{padding-left: 20px;}
 .qty_txt {}
 .go-back{font-size:12px;}
+.ajax-wrapper .go-back{display:none;}
+
+.mfp-ajax-holder .mfp-content {
+    line-height: 0;
+    width: 100%;
+    max-width: 1100px;
+}
+.mfp-iframe-holder .mfp-content {
+    line-height: 0;
+    width: 100%;
+    max-width: 1100px;
+}
+.mfp-iframe-scaler button.close  {
+    font-size: 25px;
+    position: absolute;
+        top: -25px;
+    right: -6px;
+    width: 25px;
+    color: #fff;
+    opacity: 1 !important;
+}
+.close{opacity: 1 !important;}
 @media (max-width: 767px) {
     .loginpage .login-left{
         display: none;

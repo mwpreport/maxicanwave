@@ -72,9 +72,10 @@ class MrsController extends AppController {
     }
 	
     public function planSummary(){
-		if(!isset($_POST['plan_report_type']))
+		if(!isset($_REQUEST['type']))
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'monthlyplan']);
 		
+		$this->viewBuilder()->layout('iframe');
         $this->set('title', 'Plan Summary');
         $uid = $this->Auth->user('id');
         $userCity = $this->Auth->user('city_id');
@@ -87,7 +88,7 @@ class MrsController extends AppController {
 		$start_date = date("Y-m")."-01";
 		$end_date = date("Y-m")."-31";
 		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-		$filter = $_REQUEST['plan_report_type'];
+		$filter = $_REQUEST['type'];
 		
         $doctors = $this->paginate($this->DoctorsRelation->find('all')->contain(['DoctorTypes','Doctors.Specialities','Doctors.Cities'])->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']))->toArray();
 

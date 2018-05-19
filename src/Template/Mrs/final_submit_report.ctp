@@ -10,7 +10,8 @@
                 <div class="col-md-12">
                     <div class="hr-title">
 						<?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
-                        <h2>Final Submit for Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
+                        <h2>Final Submit for Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?> 
+						<span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
                         <hr>
                     </div>
                 </div>
@@ -163,10 +164,8 @@
 						<input type="hidden" name="date" value="<?= $reportDate?>">
 						<?php if($hasUnSavedPlans){?>
 						<p class="message error">You have some unsaved plans. Please save or mark them as missed to Final Submit</p>
-						<a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 ajax-popup-link" target="blank"><b>View Reported Calls</b></a>
 						<button type="submit" disabled name="submitPlan" class="common-btn blue-btn">Submit</button>
 						<?php } else {?>
-						<a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 ajax-popup-link" target="blank"><b>View Reported Calls</b></a>
 						<button type="submit" name="submitPlan" class="common-btn blue-btn">Submit</button>
 						<?php }?>
 					</div>
@@ -207,4 +206,19 @@
 	}
 	
 	$('.time').mask('99:99');
+	$('.iframe-popup-link').magnificPopup({
+	type: 'iframe',
+	modal: true,
+	iframe: {
+		markup: '<div class="mfp-iframe-scaler">'+
+				'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
+				'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+				'</div>'
+	  }
+	});
+	$(document).on('click', '.popup-modal-dismiss', function (e) {
+		e.preventDefault();
+		$.magnificPopup.close();
+	});
+
 </script>

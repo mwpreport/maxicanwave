@@ -1,6 +1,6 @@
 <?php ?>
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
+            <div class="ajax-wrapper">
                 <!-- Main content -->
                 <div class="content">
                     <section>
@@ -61,7 +61,7 @@
                    
                     
                     <section>
-                        <div class="row">
+                        <div class="row" id="report_section">
                             <div class="col-xs-12">
                                 <div class="white-wrapper mar-top-20">
                                     <!-- /.box-header -->

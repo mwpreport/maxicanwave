@@ -77,7 +77,7 @@
 													<button class="common-btn blue-btn pull-left" type="submit" name="SubmitField" id="w2SubmitSave">Submit</button>
 												</div>
 												<div class="col-sm-3">
-													<a class="common-btn blue-btn margin-right-35 pull-right" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" target="blank"><b>View Reported Calls</b></a>
+													<a class="common-btn blue-btn margin-right-35 pull-right iframe-popup-link" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" ><b>View Reported Calls</b></a>
 												</div>
 											</div>
 										</div>
@@ -191,7 +191,7 @@
 														<button type="submit" class="common-btn blue-btn btn-block margin-right-35">Submit</button>
 													</div>
 													<div class="col-md-3 col-sm-3 col-xs-3"><label>&nbsp;</label>
-														<a class="common-btn blue-btn margin-right-35 pull-right" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" target="blank"><b>View Reported Calls</b></a>
+														<a class="common-btn blue-btn margin-right-35 pull-right iframe-popup-link" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" ><b>View Reported Calls</b></a>
 													</div>
 												</div>
 												<!-- /.input group -->
@@ -311,6 +311,16 @@
 		preloader: false,
 		modal: true
 	});
+	$('.iframe-popup-link').magnificPopup({
+		type: 'iframe',
+		modal: true,
+		iframe: {
+			markup: '<div class="mfp-iframe-scaler">'+
+					'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
+					'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+					'</div>'
+		  }
+	});
 	
 	$(document).on('click', '.popup-modal-dismiss', function (e) {
 		e.preventDefault();
@@ -366,7 +376,7 @@
 	});
   
 	function reset_form(){
-		$('#StockistAddForm, #ChemistAddForm, #UnplannedAddForm')[0].reset();
+		$('form')[0].reset();
 	}
 	function reset_missed_form(){
 		$("tr[id^='missed_']").hide();

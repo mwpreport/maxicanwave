@@ -61,6 +61,7 @@
 </head>
 <body class="hold-transition skin-red-light sidebar-mini">
     <div class="wrapper"><?php
+		echo $this->Flash->render();
         echo $this->fetch('content');
         ?>
     </div>

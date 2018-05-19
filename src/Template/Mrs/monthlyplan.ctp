@@ -62,18 +62,16 @@
                         <div class="content">
                             <div class="monthly-reports white-wrapper">
                                 <div class="daily-report-radio-cnt">
-                                    <form action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planSummary"])?>" method="post">
                                         <ul>
                                             <li class="col-md-12"><h3 class="mar-top-20 mar-bottom-20">Reports (Plan Summary)</h3></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="doctor-wise-plan" value="Doctor_Wise_Plan" checked="checked"><label for="doctor-wise-plan"><span></span>Doctor Wise Plan</label></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="un-planned" value="Un-Planned_Doctors" ><label for="un-planned"><span></span>Un-Planned Doctors</label></li>
-                                            <li class="col-md-3"><input type="radio" name="plan_report_type" id="entire-doctor-list" value="Entire_Doctor_List_Plan" ><label for="entire-doctor-list"><span></span>Entire Doctor List Plan</label></li>
+                                            <li class="col-md-3"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planSummary",'?' => ['type' => 'Doctor_Wise_Plan']])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>Doctor Wise Plan</b></a></li>
+                                            <li class="col-md-3"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planSummary",'?' => ['type' => 'Un-Planned_Doctors']])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>Un-Planned Doctors</b></a></li>
+                                            <li class="col-md-3"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planSummary",'?' => ['type' => 'Entire_Doctor_List_Plan']])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>Entire Doctor List Plan</b></a></li>
                                         </ul>
 										<div class="clearfix"></div>
 										<div class="col-sm-12 mar-top-20">
-										<button type="submit" class="common-btn blue-btn btn-125">Submit</button>
+										<!--<button type="submit" class="common-btn blue-btn btn-125">Submit</button>-->
 										</div>
-                                     </form>
                                </div>
                             </div>
                         </div>
@@ -670,6 +668,17 @@
 			type: 'inline',
 			preloader: false,
 			modal: true
+		});
+		
+		$('.iframe-popup-link').magnificPopup({
+			type: 'iframe',
+			modal: true,
+			iframe: {
+				markup: '<div class="mfp-iframe-scaler">'+
+						'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
+						'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+						'</div>'
+			  }
 		});
 
 		$(document).on('click', '.popup-modal-dismiss', function (e) {

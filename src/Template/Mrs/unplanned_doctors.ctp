@@ -21,7 +21,7 @@
 								<div class="form-group">
 									<div class="col-sm-6">
 										 <input type="hidden" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo $reportDate;?>">
-										 <div class="col-sm-6"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35" target="blank"><b>View Reported Calls</b></a></div>
+										 <div class="col-sm-6"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link"><b>View Reported Calls</b></a></div>
 										 <div class="col-sm-6"><button class="btn blue-btn btn-block margin-right-35 pull-right" type="submit">Final Submit</a></div>
 									</div>
 									<!-- /.input group -->
@@ -387,6 +387,16 @@
 		type: 'inline',
 		preloader: false,
 		modal: true
+	});
+	$('.iframe-popup-link').magnificPopup({
+		type: 'iframe',
+		modal: true,
+		iframe: {
+			markup: '<div class="mfp-iframe-scaler">'+
+					'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
+					'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+					'</div>'
+		  }
 	});
 	
 	$(document).on('click', '.popup-modal-dismiss', function (e) {
