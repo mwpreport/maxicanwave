@@ -20,7 +20,7 @@
 		<?php }?>
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="active"><a href="#"><i class="fa fa-home" aria-hidden="true"></i>
+            <li class="active"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dashboard"])?>"><i class="fa fa-home" aria-hidden="true"></i>
                 <span>Home</span></a>
             </li>
 
