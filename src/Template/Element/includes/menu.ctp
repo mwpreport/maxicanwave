@@ -20,7 +20,7 @@
 		<?php }?>
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="active"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dashboard"])?>"><i class="fa fa-home" aria-hidden="true"></i>
+            <li class="active"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "index"])?>"><i class="fa fa-home" aria-hidden="true"></i>
                 <span>Home</span></a>
             </li>
 
@@ -162,10 +162,7 @@
 
                 </ul>
             </li>
-            <li><a href="#">
-                    <i class="fa fa-book"></i> 
-                    <span>Reports</span></a>
-            </li>
+            <li><?= $this->Html->link(__('<i class="fa fa-book"></i> Reports'), ['controller' => 'Reports', 'action' => 'index'], ['escape' => false]) ?></li>
         </ul>
         <!-- /.sidebar-menu -->
     </section>

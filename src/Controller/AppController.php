@@ -82,6 +82,7 @@ class AppController extends Controller
 		'5' =>array(
 		  array('controller'=>'Users', 'action'=>['login','logout','account']),
 		  array('controller'=>'Mrs', 'action'=> '*'),
+		  array('controller'=>'Reports', 'action'=> '*'),
 		  array('controller'=>'Doctors', 'action'=>['mrsGetDoctors','mrsGetDoctor','getDoctorsOption']),
 		  array('controller'=>'DoctorsRelation', 'action'=>['mrsAdd','mrsUpdate','mrsDelete','mrsGetRelation']),
 		  array('controller'=>'Chemists', 'action'=>['index','add','view','edit']),
@@ -136,7 +137,7 @@ class AppController extends Controller
 		  else
 		  {
 			if(!$this->verifyRole($user['role_id'])){
-			$this->redirect(['controller' => 'Mrs', 'action' => 'dashboard']);
+			$this->redirect(['controller' => 'Mrs', 'action' => 'index']);
 			return false;
 			}
 		  }
