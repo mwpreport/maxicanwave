@@ -61,7 +61,6 @@ class ReportsController extends AppController {
 		if(!isset($_REQUEST['type']))
 		return $this->redirect(['controller' => 'Reports', 'action' => 'index']);
 		
-		$this->viewBuilder()->layout('iframe');
         $this->set('title', 'Plan Summary');
         $uid = $this->Auth->user('id');
         $userCity = $this->Auth->user('city_id');
@@ -71,8 +70,10 @@ class ReportsController extends AppController {
         $specialities = $this->Specialities->find('all')->toarray();
 		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 		$month = date('M, Y');
-		$start_date = date("Y-m")."-01";
-		$end_date = date("Y-m")."-31";
+		$m = date("m")+1;
+		$y = date("Y");
+		$start_date = $y."-".$m."-01";
+		$end_date = $y."-".$m."-31";
 		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
 		$filter = $_REQUEST['type'];
 		

@@ -16,10 +16,20 @@
                     <div class="form-group mar-bottom-40">
                         <div class="col-sm-3">
                             <select name="month" class="error form-control" id="state" aria-invalid="true">
+								<?php
+								$m = date("m");
+								for($i=1;$i<=12;$i++)
+								echo '<option value='.$i.' '.(($m+1==$i)? "selected" : "").'>'.DateTime::createFromFormat('!m', $i)->format('F').'</option>';
+								?>
                             </select>  
                         </div>
                         <div class="col-sm-3">
                             <select name="year" class="error form-control" id="city" onchange="loadDoctors()" aria-invalid="true">
+								<?php
+								$y = date("Y");
+								for($i=$y;$i<=$y+3;$i++)
+								echo '<option value='.$i.' '.(($y==$i)? "selected" : "").'>'.$i.'</option>';
+								?>
                             </select>  
                         </div>
                     </div>
