@@ -16,15 +16,29 @@
 		</section>
 	   
 		
+		<?php 
+		foreach( $WorkPlan_Date as $date=>$WorkPlansD)
+		{ ?>
 		<section>
 			<div class="row" id="report_section">
 				<div class="col-xs-12">
 					<div class="white-wrapper mar-top-20">
 						<!-- /.box-header -->
-						<div class="table-responsive">
-							<?php pj( $WorkPlan_Date );?>
-							<table class="table table-striped table-bordered table-hover">
-							</table>
+						<div class="table-responsive" id="report_section">
+						<?php
+						$html = "";
+						if(!empty($WorkPlansD))
+						{
+							$html.='<h3 class="mar-top-10 mar-bottom-10">'.$date.'</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Work With</th></tr></thead><tbody>';
+							$i = 1;
+							foreach ($WorkPlansD as $WorkPlanD)
+							{
+								$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$class[$WorkPlanD->doctor->class].'</td><td>'.$WorkPlanD->doctor->speciality->code.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td></tr>';
+							$i++;
+							}
+							$html.='</tbody></table>';
+						}
+						?>
 						</div>
 						<!-- /.box-body -->
 					</div>
@@ -33,6 +47,7 @@
 				<!-- /.col -->
 			</div>
 		</section>
+		<?php }?>
     </div>
     <!-- /.content -->
 </div>
