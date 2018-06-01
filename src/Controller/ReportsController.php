@@ -5,6 +5,9 @@ use Cake\Core\Configure;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use DateTime;
+use DatePeriod;
+use DateInterval;
 
 
 /**
@@ -61,6 +64,12 @@ class ReportsController extends AppController {
 		if(!isset($_REQUEST['type']))
 		return $this->redirect(['controller' => 'Reports', 'action' => 'index']);
 		
+		if(isset($_REQUEST['page-type']))
+		{$wrapper = "content";}
+		else
+		{$wrapper = "ajax";$this->viewBuilder()->layout('iframe');}
+		
+		
         $this->set('title', 'Plan Summary');
         $uid = $this->Auth->user('id');
         $userCity = $this->Auth->user('city_id');
@@ -69,9 +78,18 @@ class ReportsController extends AppController {
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $specialities = $this->Specialities->find('all')->toarray();
 		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
-		$month = date('M, Y');
-		$m = date("m")+1;
-		$y = date("Y");
+		if(isset($_REQUEST['month']) && isset($_REQUEST['year']))
+		{
+			$m = $_REQUEST['month'];
+			$y = $_REQUEST['year'];
+			$month = date('M, Y', strtotime($y."-".$m."-01"));
+		}
+		else
+		{
+			$month = date('M, Y');
+			$m = date("m",strtotime("+1 month"));
+			$y = date("Y");
+		}
 		$start_date = $y."-".$m."-01";
 		$end_date = $y."-".$m."-31";
 		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
@@ -81,7 +99,7 @@ class ReportsController extends AppController {
 
 		foreach($doctors as $doctor) $visits[$doctor->doctor_id] = $this->getVisits($doctor->doctor_id,$uid,$start_date,$end_date);
         //pj($visits);
-		$this->set(compact('userCity', 'cities', 'specialities', 'class', 'visits', 'doctors', 'month', 'filter'));        
+		$this->set(compact('userCity', 'cities', 'specialities', 'class', 'visits', 'doctors', 'month', 'filter', 'wrapper'));        
 
 		
     }      
@@ -96,32 +114,69 @@ class ReportsController extends AppController {
 		return (implode("/",$visits));
 	}
 	
+    public function dailyPlan()
+    {
+        $this->set('title', 'Daily Plan');
+    }
+
+    public function dailyPlanReport()
+    {
+		if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date']))
+		{
+			$start_date = $_REQUEST['start_date'];
+			$end_date = $_REQUEST['end_date'];
+
+			//echo $date; exit;
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$specialities = $this->Specialities->find('all')->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			
+			$dates = $this->_datePeriod($start_date, $end_date);
+			$WorkPlan_Date = array();
+			foreach($dates as $date)
+			{
+				$plandate= $date." 00:00:00";
+				$WorkPlansD = $this->WorkPlans
+				->find('all')
+				->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	
+				->where(['WorkPlans.user_id =' => $uid])
+				->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.start_date =' => $plandate])->toArray();
+				$WorkPlan_Date[$date] = $WorkPlansD;
+				$WorkPlansD = array();
+			}
+			
+			$this->set(compact('userCity', 'cities', 'specialities', 'class', 'WorkPlan_Date', 'dates'));        
+			
+		}
+		else
+		return $this->redirect(['controller' => 'Reports', 'action' => 'dailyPlan']);
+    }
+
     public function reportSummary(){
-		if(!isset($_POST['plan_report_type']))
-		return $this->redirect(['controller' => 'Mrs', 'action' => 'monthlyplan']);
-		
-        $this->set('title', 'Report Summary');
-        $uid = $this->Auth->user('id');
-        $userCity = $this->Auth->user('city_id');
-        $user =  $this->Auth->user;
-		$state_id = $this->Auth->user('state_id');
-        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $specialities = $this->Specialities->find('all')->toarray();
-		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
-		$month = date('M, Y');
-		$start_date = date("Y-m")."-01";
-		$end_date = date("Y-m")."-31";
-		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-		$filter = $_REQUEST['plan_report_type'];
-		
-        $doctors = $this->paginate($this->DoctorsRelation->find('all')->contain(['DoctorTypes','Doctors.Specialities','Doctors.Cities'])->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']))->toArray();
-
-		foreach($doctors as $doctor) $visits[$doctor->doctor_id] = $this->getReports($doctor->doctor_id,$uid,$start_date,$end_date);
-        //pj($visits);
-		$this->set(compact('userCity', 'cities', 'specialities', 'class', 'visits', 'doctors', 'month', 'filter'));        
 
 		
-    }      
+    }   
+       
+	protected function _datePeriod($start_date, $end_date)
+    {
+		$period = new DatePeriod(
+		new DateTime($start_date),
+		new DateInterval('P1D'),
+		new DateTime($end_date)
+		);
+		foreach ($period as $key => $value)
+		$dates[]=$value->format('Y-m-d');
+		return $dates;
+
+	}
 
 
 	}

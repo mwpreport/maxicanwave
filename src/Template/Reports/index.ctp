@@ -22,7 +22,7 @@
 							<h4>Planning</h4>
 							<ul>
 								<li><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "plan"])?>">a. Plan Summary</a></li>
-								<li><a href="">b. Daily Plan</a></li>
+								<li><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "dailyPlan"])?>">b. Daily Plan</a></li>
 							</ul>
 						</td>
 					</tr>

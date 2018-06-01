@@ -248,11 +248,12 @@ h3{
 .common-btn{
     background: transparent;
     border: 1px solid #ccc;
-    padding: 8px 12px;
+    padding: 5px 10px;
     border-radius: 6px;
     width: 100%;
     display: inline-block;
     text-align: center;
+    font-size: 12px;
     font-family: 'robotobold';
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -265,6 +266,7 @@ h3{
     background: #0071bc;
     border: 1px solid #0071bc;
     color:#fff;
+    font-size: 12px;
     font-family: 'robotobold';
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -406,7 +408,7 @@ textarea:-moz-placeholder { /* Firefox 18- */
 select.form-control {
     background: #fff url("../images/select_drop.png") no-repeat scroll right 0;
     color:#0071bc;
-    font-size: 15px;
+    font-size: 13px;
     cursor: pointer;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -499,10 +501,11 @@ input[type="checkbox"]:disabled + label span {
     overflow: hidden;
 }
 .form-control {
-    height: 40px;
+    height: 30px;
     border: solid 1px #0071bc;
     border-radius: 4px;
     color: #6a4e45;
+    padding: 3px 6px;
 }
 .radio-blk label{
     color: #0071bc;
@@ -631,10 +634,10 @@ input[type="checkbox"]:disabled + label span {
     border-top: 1px solid #0071bc;
 }
 .fc-button{
-        background:  #0071bc;
-            height: 50px !important;
+    background: #0071bc;
+    height: 35px !important;
     padding: 10px !important;
-    font-size: 20px !important;
+    font-size: 16px !important;
 }
 .fc button .fc-icon{
     color:#fff;
@@ -670,17 +673,18 @@ input[type="checkbox"]:disabled + label span {
 .event-button-cont ul li a{
    background: #0071bc;
     border: 1px solid #0071bc;
-    padding: 10px 20px;
+    padding: 5px 10px;
     color: #fff;
     text-align: center;
     display: block;
     text-transform: uppercase;
     font-family: 'robotobold';
+    font-size: 12px;
         letter-spacing: 1px;
         border-radius: 4px;
 }
 .event-button-cont i{
-    font-size: 20px;
+    font-size: 16px;
     padding-right: 5px;
     position: relative;
     top: 1px;
