@@ -7,12 +7,12 @@
             <div class="white-wrapper">
                 <div class="col-md-12">
                     <div class="hr-title">
-                        <h2>Daily Plan <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "index"])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
+                        <h2>Daily Report <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "index"])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
                         <hr>
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                <form id="daily_plan_form" method="POST" action="<?php echo $this->Url->build(["controller" => "Reports","action" => "dailyPlanReport"])?>">
+                <form id="daily_plan_form" method="POST" action="<?php echo $this->Url->build(["controller" => "Reports","action" => "dailyReportDetails"])?>">
                     <div class="form-group mar-bottom-40">
                         <div class="row">
                             <div class="leave-plan mar-bottom-20">

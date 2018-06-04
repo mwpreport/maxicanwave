@@ -31,7 +31,7 @@
 						<td valign="top">
 							<h4>Reporting</h4>
 							<ul>
-								<li><a href="">a. Daily Report</a></li>
+								<li><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "dailyReport"])?>">a. Daily Report</a></li>
 								<li><a href="">b. Doctor visit Report</a></li>
 								<li><a href="">c. Missed Doctors</a></li>
 							</ul>

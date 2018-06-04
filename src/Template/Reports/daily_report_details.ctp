@@ -7,7 +7,7 @@
             <div class="white-wrapper">
                 <div class="col-md-12">
                     <div class="hr-title">
-                        <h2>Daily Plan
+                        <h2>Daily Report
 							<span class="go-back pull-right no-print"><a href="javascript:print()" class="mar-left-20"><i class="fa fa-print"></i> Print</a></span>
 							<span class="go-back pull-right no-print"><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "dailyPlan"])?>"><i class="fa fa-arrow-left"></i> Go Back</a>&nbsp;&nbsp;</span>
                         </h2>
