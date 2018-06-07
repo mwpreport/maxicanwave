@@ -28,9 +28,9 @@
 			//pj($workPlanDate);
 			if(isset($workPlanDate['field']) || isset($workPlanDate['other']) || isset($workPlanDate['leave']))
 			{
-				$html = '<div class="white-wrapper no-padding mar-top-20"><div class="table-responsive" id="report_section"><h3 class="mar-top-10 mar-bottom-10 center"><u>'.$date.'</u></h3>';
+				$html = '<div class="white-wrapper no-padding mar-top-20"><div class="table-responsive" id="report_section"><h3 class="mar-top-10 mar-bottom-15 center"><u>'.$date.'</u></h3>';
 				if(!empty($workPlanDate['field'])){
-					$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Products</th></tr></thead><tbody>';
+					$html.='<h3 class="mar-top-10 mar-bottom-10 center">Doctors Visit</h3><table class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Products</th></tr></thead><tbody>';
 					$i = 1;
 					foreach ($workPlanDate['field'] as $WorkPlanD)
 					{
@@ -40,7 +40,7 @@
 					$html.='</tbody></table>';
 				}
 				if(!empty($workPlanDate['other'])){
-					$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th></tr></thead><tbody>';
+					$html.='<h3 class="mar-top-10 mar-bottom-10 center">Others</h3><table class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Work Type</th><th>City</th></tr></thead><tbody>';
 					$i = 1;
 					foreach ($workPlanDate['other'] as $WorkPlan)
 					{
@@ -50,7 +50,7 @@
 					$html.='</tbody></table>';
 				}
 				if(!empty($workPlanDate['leave'])){
-				$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Type of Leave</th><th>More details</th></thead><tbody>';
+				$html.='<h3 class="mar-top-10 mar-bottom-10 center">Leave</h3><table class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Type of Leave</th><th>More details</th></thead><tbody>';
 				$i = 1;
 				foreach ($workPlanDate['leave'] as $WorkPlanL)
 				{

@@ -205,8 +205,12 @@ class ReportsController extends AppController {
 			$state_id = $this->Auth->user('state_id');
 			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
 			$specialities = $this->Specialities->find('all')->toarray();
+			$products = $this->Products->find('all')->toarray();
 			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$samples = $this->Products->find('all')->toarray();
+			$gifts = $this->Gifts->find('all')->toarray();
+
 			
 			$dates = $this->_datePeriod($start_date, $end_date);
 			$workPlansDate = array();
@@ -274,7 +278,7 @@ class ReportsController extends AppController {
 				
 			}
 			
-			$this->set(compact('user', 'userCity', 'cities', 'specialities', 'class', 'workPlansDate', 'dates', 'start_date', 'end_date'));        
+			$this->set(compact('user', 'userCity', 'cities', 'specialities', 'class', 'products', 'samples', 'gifts', 'workPlansDate', 'dates', 'start_date', 'end_date'));        
 			
 		}
 		else

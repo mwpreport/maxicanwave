@@ -87,21 +87,24 @@
 							</form>
 							</div>
 							<?php
+							$saved_other=0; 
 							foreach ($WorkPlans as $WorkPlan)
 							{
 								$workTypePlans[$WorkPlan->work_type_id][] = $WorkPlan;
 							}
 							?>
-							<?php foreach ($workTypes as $workType){?>
+							<?php 
+							foreach ($workTypes as $workType){?>
 							<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_<?php echo $workType->id?>">
 								<div class="col-md-12 mar-bottom-20">
 									<?php 
 										$html = "";
 										if(count($workTypePlans[$workType->id]))
-										{
+										{	$saved_this=0; 
 											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned '.$workType->name.'</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Work Type</th><th>City</th></thead><tbody>';
 											foreach ($workTypePlans[$workType->id] as $workTypePlan)
 											{
+												if($workTypePlan->is_reported || $workTypePlan->is_missed) {$saved_other =1; $saved_this=1;}
 												$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' '.(($workTypePlan->is_missed)?"missed":"").'"><td><input class=" workplan_id_'.$workType->id.'" type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="'.$workTypePlan->id.'"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
 											}
 											$html.='</tbody></table>';
@@ -134,6 +137,11 @@
 													<input type="submit" id="w<?php echo $workType->id?>SubmitRemove" name="SubmitRemove" class="hide" >
 													<button class="common-btn blue-btn pull-left" value="w<?php echo $workType->id?>SubmitRemove" type="button" name="" id="w<?php echo $workType->id?>ButtonRemove">Remove Visit List</button>
 												</div>
+												<?php if($saved_this){?>
+												<div class="col-sm-3">
+													<a class="common-btn blue-btn pull-left" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>">Final Submit</a>
+												</div>
+												<?php }?>
 											</div>
 										</div>
 									</div>
@@ -211,7 +219,7 @@
 
 							</script>
 							<?php }?>
-							<div class="col-md-12 hide" id="success_plan" >
+							<div class="col-md-12 <?php echo ((!$saved_other)?"hide":"")?>" id="success_plan" >
 								<p class="message">
 									<span class="message success" id="success_msg"></span>
 									Have you done any field work on this date? Is yes <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>" > Click here </a> or Click on <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" >Final Submit</a> and proceed to next date. 
