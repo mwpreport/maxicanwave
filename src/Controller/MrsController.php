@@ -194,14 +194,20 @@ class MrsController extends AppController {
 			->find('all')
 			->contain(['WorkTypes', 'Cities'])	
 			->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
-			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
 
+			$WorkPlansL = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities'])	
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
+
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
 			
 		}
-		$hasLeave = $this->_hasLeave($date);
+		$hasLeave = $this->_hasPlannedLeave($date);
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'workPlanSubmit', 'date','hasLeave'));        
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'WorkPlansL', 'workPlanSubmit', 'date','hasLeave'));        
 		
     }
 
@@ -589,6 +595,16 @@ class MrsController extends AppController {
     {
 		$uid = $this->Auth->user('id');
 		$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date,'work_type_id =' => 1, 'user_id =' => $uid])->first();
+		if(count($workPlans)>0)
+		return $workPlans->id;
+
+		return false;
+    }
+    
+	protected function _hasPlannedLeave($start_date)
+    {
+		$uid = $this->Auth->user('id');
+		$workPlans = $this->WorkPlans->find()->where(['WorkPlans.is_missed <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'start_date =' => $start_date,'work_type_id =' => 1, 'user_id =' => $uid])->first();
 		if(count($workPlans)>0)
 		return $workPlans->id;
 

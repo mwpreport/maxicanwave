@@ -285,6 +285,45 @@ class ReportsController extends AppController {
 		return $this->redirect(['controller' => 'Reports', 'action' => 'dailyPlan']);
     }
        
+    public function doctorVisit()
+    {
+        $this->set('title', 'Doctor Visit Reprot');
+    }
+
+    public function doctorVisitReport(){
+		if(!isset($_REQUEST['month']))
+		return $this->redirect(['controller' => 'Reports', 'action' => 'doctorVisit']);
+		
+        $this->viewBuilder()->layout('iframe');
+        $this->set('title', 'Doctor Visit Reprot');
+        $uid = $this->Auth->user('id');
+        $userCity = $this->Auth->user('city_id');
+        $user =  $this->Users->get($uid, [ 'contain' => ['Roles', 'States', 'Cities'] ]);
+		$state_id = $this->Auth->user('state_id');
+        $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+        $specialities = $this->Specialities->find('all')->toarray();
+		$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+		
+		$months = $_REQUEST['month'];
+		$visits = array();
+        $doctors = $this->paginate($this->DoctorsRelation->find('all')->contain(['DoctorTypes','Doctors.Specialities','Doctors.Cities'])->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']))->toArray();
+		foreach ($months as $month) {
+			list($M,$m,$y) = explode("-",date('M-m-y', strtotime("-$month month")));
+			$start_date = $y."-".$m."-01";
+			$end_date = $y."-".$m."-31";
+			foreach($doctors as $doctor) 
+			$visits[$M."-".$y][$doctor->doctor_id] = $this->getVisits($doctor->doctor_id,$uid,$start_date,$end_date);
+
+		}
+		foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+		
+
+        //pj($visits);
+		$this->set(compact('userCity', 'cities', 'specialities', 'class', 'visits', 'doctors', 'user'));        
+
+		
+    }      
+
 	protected function _datePeriod($start_date, $end_date)
     {
 		$period = new DatePeriod(

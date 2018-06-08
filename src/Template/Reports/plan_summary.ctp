@@ -4,7 +4,7 @@
                 <!-- Main content -->
                 <div class="content">
                     <section>
-                        <div class="white-wrapper">
+                        <div class="white-wrapper small">
                             <div class="col-md-12">
                                 <div class="hr-title">
                                     <h2><?=str_replace("_"," ",$filter)?> of <?=$month?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "plan"])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>

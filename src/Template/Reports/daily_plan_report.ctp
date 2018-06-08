@@ -4,7 +4,7 @@
     <!-- Main content -->
     <div class="content">
         <section>
-            <div class="white-wrapper">
+            <div class="white-wrapper small">
                 <div class="col-md-12">
                     <div class="hr-title">
                         <h2>Daily Plan

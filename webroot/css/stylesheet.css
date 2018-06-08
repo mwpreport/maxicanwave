@@ -484,6 +484,9 @@ input[type="checkbox"]:disabled + label span {
     box-shadow: 0 0px 1px 1px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
+.white-wrapper.small{
+    padding: 15px 10px;
+}
 .hr-title h2 {
     font-size: 20px;
     color: #3e3f3f;
@@ -735,7 +738,7 @@ tr.reported.unplanned td:first-child {background: #3CB371;}
 .qty_txt {}
 .go-back{font-size:12px;}
 .ajax-wrapper .go-back{display:none;}
-
+.uppercase{text-transform: uppercase;}
 .mfp-ajax-holder .mfp-content {
     line-height: 0;
     width: 100%;
