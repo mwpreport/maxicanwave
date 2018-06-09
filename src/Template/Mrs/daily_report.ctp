@@ -302,47 +302,46 @@
 												if($WorkPlanL->is_reported || $WorkPlanL->is_missed) $saved_this = 1;
 											}
 											$html.='</tbody></table>';
-										}
-									?>
-									<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
-									<input type="hidden" value="<?php echo $reportDate;?>" name="reportDate">
-									<div class="table-responsive">
-										<?php echo $html;?>
-									</div>
-									<div class="clearfix"></div>
-									<div class="center-button-container">
-										<div class="row">
-											<div class="form-group  mar-top-30">
-												<div class="col-sm-3">
-													<input type="hidden" id="return" name="return" value="dailyReport" >
-													<input type="submit" id="w1SubmitSave" name="SubmitSave" class="hide" >
-													<button class="common-btn blue-btn pull-left" value="w1SubmitSave" type="button" name="" id="w1ButtonSave">Save</button>
-												</div>
-												<div class="col-sm-3">
-													<input type="submit" id="w1SubmitMissed" name="SubmitMissed" class="hide" >
-													<button class="common-btn blue-btn pull-left" value="w1SubmitMissed" type="button" name="" id="w1ButtonMissed">Missed</button>
-												</div>
-												<div class="col-sm-3">
-													<input type="submit" id="w1SubmitRemove" name="SubmitRemove" class="hide" >
-													<button class="common-btn blue-btn pull-left" value="w1SubmitRemove" type="button" name="" id="w1ButtonRemove">Remove Visit List</button>
+										?>
+										<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
+										<input type="hidden" value="<?php echo $reportDate;?>" name="reportDate">
+										<div class="table-responsive">
+											<?php echo $html;?>
+										</div>
+										<div class="clearfix"></div>
+										<div class="center-button-container">
+											<div class="row">
+												<div class="form-group  mar-top-30">
+													<div class="col-sm-3">
+														<input type="hidden" id="return" name="return" value="dailyReport" >
+														<input type="submit" id="w1SubmitSave" name="SubmitSave" class="hide" >
+														<button class="common-btn blue-btn pull-left" value="w1SubmitSave" type="button" name="" id="w1ButtonSave">Save</button>
+													</div>
+													<div class="col-sm-3">
+														<input type="submit" id="w1SubmitMissed" name="SubmitMissed" class="hide" >
+														<button class="common-btn blue-btn pull-left" value="w1SubmitMissed" type="button" name="" id="w1ButtonMissed">Missed</button>
+													</div>
+													<div class="col-sm-3">
+														<input type="submit" id="w1SubmitRemove" name="SubmitRemove" class="hide" >
+														<button class="common-btn blue-btn pull-left" value="w1SubmitRemove" type="button" name="" id="w1ButtonRemove">Remove Visit List</button>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									</form>
-									<script>
-										$("#w1ButtonSave,#w1ButtonMissed,#w1ButtonRemove").click(function(){
-											var target_id = $(this).val();
-											if ($('input[type="checkbox"].workplan_id_1').is(':checked'))
-											{
-												$( "#"+target_id ).click();
-											}
-											else{
-												alert("Please check a Plan");
-											}
-										});
-									</script>
-
+										</form>
+										<script>
+											$("#w1ButtonSave,#w1ButtonMissed,#w1ButtonRemove").click(function(){
+												var target_id = $(this).val();
+												if ($('input[type="checkbox"].workplan_id_1').is(':checked'))
+												{
+													$( "#"+target_id ).click();
+												}
+												else{
+													alert("Please check a Plan");
+												}
+											});
+										</script>
+									<?php }?>
 								</div>
 								<?php if($saved_this){?>
 									<p class="message">

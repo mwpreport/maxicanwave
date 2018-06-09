@@ -5,6 +5,9 @@ use Cake\Core\Configure;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use DateTime;
+use DatePeriod;
+use DateInterval;
 
 
 /**
@@ -48,7 +51,61 @@ class MrsController extends AppController {
     }    
     
     public function index(){
-        $this->set('title', 'Doctor Visit Report');        
+        $this->set('title', 'Dashboard');       
+        
+        $month = date('M - Y');
+		$start_date = date('Y-m-01')."00:00:00";
+		$end_date = date('Y-m-t')."23:59:59	"; 
+		
+		$uid = $this->Auth->user('id');
+		$lead_id = $this->Auth->user('lead_id');
+		$user =  $this->Users->get($uid, [ 'contain' => ['Roles', 'States', 'Cities'] ]);
+		
+		$dates = $this->_datePeriod($start_date, $end_date);
+		$reportedDates = array(0); $doctorCalls = 0; $chemistCalls = 0; $visited = array();
+		
+		$today_eod = strtotime(date("Y-m-d 23:59:59")); // or your date as well
+		$datediff = $today_eod - strtotime($start_date);
+		$coveredDays = round($datediff / (60 * 60 * 24));
+		
+
+
+		foreach($dates as $date)
+		{
+			$reportedPlans = $this->WorkPlans->find('list')
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date])->toArray();
+			if($reportedPlans)$reportedDates[] = "'".date("m/d/Y", strtotime($date))."'";
+			
+				$WorkPlansD = $this->WorkPlans
+				->find('list')
+				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
+				
+				$WorkPlansUD = $this->WorkPlans
+				->find('list')
+				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
+				
+				$WorkPlansPD = $this->WorkPlans
+				->find('list')
+				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+				
+				$WorkPlansC = $this->WorkPlans
+				->find('list')
+				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+				
+				$doctorCalls+= count($WorkPlansD) + count($WorkPlansUD) +  count($WorkPlansPD);
+				$chemistCalls+= count($WorkPlansC);
+
+		}
+		$doctors = $this->paginate($this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']))->toArray();
+		foreach($doctors as $doctor) 
+		{
+			$visited[] = $doctor->doctor_id;
+		}
+		
+		$doctorsAvarage = $doctorCalls/$coveredDays;
+		$chemistAvarage = $chemistCalls/$coveredDays;
+		$doctorsCoverage = count($visited);
+		$this->set(compact('user', 'reportedDates', 'doctorsAvarage', 'chemistAvarage', 'doctorsCoverage'));        
     }      
 
     public function doctorList(){
@@ -621,4 +678,27 @@ class MrsController extends AppController {
 		return false;
     }
 
+	protected function _datePeriod($start_date, $end_date)
+    {
+		$period = new DatePeriod(
+		new DateTime($start_date),
+		new DateInterval('P1D'),
+		new DateTime($end_date)
+		);
+		foreach ($period as $key => $value)
+		$dates[]=$value->format('Y-m-d');
+		return $dates;
+
+	}
+
+    public function getReportedVisits($doctor_id,$uid,$start_date,$end_date){
+		$WorkPlansD = $this->WorkPlans->find('all')
+		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	
+		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.doctor_id =' => $doctor_id, 'WorkPlans.work_type_id =' => 2])
+		->where(['WorkPlans.start_date >=' => $start_date])
+		->andWhere(['WorkPlans.start_date <=' => $end_date])->toArray();
+		$visits = array_map(function($d) { return date("d", strtotime($d->start_date)); }, $WorkPlansD);
+		return (implode("/",$visits));
+	}
+	
 	}

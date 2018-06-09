@@ -20,14 +20,14 @@
                 <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
-                        <h3>150</h3>
+                        <h3><?=number_format($doctorsAvarage,2)?><sup style="font-size: 20px">%</sup></h3>
 
                         <p>Doctor Call Average</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-stethoscope" aria-hidden="true"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "dailyReport"])?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -35,14 +35,14 @@
                 <!-- small box -->
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>53<sup style="font-size: 20px">%</sup></h3>
+                        <h3><?=number_format($chemistAvarage,2)?><sup style="font-size: 20px">%</sup></h3>
 
                         <p>Chemist Call Average</p>
                     </div>
                     <div class="icon">
                        <i class="fa fa-plus-square" aria-hidden="true"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "dailyReport"])?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -50,56 +50,22 @@
                 <!-- small box -->
                 <div class="small-box bg-yellow">
                     <div class="inner">
-                        <h3>44</h3>
+                        <h3><?=$doctorsCoverage?></h3>
 
                         <p>Doctor Coverage</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person-add"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "doctorVisit"])?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div>
         <!-- /.row -->
         <!-- Main row -->
         <div class="row">
-            <!-- Left col -->
-            <section class="col-lg-6 connectedSortable">
-                <!-- Custom tabs (Charts with tabs)-->
-                <div class="nav-tabs-custom">
-
-                    <div class="tab-content no-padding">
-                        <!-- Morris chart - Sales -->
-                        <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;"></div>
-                    </div>
-                </div>
-                <!-- /.nav-tabs-custom -->
-
-            </section>
-            <!-- /.Left col -->
             <!-- right col (We are only adding the ID to make the widgets sortable)-->
             <section class="col-lg-6 connectedSortable">
-                <!-- solid sales graph -->
-                <div class="box box-solid bg-teal-gradient">
-                    <div class="box-header">
-                        <i class="fa fa-th"></i>
-
-                        <h3 class="box-title">Sales Graph</h3>
-
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn bg-teal btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn bg-teal btn-sm" data-widget="remove"><i class="fa fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="box-body border-radius-none">
-                        <div class="chart" id="line-chart" style="height: 250px;"></div>
-                    </div>
-                    <!-- /.box-footer -->
-                </div>
-                <!-- /.box -->
 
                 <!-- Calendar -->
                 <div class="box box-solid bg-green-gradient">
@@ -111,19 +77,10 @@
                         <div class="pull-right box-tools">
                             <!-- button with a dropdown -->
                             <div class="btn-group">
-                                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-bars"></i></button>
-                                <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="#">Add new event</a></li>
-                                    <li><a href="#">Clear events</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">View calendar</a></li>
-                                </ul>
+                                <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "monthlyplan"])?>" class="btn btn-success btn-sm">
+                                    <i class="fa fa-bars"></i>
+                                </a>
                             </div>
-                            <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-success btn-sm" data-widget="remove"><i class="fa fa-times"></i>
-                            </button>
                         </div>
                         <!-- /. tools -->
                     </div>
@@ -144,3 +101,17 @@
     </section>
     <!-- /.content -->
 </div>
+<script>
+    //The Calender
+    var dates = [<?=implode(",",$reportedDates)?>]
+    $('#calendar').datepicker({
+        multidate: true,
+        beforeShowDay: function(date) {
+		   for (var i = 0; i < dates.length; i++) {
+            if (new Date(dates[i]).toString() == date.toString()) {              
+                  return {classes: 'highlight', tooltip: 'Reported'};
+                  }
+          }
+    }
+    });
+</script>

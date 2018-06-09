@@ -32,13 +32,13 @@
 							<h4>Reporting</h4>
 							<ul>
 								<li><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "dailyReport"])?>">a. Daily Report</a></li>
-								<li><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "doctorVisit"])?>">b. Doctor visit Report</a></li>
-								<li><a href="">c. Missed Doctors</a></li>
+								<li><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "doctorVisit"])?>">b. Doctor Visit Report</a></li>
+								<li><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "missedDoctors"])?>">c. Missed Doctors</a></li>
+								<li><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "attendenceReport"])?>">d. Attendence Report</a></li>
 							</ul>
 						</td>
 					</tr>
 				</table>
-				
             </div>
         </section>
     </div>

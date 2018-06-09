@@ -19,7 +19,6 @@
                             '/dist/css/AdminLTE.min.css',
                             '/dist/css/skins/skin-red-light.min.css',
                             '/plugins/iCheck/flat/blue.css',
-                            '/plugins/morris/morris.css',
                             '/plugins/jvectormap/jquery-jvectormap-1.2.2.css',
                             '/plugins/datepicker/datepicker3.css',
                             '/plugins/daterangepicker/daterangepicker.css',
@@ -51,7 +50,6 @@
                 '/plugins/daterangepicker/daterangepicker',
                 '/plugins/datepicker/bootstrap-datepicker',
                 'https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js',
-                '/plugins/morris/morris.min',
                 '/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min',
                 '/js/jquery.mask.js',
                 '/dist/js/pages/dashboard'

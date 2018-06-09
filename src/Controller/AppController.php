@@ -83,7 +83,7 @@ class AppController extends Controller
 		  array('controller'=>'Users', 'action'=>['login','logout','account']),
 		  array('controller'=>'Mrs', 'action'=> '*'),
 		  array('controller'=>'Reports', 'action'=> '*'),
-		  array('controller'=>'Doctors', 'action'=>['mrsGetDoctors','mrsGetDoctor','getDoctorsOption']),
+		  array('controller'=>'Doctors', 'action'=>['mrsGetDoctors','mrsGetDoctor','getDoctorsOption','viewDoctorProfile']),
 		  array('controller'=>'DoctorsRelation', 'action'=>['mrsAdd','mrsUpdate','mrsDelete','mrsGetRelation']),
 		  array('controller'=>'Chemists', 'action'=>['index','add','view','edit']),
 		  array('controller'=>'WorkPlans', 'action'=> '*'),

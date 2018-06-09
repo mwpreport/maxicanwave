@@ -290,11 +290,11 @@ label{
      background: #0071bc;
     color: #fff;
     font-size: 15px;
-    padding: 14px 8px;
+    padding: 3px;
     text-align: center;
 }
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td{
-    padding: 14px 8px;
+    padding: 3px;
     font-size: 14px;
     text-align: center;
 }
@@ -572,38 +572,38 @@ input[type="checkbox"]:disabled + label span {
     color: #0071bc;
     font-size: 17px;
 }
-.datepicker-days .table > thead > tr > th{
-    background: #fff;
-    color:#0071bc;
+.datepicker .table > thead > tr > th{
+    background: transparent;
+    color:#fff;
     font-size: 15px;
-        padding:8px 10px;
+    padding:8px 10px;
 }
 .datepicker th.datepicker-switch{
-    background: #fff;
-    color:#0071bc;
+    background: transparent;
+    color:#fff;
     font-size: 15px;
         padding:8px 10px;
 }
 .datepicker.dropdown-menu th, .datepicker.dropdown-menu td{
-     background: #fff;
+    background: #fff;
     color:#0071bc;
     font-size: 15px;
         padding:8px 10px;
 }
 .datepicker thead tr:first-child th:hover, .datepicker tfoot tr th:hover{
-     background:#0071bc;
+    background: rgba(0,0,0,0.2);
     color:#fff;
 }
 .datepicker table tr td span:hover{
-     background:#0071bc;
+     background:rgba(0,0,0,0.2);
     color:#fff;
 }
 .datepicker table tr td.day:hover, .datepicker table tr td.day.focused{
-    background:#0071bc;
+    background:rgba(0,0,0,0.2);
     color:#fff;
 }
-.datepicker table tr td.active.active{
-    background:#0071bc;
+.datepicker td.highlight, .datepicker table tr td.active.active{
+    background:rgba(0,0,0,0.5);
     color:#fff;
 }
 .input-group.date .input-group-addon i{
@@ -739,6 +739,14 @@ tr.reported.unplanned td:first-child {background: #3CB371;}
 .go-back{font-size:12px;}
 .ajax-wrapper .go-back{display:none;}
 .uppercase{text-transform: uppercase;}
+.at_box{    text-align: center;
+    float: left;
+    width: 50px;
+    height: 70px;
+    border: solid 1px #ddd;
+    margin: 10px 0;}
+.at_date { background: #eee; height: 29px; line-height: 29px; margin:0;}
+.at_status { background: #fff; height: 39px; line-height: 39px; margin:0;}
 .mfp-ajax-holder .mfp-content {
     line-height: 0;
     width: 100%;

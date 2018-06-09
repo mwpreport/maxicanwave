@@ -27,9 +27,6 @@
 		$chemist_count = 0;
 		foreach( $workPlansDate as $date=>$workPlanDate)
 		{ 
-			?>
-			<?php
-			//pj($workPlanDate);
 			if(isset($workPlanDate['field']) || isset($workPlanDate['un_field']) || isset($workPlanDate['pg_field']) || isset($workPlanDate['chemist']) || isset($workPlanDate['stockist']) || isset($workPlanDate['other']) || isset($workPlanDate['leave']))
 			{
 				$html = '<div class="white-wrapper no-padding mar-top-20"><div class="table-responsive" id="report_section"><h3 class="mar-top-10 mar-bottom-15 center"><u>'.$date.'</u></h3>';
@@ -153,14 +150,14 @@
 					$html.='</tbody></table>';
 				}
 						
-				$html.='<h5>Doctor Calls till today: '.$doctor_count.', Doctor Calls Avg. till today: '.($doctor_count/$day_count).'</h5>';
-				$html.='<h5>Chemist Calls till today: '.$chemist_count.', Chemist Calls Avg. till today: '.($chemist_count/$day_count).'</h5>';
+				$html.='<h5>Doctor Calls till today: '.$doctor_count.', Doctor Calls Avg. till today: '.number_format(($doctor_count/$day_count),2).' %</h5>';
+				$html.='<h5>Chemist Calls till today: '.$chemist_count.', Chemist Calls Avg. till today: '.number_format(($chemist_count/$day_count),2).' %</h5>';
 				$html.='</div></div>';
 				echo $html; $day_count++;
 			}
 			
-			?>
-		<?php }?>
+		}
+		 ?>
     </div>
 
 </div>

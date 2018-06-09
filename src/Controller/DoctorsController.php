@@ -237,4 +237,16 @@ class DoctorsController extends AppController
 		echo $listHtml; exit;
     }
 
+    public function viewDoctorProfile()
+    {
+		$this->viewBuilder()->layout('iframe');
+		$data = $this->request->query;
+		$doctor = $this->Doctors->get($data['id'], [
+            'contain' => ['Specialities', 'Qualifications', 'States', 'Cities']
+        ]);
+
+        $this->set('doctor', $doctor);
+        $this->set('_serialize', ['doctor']);
+    }
+
 }
