@@ -81,6 +81,7 @@
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Assign Samples'), ['controller' => 'AssignedSamples', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Gifts'), ['controller' => 'Gifts', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Assign Gifts'), ['controller' => 'AssignedGifts', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Holiday Shcedule'), ['controller' => 'Holidays', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Leave Types'), ['controller' => 'LeaveTypes', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Configuration'), ['controller' => 'Config', 'action' => 'index'], ['escape' => false]) ?></li>
                 </ul>
