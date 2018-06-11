@@ -33,7 +33,7 @@
 										<?php }?>
                                     </div>
                                     
-                                    <p>P - Present, CL - Leave, S - Sunday, ? - Not Reported </p>
+                                    <p>P - Present, L - Leave, PH - Public Hoiday, S - Sunday, ? - Not Reported </p>
                                     <!-- /.box-body -->
                                 </div>
                                 <!-- /.box -->

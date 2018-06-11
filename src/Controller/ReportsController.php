@@ -39,6 +39,7 @@ class ReportsController extends AppController {
         $this->loadModel('IssuedSamples');
         $this->loadModel('AssignedGifts');
         $this->loadModel('IssuedGifts');
+        $this->loadModel('Holidays');
     }
     
     public function beforeFilter(Event $event){
@@ -458,9 +459,11 @@ class ReportsController extends AppController {
 			if($WorkPlans)
 			$workPlansDate[$date] = "P";
 			elseif($WorkPlansL)
-			$workPlansDate[$date] = "CL";
+			$workPlansDate[$date] = "L";
 			else
 			{
+				if($this->isHoliday($date))
+				$workPlansDate[$date] = "PH";
 				if($this->isSunday($date))
 				$workPlansDate[$date] = "S";
 				else
@@ -509,6 +512,13 @@ class ReportsController extends AppController {
 	protected function isSunday($date) {
 		$weekDay = date('w', strtotime($date));
 		return ($weekDay == 0);
+	}
+
+	protected function isHoliday($date) {
+		$h_date = date('Y-m-d', strtotime($date));
+		$holiday = $this->Holidays->find('list')->where(['Holidays.date =' => $h_date])->toArray();
+		if($holiday)return true;
+		else return false;
 	}
 
 	}
