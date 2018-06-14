@@ -741,12 +741,12 @@ tr.reported.unplanned td:first-child {background: #3CB371;}
 .uppercase{text-transform: uppercase;}
 .at_box{    text-align: center;
     float: left;
-    width: 50px;
-    height: 70px;
+    width: 30px;
+    height: 48px;
     border: solid 1px #ddd;
     margin: 10px 0;}
-.at_date { background: #eee; height: 29px; line-height: 29px; margin:0;}
-.at_status { background: #fff; height: 39px; line-height: 39px; margin:0;}
+.at_date { background: #eee; height: 25px; line-height: 25px; margin:0; font-size: 14px; font-weight: bold;}
+.at_status { background: #fff; height: 20px; line-height: 20px; margin:0; font-size: 14px;}
 .mfp-ajax-holder .mfp-content {
     line-height: 0;
     width: 100%;

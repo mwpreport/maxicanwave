@@ -37,7 +37,7 @@
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Date') ?></th>
-											<td><?= h($holiday->date) ?></td>
+											<td><?= h(date("Y-m-d", strtotime($holiday->date))) ?></td>
 										</tr>
 									</table>
 		

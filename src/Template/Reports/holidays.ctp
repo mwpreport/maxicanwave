@@ -12,9 +12,6 @@
 				<div class="white-wrapper no-padding-top">
 					<div class="row">
 						<div class="event-button-cont">
-							<ul class="side-nav">
-								<li><?= $this->Html->link(__('<i class="fa fa-plus-circle" aria-hidden="true"></i> New Holiday'), ['action' => 'add'], ['escape' => false]) ?></li>
-							</ul>
 						</div>
 						<div class="clearfix"></div>
 						<div class="col-md-12">
@@ -33,7 +30,6 @@
 														<th scope="col">S.No</th>
 														<th scope="col"><?= $this->Paginator->sort('name') ?></th>
 														<th scope="col"><?= $this->Paginator->sort('date') ?></th>
-														<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
 													</tr>
 												</thead>
 												<tbody>
@@ -41,10 +37,7 @@
 													<tr>
 														<td><?= $i ?></td>
 														<td><?= h($holiday->name) ?></td>
-														<td><?= date("Y-m-d", strtotime($holiday->date)) ?></td>
-														<td width="60"><?= $this->Html->link(__('<img src="./images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'view', $holiday->id],['escape' => false]) ?></td>
-														<td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $holiday->id],['escape' => false]) ?></td>
-														<td width="50"><?= $this->Form->postLink(__('<img src="./images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'delete', $holiday->id], ['escape' => false,'confirm' => __('Are you sure you want to delete "{0}"?', $holiday->name)]) ?></td>
+														<td><?= h(date("Y-m-d", strtotime($holiday->date))) ?></td>
 													</tr>
 													<?php $i++; endforeach; ?>
 												</tbody>

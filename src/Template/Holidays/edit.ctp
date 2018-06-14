@@ -36,8 +36,13 @@
 									<fieldset>
 										<?php
 											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('name', ['class' => 'form-control']).'</div>';
-											echo '<div class="col-sm-4">'.$this->Form->control('date', ['class' => 'form-control']).'</div></div>';
 										?>
+										<div class="form-group mar-bottom-10"><div class="col-sm-4">
+										<div class="input text">
+											<label for="date">Date</label>
+											<input type="text" name="date" class="form-control date valid" id="date" value="<?=date("Y-m-d", strtotime($holiday->date))?>" aria-invalid="false">
+										</div>
+										</div></div>
 									</fieldset>
 									<div class="form-group mar-bottom-10"> <div class="col-sm-8">
 									<?= $this->Form->button(__('Submit'), ['class' => 'common-btn blue-btn btn-125 pull-right mar-top-20']); ?>
@@ -55,4 +60,13 @@
 		<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<script>$("#editform").validate();</script>
+<script>
+	$("#editform").validate();
+	//Date picker
+	$('.date').datepicker({
+		autoclose: true
+	});
+
+	
+</script>
+

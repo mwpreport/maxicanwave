@@ -476,6 +476,14 @@ class ReportsController extends AppController {
 			
     }
        
+    public function holidays()
+    {
+        $holidays = $this->paginate($this->Holidays);
+
+        $this->set(compact('holidays'));
+        $this->set('_serialize', ['holidays']);
+    }
+
     public function getVisits($doctor_id,$uid,$start_date,$end_date){
 		$WorkPlansD = $this->WorkPlans->find('all')
 		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	

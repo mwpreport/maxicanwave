@@ -29,7 +29,7 @@
 									<fieldset>
 										<?php
 											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('name', ['class' => 'form-control']).'</div>';
-											echo '<div class="col-sm-4">'.$this->Form->control('date', ['class' => 'form-control']).'</div></div>';
+											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('date', ['type' => 'text', 'class' => 'form-control date']).'</div>';											
 										?>
 									</fieldset>
 									<div class="form-group mar-bottom-10"> <div class="col-sm-8">
@@ -48,4 +48,12 @@
 		<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<script>$("#newform").validate();</script>
+<script>
+	$("#newform").validate();
+	//Date picker
+	$('.date').datepicker({
+		autoclose: true
+	});
+
+	
+</script>

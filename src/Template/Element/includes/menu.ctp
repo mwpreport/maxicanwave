@@ -164,6 +164,18 @@
                 </ul>
             </li>
             <li><?= $this->Html->link(__('<i class="fa fa-book"></i> Reports'), ['controller' => 'Reports', 'action' => 'index'], ['escape' => false]) ?></li>
+            <li class="treeview">
+				<a href="#">
+					<i class="fa fa-star" aria-hidden="true"></i>
+					<span>Additional Resources</span>
+					<span class="pull-right-container">
+						<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+				<ul class="treeview-menu" style="display: none;">
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Holiday Schedule'), ['controller' => 'Reports', 'action' => 'holidays'], ['escape' => false]) ?></li>
+				</ul>
+			</li>
         </ul>
         <!-- /.sidebar-menu -->
     </section>
