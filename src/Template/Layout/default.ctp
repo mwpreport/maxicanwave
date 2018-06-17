@@ -8,13 +8,13 @@
 <head>
     <?= $this->Html->charset() ?>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">   
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Mexican Wave Pharma</title>
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->Url->image('favicon.ico')?>">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?= $this->Html->css([
-                            '/bootstrap/css/bootstrap.min.css', 
-                            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', 
+                            '/bootstrap/css/bootstrap.min.css',
+                            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
                             'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
                             '/dist/css/AdminLTE.min.css',
                             '/dist/css/skins/skin-red-light.min.css',
@@ -51,22 +51,21 @@
                 '/plugins/daterangepicker/daterangepicker',
                 '/plugins/datepicker/bootstrap-datepicker',
                 'https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js',
-                '/plugins/morris/morris.min',
+                //'/plugins/morris/morris.min',
                 '/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min',
                 '/js/jquery.mask.js',
-                '/dist/js/pages/dashboard'
-			 ]); ?>        
+                //'/dist/js/pages/dashboard'
+			 ]); ?>
     <?= $this->fetch('script') ?>
 
 </head>
 <body class="hold-transition skin-red-light sidebar-mini">
     <div class="wrapper"><?php
-        echo $this->element('includes/header'); 
-        echo $this->element('includes/menu'); 
+        echo $this->element('includes/header');
+        echo $this->element('includes/menu');
         echo $this->Flash->render();
         echo $this->fetch('content');
         echo $this->element('includes/footer'); ?>
     </div>
-</body>    
-</html>        
-
+</body>
+</html>
