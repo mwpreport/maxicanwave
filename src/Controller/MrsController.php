@@ -41,6 +41,7 @@ class MrsController extends AppController {
         $this->loadModel('DailyAllowances');
         $this->loadModel('CityDistances');
         $this->loadModel('OtherAllowances');
+        $this->loadModel('OtherExpenses');
     }
 
     public function beforeFilter(Event $event){
@@ -744,6 +745,26 @@ class MrsController extends AppController {
      return $this->redirect(['action' => 'dashboard']);
    }
 
+ }
+
+ /**
+  * Delete method
+  *
+  * @param string|null $id Other Expense id.
+  * @return \Cake\Http\Response|null Redirects to index.
+  * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+  */
+ public function OtherExpensedelete($id = null)
+ {
+     //$this->request->allowMethod(['post', 'delete']);
+     $otherExpense = $this->OtherExpenses->get($id);
+     if ($this->OtherExpenses->delete($otherExpense)) {
+         $this->Flash->success(__('The other expense has been deleted.'));
+     } else {
+         $this->Flash->error(__('The other expense could not be deleted. Please, try again.'));
+     }
+
+     return $this->redirect(['action' => 'edit-expense?date='.$this->request->getQuery('date')]);
  }
 
 	protected function _hasLeave($start_date)

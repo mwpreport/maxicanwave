@@ -99,14 +99,14 @@
                                  $other_expense_arr = array_map(function($e) {
                                       return is_object($e) ? $e->fare : $e['fare'];
                                   }, $otherExpenses);
-                                  $total_other_expense_fare=array_sum($other_expense_arr);                                  
+                                  $total_other_expense_fare=array_sum($other_expense_arr);
                                  foreach($otherExpenses as $otherExpense){ ?>
                                  <tr>
                                    <td><?php echo $otherExpense['voucher_no']; ?></td>
                                    <td><?php echo $otherExpense['other_allowance']['name']; ?></td>
                                    <td><?php echo $otherExpense['description']; ?></td>
                                    <td><?php echo $otherExpense['fare']; ?></td>
-                                   <td width="50"><?= $this->Html->link(__('<img src="../images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'other-expense-delete',$otherExpense['id']],['escape' => false]) ?></td>
+                                   <td width="50"><?= $this->Html->link(__('<img src="../images/del@2x.png" width="14" height="18" alt="trash">'), ['action' => 'other-expense-delete',$otherExpense['id'],'?' => ['date'=>$this->request->getQuery('date')]],['escape' => false]) ?></td>
                                 </tr>
                               <?php } ?>
                               <?php } ?>
@@ -123,14 +123,14 @@
                                       <?= $this->form->control('other_allowances[0][expense_id]', ['type' => 'hidden', 'label' => false, 'value' => $expense['id']]); ?>
                                     <?php } ?>
                                   </td>
-
+                                  <td></td>
                                   <td><?= $this->Form->control('other_expenses[0][other_allowance_id]', ['options' => $otherAllowances, 'label' => false, 'empty' => 'Select']); ?></td>
                                   <td><?= $this->Form->control('other_expenses[0][fare]',['label'=>false]); ?></td>
                                   <td><?= $this->Form->control('other_expenses[0][description]',['label'=>false, 'type'=> 'textArea']); ?></td>
                                   <td style="display:none"><?= $this->Form->control('other_expenses[0][voucher_no]',['label'=>false, 'type'=> 'textArea','value' => time()]); ?></td>
 
                                   <td width="50">
-                                    <td colspan="4"><?= $this->Form->button(__('Add'), ['class' => 'other-expense-submit common-btn blue-btn btn-125']); ?></td>
+                                    <?= $this->Form->button(__('Add'), ['class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
                                   </td>
                                 <?= $this->Form->end() ?>
                               </tr>
