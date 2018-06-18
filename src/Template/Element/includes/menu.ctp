@@ -84,7 +84,6 @@
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Holiday Shcedule'), ['controller' => 'Holidays', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Leave Types'), ['controller' => 'LeaveTypes', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Configuration'), ['controller' => 'Config', 'action' => 'index'], ['escape' => false]) ?></li>
-					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> City Distances'), ['controller' => 'CityDistances', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Expense Types'), ['controller' => 'ExpenseTypes', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Daily Allowances'), ['controller' => 'DailyAllowances', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Other Allowances'), ['controller' => 'OtherAllowances', 'action' => 'index'], ['escape' => false]) ?></li>
