@@ -39,6 +39,12 @@ class MrsController extends AppController {
         $this->loadModel('IssuedSamples');
         $this->loadModel('AssignedGifts');
         $this->loadModel('IssuedGifts');
+        $this->loadModel('Expenses');
+        $this->loadModel('ExpenseTypes');
+        $this->loadModel('DailyAllowances');
+        $this->loadModel('CityDistances');
+        $this->loadModel('OtherAllowances');
+        $this->loadModel('OtherExpenses');
     }
     
     public function beforeFilter(Event $event){
@@ -648,6 +654,123 @@ class MrsController extends AppController {
 		
     }
 
+    public function expenses(){
+
+        $current_year = date("Y");
+        $months = [1 => 'January',2 => 'Feburary',3 => 'March',4 => 'April',5 => 'May',6 => 'June',7 => 'July',8 => 'August',9 => 'September',10 => 'October',11 => 'November',12 => 'December'];
+        $years= [$current_year   => $current_year,$current_year-1 => $current_year-1,$current_year-2 => $current_year-2,$current_year-3 => $current_year-3,$current_year-4 => $current_year-4];
+        $this->loadModel('Expenses');
+
+        $expense = $this->Expenses->newEntity();
+        if($this->request->is('post')){
+
+          $uid = $this->Auth->user('id');
+          $lead_id = $this->Auth->user('lead_id');
+          $month = $this->request->data['month'];
+          $year = $this->request->data['year'];
+          $month_days = cal_days_in_month(CAL_GREGORIAN,$month,$year);
+          $month_in_text = $months[$month];
+          $workPlanSubmit = $this->WorkPlanSubmit->find('all')
+          ->contain([
+          'Expenses.ExpenseTypes',
+          'Expenses.OtherExpenses'  => function ($q) {
+                return $q->select(['total' => $q->func()->sum('fare'),'OtherExpenses.expense_id']);
+              },
+              'Expenses.TravelExpenses.WorkTypes' ,
+              'Expenses.TravelExpenses.CitiesFrom',
+              'Expenses.TravelExpenses.CitiesTo'
+          ])
+          ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year ])->order(['WorkPlanSubmit.id' => 'ASC']);
+          $this->set(compact('month_days','month','month_in_text','year', 'workPlanSubmit'));
+        }
+        $this->set('title', 'Daily Report');
+        $this->set(compact('years', 'months', 'expense'));
+    }
+
+	public function editExpense(){
+
+		$cities=[];
+		$uid = $this->Auth->user('id');
+		$role_id = $this->Auth->user('role_id');
+		if($this->request->getQuery('date')){
+			$workPlanSubmit = $this->WorkPlanSubmit->find()
+			->contain(['Expenses.ExpenseTypes','Expenses.TravelExpenses','Expenses.OtherExpenses','Expenses.TravelExpenses.CitiesFrom','Expenses.TravelExpenses.CitiesTo','Expenses.OtherExpenses.OtherAllowances'])
+			->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.date' => $this->request->getQuery('date')])
+			->first();
+			if($workPlanSubmit){
+				$expense = $workPlanSubmit['expense'];
+				if($this->request->is(['patch', 'post', 'put'])){
+					$this->request->data['work_plan_submit_id'] = $workPlanSubmit -> id;
+					if($expense){
+						$oldexpense = $this->Expenses->patchEntity($expense, $this->request->data);
+						if ($this->Expenses->save($oldexpense)) {
+							$this->Flash->success(__('The expense has been updated.'));
+						}
+					}else{
+						$this->request->data['work_plan_submit_id'] = $workPlanSubmit -> id;
+						$this->request->data['expense_date'] = $workPlanSubmit -> date;
+						$this->request->data['user_id'] = $uid;
+						if(isset($this->request->data['other_expenses'])){
+							$this->request->data['daily_allowance'] = 0;
+							$this->request->data['expense_type_id'] = 1;
+						}
+
+						$expenseNewEntity = $this->Expenses->newEntity();
+						$expensepatchEntity = $this->Expenses->patchEntity($expenseNewEntity, $this->request->data,['associated' => ['TravelExpenses','OtherExpenses']]);
+						if ($this->Expenses->save($expensepatchEntity)) {
+							$this->Flash->success(__('The expense has been saved.'));
+						}
+					}
+					return $this->redirect(['action' => 'editExpense?date='.$this->request->getQuery('date')]);
+				}
+				$WorkPlans = $this->WorkPlans->find('all')->contain(['Cities','WorkTypes'])
+				->where(['WorkPlans.start_date =' => $this->request->getQuery('date'),'WorkPlans.user_id =' => $uid])
+				->order(['work_type_id' => 'DESC'])
+				->hydrate(false)
+				->toArray();
+				if(count($WorkPlans) ){
+					$cities = array_column(array_column($WorkPlans, 'city'), 'city_name', 'id');
+					$worktypes = array_column(array_column($WorkPlans, 'work_type'), 'id');
+				}
+				$userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
+				$cities[$userCity->id]=$userCity->city_name;
+
+				$expenseTypes = $this->Expenses->ExpenseTypes->find('list', ['limit' => 200]);
+				$dailyAllowances = $this->DailyAllowances->find('list',['keyField' => 'cost','valueField' => 'cost'])->where(['role_id' => $role_id]);
+				$otherAllowances = $this->OtherAllowances->find('list',['keyField' => 'id','valueField' => 'name']);
+
+				$this->set(compact('expense','WorkPlans','expenseTypes','cities','worktypes','dailyAllowances','otherAllowances'));
+				$this->set('title', 'Edit Expense');
+
+			}else {
+				return $this->redirect(['action' => 'dashboard']);
+			}
+		}else{
+			return $this->redirect(['action' => 'dashboard']);
+		}
+
+	}
+
+	/**
+	* Delete method
+	*
+	* @param string|null $id Other Expense id.
+	* @return \Cake\Http\Response|null Redirects to index.
+	* @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+	*/
+	public function OtherExpensedelete($id = null)
+	{
+		//$this->request->allowMethod(['post', 'delete']);
+		$otherExpense = $this->OtherExpenses->get($id);
+		if ($this->OtherExpenses->delete($otherExpense)) {
+			$this->Flash->success(__('The other expense has been deleted.'));
+		} else {
+			$this->Flash->error(__('The other expense could not be deleted. Please, try again.'));
+		}
+
+		return $this->redirect(['action' => 'edit-expense?date='.$this->request->getQuery('date')]);
+	}
+	
 	protected function _hasLeave($start_date)
     {
 		$uid = $this->Auth->user('id');
@@ -701,4 +824,22 @@ class MrsController extends AppController {
 		return (implode("/",$visits));
 	}
 	
-	}
+    public function getcityDistance(){
+      if($this->request->is('Ajax')){
+        $distance = $this->CityDistances->find()
+        ->where(['city_from' => $this->request->data['from'],'city_to' => $this->request->data['to']])
+        ->orWhere(['city_from' => $this->request->data['to'],'city_to' => $this->request->data['from']])
+        ->first();
+        $city_distance = 0;
+        if($distance){
+          $city_distance = $distance['km'];
+        }
+        $response=[
+          'status' => 1,
+          'distance' => $city_distance,
+          'km_fare' => 2
+        ];
+        echo json_encode($response);exit;
+      }
+    }
+}

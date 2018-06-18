@@ -43,6 +43,10 @@ class WorkPlanSubmitTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'lead_id'
         ]);
+
+        $this->hasOne('Expenses', [
+            'foreignKey' => 'work_plan_submit_id'
+        ]);
     }
 
     /**
