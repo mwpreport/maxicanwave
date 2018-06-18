@@ -84,6 +84,9 @@
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Holiday Shcedule'), ['controller' => 'Holidays', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Leave Types'), ['controller' => 'LeaveTypes', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Configuration'), ['controller' => 'Config', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Expense Types'), ['controller' => 'ExpenseTypes', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Daily Allowances'), ['controller' => 'DailyAllowances', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Other Allowances'), ['controller' => 'OtherAllowances', 'action' => 'index'], ['escape' => false]) ?></li>
                 </ul>
             </li>
             <?php }?>
@@ -96,9 +99,9 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Monthly Planning'), ['controller' => 'Mrs', 'action' => 'monthlyplan'], ['escape' => false]) ?></li>
-					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Daily Report'), ['controller' => 'Mrs', 'action' => 'dailyReport'], ['escape' => false]) ?></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Expenses</a></li>
+                    <li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Monthly Planning'), ['controller' => 'Mrs', 'action' => 'monthlyplan'], ['escape' => false]) ?></li>
+                    <li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Daily Report'), ['controller' => 'Mrs', 'action' => 'dailyReport'], ['escape' => false]) ?></li>
+                    <li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Expenses'), ['controller' => 'Mrs', 'action' => 'expenses'], ['escape' => false]) ?></li>
                 </ul>
             </li>
             <li class="treeview">
