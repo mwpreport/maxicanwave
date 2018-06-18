@@ -20,7 +20,7 @@
 		<?php }?>
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="active"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dashboard"])?>"><i class="fa fa-home" aria-hidden="true"></i>
+            <li class="active"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "index"])?>"><i class="fa fa-home" aria-hidden="true"></i>
                 <span>Home</span></a>
             </li>
 
@@ -81,12 +81,13 @@
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Assign Samples'), ['controller' => 'AssignedSamples', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Gifts'), ['controller' => 'Gifts', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Assign Gifts'), ['controller' => 'AssignedGifts', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Holiday Shcedule'), ['controller' => 'Holidays', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Leave Types'), ['controller' => 'LeaveTypes', 'action' => 'index'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Configuration'), ['controller' => 'Config', 'action' => 'index'], ['escape' => false]) ?></li>
-          <li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> City Distances'), ['controller' => 'CityDistances', 'action' => 'index'], ['escape' => false]) ?></li>
-          <li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Expense Types'), ['controller' => 'ExpenseTypes', 'action' => 'index'], ['escape' => false]) ?></li>
-          <li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Daily Allowances'), ['controller' => 'DailyAllowances', 'action' => 'index'], ['escape' => false]) ?></li>
-          <li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Other Allowances'), ['controller' => 'OtherAllowances', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> City Distances'), ['controller' => 'CityDistances', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Expense Types'), ['controller' => 'ExpenseTypes', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Daily Allowances'), ['controller' => 'DailyAllowances', 'action' => 'index'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Other Allowances'), ['controller' => 'OtherAllowances', 'action' => 'index'], ['escape' => false]) ?></li>
                 </ul>
             </li>
             <?php }?>
@@ -99,8 +100,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Daily Report'), ['controller' => 'Mrs', 'action' => 'dailyReport'], ['escape' => false]) ?></li>
 					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Monthly Planning'), ['controller' => 'Mrs', 'action' => 'monthlyplan'], ['escape' => false]) ?></li>
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Daily Report'), ['controller' => 'Mrs', 'action' => 'dailyReport'], ['escape' => false]) ?></li>
                     <li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Expenses'), ['controller' => 'Mrs', 'action' => 'expenses'], ['escape' => false]) ?></li>
                 </ul>
             </li>
@@ -166,12 +167,22 @@
 
                 </ul>
             </li>
-            <li><a href="#">
-                    <i class="fa fa-book"></i>
-                    <span>Reports</span></a>
-            </li>
+            <li><?= $this->Html->link(__('<i class="fa fa-book"></i> Reports'), ['controller' => 'Reports', 'action' => 'index'], ['escape' => false]) ?></li>
+            <li class="treeview">
+				<a href="#">
+					<i class="fa fa-star" aria-hidden="true"></i>
+					<span>Additional Resources</span>
+					<span class="pull-right-container">
+						<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+				<ul class="treeview-menu" style="display: none;">
+					<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Holiday Schedule'), ['controller' => 'Reports', 'action' => 'holidays'], ['escape' => false]) ?></li>
+				</ul>
+			</li>
         </ul>
         <!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->
 </aside>
+
