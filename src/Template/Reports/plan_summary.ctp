@@ -1,25 +1,13 @@
 <?php ?>
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
-                <!--  <section class="content-header">
-                       <h1>
-                        Doctor List
-
-                    </h1>
-                                   <ol class="breadcrumb">
-                                            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                                            <li class="active">Here</li>
-                                        </ol>
-                </section>-->
-
+            <div class="<?=$wrapper?>-wrapper">
                 <!-- Main content -->
                 <div class="content">
                     <section>
-                        <div class="white-wrapper">
+                        <div class="white-wrapper small">
                             <div class="col-md-12">
                                 <div class="hr-title">
-                                    <h2>Doctor Wise Plan</h2>
+                                    <h2><?=str_replace("_"," ",$filter)?> of <?=$month?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "plan"])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
                                     <hr>
                                 </div>
                             </div>
@@ -73,7 +61,7 @@
                    
                     
                     <section>
-                        <div class="row">
+                        <div class="row" id="report_section">
                             <div class="col-xs-12">
                                 <div class="white-wrapper mar-top-20">
                                     <!-- /.box-header -->
@@ -87,24 +75,31 @@
                                                     <th>Speciality</th>
                                                     <th>Class</th>
                                                     <th>City</th>
+                                                    <?php if($filter != "Un-Planned_Doctors"){?>
                                                     <th>Planned Visit</th>
                                                     <th>Total Visit</th>
+                                                    <?php }?>
                                                 </tr>
                                             </thead>
                                             <tbody>
 											<?php
 											$i =1;
-                                            foreach ($WorkPlansD as $WorkPlanD)
-											{?>
-											<tr>
+                                            foreach ($doctors as $doctor)
+											{
+												if($filter == "Doctor_Wise_Plan") {if(empty($visits[$doctor->doctor_id])) continue;}
+												elseif($filter == "Un-Planned_Doctors") {if(!empty($visits[$doctor->doctor_id])) continue;}
+											?>
+											<tr class="<?=(empty($visits[$doctor->doctor_id]))?"unplanned":""?>">
 											<td><?=$i?></td>
-											<td><?=$WorkPlanD->doctor->code?></td>
-											<td><?=$WorkPlanD->doctor->name?></td>
-											<td><?=$WorkPlanD->doctor->speciality->code?></td>
-											<td><?=$class[$WorkPlanD->doctor->class]?></td>
-											<td><?=$WorkPlanD->city->city_name?></td>
-											<td><?=$visits[$WorkPlanD->doctor_id]?></td>
-											<td><?=count(explode("/",$visits[$WorkPlanD->doctor_id]))?></td>
+											<td><?=$doctor->doctor->code?></td>
+											<td><?=$doctor->doctor->name?></td>
+											<td><?=$doctor->doctor->speciality->code?></td>
+											<td><?=$class[$doctor->doctor->class]?></td>
+											<td><?=$doctor->doctor->city->city_name?></td>
+											<?php if($filter != "Un-Planned_Doctors"){?>
+											<td><?=$visits[$doctor->doctor_id]?></td>
+											<td><?=(!empty($visits[$doctor->doctor_id]))?count(explode("/",$visits[$doctor->doctor_id])):0?></td>
+											<?php }?>
 											</tr>
 										<?php $i++;}?>
                                             </tbody>

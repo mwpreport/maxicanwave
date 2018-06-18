@@ -47,7 +47,9 @@
 											<tr>
 												<th scope="col"><?= $this->Paginator->sort('S.No') ?></th>
 												<th scope="col"><?= $this->Paginator->sort('Gift') ?></th>
-												<th scope="col"><?= $this->Paginator->sort('Item Count') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('Received') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('Issued') ?></th>
+												<th scope="col"><?= $this->Paginator->sort('Remaining') ?></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -55,6 +57,8 @@
 											<tr>
 												<td><?= $i ?></td>
 												<td><?= $assignedGift->name?></td>
+												<td><?= $assignedGift->count ?></td>
+												<td><?= $i_gift[$assignedGift->id] ?></td>
 												<td><?= $assignedGift->count-$i_gift[$assignedGift->id] ?></td>
 											</tr>
 											<?php endforeach; ?>

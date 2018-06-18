@@ -64,9 +64,9 @@
                                 <div class="daily-report-radio-cnt">
                                         <ul>
                                             <li class="col-md-12"><h3 class="mar-top-20 mar-bottom-20">Reports (Plan Summary)</h3></li>
-                                            <li class="col-md-3"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planSummary",'?' => ['type' => 'Doctor_Wise_Plan']])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>Doctor Wise Plan</b></a></li>
-                                            <li class="col-md-3"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planSummary",'?' => ['type' => 'Un-Planned_Doctors']])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>Un-Planned Doctors</b></a></li>
-                                            <li class="col-md-3"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "planSummary",'?' => ['type' => 'Entire_Doctor_List_Plan']])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>Entire Doctor List Plan</b></a></li>
+                                            <li class="col-md-3"><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "planSummary",'?' => ['type' => 'Doctor_Wise_Plan']])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>Doctor Wise Plan</b></a></li>
+                                            <li class="col-md-3"><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "planSummary",'?' => ['type' => 'Un-Planned_Doctors']])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>Un-Planned Doctors</b></a></li>
+                                            <li class="col-md-3"><a href="<?php echo $this->Url->build(["controller" => "Reports","action" => "planSummary",'?' => ['type' => 'Entire_Doctor_List_Plan']])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>Entire Doctor List Plan</b></a></li>
                                         </ul>
 										<div class="clearfix"></div>
 										<div class="col-sm-12 mar-top-20">

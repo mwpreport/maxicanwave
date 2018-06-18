@@ -35,7 +35,8 @@
 									<fieldset>
 										<?php
 											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('name', ['class' => 'form-control']).'</div>';
-											echo '<div class="col-sm-4">'.$this->Form->control('clinic_name', ['label' => 'Hospital/ Institution/ Clinic Name','class' => 'form-control']).'</div></div>';
+											echo '<div class="col-sm-4">'.$this->Form->control('clinic_name', ['label' => 'Hospital/ Institution/ Clinic Name','class' => 'form-control']).'</div>';
+											echo '<div class="col-sm-4">'.$this->Form->control('reg_no', ['label' => 'Registration.No','class' => 'form-control']).'</div></div>';
 											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('speciality_id', ['class' => 'form-control', 'options' => $specialities, 'empty' => 'Select Speciality']).'</div>';
 											echo '<div class="col-sm-4">'.$this->Form->control('qualification_id', ['class' => 'form-control', 'options' => $qualifications, 'empty' => 'Select Qualification']).'</div>';
 											echo '<div class="col-sm-4">'.$this->Form->control('add_qualification', ['label' => 'Additional Qualification','class' => 'form-control']).'</div></div>';

@@ -164,7 +164,7 @@ class UsersController extends AppController
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
-                return $this->redirect(array('controller' => 'mrs', 'action' => 'dashboard'));
+                return $this->redirect(array('controller' => 'mrs', 'action' => 'index'));
             }else{
 				$this->Flash->error("Invalid Email or Password.");
 				return $this->redirect($this->Auth->logout()); 

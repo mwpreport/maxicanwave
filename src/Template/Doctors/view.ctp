@@ -40,16 +40,28 @@
 											<td><?= h($doctor->name) ?></td>
 										</tr>
 										<tr>
+											<th scope="row"><?= __('Hospital/ Institution/ Clinic Name') ?></th>
+											<td><?= h($doctor->clinic_name) ?></td>
+										</tr>
+										<tr>
+											<th scope="row"><?= __('Reg.no') ?></th>
+											<td><?= h($doctor->reg_no) ?></td>
+										</tr>
+										<tr>
+											<th scope="row"><?= __('D.O.Birth') ?></th>
+											<td><?= !empty($doctor->dob) ? $doctor->dob->i18nFormat('dd-MM-YYYY') : "" ?></td>
+										</tr>
+										<tr>
+											<th scope="row"><?= __('D.O.Wedding') ?></th>
+											<td><?= !empty($doctor->dow) ? $doctor->dow->i18nFormat('dd-MM-YYYY') : "" ?></td>
+										</tr>
+										<tr>
 											<th scope="row"><?= __('Speciality') ?></th>
 											<td><?= $doctor->has('speciality') ? $this->Html->link($doctor->speciality->name, ['controller' => 'Specialities', 'action' => 'view', $doctor->speciality->id]) : '' ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Qualification') ?></th>
 											<td><?= $doctor->has('qualification') ? $this->Html->link($doctor->qualification->name, ['controller' => 'Qualifications', 'action' => 'view', $doctor->qualification->id]) : '' ?>,<?= h($doctor->add_qualification) ?></td>
-										</tr>
-										<tr>
-											<th scope="row"><?= __('Id') ?></th>
-											<td><?= $this->Number->format($doctor->id) ?></td>
 										</tr>
 										<tr>
 											<th scope="row"><?= __('Email') ?></th>
