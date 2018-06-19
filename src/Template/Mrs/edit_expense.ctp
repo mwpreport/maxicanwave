@@ -51,13 +51,13 @@
 
                                           <td colspan='2' class='started_date'>
                                             <span>Started:</span>
-                                            <?= $this->Form->control('started_hour', ['options' => $hours, 'label' => false, 'value' => isset($expense['started']) ? date("G", strtotime($expense['started'])):'00']); ?>
-                                            <?= $this->Form->control('started_minute', ['options' => $minutes, 'label' => false, 'value' => isset($expense['started']) ? date("i", strtotime($expense['started'])):'00']); ?>
+                                            <?= $this->Form->control('started_hour', ['options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("G", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
+                                            <?= $this->Form->control('started_minute', ['options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("i", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
                                           </td>
                                           <td colspan='2' class='end_date'>
                                             <span>Reached:</span>
-                                            <?= $this->Form->control('reached_hour', ['options' => $hours, 'label' => false, 'value' => isset($expense['reached']) ? date("G", strtotime($expense['reached'])):'00']); ?>
-                                            <?= $this->Form->control('reached_minute', ['options' => $minutes, 'label' => false, 'value' => isset($expense['reached']) ? date("i", strtotime($expense['reached'])):'00']); ?>
+                                            <?= $this->Form->control('reached_hour', ['options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("G", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
+                                            <?= $this->Form->control('reached_minute', ['options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("i", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
                                           </td>
                                         </tr>
                                         <tr>
@@ -181,10 +181,10 @@
                                            $worktypeid=$WorkPlans[0]['work_type']['id'];
                                          }
                                          ?>
-                                      <?= $this->Form->create($expense, array('id' => 'newform')) ?>
+                                      <?= $this->Form->create($expense, array('id' => 'newform','class'=>'main-expense-form')) ?>
                                       <?php
                                       if(isset($expense['travel_expenses'])){ ?>
-                                       <tr>
+                                       <tr class="travel-expense-row">
                                         <?php if($i==0) {?>
                                           <td class="exp-type" rowspan="<?php echo $count; ?>" style="vertical-align : middle;text-align:center;">
                                             <span>
@@ -229,13 +229,18 @@
                                              <?= $this->Form->control('travel_expenses['.$i.'][fare]',['value' => $expense['travel_expenses'][$i]['fare'], 'label' => false,'type'=>$inputtype]) ?>
                                          </td>
 
-                                         <td><?= $this->Form->control('travel_expenses['.$i.'][travel_mode]', ['options' => $travelMode, 'label' => false, 'value' => $expense['travel_expenses'][$i]['travel_mode']]); ?></td>
+                                         <td>
+                                           <?= $this->Form->control('travel_expenses['.$i.'][travel_mode]', ['options' => $travelMode, 'label' => false, 'value' => $expense['travel_expenses'][$i]['travel_mode']]); ?>
+                                         </td>
+
                                          <td class='start_date' style="display:none">
-                                           <?= $this->form->control('started', ['type' => 'hidden', 'label' => false, 'value' => date("G:i", strtotime($expense['started']))]); ?>
+                                           <?= $this->form->control('travel_expenses['.$i.'][started]', ['type' => 'hidden', 'label' => false, 'value' => date("G:i", strtotime($expense['travel_expenses'][$i]['started']))]); ?>
                                          </td>
+
                                          <td class='end_date' style="display:none">
-                                           <?= $this->form->control('reached', ['type' => 'hidden', 'label' => false, 'value' => date("G:i", strtotime($expense['reached']))]); ?>
+                                           <?= $this->form->control('travel_expenses['.$i.'][reached]', ['type' => 'hidden', 'label' => false, 'value' => date("G:i", strtotime($expense['travel_expenses'][$i]['reached']))]); ?>
                                          </td>
+
                                          <td>
                                            <?= $this->form->control('travel_expenses['.$i.'][expense_id]', ['type' => 'hidden', 'label' => false, 'value' => $expense['id']]); ?>
                                          </td>
@@ -246,7 +251,7 @@
                                        </tr>
 
                                      <?php }else{ ?>
-                                       <tr>
+                                       <tr class="travel-expense-row">
                                         <?php if($i==0) {?>
                                           <td rowspan="<?php echo $count; ?>" class='exp-type'>
                                             <?= $this->form->control('expense_type_id',['type' => 'hidden']); ?>
@@ -348,6 +353,7 @@ $('.travel-expense-submit').click(function(e){
       alert('please select required option');
       return false;
     }
+
     if($(this).parent().parent().attr('class') == 'city_to_'+row_cnt){
       var city_from_value = $('.city_from_'+row_cnt+' option:selected').val();
       var city_to_value = $('.city_to_'+row_cnt+' option:selected').val();
@@ -380,11 +386,22 @@ $('.travel-expense-submit').click(function(e){
       });
     }
   })
-  //Add started and reached in main form
-  $started=$('#started-hour option:selected').val()+':'+$('#started-minute option:selected').val();
-  $reached=$('#reached-hour option:selected').val()+':'+$('#reached-minute option:selected').val();
-  $('.main-travel-expense .start_date input').val($started);
-  $('.main-travel-expense .end_date input').val($reached);
+
+  //Add started and reached in main form for OS type only
+  var expensetype = $('.main-travel-expense .exp-type input').val();
+  if(expensetype == 3){    
+      $started=$('#started-hour option:selected').val()+':'+$('#started-minute option:selected').val();
+      $reached=$('#reached-hour option:selected').val()+':'+$('#reached-minute option:selected').val();
+      $('.main-travel-expense .start_date input').val($started);
+      $('.main-travel-expense .end_date input').val($reached);
+      var travel_expense_row_count = $('.main-travel-expense .travel-expense-row').length;
+      if(travel_expense_row_count > 1)
+        $('.main-travel-expense .travel-expense-row:last').css('display','none');
+    }else{
+      $('.main-travel-expense .travel-expense-row:last').css('display','table-row');
+    }
+
+  //Open main expense modal popup
   $.magnificPopup.open({
     items: {
       src: '#test-modal',
@@ -393,6 +410,17 @@ $('.travel-expense-submit').click(function(e){
   });
   return false;
   e.preventDefault();
+});
+
+$('.main-expense-form').submit(function(){
+  var expensetype = $('.main-travel-expense .exp-type input').val();
+  if(expensetype == 3){
+    var travel_expense_row_count = $('.main-travel-expense .travel-expense-row').length;
+    if(travel_expense_row_count > 1){
+      $('.main-travel-expense .travel-expense-row:last').remove();
+    }
+
+  }
 });
 
 /*$('.other-expense-form').submit(function(){
