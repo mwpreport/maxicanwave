@@ -88,7 +88,9 @@
                              <th scope="col"><?= $this->Paginator->sort('Daiy Allow.') ?></th>
                              <th scope="col"><?= $this->Paginator->sort('Other Exp.') ?></th>
                              <th scope="col"><?= $this->Paginator->sort('Total') ?></th>
-     												<th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
+                             <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
+				                        <th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
+                             <?php } ?>
      											</tr>
      										</thead>
      										<tbody>
@@ -123,7 +125,9 @@
                                            <td></td>
                                            <td></td>
                                            <td></td>
-        				                           <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                           <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
+        				                                 <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                           <?php } ?>
     							                 </tr>
                                  <?php }else {
 
@@ -183,8 +187,10 @@
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
                                                      <?php } ?>
                                                 </td>
-                                                 <?php if($key==0){ ?>
-                                                   <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                              <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
+                                                   <?php if($key==0){ ?>
+                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                                  <?php } ?>
                                                 <?php } ?>
                                         </tr>
                                        <?php }
@@ -213,8 +219,10 @@
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
                                                      <?php } ?>
                                                 </td>
-                                                 <?php if($key==0){ ?>
-                                                   <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                                <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
+                                                   <?php if($key==0){ ?>
+                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                                  <?php } ?>
                                                 <?php } ?>
                                         </tr>
                                      <?php
@@ -244,15 +252,17 @@
                         <tr>
 
                           <td colspan="12">
-                            <?php if(empty($expenseApproval) || $expenseApproval['is_rejected'] == 1){ ?>
+                            <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
                             <?= $this->Form->create('expenses', array('id' => 'newform')) ?>
                             <?= $this->form->control('approve_request', ['type' => 'hidden', 'label' => false, 'value' => 1]); ?>
                             <?= $this->Form->control('month', ['type' => 'hidden','label' => false, 'value' => $this->request->data['month']]) ?>
                             <?= $this->Form->control('year', ['type' => 'hidden','label' => false, 'value' => $this->request->data['year']]) ?>
                           <?= $this->Form->button(__('Send Expense For Approvals'), ['class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
                             <?= $this->Form->end() ?>
+                          <?php }else if(empty($expenseApproval) && $expenseApproval['is_approved'] == 1){ ?>
+                            <h4 class="message success">Expense approval request sent for this month</h4>
                           <?php }else{ ?>
-                            Expense approval request already sent
+                            <h4 class="message success">Expense has been approved for this month</h4>
                           <?php } ?>
                           </td>
                         </tr>

@@ -681,19 +681,28 @@ class MrsController extends AppController {
           ])
           ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year ])->order(['WorkPlanSubmit.id' => 'ASC']);
 
+          //Store Expense Approval Informations
+          $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid,'lead_id ='=> $lead_id,'Month(date) =' => $month, 'Year(date) =' => $year])->first();
           if(isset($this->request->data['approve_request'])){
             $this->request->data['date']=$this->request->data['year']."-".$this->request->data['month'].'-1';
             $this->request->data['user_id']=$uid;
             $this->request->data['lead_id']=$lead_id;
-            $expenseApprovalsEntity = $this->ExpenseApprovals->newEntity();
-            $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApprovalsEntity, $this->request->data);
-            pr($expenseApprovalpatchEntity);
-						if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
-							$this->Flash->success(__('The expense approval has been created'));
-						}
+            if(empty($expenseApproval)){
+              $expenseApprovalsEntity = $this->ExpenseApprovals->newEntity();
+              $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApprovalsEntity, $this->request->data);
+  						if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
+  							$this->Flash->success(__('The expense approval has been created'));
+  						}
+            }else {
+              $this->request->data['id']=$expenseApproval->id;
+              $this->request->data['is_rejected']=0;              
+              $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApproval, $this->request->data);
+  						if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
+  							$this->Flash->success(__('The expense approval has been updated'));
+  						}
+            }
             $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid,'lead_id ='=> $lead_id,'Month(date) =' => $month, 'Year(date) =' => $year])->first();
           }
-
           $this->set(compact('month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
 
         }
