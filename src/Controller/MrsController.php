@@ -695,7 +695,7 @@ class MrsController extends AppController {
   						}
             }else {
               $this->request->data['id']=$expenseApproval->id;
-              $this->request->data['is_rejected']=0;              
+              $this->request->data['is_rejected']=0;
               $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApproval, $this->request->data);
   						if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
   							$this->Flash->success(__('The expense approval has been updated'));
@@ -794,6 +794,78 @@ class MrsController extends AppController {
 
 		return $this->redirect(['action' => 'edit-expense?date='.$this->request->getQuery('date')]);
 	}
+
+  public function ExpenseApprovalRequests(){
+        $this->set('title', 'Expense Approval Requests');
+        $uid = $this->Auth->user('id');
+	      $lead_id = $this->Auth->user('lead_id');
+        $expenseApprovals = $this->paginate($this->ExpenseApprovals->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['ExpenseApprovals.lead_id =' => $uid, 'ExpenseApprovals.is_approved =' => 0, 'ExpenseApprovals.is_rejected =' => 0]));
+        $this->set(compact('expenseApprovals'));
+
+    }
+
+    public function ExpenseApprovalRequest($id){
+
+      $current_year = date("Y");
+      $months = [1 => 'January',2 => 'Feburary',3 => 'March',4 => 'April',5 => 'May',6 => 'June',7 => 'July',8 => 'August',9 => 'September',10 => 'October',11 => 'November',12 => 'December'];
+      $years= [$current_year   => $current_year,$current_year-1 => $current_year-1,$current_year-2 => $current_year-2,$current_year-3 => $current_year-3,$current_year-4 => $current_year-4];
+      $this->loadModel('Expenses');
+
+      $expense = $this->Expenses->newEntity();
+      if($this->request->is('post') || !empty($id)){
+
+        $uid = $this->Auth->user('id');
+        $lead_id = $this->Auth->user('lead_id');
+
+        $expenseApproval = $this->ExpenseApprovals->find()->where(['id'=>$id])->first();
+        if($expenseApproval){
+
+          $month = (int)date("m", strtotime($expenseApproval->date));
+          $year = date("Y", strtotime($expenseApproval->date));
+          $expense_user_id =  $expenseApproval->user_id;
+
+          $month_days = cal_days_in_month(CAL_GREGORIAN,$month,$year);
+          $month_in_text = $months[$month];
+          $workPlanSubmit = $this->WorkPlanSubmit->find('all')
+          ->contain([
+          'Expenses.ExpenseTypes',
+          'Expenses.OtherExpenses',
+          'Expenses.TravelExpenses.WorkTypes' ,
+          'Expenses.TravelExpenses.CitiesFrom',
+          'Expenses.TravelExpenses.CitiesTo'
+          ])
+          ->where(['WorkPlanSubmit.user_id =' => $expense_user_id, 'WorkPlanSubmit.lead_id =' => $uid, 'Month(date) =' => $month, 'Year(date) =' => $year ])->order(['WorkPlanSubmit.id' => 'ASC']);
+
+          //Store Expense Approval Informations
+          if(isset($this->request->data['approve_request'])){
+              $expense_changes = $this->request->data['expenses'];
+              foreach($expense_changes as $expense_change){
+                $expense = $this->Expenses->find()->where(['id' => $expense_change['id']])->first();
+                $expensePatchEntity=$this->Expenses->patchEntity($expense,$expense_change);                
+                $this->Expenses->save($expensePatchEntity);
+              }
+              unset($this->request->data['expenses']);
+              if(isset($this->request->data['is_approved'])){
+                $this->request->data['is_approved']=1;
+              }else{
+                $this->request->data['is_rejected']=1;
+              }
+              $this->request->data['id']=$expenseApproval->id;
+              $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApproval, $this->request->data);
+              if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
+                $this->Flash->success(__('The expense approval has been updated'));
+                return $this->redirect(["controller" => "Mrs","action" => "ExpenseApprovalRequest",$id]);
+              }
+          }
+          $this->set(compact('month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
+        }else {
+
+        }
+
+      }
+      $this->set('title', 'Daily Report');
+      $this->set(compact('years', 'months', 'expense'));
+    }
 
 	protected function _hasLeave($start_date)
     {
