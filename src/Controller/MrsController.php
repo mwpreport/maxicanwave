@@ -45,6 +45,7 @@ class MrsController extends AppController {
         $this->loadModel('CityDistances');
         $this->loadModel('OtherAllowances');
         $this->loadModel('OtherExpenses');
+        $this->loadModel('Holidays');        
     }
     
     public function beforeFilter(Event $event){
@@ -162,7 +163,8 @@ class MrsController extends AppController {
         $leaveTypes = $this->LeaveTypes->find()->toarray();
 		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
         $workPlanApproval = $this->WorkPlanApproval->find('all')->where(['WorkPlanApproval.user_id =' => $uid, 'WorkPlanApproval.lead_id =' => $lead_id, 'WorkPlanApproval.date =' => $thisDate])->first();
-        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate'));        
+        $holidayArray = $this->holidayArray();
+        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate', 'holidayArray'));        
     }
     
 	public function workPlan($id = null){
@@ -841,5 +843,16 @@ class MrsController extends AppController {
         ];
         echo json_encode($response);exit;
       }
+    }
+    
+    public function holidayArray()
+    {
+		$start_date=date("Y-01-01");
+		$end_date=date("Y-12-31");
+		$date_array = array();
+        $holidays = $this->Holidays->find()->select('date')->where(['date >=' => $start_date])->andWhere(['date <=' => $end_date])->toArray();
+        foreach($holidays as $holiday)
+        $date_array[]=date("Y-m-d", strtotime($holiday['date']));
+        return ($date_array); 
     }
 }

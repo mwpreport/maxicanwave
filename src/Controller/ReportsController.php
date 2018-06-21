@@ -484,6 +484,20 @@ class ReportsController extends AppController {
         $this->set('_serialize', ['holidays']);
     }
 
+    public function holidayArray($id = null)
+    {
+		$this->autoRender = false;
+        $this->viewBuilder()->layout(false);
+		$start_date=date("Y-01-01");
+		$end_date=date("Y-12-31");
+		$date_array = array();
+        $holidays = $this->Holidays->find()->select('date')->where(['date >=' => $start_date])->andWhere(['date <=' => $end_date])->toArray();
+        foreach($holidays as $holiday)
+        $date_array[]=date("Y-m-d", strtotime($holiday['date']));
+        echo json_encode($date_array); 
+
+    }
+
     public function getVisits($doctor_id,$uid,$start_date,$end_date){
 		$WorkPlansD = $this->WorkPlans->find('all')
 		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	

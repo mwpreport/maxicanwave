@@ -594,7 +594,18 @@
 					   //alert(json);
 					   }
 				   });
-			   }
+			   },
+			   eventAfterAllRender: function (view) {
+				var fourthOfJuly = '2018-07-04';
+				var fifthOfJuly = '2018-07-05';
+				var holidays = ['<?php echo implode("','", $holidayArray);?>'];
+				for(var i = 0; i < holidays.length; i++) {				
+					holidayMoment = holidays[i];
+					if (view.name == 'month') {
+						$("td[data-date=" + holidayMoment + "]").addClass('holiday');
+					}
+				}
+			}
 			   
 			});
 
