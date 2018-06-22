@@ -48,5 +48,9 @@ class Expense extends Entity
         'travel_expenses' => true,
         'started' => true,
         'reached' => true,
+        'disallowed' => true,
+        'disallowed_remark' => true,
+        'abeyance' => true,
+        'abeyance_remark' => true
     ];
 }

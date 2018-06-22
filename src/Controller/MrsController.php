@@ -46,35 +46,36 @@ class MrsController extends AppController {
         $this->loadModel('OtherAllowances');
         $this->loadModel('OtherExpenses');
         $this->loadModel('Holidays');        
+        $this->loadModel('ExpenseApprovals');
     }
-    
+
     public function beforeFilter(Event $event){
         parent::beforeFilter($event);
         if($this->Auth->User()) {
             $currentUserid = $this->Auth->user('id');
         }else{
-            return $this->redirect($this->Auth->logout()); 
+            return $this->redirect($this->Auth->logout());
         }
-    }    
-    
+    }
+
     public function index(){
-        $this->set('title', 'Dashboard');       
-        
+        $this->set('title', 'Dashboard');
+
         $month = date('M - Y');
 		$start_date = date('Y-m-01')."00:00:00";
-		$end_date = date('Y-m-t')."23:59:59	"; 
-		
+		$end_date = date('Y-m-t')."23:59:59	";
+
 		$uid = $this->Auth->user('id');
 		$lead_id = $this->Auth->user('lead_id');
 		$user =  $this->Users->get($uid, [ 'contain' => ['Roles', 'States', 'Cities'] ]);
-		
+
 		$dates = $this->_datePeriod($start_date, $end_date);
 		$reportedDates = array(0); $doctorCalls = 0; $chemistCalls = 0; $visited = array();
-		
+
 		$today_eod = strtotime(date("Y-m-d 23:59:59")); // or your date as well
 		$datediff = $today_eod - strtotime($start_date);
 		$coveredDays = round($datediff / (60 * 60 * 24));
-		
+
 
 
 		foreach($dates as $date)
@@ -82,38 +83,38 @@ class MrsController extends AppController {
 			$reportedPlans = $this->WorkPlans->find('list')
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date])->toArray();
 			if($reportedPlans)$reportedDates[] = "'".date("m/d/Y", strtotime($date))."'";
-			
+
 				$WorkPlansD = $this->WorkPlans
 				->find('list')
 				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
-				
+
 				$WorkPlansUD = $this->WorkPlans
 				->find('list')
 				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
-				
+
 				$WorkPlansPD = $this->WorkPlans
 				->find('list')
 				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
-				
+
 				$WorkPlansC = $this->WorkPlans
 				->find('list')
 				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
-				
+
 				$doctorCalls+= count($WorkPlansD) + count($WorkPlansUD) +  count($WorkPlansPD);
 				$chemistCalls+= count($WorkPlansC);
 
 		}
 		$doctors = $this->paginate($this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']))->toArray();
-		foreach($doctors as $doctor) 
+		foreach($doctors as $doctor)
 		{
 			$visited[] = $doctor->doctor_id;
 		}
-		
+
 		$doctorsAvarage = $doctorCalls/$coveredDays;
 		$chemistAvarage = $chemistCalls/$coveredDays;
 		$doctorsCoverage = count($visited);
-		$this->set(compact('user', 'reportedDates', 'doctorsAvarage', 'chemistAvarage', 'doctorsCoverage'));        
-    }      
+		$this->set(compact('user', 'reportedDates', 'doctorsAvarage', 'chemistAvarage', 'doctorsCoverage'));
+    }
 
     public function doctorList(){
         $this->set('title', 'Doctor List');
@@ -132,22 +133,22 @@ class MrsController extends AppController {
 				return $q->where(['DoctorsRelation.user_id' => $uid]);
 			})->where(['city_id =' => $userCity]);
         //pj($doctors);exit;
-        $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors', 'doctorTypes'));            
+        $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors', 'doctorTypes'));
     }
-	
+
     public function getReports($doctor_id,$uid,$start_date,$end_date){
 		$WorkPlansD = $this->WorkPlans->find('all')
-		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	
+		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
 		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.doctor_id =' => $doctor_id, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_submitted =' => '1'])
 		->where(['WorkPlans.start_date >=' => $start_date])
 		->andWhere(['WorkPlans.start_date <=' => $end_date])->toArray();
 		$visits = array_map(function($d) { return date("d", strtotime($d->start_date)); }, $WorkPlansD);
 		return (implode("/",$visits));
 	}
-	
+
     public function doctorSelection(){
-        $this->set('title', 'Doctor Visit Report');        
-    }      
+        $this->set('title', 'Doctor Visit Report');
+    }
 
 	public function monthlyplan(){
         $this->viewBuilder()->layout('monthlyplan');
@@ -165,8 +166,9 @@ class MrsController extends AppController {
         $workPlanApproval = $this->WorkPlanApproval->find('all')->where(['WorkPlanApproval.user_id =' => $uid, 'WorkPlanApproval.lead_id =' => $lead_id, 'WorkPlanApproval.date =' => $thisDate])->first();
         $holidayArray = $this->holidayArray();
         $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate', 'holidayArray'));        
+
     }
-    
+
 	public function workPlan($id = null){
 		$workPlanApproval = $this->WorkPlanApproval->find('all')->where(['id =' => $id])->first();
 		$uid = $this->Auth->user('id');
@@ -183,30 +185,30 @@ class MrsController extends AppController {
 			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $user_id, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
 			$leaveTypes = $this->LeaveTypes->find()->toarray();
 			$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
-			$this->set(compact('user_id', 'userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate'));        
+			$this->set(compact('user_id', 'userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate'));
 		}
 		else
 		return $this->redirect(["controller" => "Mrs","action" => "workPlanRequests"]);
     }
-    
+
 	public function workPlanRequests(){
         $this->set('title', 'Plan Requests for Approval');
         $uid = $this->Auth->user('id');
 		$lead_id = $this->Auth->user('lead_id');
 		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
         $workPlansApproval = $this->paginate($this->WorkPlanApproval->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['WorkPlanApproval.lead_id =' => $uid, 'WorkPlanApproval.date =' => $thisDate, 'WorkPlanApproval.is_approved =' => 0, 'WorkPlanApproval.is_rejected =' => 0]));
-        $this->set(compact('workPlansApproval', 'thisDate'));        
+        $this->set(compact('workPlansApproval', 'thisDate'));
     }
-	
+
 	public function workPlanSubmits(){
         $this->set('title', 'Plan Requests for Approval');
         $uid = $this->Auth->user('id');
 		$lead_id = $this->Auth->user('lead_id');
 		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
         $workPlansSubmit = $this->paginate($this->WorkPlanSubmit->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['WorkPlanSubmit.lead_id =' => $uid, 'WorkPlanSubmit.date =' => $thisDate, 'WorkPlanSubmit.is_approved =' => 0, 'WorkPlanSubmit.is_rejected =' => 0]));
-        $this->set(compact('workPlansSubmit', 'thisDate'));        
+        $this->set(compact('workPlansSubmit', 'thisDate'));
     }
-    
+
     public function planGetDoctors()
     {
         $this->autoRender = false;
@@ -216,10 +218,10 @@ class MrsController extends AppController {
 		$id = $data['id'];
 		$city_id = $data['city_id'];
 		$start_date = $data['start_date'];
-		
+
 		$WorkPlansD = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities', 'Doctors'])	
+			->contain(['WorkTypes', 'Cities', 'Doctors'])
 			->select('doctor_id')->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
 		$doctor_ids=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD);
@@ -231,7 +233,7 @@ class MrsController extends AppController {
 		$listHtml.='<option value="'.$doctor->doctor_id.'">'.$doctor->doctor->name.'</option>';
 		echo $listHtml; exit;
     }
-    
+
     public function dailyReport()
     {
         $this->set('title', 'Daily Report');
@@ -254,26 +256,26 @@ class MrsController extends AppController {
 			//echo $date; exit;
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
-						
+
 			$WorkPlans = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities'])	
+			->contain(['WorkTypes', 'Cities'])
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
 
 			$WorkPlansL = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities'])	
+			->contain(['WorkTypes', 'Cities'])
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
 
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-			
+
 		}
 		$hasLeave = $this->_hasPlannedLeave($date);
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'WorkPlansL', 'workPlanSubmit', 'date','hasLeave'));        
-		
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'WorkPlansL', 'workPlanSubmit', 'date','hasLeave'));
+
     }
 
     public function dailyReportField()
@@ -288,7 +290,7 @@ class MrsController extends AppController {
 			$hasLeave = $this->_hasLeave($date);
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
 			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
-			
+
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
 			$state_id = $this->Auth->user('state_id');
@@ -316,60 +318,60 @@ class MrsController extends AppController {
 			$stockists = array();
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
-			
-			
+
+
 			$WorkPlansD = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	
+			->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
 			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray()); $reported_doctors[]=0;
 			$WorkPlansD = $WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
 			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors'])->toArray();
-			
+
 			$WorkPlansUD = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
 
 			$WorkPlansPD = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])	
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
 
 			$WorkPlans = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities'])	
+			->contain(['WorkTypes', 'Cities'])
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
-			
+
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Chemists'])	
+			->contain(['Cities', 'Chemists'])
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
 			$reported_chemists=array_map(function($c) { return $c->chemist_id; }, $WorkPlansC); $reported_chemists[]=0;
 			$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity, 'Chemists.id NOT IN' => $reported_chemists])->toarray();
 
-			
+
 			$WorkPlansS = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Stockists'])	 
+			->contain(['Cities', 'Stockists'])
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansS); $reported_stockists[]=0;
 			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
 
-        $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansPD', 'WorkPlansS', 'WorkPlansC', 'WorkPlans', 'date'));        
-			
+        $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansPD', 'WorkPlansS', 'WorkPlansC', 'WorkPlans', 'date'));
+
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
-	
-		
+
+
     }
-    
+
     public function UnplannedDoctors()
     {
 		if(isset($_GET['date']))
@@ -382,7 +384,7 @@ class MrsController extends AppController {
 			$hasLeave = $this->_hasLeave($date);
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
 			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
-			
+
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
 			$state_id = $this->Auth->user('state_id');
@@ -410,32 +412,32 @@ class MrsController extends AppController {
 			$stockists = array();
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
-			
-			
+
+
 			$WorkPlansD = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	
+			->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
 			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray()); $reported_doctors[]=0;
 			$WorkPlansD = $WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
 			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors.Specialities'])->toArray();
-			
+
 			$WorkPlansUD = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
 
 
-        $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'doctorsRelation', 'workTypes', 'WorkPlansUD','date'));        
-			
+        $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'doctorsRelation', 'workTypes', 'WorkPlansUD','date'));
+
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
-	
-		
+
+
     }
-    
+
     public function viewDailyReport()
     {
 		if(isset($_GET['date']))
@@ -449,7 +451,7 @@ class MrsController extends AppController {
 			$hasLeave = $this->_hasLeave($date);
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
 			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
-			
+
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
 			$state_id = $this->Auth->user('state_id');
@@ -462,48 +464,48 @@ class MrsController extends AppController {
 			$html = "";
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
-			
+
 			$WorkPlansD = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
-			
+
 			$WorkPlansUD = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
-			
+
 			$WorkPlansPD = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])	
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
-			
+
 			$WorkPlans = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities'])	
+			->contain(['WorkTypes', 'Cities'])
 			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
 
 			$WorkPlansL = $this->WorkPlans
 			->find('all')
-			->contain(['LeaveTypes'])	
-			->contain(['WorkTypes', 'Cities'])	
+			->contain(['LeaveTypes'])
+			->contain(['WorkTypes', 'Cities'])
 			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
-			
+
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Chemists'])	
+			->contain(['Cities', 'Chemists'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
-			
+
 			$WorkPlansS = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Stockists'])	 
+			->contain(['Cities', 'Stockists'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
-			
-			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));        
+
+			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
-		
+
     }
 
     public function finalSubmitReport()
@@ -519,7 +521,7 @@ class MrsController extends AppController {
 			$hasUnSavedPlans = $this->_hasUnSavedPlans($date);
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
 			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
-			
+
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;
 			$state_id = $this->Auth->user('state_id');
@@ -532,50 +534,50 @@ class MrsController extends AppController {
 			$html = "";
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
-			
+
 			$WorkPlansD = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
-			
+
 			$WorkPlansUD = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
-			
+
 			$WorkPlansPD = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])	
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
-			
+
 			$WorkPlans = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities'])	
+			->contain(['WorkTypes', 'Cities'])
 			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
 
 			$WorkPlansL = $this->WorkPlans
 			->find('all')
-			->contain(['LeaveTypes'])	
-			->contain(['WorkTypes', 'Cities'])	
+			->contain(['LeaveTypes'])
+			->contain(['WorkTypes', 'Cities'])
 			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
-			
+
 			$WorkPlansC = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Chemists'])	
+			->contain(['Cities', 'Chemists'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
-			
+
 			$WorkPlansS = $this->WorkPlans
 			->find('all')
-			->contain(['Cities', 'Stockists'])	 
+			->contain(['Cities', 'Stockists'])
 			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
-			
-			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD', 'hasUnSavedPlans'));        
+
+			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD', 'hasUnSavedPlans'));
 		}
 		else
 		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
 
     }
-	
+
     public function reportGetDoctors()
     {
         $this->autoRender = false;
@@ -584,10 +586,10 @@ class MrsController extends AppController {
 		$uid = $this->Auth->user('id');
 		$city_id = $data['city_id'];
 		$start_date = $data['start_date'];
-		
+
 		$WorkPlansD = $this->WorkPlans
 			->find('all')
-			->contain(['WorkTypes', 'Cities', 'Doctors'])	
+			->contain(['WorkTypes', 'Cities', 'Doctors'])
 			->select('doctor_id')->where(['WorkPlans.user_id =' => $uid])
 			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
 		$doctor_ids=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray());
@@ -608,20 +610,20 @@ class MrsController extends AppController {
 		$uid = $this->Auth->user('id');
 		$city_id = $data['city_id'];
 		$start_date = $data['start_date'];
-			
+
 		$WorkPlansC = $this->WorkPlans
 		->find('all')
-		->contain(['Cities', 'Chemists'])	
+		->contain(['Cities', 'Chemists'])
 		->where(['WorkPlans.user_id =' => $uid])
 		->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
 		$chemist_ids=array_map(function($c) { return $c->chemist_id; }, $WorkPlansC);
 		$chemist_ids[]=0;
-			
+
 		$chemists = $this->Chemists->find('all')->where(['city_id =' => $city_id, 'id NOT IN' => $chemist_ids])->toarray();
 		$listHtml='<option value="">Select Chemists</option>';
 		foreach ($chemists as $chemist)
 		$listHtml.='<option value="'.$chemist['id'].'">'.$chemist['name'].'</option>';
-		
+
 		echo $listHtml; exit;
     }
 
@@ -633,27 +635,27 @@ class MrsController extends AppController {
 		$uid = $this->Auth->user('id');
 		$city_id = $data['city_id'];
 		$start_date = $data['start_date'];
-		
+
 		$WorkPlansS = $this->WorkPlans
 		->find('all')
-		->contain(['Cities', 'Stockists'])	 
+		->contain(['Cities', 'Stockists'])
 		->where(['WorkPlans.user_id =' => $uid])
 		->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 		$stockist_ids=array_map(function($c) { return $c->stockist_id; }, $WorkPlansS);
 		$stockist_ids[]=0;
-		
+
 		$stockists = $this->Stockists->find('all')->where(['city_id =' => $city_id, 'id NOT IN' => $stockist_ids])->toarray();
 		$listHtml='<option value="">Select Stockists</option>';
 		foreach ($stockists as $stockist)
 		$listHtml.='<option value="'.$stockist['id'].'">'.$stockist['name'].'</option>';
-		
+
 		echo $listHtml; exit;
     }
 
     public function reports()
     {
         $this->set('title', 'Reports');
-		
+
     }
 
     public function expenses(){
@@ -675,15 +677,37 @@ class MrsController extends AppController {
           $workPlanSubmit = $this->WorkPlanSubmit->find('all')
           ->contain([
           'Expenses.ExpenseTypes',
-          'Expenses.OtherExpenses'  => function ($q) {
-                return $q->select(['total' => $q->func()->sum('fare'),'OtherExpenses.expense_id']);
-              },
-              'Expenses.TravelExpenses.WorkTypes' ,
-              'Expenses.TravelExpenses.CitiesFrom',
-              'Expenses.TravelExpenses.CitiesTo'
+          'Expenses.OtherExpenses',
+          'Expenses.TravelExpenses.WorkTypes' ,
+          'Expenses.TravelExpenses.CitiesFrom',
+          'Expenses.TravelExpenses.CitiesTo'
           ])
           ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year ])->order(['WorkPlanSubmit.id' => 'ASC']);
-          $this->set(compact('month_days','month','month_in_text','year', 'workPlanSubmit'));
+
+          //Store Expense Approval Informations
+          $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid,'lead_id ='=> $lead_id,'Month(date) =' => $month, 'Year(date) =' => $year])->first();
+          if(isset($this->request->data['approve_request'])){
+            $this->request->data['date']=$this->request->data['year']."-".$this->request->data['month'].'-1';
+            $this->request->data['user_id']=$uid;
+            $this->request->data['lead_id']=$lead_id;
+            if(empty($expenseApproval)){
+              $expenseApprovalsEntity = $this->ExpenseApprovals->newEntity();
+              $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApprovalsEntity, $this->request->data);
+  						if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
+  							$this->Flash->success(__('The expense approval has been created'));
+  						}
+            }else {
+              $this->request->data['id']=$expenseApproval->id;
+              $this->request->data['is_rejected']=0;
+              $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApproval, $this->request->data);
+  						if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
+  							$this->Flash->success(__('The expense approval has been updated'));
+  						}
+            }
+            $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid,'lead_id ='=> $lead_id,'Month(date) =' => $month, 'Year(date) =' => $year])->first();
+          }
+          $this->set(compact('month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
+
         }
         $this->set('title', 'Daily Report');
         $this->set(compact('years', 'months', 'expense'));
@@ -701,10 +725,11 @@ class MrsController extends AppController {
 			->first();
 			if($workPlanSubmit){
 				$expense = $workPlanSubmit['expense'];
-				if($this->request->is(['patch', 'post', 'put'])){
+				if($this->request->is(['patch', 'post', 'put'])){ //pr($this->request->data);
 					$this->request->data['work_plan_submit_id'] = $workPlanSubmit -> id;
 					if($expense){
 						$oldexpense = $this->Expenses->patchEntity($expense, $this->request->data);
+            //pr($oldexpense);exit;
 						if ($this->Expenses->save($oldexpense)) {
 							$this->Flash->success(__('The expense has been updated.'));
 						}
@@ -772,7 +797,79 @@ class MrsController extends AppController {
 
 		return $this->redirect(['action' => 'edit-expense?date='.$this->request->getQuery('date')]);
 	}
-	
+
+  public function ExpenseApprovalRequests(){
+        $this->set('title', 'Expense Approval Requests');
+        $uid = $this->Auth->user('id');
+	      $lead_id = $this->Auth->user('lead_id');
+        $expenseApprovals = $this->paginate($this->ExpenseApprovals->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['ExpenseApprovals.lead_id =' => $uid, 'ExpenseApprovals.is_approved =' => 0, 'ExpenseApprovals.is_rejected =' => 0]));
+        $this->set(compact('expenseApprovals'));
+
+    }
+
+    public function ExpenseApprovalRequest($id){
+
+      $current_year = date("Y");
+      $months = [1 => 'January',2 => 'Feburary',3 => 'March',4 => 'April',5 => 'May',6 => 'June',7 => 'July',8 => 'August',9 => 'September',10 => 'October',11 => 'November',12 => 'December'];
+      $years= [$current_year   => $current_year,$current_year-1 => $current_year-1,$current_year-2 => $current_year-2,$current_year-3 => $current_year-3,$current_year-4 => $current_year-4];
+      $this->loadModel('Expenses');
+
+      $expense = $this->Expenses->newEntity();
+      if($this->request->is('post') || !empty($id)){
+
+        $uid = $this->Auth->user('id');
+        $lead_id = $this->Auth->user('lead_id');
+
+        $expenseApproval = $this->ExpenseApprovals->find()->where(['id'=>$id])->first();
+        if($expenseApproval){
+
+          $month = (int)date("m", strtotime($expenseApproval->date));
+          $year = date("Y", strtotime($expenseApproval->date));
+          $expense_user_id =  $expenseApproval->user_id;
+
+          $month_days = cal_days_in_month(CAL_GREGORIAN,$month,$year);
+          $month_in_text = $months[$month];
+          $workPlanSubmit = $this->WorkPlanSubmit->find('all')
+          ->contain([
+          'Expenses.ExpenseTypes',
+          'Expenses.OtherExpenses',
+          'Expenses.TravelExpenses.WorkTypes' ,
+          'Expenses.TravelExpenses.CitiesFrom',
+          'Expenses.TravelExpenses.CitiesTo'
+          ])
+          ->where(['WorkPlanSubmit.user_id =' => $expense_user_id, 'WorkPlanSubmit.lead_id =' => $uid, 'Month(date) =' => $month, 'Year(date) =' => $year ])->order(['WorkPlanSubmit.id' => 'ASC']);
+
+          //Store Expense Approval Informations
+          if(isset($this->request->data['approve_request'])){
+              $expense_changes = $this->request->data['expenses'];
+              foreach($expense_changes as $expense_change){
+                $expense = $this->Expenses->find()->where(['id' => $expense_change['id']])->first();
+                $expensePatchEntity=$this->Expenses->patchEntity($expense,$expense_change);                
+                $this->Expenses->save($expensePatchEntity);
+              }
+              unset($this->request->data['expenses']);
+              if(isset($this->request->data['is_approved'])){
+                $this->request->data['is_approved']=1;
+              }else{
+                $this->request->data['is_rejected']=1;
+              }
+              $this->request->data['id']=$expenseApproval->id;
+              $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApproval, $this->request->data);
+              if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
+                $this->Flash->success(__('The expense approval has been updated'));
+                return $this->redirect(["controller" => "Mrs","action" => "ExpenseApprovalRequest",$id]);
+              }
+          }
+          $this->set(compact('month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
+        }else {
+
+        }
+
+      }
+      $this->set('title', 'Daily Report');
+      $this->set(compact('years', 'months', 'expense'));
+    }
+
 	protected function _hasLeave($start_date)
     {
 		$uid = $this->Auth->user('id');
@@ -782,7 +879,7 @@ class MrsController extends AppController {
 
 		return false;
     }
-    
+
 	protected function _hasPlannedLeave($start_date)
     {
 		$uid = $this->Auth->user('id');
@@ -792,7 +889,7 @@ class MrsController extends AppController {
 
 		return false;
     }
-    
+
 	protected function _hasUnSavedPlans($start_date)
     {
 		$uid = $this->Auth->user('id');
@@ -818,14 +915,14 @@ class MrsController extends AppController {
 
     public function getReportedVisits($doctor_id,$uid,$start_date,$end_date){
 		$WorkPlansD = $this->WorkPlans->find('all')
-		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])	
+		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
 		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.doctor_id =' => $doctor_id, 'WorkPlans.work_type_id =' => 2])
 		->where(['WorkPlans.start_date >=' => $start_date])
 		->andWhere(['WorkPlans.start_date <=' => $end_date])->toArray();
 		$visits = array_map(function($d) { return date("d", strtotime($d->start_date)); }, $WorkPlansD);
 		return (implode("/",$visits));
 	}
-	
+
     public function getcityDistance(){
       if($this->request->is('Ajax')){
         $distance = $this->CityDistances->find()
