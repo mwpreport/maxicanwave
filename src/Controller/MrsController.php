@@ -850,9 +850,9 @@ class MrsController extends AppController {
 		$start_date=date("Y-01-01");
 		$end_date=date("Y-12-31");
 		$date_array = array();
-        $holidays = $this->Holidays->find()->select('date')->where(['date >=' => $start_date])->andWhere(['date <=' => $end_date])->toArray();
+        $holidays = $this->Holidays->find()->where(['date >=' => $start_date])->andWhere(['date <=' => $end_date])->toArray();
         foreach($holidays as $holiday)
-        $date_array[]=date("Y-m-d", strtotime($holiday['date']));
-        return ($date_array); 
+        $date_array[date("Y-m-d", strtotime($holiday['date']))]=$holiday['name'];
+        return (json_encode($date_array)); 
     }
 }

@@ -137,7 +137,7 @@
                                 </div>
                                 <div class="form-group w2 hide dhide">
                                     <label for="doctor_id">Select Doctor</label>
-                                    <select name="doctor_id[]" class="form-control required" id="doctor_id" aria-invalid="true" multiple="multiple">
+                                    <select name="doctor_id[]" class="multiselect-ui form-control required" id="doctor_id" aria-invalid="true" multiple="multiple">
 										<?php
 										foreach ($doctorsRelation as $doctor)
 										{?>
@@ -442,8 +442,10 @@
         <script src="<?php echo $this->Url->image('../plugins/input-mask/jquery.inputmask.js')?>"></script>
         <script src="<?php echo $this->Url->image('../plugins/datepicker/bootstrap-datepicker.js')?>"></script>
         <script src="<?php echo $this->Url->image('../js/jquery.validate.js')?>"></script>
-
-        <script>
+		<?php echo $this->Html->script(['multiselect.js']); ?>        
+		<?= $this->fetch('script') ?>
+		<script type="text/javascript">
+			$('.multiselect-ui').multiselect({ });
 			
             $(function(){
 
@@ -533,6 +535,7 @@
 				selectable: true,
 				selectHelper: true,
 				showNonCurrentDates : false,
+				
 
 				events: "<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsView"])?>",  // request to load current events
 
@@ -543,6 +546,7 @@
 						reset_form();
 						$('#ModalAdd #start_date').val(moment(start).format('YYYY-MM-DD'));
 						$('#ModalAdd #end_date').datepicker('remove');
+						$('#ModalAdd .multiselect-container li').removeClass('active');
 						$('#ModalAdd #end_date').datepicker({autoclose: true, startDate: moment(start).format('YYYY-MM-DD'), endDate: endDate});
 						$.magnificPopup.open({ items: {src: '#ModalAdd'}, type: 'inline' });
 					}
@@ -598,14 +602,16 @@
 			   eventAfterAllRender: function (view) {
 				var fourthOfJuly = '2018-07-04';
 				var fifthOfJuly = '2018-07-05';
-				var holidays = ['<?php echo implode("','", $holidayArray);?>'];
-				for(var i = 0; i < holidays.length; i++) {				
-					holidayMoment = holidays[i];
+				var holidays = JSON.parse('<?php echo $holidayArray;?>');
+				$.each(holidays, function(index, value) {
+					holidayMoment = index;
 					if (view.name == 'month') {
 						$("td[data-date=" + holidayMoment + "]").addClass('holiday');
+						$("td[data-date=" + holidayMoment + "]").append("<span class='fc-label'>"+value+"</span>");
+						
 					}
+				});
 				}
-			}
 			   
 			});
 
