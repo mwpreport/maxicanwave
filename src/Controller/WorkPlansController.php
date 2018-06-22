@@ -332,16 +332,17 @@ class WorkPlansController extends AppController
 		
 		$WorkPlans = $this->WorkPlans
 		->find('all')
-		->contain(['WorkTypes', 'Cities'])	
+		->contain(['WorkTypes', 'Cities', 'Doctors'])	
 		->where(['WorkPlans.user_id =' => $uid])
 		->where(['WorkPlans.start_date =' => $start_date])->toArray();
 		$html = "";
 		if(count($WorkPlans))
 		{
-			$i=1;$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th>S.No</th><th>Work Type</th><th>City</th></tr></thead><tbody>';
+			$i=1;$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th>S.No</th><th>Field/ Others</th><th>City</th></tr></thead><tbody>';
 			foreach ($WorkPlans as $WorkPlan)
 			{
-				$html.='<tr><td class="text-center">'.$i.'</td><td><input type="hidden" name="selected_plan_id[]" value="'.$WorkPlan->id.'">'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
+				$colomn_two = ($WorkPlan->work_type_id == 2) ? $WorkPlan->doctor->name : $WorkPlan->work_type->name;
+				$html.='<tr><td class="text-center">'.$i.'</td><td><input type="hidden" name="selected_plan_id[]" value="'.$WorkPlan->id.'">'.$colomn_two.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
 				$i++;
 			}
 			$html.='</tbody></table>';
@@ -368,16 +369,17 @@ class WorkPlansController extends AppController
 		
 		$WorkPlans = $this->WorkPlans
 		->find('all')
-		->contain(['WorkTypes', 'Cities'])	
+		->contain(['WorkTypes', 'Cities', 'Doctors'])	
 		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.work_type_id <>' => 1])
 		->where(['WorkPlans.start_date =' => $start_date])->toArray();
 		$html = "";
 		if(count($WorkPlans))
 		{
-			$i=1;$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th>S.No</th><th>Work Type</th><th>City</th></tr></thead><tbody>';
+			$i=1;$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th>S.No</th><th>Field/ Others</th><th>City</th></tr></thead><tbody>';
 			foreach ($WorkPlans as $WorkPlan)
 			{
-				$html.='<tr><td class="text-center">'.$i.'</td><td><input type="hidden" name="selected_plan_id[]" value="'.$WorkPlan->id.'">'.$WorkPlan->work_type->name.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
+				$colomn_two = ($WorkPlan->work_type_id == 2) ? $WorkPlan->doctor->name : $WorkPlan->work_type->name;
+				$html.='<tr><td class="text-center">'.$i.'</td><td><input type="hidden" name="selected_plan_id[]" value="'.$WorkPlan->id.'">'.$colomn_two.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
 				$i++;
 			}
 			$html.='</tbody></table>';
@@ -437,10 +439,9 @@ class WorkPlansController extends AppController
 		
 		if($workPlan['work_type_id'] !=1)
 		{
-			if($this->_checkLeave($start_date,$workPlan->id))
-			{
-			echo json_encode(array("success"=>0,"error"=>'You cannot move plans to leave days.')); exit;
-			}
+			list($status, $error) = $this->_checkLeave($start_date,$start_date,$workPlan->work_type_id,$workPlan->id);
+			if(!$status)
+			{echo json_encode(array("success"=>$status,"error"=>$error)); exit;}
 		}
 
 		$WorkPlansTable = $this->WorkPlans;

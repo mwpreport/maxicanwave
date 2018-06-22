@@ -157,6 +157,10 @@ class UsersController extends AppController
     }
     
     public function login(){
+		if($this->Auth->User()) {
+            return $this->redirect(['controller' => 'Mrs', 'action' => 'index']);
+        }
+
         $this->viewBuilder()->layout('register');
         $this->set('title', 'Login Page');
         if ($this->request->is('post')) {

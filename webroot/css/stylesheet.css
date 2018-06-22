@@ -708,6 +708,8 @@ label.error{font-weight:normal; color:#dd4b39; font-size:12px;}
 .message.success {color:#00a65a;}
 div.error-message, .message.error {color:#dd4b39;}
 /*monthly plan custom styles*/
+.fc-sun, .fc-sun .fc-day-number, .holiday .fc-day-number, .holiday .fc-label { color:red;  }
+td.fc-day.fc-sun, td.fc-day.holiday { background-color: #f9eff5; }
 .fc-content .fc-time{display:none;} .mfp-close{display:none !important;}
 #start_date-error{ position: absolute; left: 0; bottom: -25px;}
 #end_date-error{ position: absolute; left: 0; bottom: -25px;}
@@ -835,6 +837,9 @@ button.multiselect.dropdown-toggle.btn-block.text-left.btn.btn-default {
 	cursor: pointer;
 	font-weight: 400;
 	padding: 3px 0 3px 30px
+}
+#ModalAddForm .multiselect-container>li>a>label {
+    height: inherit;
 }
 .multiselect-container>li>a>label.radio, .multiselect-container>li>a>label.checkbox {
 	margin: 0
