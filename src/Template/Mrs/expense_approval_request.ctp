@@ -4,38 +4,6 @@
     <!-- Main content -->
     <div class="content">
 
-       <?php if(!isset($month_days)){ ?>
-        <section>
-            <div class="white-wrapper">
-                <div class="col-md-12">
-                    <div class="hr-title">
-                      <h2><?= __('Expenses') ?></h2>
-                        <hr>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-                <div class="daily-report-radio-cnt">
-                  <div class="row">
-    							<?= $this->Form->create($expense, array('id' => 'newform')) ?>
-    								<div class="form-group">
-    									<div class="col-sm-4">
-                        <?= $this->Form->control('month', ['class' => 'form-control required', 'options' => $months,'empty' => 'Select', 'required' => true,]) ?>
-    									</div>
-                      <div class="col-sm-4">
-                        <?= $this->Form->control('year', ['class' => 'form-control required', 'options' => $years,'empty' => 'Select']) ?>
-    									</div>
-                      <div class="col-sm-4">
-                        <?= $this->Form->button(__('Submit'), ['class' => 'expense-submit common-btn blue-btn btn-125 pull-left mar-top-30']); ?>
-    									</div>
-    									<!-- /.input group -->
-    								</div>
-    							<?= $this->Form->end() ?>
-    							</div>
-                </div>
-             </div>
-           </section>
-        <?php } ?>
-
          <?php if(isset($month_days)){ ?>
            <section>
              <div class="white-wrapper">
@@ -88,11 +56,16 @@
                              <th scope="col"><?= $this->Paginator->sort('Daiy Allow.') ?></th>
                              <th scope="col"><?= $this->Paginator->sort('Other Exp.') ?></th>
                              <th scope="col"><?= $this->Paginator->sort('Total') ?></th>
-                             <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
+                             <th scope="col"><?= $this->Paginator->sort('Disallowed') ?></th>
+                             <th scope="col"><?= $this->Paginator->sort('Remark') ?></th>
+                             <th scope="col"><?= $this->Paginator->sort('Abeyance') ?></th>
+                             <th scope="col"><?= $this->Paginator->sort('Remark') ?></th>
+                             <!-- <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
 				                        <th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
-                             <?php } ?>
+                             <?php } ?> -->
      											</tr>
      										</thead>
+                        <?= $this->Form->create('expenses', array('id' => 'newform')) ?>
      										<tbody>
      											<?php
                           $month_first_date="";
@@ -100,6 +73,7 @@
                           $month_daily_expense=0;
                           $month_other_expense=0;
                           $month_total_expense=0;
+                          $expense_key=0;
                           for($i=1; $i<=$month_days; $i++){
                             $time=mktime(12, 0, 0, $month, $i, $year); ?>
                             <?php if (date('m', $time)==$month){
@@ -115,6 +89,10 @@
     									                 <td>
                                          <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
                                        </td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
                                            <td></td>
                                            <td></td>
                                            <td></td>
@@ -154,6 +132,7 @@
                                    }
                                    $month_total_expense = $month_travel_expense + $month_other_expense + $month_daily_expense;
 
+
                                    if(!empty($travelExpenses)){
                                        foreach($travelExpenses as $key => $travelExpense){ ?>
                                          <tr>
@@ -187,6 +166,27 @@
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
                                                      <?php } ?>
                                                 </td>
+                                                <td>
+                                                  <?php if($key==0){ ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][id]', ['type' => 'hidden', 'label' => false, 'value' => $expense['id']]); ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][disallowed]', ['label' => false, 'value' => $expense['disallowed']]); ?>
+                                                  <?php } ?>
+                                                </td>
+                                                <td>
+                                                  <?php if($key==0){ ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][disallowed_remark]', ['type' => 'textArea', 'label' => false, 'value' => $expense['disallowed_remark']]); ?>
+                                                  <?php } ?>
+                                                </td>
+                                                <td>
+                                                  <?php if($key==0){ ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][abeyance]', ['label' => false, 'value' => $expense['abeyance']]); ?>
+                                                  <?php } ?>
+                                                </td>
+                                                <td>
+                                                  <?php if($key==0){ ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][abeyance_remark]', ['type' => 'textArea', 'label' => false,'value' => $expense['abeyance_remark']]); ?>
+                                                  <?php } ?>
+                                                </td>
                                               <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
                                                    <?php if($key==0){ ?>
                                                      <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
@@ -219,6 +219,10 @@
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
                                                      <?php } ?>
                                                 </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
                                                    <?php if($key==0){ ?>
                                                      <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
@@ -227,6 +231,7 @@
                                         </tr>
                                      <?php
                                    }
+                                   $expense_key++;
                                     } ?>
                                    <?php $k=1; } ?>
                                  <?php
@@ -236,37 +241,35 @@
                                    <td>
                                      <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
                                    </td>
-                                   <td colspan="12">Holiday / On Leave</td>
+                                   <td colspan="16">Holiday / On Leave</td>
                                 </tr>
                               <?php }
                           }
                     } ?>
                         <tr>
-                          <td colspan="6">Travel Expense <?php echo $month_travel_expense; ?></td>
-                          <td colspan="6">Total Daily Expense <?php echo $month_daily_expense; ?></td>
+                          <td colspan="8">Travel Expense <?php echo $month_travel_expense; ?></td>
+                          <td colspan="8">Total Daily Expense <?php echo $month_daily_expense; ?></td>
                         </tr>
                         <tr>
-                          <td colspan="6">Other Expense <?php echo $month_other_expense; ?></td>
-                          <td colspan="6">Total <?php echo $month_total_expense; ?></td>
+                          <td colspan="8">Other Expense <?php echo $month_other_expense; ?></td>
+                          <td colspan="8">Total <?php echo $month_total_expense; ?></td>
                         </tr>
                         <tr>
 
-                          <td colspan="12">
-                            <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-                            <?= $this->Form->create('expenses', array('id' => 'newform')) ?>
+                          <td colspan="16">
+                            <?php if(!empty($expenseApproval) && $expenseApproval['is_rejected'] != 1 && $expenseApproval['is_approved'] != 1){ ?>
                             <?= $this->form->control('approve_request', ['type' => 'hidden', 'label' => false, 'value' => 1]); ?>
-                            <?= $this->Form->control('month', ['type' => 'hidden','label' => false, 'value' => $this->request->data['month']]) ?>
-                            <?= $this->Form->control('year', ['type' => 'hidden','label' => false, 'value' => $this->request->data['year']]) ?>
-                          <?= $this->Form->button(__('Send Expense For Approvals'), ['class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
-                            <?= $this->Form->end() ?>
+                            <?= $this->Form->button(__('Reject'), ['name'=> 'is_rejected', 'class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
+                            <?= $this->Form->button(__('Approve'), ['name'=> 'is_approved', 'class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
                           <?php }else if(!empty($expenseApproval) && $expenseApproval['is_approved'] == 1){ ?>
-                            <h4 class="message success">Expense has been approved for this month</h4>
-                          <?php }else{ ?>
-                            <h4 class="message success">Expense approval request sent for this month</h4>
+                            <h4 class="message success">Expense Approved</h4>
+                          <?php }else if(!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1){ ?>
+                            <h4 class="message success">Expense Rejected</h4>
                           <?php } ?>
                           </td>
                         </tr>
      										</tbody>
+                        <?= $this->Form->end() ?>
      									</table>
                     </div>
                   </div>

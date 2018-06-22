@@ -116,7 +116,7 @@
 					<?php if($role!=5){?>
 						<li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i> Work plan Requests'), ['controller' => 'Mrs', 'action' => 'workPlanRequests'], ['escape' => false]) ?></li>
 					<?php }?>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Expenses</a></li>
+                    <li><?= $this->Html->link(__('<i class="fa fa-circle-o"></i>Expense'), ['controller' => 'Mrs', 'action' => 'ExpenseApprovalRequests'], ['escape' => false]) ?></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i> DV List</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i> Leave</a></li>
                 </ul>
@@ -184,4 +184,3 @@
     </section>
     <!-- /.sidebar -->
 </aside>
-

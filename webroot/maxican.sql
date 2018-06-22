@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 18, 2018 at 12:41 AM
+-- Generation Time: Jun 22, 2018 at 01:42 AM
 -- Server version: 5.6.33-0ubuntu0.14.04.1
 -- PHP Version: 5.6.36-1+ubuntu14.04.1+deb.sury.org+1
 
@@ -1815,23 +1815,54 @@ CREATE TABLE IF NOT EXISTS `expenses` (
   `daily_allowance` int(11) NOT NULL,
   `started` time NOT NULL,
   `reached` time NOT NULL,
+  `disallowed` int(11) NOT NULL DEFAULT '0',
+  `disallowed_remark` varchar(255) NOT NULL,
+  `abeyance` int(11) NOT NULL DEFAULT '0',
+  `abeyance_remark` varchar(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `work_plan_submit_id` (`work_plan_submit_id`),
   KEY `expense_type_id` (`expense_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `expenses`
 --
 
-INSERT INTO `expenses` (`id`, `user_id`, `work_plan_submit_id`, `expense_date`, `expense_type_id`, `daily_allowance`, `started`, `reached`, `created`, `updated`) VALUES
-(1, 2, 7, '2018-06-01', 1, 0, '09:00:00', '11:00:00', '2018-06-14 11:00:19', '2018-06-14 11:00:19'),
-(2, 2, 11, '2018-06-05', 2, 210, '12:24:00', '15:30:00', '2018-06-14 11:23:00', '2018-06-14 11:23:00'),
-(5, 2, 8, '2018-06-02', 1, 210, '08:00:00', '09:13:00', '2018-06-16 19:42:29', '2018-06-16 19:42:29'),
-(7, 2, 9, '2018-06-03', 1, 0, '02:03:00', '02:03:00', '2018-06-17 18:52:35', '2018-06-17 18:52:35');
+INSERT INTO `expenses` (`id`, `user_id`, `work_plan_submit_id`, `expense_date`, `expense_type_id`, `daily_allowance`, `started`, `reached`, `disallowed`, `disallowed_remark`, `abeyance`, `abeyance_remark`, `created`, `updated`) VALUES
+(1, 2, 7, '2018-06-01', 1, 0, '09:00:00', '11:00:00', 234, 'Test', 0, '', '2018-06-14 11:00:19', '2018-06-14 11:00:19'),
+(2, 2, 11, '2018-06-05', 2, 210, '12:24:00', '15:30:00', 0, '', 0, '', '2018-06-14 11:23:00', '2018-06-14 11:23:00'),
+(5, 2, 8, '2018-06-02', 1, 210, '08:00:00', '09:13:00', 300, 'Test', 0, '', '2018-06-16 19:42:29', '2018-06-16 19:42:29'),
+(7, 2, 9, '2018-06-03', 1, 0, '02:00:00', '02:12:00', 300, 'Test', 0, '', '2018-06-17 18:52:35', '2018-06-17 18:52:35'),
+(8, 2, 12, '2018-06-07', 1, 0, '00:00:00', '00:00:00', 0, '', 0, '', '2018-06-20 01:05:14', '2018-06-20 01:05:14'),
+(9, 2, 13, '2018-06-08', 3, 0, '04:00:00', '12:00:00', 0, '', 0, '', '2018-06-20 01:31:15', '2018-06-20 01:31:15'),
+(10, 2, 14, '2018-06-09', 1, 0, '00:00:00', '00:00:00', 0, '', 0, '', '2018-06-20 01:53:54', '2018-06-20 01:53:54');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `expense_approvals`
+--
+
+CREATE TABLE IF NOT EXISTS `expense_approvals` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` date DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `lead_id` int(11) DEFAULT NULL,
+  `is_approved` int(11) NOT NULL DEFAULT '0',
+  `is_rejected` int(11) NOT NULL DEFAULT '0',
+  `dt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `expense_approvals`
+--
+
+INSERT INTO `expense_approvals` (`id`, `date`, `user_id`, `lead_id`, `is_approved`, `is_rejected`, `dt`) VALUES
+(2, '2018-06-01', 2, 8, 1, 0, '2018-06-21 01:12:16');
 
 -- --------------------------------------------------------
 
@@ -2009,7 +2040,7 @@ CREATE TABLE IF NOT EXISTS `other_expenses` (
   PRIMARY KEY (`id`),
   KEY `expense_id` (`expense_id`),
   KEY `other_allowance_id` (`other_allowance_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 --
 -- Dumping data for table `other_expenses`
@@ -2020,8 +2051,14 @@ INSERT INTO `other_expenses` (`id`, `expense_id`, `other_allowance_id`, `descrip
 (2, 1, 2, 'Review meeting', 100, 1234568),
 (3, 1, 1, 'hkjhjhkj', 987, 1529257830),
 (4, 5, 2, 'test', 456, 1529257975),
-(12, 7, 1, 'hill station', 100, 1529262241),
-(13, 7, 2, 'Review Meet', 200, 1529262259);
+(19, 7, 1, 'tefr', 245, 1529263791),
+(20, 7, 2, 'fdfdf', 43, 1529263804),
+(21, 8, 1, 'Hill station', 100, 1529456757),
+(22, 8, 2, 'Review Meeting', 200, 1529458183),
+(23, 9, 1, 'Hill station', 1000, 1529459510),
+(24, 10, 1, 'Allowance', 500, 1529459604),
+(25, 10, 2, 'Review Meeting', 1000, 1529459634),
+(26, 9, 2, 'test', 500, 1529459695);
 
 -- --------------------------------------------------------
 
@@ -2330,23 +2367,27 @@ CREATE TABLE IF NOT EXISTS `travel_expenses` (
   `km` int(11) NOT NULL,
   `fare` int(11) NOT NULL,
   `travel_mode` varchar(50) NOT NULL,
+  `started` time NOT NULL,
+  `reached` time NOT NULL,
   PRIMARY KEY (`id`),
   KEY `expense_id` (`expense_id`),
   KEY `city_from` (`city_from`),
   KEY `city_to` (`city_to`),
   KEY `work_type_id` (`work_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `travel_expenses`
 --
 
-INSERT INTO `travel_expenses` (`id`, `expense_id`, `work_type_id`, `city_from`, `city_to`, `km`, `fare`, `travel_mode`) VALUES
-(1, 1, 2, 1143, 1143, 60, 120, 'Road'),
-(2, 2, 3, 1143, 1145, 56, 112, 'Train'),
-(3, 2, 2, 1145, 1143, 60, 120, 'Road'),
-(16, 5, 2, 1143, 1143, 0, 0, 'Road'),
-(17, 7, 2, 1143, 1143, 0, 0, 'Road');
+INSERT INTO `travel_expenses` (`id`, `expense_id`, `work_type_id`, `city_from`, `city_to`, `km`, `fare`, `travel_mode`, `started`, `reached`) VALUES
+(1, 1, 2, 1143, 1143, 60, 120, 'Road', '00:00:00', '00:00:00'),
+(2, 2, 3, 1143, 1145, 56, 112, 'Train', '12:00:00', '15:00:00'),
+(3, 2, 2, 1145, 1143, 60, 120, 'Road', '00:00:00', '00:00:00'),
+(16, 5, 2, 1143, 1143, 0, 0, 'Road', '00:00:00', '00:00:00'),
+(17, 7, 2, 1143, 1143, 0, 0, 'Road', '00:00:00', '00:00:00'),
+(18, 8, 3, 1143, 1143, 0, 0, 'Road', '00:00:00', '00:00:00'),
+(19, 9, 2, 1143, 1145, 56, 112, 'Road', '03:00:00', '05:00:00');
 
 -- --------------------------------------------------------
 

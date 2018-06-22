@@ -37,8 +37,10 @@ class TravelExpense extends Entity
         'city_to' => true,
         'km' => true,
         'fare' => true,
-        'travel_mode' => true,        
+        'travel_mode' => true,
         'expense' => true,
-        'city' => true
+        'city' => true,
+        'started' => true,
+        'reached' => true
     ];
 }
