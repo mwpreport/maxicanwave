@@ -45,7 +45,7 @@ class MrsController extends AppController {
         $this->loadModel('CityDistances');
         $this->loadModel('OtherAllowances');
         $this->loadModel('OtherExpenses');
-        $this->loadModel('Holidays');        
+        $this->loadModel('Holidays');
         $this->loadModel('ExpenseApprovals');
     }
 
@@ -165,7 +165,7 @@ class MrsController extends AppController {
 		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
         $workPlanApproval = $this->WorkPlanApproval->find('all')->where(['WorkPlanApproval.user_id =' => $uid, 'WorkPlanApproval.lead_id =' => $lead_id, 'WorkPlanApproval.date =' => $thisDate])->first();
         $holidayArray = $this->holidayArray();
-        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate', 'holidayArray'));        
+        $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate', 'holidayArray'));
 
     }
 
@@ -672,8 +672,14 @@ class MrsController extends AppController {
           $lead_id = $this->Auth->user('lead_id');
           $month = $this->request->data['month'];
           $year = $this->request->data['year'];
+          $name = $this->Auth->user('firstname')." ".$this->Auth->user('lastname');
+          $role = $this->Roles->find()->where(['id' => $this->Auth->user('role_id')])->first();
+          $role_name = $role->name;
+          $userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
+          $city_name = $userCity -> city_name;
           $month_days = cal_days_in_month(CAL_GREGORIAN,$month,$year);
           $month_in_text = $months[$month];
+
           $workPlanSubmit = $this->WorkPlanSubmit->find('all')
           ->contain([
           'Expenses.ExpenseTypes',
@@ -706,7 +712,7 @@ class MrsController extends AppController {
             }
             $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid,'lead_id ='=> $lead_id,'Month(date) =' => $month, 'Year(date) =' => $year])->first();
           }
-          $this->set(compact('month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
+          $this->set(compact('name','role_name','city_name','month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
 
         }
         $this->set('title', 'Daily Report');
@@ -819,6 +825,12 @@ class MrsController extends AppController {
 
         $uid = $this->Auth->user('id');
         $lead_id = $this->Auth->user('lead_id');
+        $name = $this->Auth->user('firstname')." ".$this->Auth->user('lastname');
+        $role = $this->Roles->find()->where(['id' => $this->Auth->user('role_id')])->first();
+        $role_name = $role->name;
+        $userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
+        $city_name = $userCity -> city_name;
+
 
         $expenseApproval = $this->ExpenseApprovals->find()->where(['id'=>$id])->first();
         if($expenseApproval){
@@ -844,7 +856,7 @@ class MrsController extends AppController {
               $expense_changes = $this->request->data['expenses'];
               foreach($expense_changes as $expense_change){
                 $expense = $this->Expenses->find()->where(['id' => $expense_change['id']])->first();
-                $expensePatchEntity=$this->Expenses->patchEntity($expense,$expense_change);                
+                $expensePatchEntity=$this->Expenses->patchEntity($expense,$expense_change);
                 $this->Expenses->save($expensePatchEntity);
               }
               unset($this->request->data['expenses']);
@@ -860,7 +872,7 @@ class MrsController extends AppController {
                 return $this->redirect(["controller" => "Mrs","action" => "ExpenseApprovalRequest",$id]);
               }
           }
-          $this->set(compact('month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
+          $this->set(compact('name','role_name','city_name','month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
         }else {
 
         }
@@ -941,7 +953,7 @@ class MrsController extends AppController {
         echo json_encode($response);exit;
       }
     }
-    
+
     public function holidayArray()
     {
 		$start_date=date("Y-01-01");
@@ -950,6 +962,6 @@ class MrsController extends AppController {
         $holidays = $this->Holidays->find()->where(['date >=' => $start_date])->andWhere(['date <=' => $end_date])->toArray();
         foreach($holidays as $holiday)
         $date_array[date("Y-m-d", strtotime($holiday['date']))]=$holiday['name'];
-        return (json_encode($date_array)); 
+        return (json_encode($date_array));
     }
 }

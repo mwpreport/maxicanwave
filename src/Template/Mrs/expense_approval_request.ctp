@@ -15,14 +15,34 @@
                </div>
                <div class="clearfix"></div>
                <div class="daily-report-radio-cnt">
+
                  <div class="row">
                    <div class="col-md-12">
                      <div class="form-group">
                        <div class="col-sm-3">
+                         <?= $this->Form->label('Employee Name'); ?>
+                       </div>
+                       <div class="col-sm-3">
+                         <?php echo $name; ?>
+                       </div>
+                       <div class="col-sm-3">
                          <?= $this->Form->label('Designation'); ?>
                        </div>
                        <div class="col-sm-3">
-                         <?php echo 'MR'; ?>
+                         <?php echo $role_name; ?>
+                       </div>
+                     </div>
+                  </div>
+                 </div><br/><br/>
+
+                 <div class="row">
+                   <div class="col-md-12">
+                     <div class="form-group">
+                       <div class="col-sm-3">
+                         <?= $this->Form->label('HQ'); ?>
+                       </div>
+                       <div class="col-sm-3">
+                         <?php echo $city_name; ?>
                        </div>
                        <div class="col-sm-3">
                          <?= $this->Form->label('Month'); ?>
@@ -32,7 +52,7 @@
                        </div>
                      </div>
                   </div>
-                 </div>
+                </div>
             </div>
           </div>
            </section>
@@ -60,9 +80,6 @@
                              <th scope="col"><?= $this->Paginator->sort('Remark') ?></th>
                              <th scope="col"><?= $this->Paginator->sort('Abeyance') ?></th>
                              <th scope="col"><?= $this->Paginator->sort('Remark') ?></th>
-                             <!-- <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-				                        <th scope="col" colspan="3" class="actions"><?= __('Options') ?></th>
-                             <?php } ?> -->
      											</tr>
      										</thead>
                         <?= $this->Form->create('expenses', array('id' => 'newform')) ?>
@@ -103,9 +120,6 @@
                                            <td></td>
                                            <td></td>
                                            <td></td>
-                                           <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-        				                                 <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
-                                           <?php } ?>
     							                 </tr>
                                  <?php }else {
 
@@ -187,11 +201,6 @@
                                                     <?= $this->form->control('expenses['.$expense_key.'][abeyance_remark]', ['type' => 'textArea', 'label' => false,'value' => $expense['abeyance_remark']]); ?>
                                                   <?php } ?>
                                                 </td>
-                                              <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-                                                   <?php if($key==0){ ?>
-                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
-                                                  <?php } ?>
-                                                <?php } ?>
                                         </tr>
                                        <?php }
                                      }elseif(!empty($otherExpenses)) { ?>
@@ -219,15 +228,27 @@
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
                                                      <?php } ?>
                                                 </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-                                                   <?php if($key==0){ ?>
-                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                                <td>
+                                                  <?php if($key==0){ ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][id]', ['type' => 'hidden', 'label' => false, 'value' => $expense['id']]); ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][disallowed]', ['label' => false, 'value' => $expense['disallowed']]); ?>
                                                   <?php } ?>
-                                                <?php } ?>
+                                                </td>
+                                                <td>
+                                                  <?php if($key==0){ ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][disallowed_remark]', ['type' => 'textArea', 'label' => false, 'value' => $expense['disallowed_remark']]); ?>
+                                                  <?php } ?>
+                                                </td>
+                                                <td>
+                                                  <?php if($key==0){ ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][abeyance]', ['label' => false, 'value' => $expense['abeyance']]); ?>
+                                                  <?php } ?>
+                                                </td>
+                                                <td>
+                                                  <?php if($key==0){ ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][abeyance_remark]', ['type' => 'textArea', 'label' => false,'value' => $expense['abeyance_remark']]); ?>
+                                                  <?php } ?>
+                                                </td>
                                         </tr>
                                      <?php
                                    }
@@ -255,12 +276,42 @@
                           <td colspan="8">Total <?php echo $month_total_expense; ?></td>
                         </tr>
                         <tr>
+                          <td colspan="3">Total Amount Claimed Rs</td>
+                          <td colspan="3">0.00</td>
+                          <td colspan="3">Comments </td>
+                          <td colspan="4" rowspan="5">
+                            <?= $this->form->control('comments', ['type' => 'textArea', 'rows' => 5, 'cols' => 50, 'label' => false, 'value' => isset($expenseApproval['comments']) ? $expenseApproval['comments'] : '' ]); ?>
+                          </td>
+
+                        </tr>
+                        <tr>
+                          <td colspan="3">Amount Disallowed Rs</td>
+                          <td colspan="3">0.00</td>
+                          <td colspan="3"></td>
+
+                        </tr>
+                        <tr>
+                          <td colspan="3">Amount in Abeyance Rs</td>
+                          <td colspan="3">0.00</td>
+                          <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                          <td colspan="3">Released Abeyance Rs</td>
+                          <td colspan="3">0.00</td>
+                          <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                          <td colspan="3">Checked & Approved Rs</td>
+                          <td colspan="3">0.00</td>
+                          <td colspan="3"></td>
+                        </tr>
+                        <tr>
 
                           <td colspan="16">
                             <?php if(!empty($expenseApproval) && $expenseApproval['is_rejected'] != 1 && $expenseApproval['is_approved'] != 1){ ?>
                             <?= $this->form->control('approve_request', ['type' => 'hidden', 'label' => false, 'value' => 1]); ?>
-                            <?= $this->Form->button(__('Reject'), ['name'=> 'is_rejected', 'class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
-                            <?= $this->Form->button(__('Approve'), ['name'=> 'is_approved', 'class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
+                            <!-- <?= $this->Form->button(__('Reject'), ['name'=> 'is_rejected', 'class' => 'other-expense-submit common-btn blue-btn btn-125']); ?> -->
+                            <?= $this->Form->button(__('Send to HO'), ['name'=> 'is_approved', 'class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
                           <?php }else if(!empty($expenseApproval) && $expenseApproval['is_approved'] == 1){ ?>
                             <h4 class="message success">Expense Approved</h4>
                           <?php }else if(!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1){ ?>
