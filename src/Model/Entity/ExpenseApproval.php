@@ -37,6 +37,7 @@ class ExpenseApproval extends Entity
         'is_rejected' => true,
         'dt' => true,
         'user' => true,
-        'lead' => true
+        'lead' => true,
+        'comments' => true
     ];
 }
