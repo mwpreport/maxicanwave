@@ -51,10 +51,29 @@
                    <div class="col-md-12">
                      <div class="form-group">
                        <div class="col-sm-3">
+                         <?= $this->Form->label('Employee Name'); ?>
+                       </div>
+                       <div class="col-sm-3">
+                         <?php echo $name; ?>
+                       </div>
+                       <div class="col-sm-3">
                          <?= $this->Form->label('Designation'); ?>
                        </div>
                        <div class="col-sm-3">
-                         <?php echo 'MR'; ?>
+                         <?php echo $role_name; ?>
+                       </div>
+                     </div>
+                  </div>
+                 </div><br/><br/>
+
+                 <div class="row">
+                   <div class="col-md-12">
+                     <div class="form-group">
+                       <div class="col-sm-3">
+                         <?= $this->Form->label('HQ'); ?>
+                       </div>
+                       <div class="col-sm-3">
+                         <?php echo $city_name; ?>
                        </div>
                        <div class="col-sm-3">
                          <?= $this->Form->label('Month'); ?>
@@ -64,7 +83,7 @@
                        </div>
                      </div>
                   </div>
-                 </div>
+                </div>
             </div>
           </div>
            </section>

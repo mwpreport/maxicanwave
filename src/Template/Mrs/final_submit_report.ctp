@@ -196,7 +196,7 @@
 			   success: function(json) {
 				   if(json.status == 1)
 					{
-						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewReportedCalls"])?>/?date=<?php echo $reportDate;?>");			   
 					}
 				   else
 						alert(json.msg);
@@ -214,7 +214,11 @@
 				'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
 				'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
 				'</div>'
-	  }
+		  },
+		callbacks: {
+		  close: function(){
+			window.location.replace("");
+		  }}
 	});
 	$(document).on('click', '.popup-modal-dismiss', function (e) {
 		e.preventDefault();

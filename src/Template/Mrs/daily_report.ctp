@@ -114,7 +114,7 @@
 						<div class="col-sm-12 mar-bottom-20">
 							<ul>
 								<li class="col-md-12"><h3 class="mar-top-20 mar-bottom-20">Type of Work</h3></li>
-								<li class="col-md-3"><input type="radio" name="workType" id="workType_2" value="2"><label for="workType_2"><span></span>Field Work</label></li>
+								<li class="col-md-3"><input type="radio" name="workType" id="workType_2" value="2" checked><label for="workType_2"><span></span>Field Work</label></li>
 								<?php foreach ($workTypes as $workType){?>
 									<li class="col-md-3"><input type="radio" name="workType" id="workType_<?php echo $workType->id?>" value="<?php echo $workType->id?>"><label for="workType_<?php echo $workType->id?>"><span></span><?php echo $workType->name;?></label></li>
 								<?php $workTypePlans[$workType->id]=[];}?>
@@ -124,7 +124,7 @@
 
 						</div>
 						<?php }}?>
-						<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_2">
+						<div class="col-sm-12 mar-bottom-20" id="workType_section_2">
 						<form method="post" action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>?date=<?php echo $reportDate;?>">
 						<input type="hidden" value="<?php echo $reportDate;?>" name="date">
 							<div class="col-md-12 mar-bottom-20">
@@ -137,7 +137,7 @@
 												<button class="common-btn blue-btn pull-left" type="submit" name="SubmitField" id="w2SubmitSave">Submit</button>
 											</div>
 											<div class="col-sm-3">
-												<a class="common-btn blue-btn margin-right-35 pull-right iframe-popup-link" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" ><b>View Reported Calls</b></a>
+												<a class="common-btn blue-btn margin-right-35 pull-right iframe-popup-link" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewReportedCalls",'?' => ['date' => $reportDate]])?>" ><b>View Reported Calls</b></a>
 											</div>
 										</div>
 									</div>
@@ -261,7 +261,7 @@
 													<button type="submit" class="common-btn blue-btn btn-block margin-right-35">Submit</button>
 												</div>
 												<div class="col-md-3 col-sm-3 col-xs-3"><label>&nbsp;</label>
-													<a class="common-btn blue-btn margin-right-35 pull-right iframe-popup-link" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" ><b>View Reported Calls</b></a>
+													<a class="common-btn blue-btn margin-right-35 pull-right iframe-popup-link" href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewReportedCalls",'?' => ['date' => $reportDate]])?>" ><b>View Reported Calls</b></a>
 												</div>
 											</div>
 											<!-- /.input group -->
@@ -449,7 +449,11 @@
 					'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
 					'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
 					'</div>'
-		  }
+		  },
+		callbacks: {
+		  close: function(){
+			window.location.replace("");
+		  }}
 	});
 	
 	$(document).on('click', '.popup-modal-dismiss', function (e) {

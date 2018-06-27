@@ -1,37 +1,20 @@
 <?php ?>
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
+<div class="ajax-wrapper">
     <!-- Main content -->
     <div class="content">
         <section>
             <div class="white-wrapper">
                 <div class="col-md-12">
-                    <div class="hr-title">
 						<?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
-                        <h2>Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
-                        <hr>
-                    </div>
                 </div>
                 <div class="clearfix"></div>
                 
                 <div class="daily-report-radio-cnt">
-						<div class="col-md-12 mar-bottom-20">
-							<div class="row">
-							<form action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" method="post" >
-								<div class="form-group">
-									<div class="col-sm-6">
-										 <input type="hidden" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo $reportDate;?>">
-										 <div class="col-sm-6"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link"><b>View Reported Calls</b></a></div>
-										 <div class="col-sm-6"><button class="btn blue-btn btn-block margin-right-35 pull-right" type="submit">Final Submit</a></div>
-									</div>
-									<!-- /.input group -->
-								</div>
-							</form>
-							</div>
-						</div>
+
 						<div id="report_section">
 							<div class="col-sm-12 mar-bottom-20" id="workType_section_2">
-							<h3 class="mar-top-10 mar-bottom-10">Add Un-Planned Doctors</h3>
+							<h3 class="mar-top-10 mar-bottom-10">Add Un-Planned Doctors for <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?></h3>
 								<div class="row">
 									<div class="col-sm-12 mar-bottom-20">
 										<form class="" id="UnplannedAddFormSelect" method="POST">
@@ -234,133 +217,6 @@
 
             </div>
         </section>
-		<!-- pop starts here -->
-		<?php
-		if(count($WorkPlansUD))
-		{
-			foreach ($WorkPlansUD as $WorkPlanUD)
-			{?>
-			<div class="mfp-hide white-popup-block large_popup doctor_product" id="doctor_product_<?=$WorkPlanUD->id?>">
-				<div class="popup-content">
-					<form class="" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>" class="ProductForm" method="POST" id="doctor_product_<?=$WorkPlanUD->id?>Form" >
-					<input type="hidden" name="reportDate" value="<?php echo $reportDate;?>">
-					<input type="hidden" name="workplan_id[<?=$WorkPlanUD->id?>]" value="<?=$WorkPlanUD->id?>">
-					<div class="popup-header">
-						<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-						<div class="hr-title"><h4>Detail Reporting</h4><hr /></div>
-					</div>
-					<div class="popup-body">
-						<div class="row">
-							<div class="col-sm-12 mar-bottom-20">
-								<div class="form-group col-sm-6">
-									<label>Doctor Name : <?= $WorkPlanUD->doctor->name?></label>
-								</div>
-								<div class="form-group col-sm-6">
-									<label>Doctor Speciality : <?= $WorkPlanUD->doctor->speciality->name?></label>
-								</div>
-								<div class="form-group col-sm-6">
-									<label>Products To be detailed :</label>
-									<select name="products[]" class="multiselect-ui form-control required" id="products" aria-invalid="true" multiple="multiple">
-									<?php
-									$products_array = array();
-									if($WorkPlanUD->products!="")
-									$products_array = unserialize($WorkPlanUD->products);
-									foreach($products as $product){
-										echo '<option value="'.$product->id.'"'. (in_array($product->id, $products_array)?"selected":"") .'>'.$product->name.'</option>';
-									}
-									?>
-									</select>
-								</div>
-							</div>
-							<div class="col-sm-12 mar-bottom-20">
-								<?php if(count($samples)){?>
-								<div class="form-group col-sm-6">
-									<h4>Samples :</h4>
-									<ul id="ud_samples_<?=$WorkPlanUD->id?>">
-									<?php 
-									$samples_array = array();
-									if($WorkPlanUD->samples!="")
-									$samples_array = unserialize($WorkPlanUD->samples);
-									$sample_limit = (count($samples)<3)? count($samples) : 3;
-									for($i=0; $i< $sample_limit; $i++){ ?>
-										<li>
-										<label class="col-sm-6">
-											<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('ud_samples_<?=$WorkPlanUD->id?>','<?=$i?>')">
-											<option value="">Select</option>
-											<?php
-											$bal =0;
-											foreach($samples as $sample)
-											{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;?>
-											<option value="<?=$sample->id?>" <?=(array_key_exists($sample->id, $samples_array))?"selected":""?> data-bal="<?=(array_key_exists($sample->id, $samples_array))?($bal+$samples_array[$sample->id]):$bal?>"><?=$sample->name?></option>
-											<?php }?>
-											</select>
-										</label>
-										<label class="col-sm-6"> <input type="text" name="sample_qty[]" class="required" id="sample_qty_<?=$i?>" max="" value="<?=(array_key_exists($sample->id, $samples_array))?$samples_array[$sample->id]:""?>" <?=(array_key_exists($sample->id, $samples_array))?"disabled":""?>></label>
-										</li>
-									<?php }?>
-									</ul>
-								</div>
-								<?php }?>
-								<?php if(count($gifts)){?>
-								<div class="form-group col-sm-6">
-									<h4>Gifts :</h4>
-									<ul id="ud_gifts_<?=$WorkPlanUD->id?>">
-									<?php 
-									$gifts_array = array();
-									if($WorkPlanUD->gifts!="")
-									$gifts_array = unserialize($WorkPlanUD->gifts);
-									$gift_limit = (count($gifts)<3)? count($gifts) : 3;
-									for($i=0; $i< $gift_limit; $i++){ ?>
-										<li>
-										<label class="col-sm-6">
-											<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('ud_gifts_<?=$WorkPlanUD->id?>','<?=$i?>')">
-											<option value="">Select</option>
-											<?php
-											$bal =0;
-											foreach($gifts as $gift)
-											{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;?>
-											<option value="<?=$gift->id?>" <?=(array_key_exists($gift->id, $gifts_array))?"selected":""?> data-bal="<?=(array_key_exists($gift->id, $gifts_array))?($bal+$gifts_array[$gift->id]):$bal?>"><?=$gift->name?></option>
-											<?php }?>
-											</select>
-										</label>
-										<label class="col-sm-6"> <input type="text" name="gift_qty[]" class="required" id="gift_qty_<?=$i?>" max="" value="<?=(array_key_exists($gift->id, $gifts_array))?$gifts_array[$gift->id]:""?>" <?=(array_key_exists($gift->id, $gifts_array))?"disabled":""?>></label>
-										</li>
-									<?php }?>
-									</ul>
-								</div>
-								<?php }?>
-								<div class="form-group col-sm-12">
-									<div class="form-group col-sm-6">
-										<label class="col-sm-6">Discussion</label>
-										<textarea name="discussion"><?= $WorkPlanUD->discussion?></textarea>
-									</div>
-									<div class="form-group col-sm-6">
-										<div class="col-sm-6">
-										<label>Visit Time</label>
-										<input type="text" name="visit_time" class="time" value="<?= $WorkPlanUD->visit_time?>"><br>
-										</div>
-										<div class="col-sm-6">
-										<label>Doctor Business</label>
-										<input type="text" name="business" value="<?= $WorkPlanUD->business?>">
-										</div>
-									</div>
-								</div>
-							</div>
-							<input type="hidden" id="return" name="return" value="dailyReportField" >
-							<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-							<div class="col-md-6 col-sm-6 col-xs-6"><button type="submit" name="SubmitSave" class="btn blue-btn btn-block">Save</button></div>
-						</div>
-					</div>
-					</form>
-					</div>
-			<script>
-				$("#doctor_product_<?=$WorkPlanUD->id?>Form").validate({
-					ignore: ":hidden"
-				});
-			</script>
-			</div>
-			<?php }
-		}?>
     </div>
     <!-- /.content -->
 </div>
@@ -396,7 +252,11 @@
 					'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
 					'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
 					'</div>'
-		  }
+		  },
+		callbacks: {
+		  close: function(){
+			window.location.replace("");
+		  }}
 	});
 	
 	$(document).on('click', '.popup-modal-dismiss', function (e) {
@@ -536,7 +396,7 @@
 		   success: function(json) {
 			   if(json.status == 1)
 			   {	
-					window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>/?date=<?php echo $reportDate;?>");			   
+					window.location.replace("");			   
 					$.magnificPopup.close();
 			   }
 			   else
@@ -558,7 +418,7 @@
 			   success: function(json) {
 				   if(json.status == 1)
 					{
-						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>/?date=<?php echo $reportDate;?>");			   
+						window.location.replace("");			   
 					}
 				   else
 						alert(json.msg);

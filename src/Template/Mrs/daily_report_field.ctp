@@ -21,7 +21,7 @@
 								<div class="form-group">
 									<div class="col-sm-6">
 									 <input type="hidden" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo $reportDate;?>">
-									 <div class="col-sm-6"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>View Reported Calls</b></a></div>
+									 <div class="col-sm-6"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewReportedCalls",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>View Reported Calls</b></a></div>
 									 <div class="col-sm-6"><button class="btn blue-btn btn-block margin-right-35 pull-right" type="submit">Final Submit</a></div>
 									</div>
 									<!-- /.input group -->
@@ -113,7 +113,7 @@
 											<hr>
 											<div class="form-group  mar-top-10">
 												<div class="col-sm-3">
-													<a  href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "UnplannedDoctors",'?' => ['date' => $reportDate]])?>" class="common-btn blue-btn pull-left"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unplanned Doctors</a>
+													<a  href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "UnplannedDoctors",'?' => ['date' => $reportDate]])?>" class="common-btn blue-btn pull-left iframe-popup-link"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unplanned Doctors</a>
 													<!--<a href="#UnplannedAdd" class="popup-modal common-btn blue-btn pull-left"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unplanned Doctors</a>-->
 												</div>
 												<div class="col-sm-3">
@@ -123,7 +123,7 @@
 													<a  href="#StockistAdd" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Stockists</a>
 												</div>
 												<div class="col-sm-3">
-													<a  href="#PGOthers" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unlisted Doctors</a>
+													<a  href="#PGOthers" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Non-Listed Doctors</a>
 												</div>
 											</div>
 										</div>
@@ -437,7 +437,7 @@
 				<input type="hidden" name="work_type_id" value="">
 				<div class="popup-header">
 					<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-					<div class="hr-title"><h4>Unlisted Doctors</h4><hr /></div>
+					<div class="hr-title"><h4>Non-Listed Doctors</h4><hr /></div>
 				</div>
 				<div class="popup-body">
 					<div class="row">
@@ -560,7 +560,7 @@
 						$html ="";
 						if(count($WorkPlansPD))
 						{
-							$html.='<h3 class="mar-top-10 mar-bottom-10">Unlisted Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Spec</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+							$html.='<h3 class="mar-top-10 mar-bottom-10">Non-Listed Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Spec</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
 							$i = 1;
 							foreach ($WorkPlansPD as $WorkPlanPD)
 							{
@@ -812,7 +812,11 @@
 					'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
 					'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
 					'</div>'
-		  }
+		  },
+		callbacks: {
+		  close: function(){
+			window.location.replace("");
+		  }}
 	});
 	
 	$(document).on('click', '.popup-modal-dismiss', function (e) {
