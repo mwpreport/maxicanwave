@@ -35,30 +35,32 @@
                      											<tr class='travel-expense-row'>
                                             <td class="exp-type">
                                               <?php if($i==0) {?>
-                                                <?= $this->Form->control('expense_type_id', ['options' => $expenseTypes, 'label' => false, 'empty' => 'Select', 'onchange' => 'loadExpenseType(this)']); ?>
+                                                <?= $this->Form->control('expense_type_id', ['class'=> 'form-control', 'options' => $expenseTypes, 'label' => false, 'empty' => 'Select', 'onchange' => 'loadExpenseType(this)']); ?>
                                               <?php } ?>
                                             </td>
                                             <td><?php echo $worktype; ?></td>
                                             <?php if(isset($expense['travel_expenses'][$i])){ ?>
-                                              <td class="city_from_<?php echo $i; ?>" ><?= $this->Form->control('travel_expenses['.$i.'][cities_from][id]', ['options' => $cities, 'label' => false, 'empty' => 'Select','value'=>$expense['travel_expenses'][$i]['city_from'], 'onchange' => 'selectCity(this)']); ?></td>
-                                              <td class="city_to_<?php echo $i; ?>"><?= $this->Form->control('travel_expenses['.$i.'][cities_to][id]', ['options' => $cities, 'label' => false, 'empty' => 'Select', 'value'=>$expense['travel_expenses'][$i]['city_to'], 'onchange' => 'selectCity(this)']); ?></td>
+                                              <td class="city_from_<?php echo $i; ?>" >
+                                                <?= $this->Form->control('travel_expenses['.$i.'][cities_from][id]', ['class'=> 'form-control', 'options' => $cities, 'label' => false, 'empty' => 'Select','value'=>$expense['travel_expenses'][$i]['city_from'], 'onchange' => 'selectCity(this)']); ?>
+                                              </td>
+                                              <td class="city_to_<?php echo $i; ?>"><?= $this->Form->control('travel_expenses['.$i.'][cities_to][id]', ['class'=> 'form-control', 'options' => $cities, 'label' => false, 'empty' => 'Select', 'value'=>$expense['travel_expenses'][$i]['city_to'], 'onchange' => 'selectCity(this)']); ?></td>
                                           <?php }else { ?>
-                                            <td class="city_from_<?php echo $i; ?>" ><?= $this->Form->control('travel_expenses['.$i.'][cities_from][id]', ['options' => $cities, 'label' => false, 'empty' => 'Select', 'onchange' => 'selectCity(this)']); ?></td>
-                                            <td class="city_to_<?php echo $i; ?>" ><?= $this->Form->control('travel_expenses['.$i.'][cities_to][id]', ['options' => $cities, 'label' => false, 'empty' => 'Select', 'onchange' => 'selectCity(this)']); ?></td>
+                                            <td class="city_from_<?php echo $i; ?>" ><?= $this->Form->control('travel_expenses['.$i.'][cities_from][id]', ['class'=> 'form-control', 'options' => $cities, 'label' => false, 'empty' => 'Select', 'onchange' => 'selectCity(this)']); ?></td>
+                                            <td class="city_to_<?php echo $i; ?>" ><?= $this->Form->control('travel_expenses['.$i.'][cities_to][id]', ['class'=> 'form-control', 'options' => $cities, 'label' => false, 'empty' => 'Select', 'onchange' => 'selectCity(this)']); ?></td>
                                           <?php } ?>
                                           </tr>
                                         <?php } ?>
                                         <tr>
 
                                           <td colspan='2' class='started_date'>
-                                            <span>Started:</span>                                            
-                                            <?= $this->Form->control('started_hour', ['options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("G", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
-                                            <?= $this->Form->control('started_minute', ['options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("i", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
+                                            <span>Started:</span>
+                                            <?= $this->Form->control('started_hour', ['class'=> 'form-control', 'options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("G", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
+                                            <?= $this->Form->control('started_minute', ['class'=> 'form-control', 'options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("i", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
                                           </td>
                                           <td colspan='2' class='end_date'>
                                             <span>Reached:</span>
-                                            <?= $this->Form->control('reached_hour', ['options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("G", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
-                                            <?= $this->Form->control('reached_minute', ['options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("i", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
+                                            <?= $this->Form->control('reached_hour', ['class'=> 'form-control', 'options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("G", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
+                                            <?= $this->Form->control('reached_minute', ['class'=> 'form-control', 'options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("i", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
                                           </td>
                                         </tr>
                                         <tr>
@@ -121,14 +123,14 @@
 
                                   <td style="display:none">
                                     <?php if(!empty($expense)) { ?>
-                                      <?= $this->form->control('other_allowances[0][expense_id]', ['type' => 'hidden', 'label' => false, 'value' => $expense['id']]); ?>
+                                      <?= $this->form->control('other_expenses[0][expense_id]', ['class'=> 'form-control', 'type' => 'hidden', 'label' => false, 'value' => $expense['id']]); ?>
                                     <?php } ?>
                                   </td>
                                   <td></td>
-                                  <td><?= $this->Form->control('other_expenses[0][other_allowance_id]', ['options' => $otherAllowances, 'label' => false, 'empty' => 'Select']); ?></td>
-                                  <td><?= $this->Form->control('other_expenses[0][fare]',['label'=>false]); ?></td>
-                                  <td><?= $this->Form->control('other_expenses[0][description]',['label'=>false, 'type'=> 'textArea']); ?></td>
-                                  <td style="display:none"><?= $this->Form->control('other_expenses[0][voucher_no]',['label'=>false, 'type'=> 'textArea','value' => time()]); ?></td>
+                                  <td><?= $this->Form->control('other_expenses[0][other_allowance_id]', ['class'=> 'form-control', 'options' => $otherAllowances, 'label' => false, 'empty' => 'Select']); ?></td>
+                                  <td><?= $this->Form->control('other_expenses[0][fare]',['label'=>false, 'class'=> 'form-control']); ?></td>
+                                  <td><?= $this->Form->control('other_expenses[0][description]',['label'=>false, 'type'=> 'textArea', 'class'=> 'form-control']); ?></td>
+                                  <td style="display:none"><?= $this->Form->control('other_expenses[0][voucher_no]',['class'=> 'form-control', 'label'=>false, 'type'=> 'textArea','value' => time()]); ?></td>
 
                                   <td width="50">
                                     <?= $this->Form->button(__('Add'), ['class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
@@ -137,9 +139,6 @@
                               </tr>
                              </tbody>
                           </table>
-
-
-
                       </div>
                     </div>
                 </div>
@@ -231,7 +230,7 @@
                                          </td>
 
                                          <td>
-                                           <?= $this->Form->control('travel_expenses['.$i.'][travel_mode]', ['options' => $travelMode, 'label' => false, 'value' => isset($expense['travel_expenses'][$i]['travel_mode']) ? $expense['travel_expenses'][$i]['travel_mode'] : '']); ?>
+                                           <?= $this->Form->control('travel_expenses['.$i.'][travel_mode]', ['class'=> 'form-control', 'options' => $travelMode, 'label' => false, 'value' => isset($expense['travel_expenses'][$i]['travel_mode']) ? $expense['travel_expenses'][$i]['travel_mode'] : '']); ?>
                                          </td>
 
                                          <td class='start_date' style="display:none">
@@ -285,7 +284,7 @@
                                             <?= $this->form->control('travel_expenses['.$i.'][fare]', ['type' => 'hidden', 'label' => false]); ?>
                                          </td>
 
-                                         <td><?= $this->Form->control('travel_expenses['.$i.'][travel_mode]', ['options' => $travelMode, 'label' => false]); ?></td>
+                                         <td><?= $this->Form->control('travel_expenses['.$i.'][travel_mode]', ['class'=> 'form-control', 'options' => $travelMode, 'label' => false]); ?></td>
 
                                          <td class='start_date' style="display:none">
                                            <?php echo date("h:i:s", strtotime($expense['started'])); ?>
@@ -298,7 +297,7 @@
                                      <?php } ?>
                                      <?php }?>
                                      <tr>
-                                       <td colspan="7"><?= $this->Form->control('daily_allowance', ['options' => $dailyAllowances, 'value' => isset($expense['daily_allowance']) ? $expense['daily_allowance'] : 0 ]); ?></td>
+                                       <td colspan="7"><?= $this->Form->control('daily_allowance', ['class'=> 'form-control', 'options' => $dailyAllowances, 'value' => isset($expense['daily_allowance']) ? $expense['daily_allowance'] : 0 ]); ?></td>
                                      </tr>
                                      <tr>
                                        <td colspan="7"><?= $this->Form->button(__('submit'), ['class' => 'travel-expense-final-submit common-btn blue-btn btn-125']); ?></td>
@@ -482,3 +481,7 @@ $('.main-expense-form').submit(function(){
 }); */
 
 </script>
+<style>
+#daily-allowance{margin-left:279px}
+#travel-expenses-0-travel-mode{margin-left:77px}
+</style>
