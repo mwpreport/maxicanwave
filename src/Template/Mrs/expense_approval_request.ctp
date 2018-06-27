@@ -206,9 +206,7 @@
                                      }elseif(!empty($otherExpenses)) { ?>
                                          <tr>
                                             <td>
-                                              <?php if($key==0){ ?>
                                                 <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
-                                              <?php } ?>
                                              </td>
                                                  <td></td>
                                                  <td></td>
@@ -219,35 +217,23 @@
                                                  <td></td>
                                                  <td></td>
                                                  <td>
-                                                   <?php if($key==0){ ?>
                                                      <?php echo $otherExpense; ?>
-                                                  <?php } ?>
                                                  </td>
                                                  <td>
-                                                   <?php if($key==0){ ?>
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
-                                                     <?php } ?>
                                                 </td>
                                                 <td>
-                                                  <?php if($key==0){ ?>
                                                     <?= $this->form->control('expenses['.$expense_key.'][id]', ['type' => 'hidden', 'label' => false, 'value' => $expense['id']]); ?>
                                                     <?= $this->form->control('expenses['.$expense_key.'][disallowed]', ['label' => false, 'value' => $expense['disallowed']]); ?>
-                                                  <?php } ?>
                                                 </td>
                                                 <td>
-                                                  <?php if($key==0){ ?>
                                                     <?= $this->form->control('expenses['.$expense_key.'][disallowed_remark]', ['type' => 'textArea', 'label' => false, 'value' => $expense['disallowed_remark']]); ?>
-                                                  <?php } ?>
                                                 </td>
                                                 <td>
-                                                  <?php if($key==0){ ?>
                                                     <?= $this->form->control('expenses['.$expense_key.'][abeyance]', ['label' => false, 'value' => $expense['abeyance']]); ?>
-                                                  <?php } ?>
                                                 </td>
                                                 <td>
-                                                  <?php if($key==0){ ?>
-                                                    <?= $this->form->control('expenses['.$expense_key.'][abeyance_remark]', ['type' => 'textArea', 'label' => false,'value' => $expense['abeyance_remark']]); ?>
-                                                  <?php } ?>
+                                                    <?= $this->form->control('expenses['.$expense_key.'][abeyance_remark]', ['type' => 'textArea', 'label' => false,'value' => $expense['abeyance_remark']]); ?>                                                  
                                                 </td>
                                         </tr>
                                      <?php

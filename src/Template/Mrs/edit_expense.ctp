@@ -1,4 +1,5 @@
 <?php ?>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
@@ -50,7 +51,7 @@
                                         <tr>
 
                                           <td colspan='2' class='started_date'>
-                                            <span>Started:</span>
+                                            <span>Started:</span>                                            
                                             <?= $this->Form->control('started_hour', ['options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("G", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
                                             <?= $this->Form->control('started_minute', ['options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("i", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
                                           </td>
@@ -183,9 +184,9 @@
                                          ?>
                                       <?= $this->Form->create($expense, array('id' => 'newform','class'=>'main-expense-form')) ?>
                                       <?php
-                                      if(isset($expense['travel_expenses'])){ ?>
+                                      if(isset($expense['travel_expenses']) && !empty($expense['travel_expenses'])){  ?>
                                        <tr class="travel-expense-row">
-                                        <?php if($i==0) {?>
+                                        <?php if($i==0) {  ?>
                                           <td class="exp-type" rowspan="<?php echo $count; ?>" style="vertical-align : middle;text-align:center;">
                                             <span>
                                               <?php $expanseTypeArr = $expenseTypes->toArray();
@@ -253,10 +254,14 @@
                                      <?php }else{ ?>
                                        <tr class="travel-expense-row">
                                         <?php if($i==0) {?>
-                                          <td rowspan="<?php echo $count; ?>" class='exp-type'>
-                                            <?= $this->form->control('expense_type_id',['type' => 'hidden']); ?>
-                                            <span></span>
-                                          </td>
+                                          <td class="exp-type" rowspan="<?php echo $count; ?>" style="vertical-align : middle;text-align:center;">
+                                            <span>
+                                              <?php $expanseTypeArr = $expenseTypes->toArray();
+                                                  if(isset($expense)){ echo $expanseTypeArr[$expense['expense_type_id']]; }
+                                              ?>
+                                            </span>
+                                            <?= $this->form->control('expense_type_id',['type' => 'hidden', 'value' => isset($expense) ? $expense['expense_type_id'] : 0] ); ?>
+                                        </td>
                                         <?php } ?>
                                          <td>
                                            <span><?php echo $worktype; ?></span>
@@ -284,10 +289,10 @@
 
                                          <td class='start_date' style="display:none">
                                            <?php echo date("h:i:s", strtotime($expense['started'])); ?>
-                                           <?= $this->form->control('started', ['type' => 'hidden', 'label' => false]); ?>
+                                           <?= $this->form->control('travel_expenses['.$i.'][started]', ['type' => 'hidden', 'label' => false]); ?>
                                          </td>
                                          <td class='end_date' style="display:none">
-                                           <?= $this->form->control('reached', ['type' => 'hidden', 'label' => false]); ?>
+                                           <?= $this->form->control('travel_expenses['.$i.'][reached]', ['type' => 'hidden', 'label' => false]); ?>
                                          </td>
                                        </tr>
                                      <?php } ?>
@@ -356,84 +361,93 @@ $('.travel-expense-submit').click(function(e){
   //Validate if all selectbox are selected
 
   var row_cnt=0;
+  var error = 0;
   $('.travel-expense-row:visible select').each(function(){
     if($(this).val() == ""){
-      alert('please select required option');
-      return false;
+      error =1 ;
     }
+    if(error == 0){
+      if($(this).parent().parent().attr('class') == 'city_to_'+row_cnt){
+        var city_from_value = $('.city_from_'+row_cnt+' option:selected').val();
+        var city_to_value = $('.city_to_'+row_cnt+' option:selected').val();
+        $.ajax({
+          url: '<?php echo $this->Url->build(["controller" => "mrs","action" => "getcityDistance"])?>',
+          type: "POST",
+          dataType: "json",
+          async: false,
+          data: {from:city_from_value,to:city_to_value},
+          success: function(result) {
+            if(result.status == 1){
 
-    if($(this).parent().parent().attr('class') == 'city_to_'+row_cnt){
-      var city_from_value = $('.city_from_'+row_cnt+' option:selected').val();
-      var city_to_value = $('.city_to_'+row_cnt+' option:selected').val();
-      $.ajax({
-        url: '<?php echo $this->Url->build(["controller" => "mrs","action" => "getcityDistance"])?>',
-        type: "POST",
-        dataType: "json",
-        data: {from:city_from_value,to:city_to_value},
-        success: function(result) {
-          if(result.status == 1){
+              //Show city distance in Kms
+              $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.km_'+row_cnt+' span').text(result.distance);
+              $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.km_'+row_cnt+' input').val(result.distance);
 
-            //Show city distance in Kms
-            $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.km_'+row_cnt+' span').text(result.distance);
-            $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.km_'+row_cnt+' input').val(result.distance);
-
-            //Show fare for travel
-            $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' span').text(result.distance*result.km_fare);
-            $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' input').val(result.distance*result.km_fare);
-            if(result.distance <= 60){
-              $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' span').css('display','block');
-              $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' input').attr('type','hidden');
-            }else{
-              $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' span').css('display','none');
-              $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' input').attr('type','text');
+              //Show fare for travel
+              $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' span').text(result.distance*result.km_fare);
+              $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' input').val(result.distance*result.km_fare);
+              if(result.distance <= 60){
+                $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' span').css('display','block');
+                $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' input').attr('type','hidden');
+              }else{
+                $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' span').css('display','none');
+                $('.main-travel-expense .city_to_'+row_cnt).closest('tr').find('.fare_'+row_cnt+' input').attr('type','text');
+              }
             }
-
+              row_cnt=row_cnt+1;
           }
-          row_cnt++;
-        }
-      });
+        });
+      }
     }
   })
 
-  //For OS Only
-  var expensetype = $('.main-travel-expense .exp-type input').val();
-  if(expensetype == 3){
+  if(error == 0){
+    //For OS Only
+    var expensetype = $('.main-travel-expense .exp-type input').val();
+    if(expensetype == 3){
 
-      //Add started and reached in main form for OS type only
-      $started=$('#started-hour option:selected').val()+':'+$('#started-minute option:selected').val();
-      $reached=$('#reached-hour option:selected').val()+':'+$('#reached-minute option:selected').val();
-      $('.main-travel-expense .start_date input').val($started);
-      $('.main-travel-expense .end_date input').val($reached);
+        //Add started and reached in main form for OS type only
+        $started=$('#started-hour option:selected').val()+':'+$('#started-minute option:selected').val();
+        $reached=$('#reached-hour option:selected').val()+':'+$('#reached-minute option:selected').val();
+        $('.main-travel-expense .start_date input').val($started);
+        $('.main-travel-expense .end_date input').val($reached);
 
-      //Remove additional Row
-      var travel_expense_row_count = $('.main-travel-expense .travel-expense-row').length;
-      if(travel_expense_row_count > 1){
-        $('.main-travel-expense .travel-expense-row:last').css('display','none');
-      }
-      //Remove fare and Km columns
-      $('.main-travel-expense .start_date input').val($started);
-      $('.main-travel-expense .start_date input').val($started);
-      $('.main-travel-expense tr th:nth-child(5)').css('display','none');
-      $('.main-travel-expense tr th:nth-child(6)').css('display','none');
-      $('.main-travel-expense tr td[class^="fare_"]').css('display','none');
-      $('.main-travel-expense tr td[class^="km_"]').css('display','none');
+        //Remove additional Row
+        var travel_expense_row_count = $('.main-travel-expense .travel-expense-row').length;
+        if(travel_expense_row_count > 1){
+          $('.main-travel-expense .travel-expense-row:last').css('display','none');
+        }
+        //Remove fare and Km columns
+        $('.main-travel-expense .start_date input').val($started);
+        $('.main-travel-expense .start_date input').val($started);
+        $('.main-travel-expense tr th:nth-child(5)').css('display','none');
+        $('.main-travel-expense tr th:nth-child(6)').css('display','none');
+        $('.main-travel-expense tr td[class^="fare_"]').css('display','none');
+        $('.main-travel-expense tr td[class^="km_"]').css('display','none');
 
+        $('.main-travel-expense tr td[class^="fare_"] span').text(0);
+        $('.main-travel-expense tr td[class^="fare_"] input').val(0);
+        $('.main-travel-expense tr td[class^="km_"] span').text(0);
+        $('.main-travel-expense tr td[class^="km_"] input').val(0);
 
+    }else{
+      $('.main-travel-expense .travel-expense-row:last').css('display','table-row');
+    }
 
-  }else{
-    $('.main-travel-expense .travel-expense-row:last').css('display','table-row');
+    //Open main expense modal popup
+    $.magnificPopup.open({
+      items: {
+        src: '#test-modal',
+      },
+      type: 'inline'
+    });
+  }else {
+    alert('please select required option');
   }
-
-  //Open main expense modal popup
-  $.magnificPopup.open({
-    items: {
-      src: '#test-modal',
-    },
-    type: 'inline'
-  });
   return false;
-  e.preventDefault();
 });
+
+
 
 $('.main-expense-form').submit(function(){
   var expensetype = $('.main-travel-expense .exp-type input').val();
