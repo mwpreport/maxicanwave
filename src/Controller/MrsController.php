@@ -732,6 +732,7 @@ class MrsController extends AppController {
 			if($workPlanSubmit){
 				$expense = $workPlanSubmit['expense'];
 				if($this->request->is(['patch', 'post', 'put'])){ //pr($this->request->data);
+          //pr($this->request->data);exit;
 					$this->request->data['work_plan_submit_id'] = $workPlanSubmit -> id;
 					if($expense){
 						$oldexpense = $this->Expenses->patchEntity($expense, $this->request->data);

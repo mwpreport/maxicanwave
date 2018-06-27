@@ -216,9 +216,7 @@
                                      }elseif(!empty($otherExpenses)) { ?>
                                          <tr>
                                             <td>
-                                              <?php if($key==0){ ?>
                                                 <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
-                                              <?php } ?>
                                              </td>
                                                  <td></td>
                                                  <td></td>
@@ -229,19 +227,13 @@
                                                  <td></td>
                                                  <td></td>
                                                  <td>
-                                                   <?php if($key==0){ ?>
                                                      <?php echo $otherExpense; ?>
-                                                  <?php } ?>
                                                  </td>
                                                  <td>
-                                                   <?php if($key==0){ ?>
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
-                                                     <?php } ?>
                                                 </td>
                                                 <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-                                                   <?php if($key==0){ ?>
-                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
-                                                  <?php } ?>
+                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>                                                  
                                                 <?php } ?>
                                         </tr>
                                      <?php
