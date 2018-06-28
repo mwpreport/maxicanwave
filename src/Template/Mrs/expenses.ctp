@@ -132,7 +132,7 @@
                                     <?php if(!isset($report->expense->travel_expenses) && !isset($report->expense->travel_expenses)){ ?>
                                    <tr>
     									                 <td>
-                                         <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
+                                         <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'viewDailyReport', "?" => ["date" => date('Y-m-d', $time)]],['class' => 'iframe-popup-link','escape' => false]) ?>
                                        </td>
                                            <td></td>
                                            <td></td>
@@ -299,4 +299,15 @@ function loadexpenses(){
   var year = $("#year").val();
   alert(month+year);
 }
+$('.iframe-popup-link').magnificPopup({
+	type: 'iframe',
+	modal: true,
+	iframe: {
+		markup: '<div class="mfp-iframe-scaler">'+
+				'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
+				'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+				'</div>'
+	  }
+});
+
 </script>
