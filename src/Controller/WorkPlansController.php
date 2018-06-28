@@ -954,14 +954,14 @@ class WorkPlansController extends AppController
 					if(isset($reportData['samples']) && !empty($reportData['samples']))
 					$this->saveIssuedSamples($sample_array, $workPlan, "pg");
 
-					$this->Flash->success(__("The PG & Others Saved to Report Successfull"));
-					return $this->redirect(['controller' => 'Mrs','action' => 'dailyReportField','?' => ['date' => $reportDate]]);
+					$this->Flash->success(__("Non-Listed Doctor Saved to Report Successfull"));
+					return $this->redirect(['controller' => 'Mrs','action' => 'dailyReportPgo','?' => ['date' => $reportDate]]);
 				}
 			}
 			else
 			{
-				$this->Flash->error(__('The PG & Others could not be saved. Please, try again.'));
-				return $this->redirect(['controller' => 'Mrs','action' => 'dailyReportField','?' => ['date' => $reportDate]]);
+				$this->Flash->error(__('Non-Listed Doctor could not be saved. Please, try again.'));
+				return $this->redirect(['controller' => 'Mrs','action' => 'dailyReportPgo','?' => ['date' => $reportDate]]);
 			}
 			
         }

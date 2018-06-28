@@ -123,7 +123,6 @@
 							<div class="clearfix"></div><hr />
 
 						</div>
-						<?php }}?>
 						<div class="col-sm-12 mar-bottom-20" id="workType_section_2">
 						<form method="post" action="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>?date=<?php echo $reportDate;?>">
 						<input type="hidden" value="<?php echo $reportDate;?>" name="date">
@@ -146,6 +145,7 @@
 						
 						</form>
 						</div>
+						<?php }}?>
 						<?php
 						$saved_other=0; 
 						foreach ($WorkPlans as $WorkPlan)

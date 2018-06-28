@@ -6,7 +6,11 @@
         <section>
             <div class="white-wrapper">
                 <div class="col-md-12">
+                    <div class="hr-title">
 						<?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
+                        <h3>Daily Report Un-Planned Doctors of  <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h3>
+                        <hr>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
                 
@@ -14,7 +18,6 @@
 
 						<div id="report_section">
 							<div class="col-sm-12 mar-bottom-20" id="workType_section_2">
-							<h3 class="mar-top-10 mar-bottom-10">Add Un-Planned Doctors for <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?></h3>
 								<div class="row">
 									<div class="col-sm-12 mar-bottom-20">
 										<form class="" id="UnplannedAddFormSelect" method="POST">
@@ -146,7 +149,7 @@
 															<div class="form-group col-sm-6">
 																<div class="col-sm-6">
 																<label>Visit Time</label>
-																<input type="text" name="visit_time" class="time" value=""><br>
+																<input type="text" name="visit_time"  placeholder="HH:MM" class="time" value=""><br>
 																</div>
 																<div class="col-sm-6">
 																<label>Doctor Business</label>
@@ -170,7 +173,7 @@
 								<div class="col-md-12 mar-bottom-20">
 									<?php if(count($WorkPlansUD)<1){?>
 									<div class="table-responsive">
-										<p>No Unplanned Doctors on this date</p>
+										<p>No Un-Planned Doctors on this date</p>
 									</div>
 									<?php }else {?>
 									<div class="table-responsive">
@@ -178,7 +181,7 @@
 											$html ="";
 											if(count($WorkPlansUD))
 											{
-												$html.='<h3 class="mar-top-10 mar-bottom-10">Un-Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+												$html.='<h3 class="mar-top-10 mar-bottom-10">Reported Un-Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
 												$i = 1;
 												foreach ($WorkPlansUD as $WorkPlanUD)
 												{
@@ -228,18 +231,7 @@
 	var endDate = new Date(y, m + 1, 0);
 
 	//Date picker
-	$('#reportDate').datepicker({
-		autoclose: true, startDate: startDate, endDate: endDate
-	});
-	$('#missed_doctors_table [type="text"]').datepicker({
-		autoclose: true, startDate: new Date(y, m, d + 1), endDate: endDate
-	});
-
-	$('#reportDate').on('changeDate', function (ev) {
-		window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>?date="+moment(ev.date).format('YYYY-MM-DD'));
-	});
-	
-	$('.popup-modal').magnificPopup({
+$('.popup-modal').magnificPopup({
 		type: 'inline',
 		preloader: false,
 		modal: true
