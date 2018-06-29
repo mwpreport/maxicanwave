@@ -27,10 +27,10 @@
 		$chemist_count = 0;
 		foreach( $workPlansDate as $date=>$workPlanDate)
 		{ 
-			if(isset($workPlanDate['field']) || isset($workPlanDate['un_field']) || isset($workPlanDate['pg_field']) || isset($workPlanDate['chemist']) || isset($workPlanDate['stockist']) || isset($workPlanDate['other']) || isset($workPlanDate['leave']))
+			if(isset($workPlanDate['field']) || isset($workPlanDate['un_field']) || isset($workPlanDate['chemist']) || isset($workPlanDate['stockist']) || isset($workPlanDate['other']) || isset($workPlanDate['leave']))
 			{
 				$html = '<div class="white-wrapper no-padding mar-top-20"><div class="table-responsive" id="report_section"><h3 class="mar-top-10 mar-bottom-15 center"><u>'.$date.'</u></h3>';
-				if(!empty($workPlanDate['field']) || !empty($workPlanDate['un_field']) || !empty($workPlanDate['pg_field'])){
+				if(!empty($workPlanDate['field']) || !empty($workPlanDate['un_field'])){
 					$html.='<h3 class="mar-top-10 mar-bottom-10 center">Doctor Visit</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th></tr></thead><tbody>';
 					$i = 1;
 					if(!empty($workPlanDate['field']))
@@ -82,29 +82,6 @@
 						}
 					}
 
-					if(!empty($workPlanDate['pg_field']))
-					{
-						foreach ($workPlanDate['pg_field'] as $WorkPlanPD)
-						{
-							$products_array = array(); $samples_array = array(); $gifts_array = array();
-							if($WorkPlanPD->products!="")
-							$products_array = unserialize($WorkPlanPD->products);
-							if($WorkPlanPD->samples!="")
-							$samples_array = unserialize($WorkPlanPD->samples);
-							if($WorkPlanPD->gifts!="")
-							$gifts_array = unserialize($WorkPlanPD->gifts);
-							$detail_products =array(); $sample_products =array(); $gift_products =array();
-							foreach($products as $product)
-							if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-							foreach($samples as $sample)
-							if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
-							foreach($gifts as $gift)
-							if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
-							$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->pg_other->name.'</td><td></td><td>'.$WorkPlanPD->pg_other->speciality->code.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td></tr>';
-						$i++;
-						}
-					}
-
 					$html.='</tbody></table>';
 				}
 				if(!empty($workPlanDate['other'])){
@@ -150,8 +127,8 @@
 					$html.='</tbody></table>';
 				}
 						
-				$html.='<h5>Doctor Calls till today: '.$doctor_count.', Doctor Calls Avg. till today: '.number_format(($doctor_count/$day_count),2).' %</h5>';
-				$html.='<h5>Chemist Calls till today: '.$chemist_count.', Chemist Calls Avg. till today: '.number_format(($chemist_count/$day_count),2).' %</h5>';
+				$html.='<h5>Doctor Calls till today: '.$doctor_count.', Doctor Calls Avg. till today: '.number_format(($doctor_count/$day_count),2).' </h5>';
+				$html.='<h5>Chemist Calls till today: '.$chemist_count.', Chemist Calls Avg. till today: '.number_format(($chemist_count/$day_count),2).' </h5>';
 				$html.='</div></div>';
 				echo $html; $day_count++;
 			}

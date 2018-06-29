@@ -92,15 +92,11 @@ class MrsController extends AppController {
 				->find('list')
 				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
 
-				$WorkPlansPD = $this->WorkPlans
-				->find('list')
-				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
-
 				$WorkPlansC = $this->WorkPlans
 				->find('list')
 				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
 
-				$doctorCalls+= count($WorkPlansD) + count($WorkPlansUD) +  count($WorkPlansPD);
+				$doctorCalls+= count($WorkPlansD) + count($WorkPlansUD);
 				$chemistCalls+= count($WorkPlansC);
 
 		}
