@@ -171,10 +171,10 @@
 			   success: function(json) {
 				   if(json.status == 1)
 					{
-						window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport"])?>/?date=<?php echo $reportDate;?>");			   
+						window.location.replace("");			   
 					}
 				   else
-						alert(json.msg);
+						window.location.replace("");
 			   }
 		   });
 		}

@@ -14,66 +14,64 @@
                 </div>
                 <div class="clearfix"></div>
                 
-                <div class="daily-report-radio-cnt">
-						<div id="report_section">
-							<div class="col-sm-12 mar-bottom-20" id="workType_section_2">
-								<form class="" id="ChemistAddForm" method="POST" >
-								<input type="hidden" name="start_date" id="start_date" value="<?php echo $reportDate;?>">
-								<input type="hidden" name="work_type_id" value="">
-								
-								<div class="row">
-									<div class="col-sm-12 mar-bottom-20">
-										<div class="form-group col-sm-4">
-											<label for="city_id">City</label>
-											<select name="city_id" onchange="loadChemists(this.form.id)" class="form-control required" id="city_id" aria-invalid="true">
-												<option value="">Select</option>
-												<?php
-												foreach ($cities as $citiy)
-												{?>
-												<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?>><?= $citiy['city_name']?></option>
-												<?php }	?>
-											</select>  
-										</div>
-										<div class="form-group col-sm-4">
-											<label for="chemist_id">Select Chemists</label>
-											<select name="chemist_id" class="form-control required" id="chemist_id" aria-invalid="true">
-											<option value="">Select Chemists</option>
-												<?php
-												foreach ($chemists as $chemist)
-												{?>
-												<option value="<?= $chemist->id?>"><?= $chemist->name?></option>
-												<?php }	?>
-											</select>  
-										</div>
-										<div class="form-group col-sm-4">
-											<label>&nbsp;</label>
-											<button type="submit" id="ChemistSubmit" class="btn blue-btn btn-block">Save</button>
-										</div>
-									</div>
-									<hr>
-									<div class="col-sm-12 mar-bottom-20">
-									<?php 
-									$html ="";
-									if(count($WorkPlansC))
-									{
-										$html.='<h3 class="mar-top-10 mar-bottom-10">Reported Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Chemists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
-										$i = 1;
-										foreach ($WorkPlansC as $WorkPlanC)
-										{
-											$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanC->chemist->name.'</td><td>'.$WorkPlanC->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanC->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
-										$i++;
-										}
-										$html.='</tbody></table>';
-									}
-									if($html!="") echo $html;
-									?>
-									</div>
+				<div id="report_section">
+					<div class="col-sm-12 mar-bottom-20" id="workType_section_2">
+						<form class="" id="ChemistAddForm" method="POST" >
+						<input type="hidden" name="start_date" id="start_date" value="<?php echo $reportDate;?>">
+						<input type="hidden" name="work_type_id" value="">
+						
+						<div class="row">
+							<div class="col-sm-12 mar-bottom-20">
+								<div class="form-group col-sm-4">
+									<label for="city_id">City</label>
+									<select name="city_id" onchange="loadChemists(this.form.id)" class="form-control required" id="city_id" aria-invalid="true">
+										<option value="">Select</option>
+										<?php
+										foreach ($cities as $citiy)
+										{?>
+										<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?>><?= $citiy['city_name']?></option>
+										<?php }	?>
+									</select>  
 								</div>
-								</form>
+								<div class="form-group col-sm-4">
+									<label for="chemist_id">Select Chemists</label>
+									<select name="chemist_id" class="form-control required" id="chemist_id" aria-invalid="true">
+									<option value="">Select Chemists</option>
+										<?php
+										foreach ($chemists as $chemist)
+										{?>
+										<option value="<?= $chemist->id?>"><?= $chemist->name?></option>
+										<?php }	?>
+									</select>  
+								</div>
+								<div class="form-group col-sm-4">
+									<label>&nbsp;</label>
+									<button type="submit" id="ChemistSubmit" class="btn blue-btn btn-block">Save</button>
+								</div>
+							</div>
+							<hr>
+							<div class="col-sm-12 mar-bottom-20">
+							<?php 
+							$html ="";
+							if(count($WorkPlansC))
+							{
+								$html.='<h3 class="mar-top-10 mar-bottom-10">Reported Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Chemists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
+								$i = 1;
+								foreach ($WorkPlansC as $WorkPlanC)
+								{
+									$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanC->chemist->name.'</td><td>'.$WorkPlanC->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanC->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
+								$i++;
+								}
+								$html.='</tbody></table>';
+							}
+							if($html!="") echo $html;
+							?>
 							</div>
 						</div>
+						</form>
+					</div>
+				</div>
 						
-						</div>
 
             </div>
         </section>

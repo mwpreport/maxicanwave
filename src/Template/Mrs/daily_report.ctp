@@ -41,7 +41,7 @@
 						<?php if($date!=""){
 						if($workPlanSubmit)
 						{echo '<h4 class="message success">Report Submitted for this date</h4>';}
-						elseif($hasLeave)
+						elseif($hasPlannedLeave)
 						{?>
 							<div class="col-md-12">
 								<div class="col-md-12 mar-bottom-20">
@@ -52,8 +52,8 @@
 											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""></th><th>Leave Type</th><th>On</th></thead><tbody>';
 											foreach ($WorkPlansL as $WorkPlanL)
 											{
-												$html.='<tr class="'.(($WorkPlanL->is_reported)?"reported":"").' '.(($WorkPlanL->is_missed)?"missed":"").' "><td><input type="checkbox" class="workplan_id_1" name="workplan_id['.$WorkPlanL->id.']" value="'.$WorkPlanL->id.'"></td><td>'.$WorkPlanL->work_type->name.'</td><td>'.$reportDate.'</td></tr>';
-												if($WorkPlanL->is_reported || $WorkPlanL->is_missed) $saved_this = 1;
+												$html.='<tr class="'.(($WorkPlanL->is_reported)?"reported":"").' "><td><input type="checkbox" class="workplan_id_1" name="workplan_id['.$WorkPlanL->id.']" value="'.$WorkPlanL->id.'"></td><td>'.$WorkPlanL->work_type->name.'</td><td>'.$reportDate.'</td></tr>';
+												if($WorkPlanL->is_reported) $saved_this = 1;
 											}
 											$html.='</tbody></table>';
 										}
@@ -66,46 +66,50 @@
 									<div class="clearfix"></div>
 									<div class="center-button-container">
 										<div class="row">
-											<div class="form-group  mar-top-30">
+											<div class="form-group  mar-top-10">
 												<div class="col-sm-3">
 													<input type="hidden" id="return" name="return" value="dailyReport" >
 													<input type="submit" id="w1SubmitSave" name="SubmitSave" class="hide" >
 													<button class="common-btn blue-btn pull-left" value="w1SubmitSave" type="button" name="" id="w1ButtonSave">Save</button>
 												</div>
 												<div class="col-sm-3">
-													<input type="submit" id="w1SubmitMissed" name="SubmitMissed" class="hide" >
-													<button class="common-btn blue-btn pull-left" value="w1SubmitMissed" type="button" name="" id="w1ButtonMissed">Missed</button>
+													<input type="submit" id="w1SubmitDelete" name="SubmitDelete" class="hide" >
+													<button class="common-btn blue-btn pull-left" value="w1SubmitDelete" type="button" name="" id="w1ButtonDelete">Delete</button>
 												</div>
-												<?php if($saved_this){?>
-												<div class="col-sm-3">
-													<input type="submit" id="w1SubmitRemove" name="SubmitRemove" class="hide" >
-													<button class="common-btn blue-btn pull-left" value="w1SubmitRemove" type="button" name="" id="w1ButtonRemove">Remove Visit List</button>
-												</div>
-												<?php }?>
 											</div>
 										</div>
 									</div>
 									</form>
 									<script>
-										$("#w1ButtonSave,#w1ButtonMissed,#w1ButtonRemove").click(function(){
+										$("#w1ButtonSave,#w1ButtonDelete").click(function(){
 											var target_id = $(this).val();
 											if ($('input[type="checkbox"].workplan_id_1').is(':checked'))
 											{
 												$( "#"+target_id ).click();
 											}
 											else{
-												alert("Please check a Plan");
+												alert("Please check leave");
 											}
 										});
 									</script>
 
 								</div>
 								<p class="message">
-									<span class="message success">This date was planned as leave.</span>
-									Have you done any field work on this date? Is yes mark this date as missed
+									<strong><span class="message success">This date was planned as leave.</span></strong><br>
+									Have you done any field work on this date? Is yes delete leave and proceed with field work.
 									<?php if($saved_this){?>
 									or Click on <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" >Final Submit</a> and proceed to next date. 
 									<?php }?>
+								</p>
+							</div>
+						<?php }
+						elseif($hasLeave)
+						{?>
+							<div class="col-md-12">
+								<p class="message">
+									<strong><span class="message success">This date was reported as leave.</span></strong><br>
+									Have you done any field work on this date? Is yes <a href="javascript:void(0)" onclick="doDelete('<?=$hasLeave?>')">delete</a> leave and proceed with field work.
+									or Click on <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" >Final Submit</a> and proceed to next date. 
 								</p>
 							</div>
 						<?php }
@@ -164,8 +168,8 @@
 										$html.='<h3 class="mar-top-10 mar-bottom-10">Planned '.$workType->name.'</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""><input type="checkbox" class="check_all" onclick="toggleCheck(this)" value="1"></th><th>Work Type</th><th>City</th></thead><tbody>';
 										foreach ($workTypePlans[$workType->id] as $workTypePlan)
 										{
-											if($workTypePlan->is_reported || $workTypePlan->is_missed) {$saved_other =1; $saved_this=1;}
-											$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' '.(($workTypePlan->is_missed)?"missed":"").'"><td><input class=" workplan_id_'.$workType->id.'" type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="'.$workTypePlan->id.'"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
+											if($workTypePlan->is_reported) {$saved_other =1; $saved_this=1;}
+											$html.='<tr class="'.(($workTypePlan->is_reported)?"reported":"").' "><td><input class=" workplan_id_'.$workType->id.'" type="checkbox" name="workplan_id['.$workTypePlan->id.']" value="'.$workTypePlan->id.'"></td><td>'.$workTypePlan->work_type->name.'</td><td>'.$workTypePlan->city->city_name.'</td></tr>';
 										}
 										$html.='</tbody></table>';
 									}
@@ -190,12 +194,8 @@
 												<button class="common-btn blue-btn pull-left" value="w<?php echo $workType->id?>SubmitSave" type="button" name="" id="w<?php echo $workType->id?>ButtonSave">Save</button>
 											</div>
 											<div class="col-sm-3">
-												<input type="submit" id="w<?php echo $workType->id?>SubmitMissed" name="SubmitMissed" class="hide" >
-												<button class="common-btn blue-btn pull-left" value="w<?php echo $workType->id?>SubmitMissed" type="button" name="" id="w<?php echo $workType->id?>ButtonMissed">Missed</button>
-											</div>
-											<div class="col-sm-3">
-												<input type="submit" id="w<?php echo $workType->id?>SubmitRemove" name="SubmitRemove" class="hide" >
-												<button class="common-btn blue-btn pull-left" value="w<?php echo $workType->id?>SubmitRemove" type="button" name="" id="w<?php echo $workType->id?>ButtonRemove">Remove Visit List</button>
+												<input type="submit" id="w<?php echo $workType->id?>SubmitDelete" name="SubmitDelete" class="hide" >
+												<button class="common-btn blue-btn pull-left" value="w<?php echo $workType->id?>SubmitDelete" type="button" name="" id="w<?php echo $workType->id?>ButtonDelete">Delete</button>
 											</div>
 										</div>
 									</div>
@@ -209,7 +209,7 @@
 								</div>
 								</form>
 								<script>
-									$("#w<?php echo $workType->id?>ButtonSave,#w<?php echo $workType->id?>ButtonMissed,#w<?php echo $workType->id?>ButtonRemove").click(function(){
+									$("#w<?php echo $workType->id?>ButtonSave,#w<?php echo $workType->id?>ButtonDelete").click(function(){
 										var target_id = $(this).val();
 										if ($('input[type="checkbox"].workplan_id_<?php echo $workType->id?>').is(':checked'))
 										{
@@ -283,74 +283,12 @@
 						<?php }?>
 						<div class="col-md-12 <?php echo ((!$saved_other)?"hide":"")?>" id="success_plan" >
 							<p class="message">
-								<span class="message success" id="success_msg"></span>
+								<strong><span class="message success" id="success_msg"></span></strong>
 								Have you done any field work on this date? Is yes <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>" > Click here </a> or Click on <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" >Final Submit</a> and proceed to next date. 
 							</p>
 						</div>
 
 						<div class="col-sm-12 mar-bottom-20 hide" id="workType_section_1">
-							<div class="col-md-12 mar-bottom-20">
-								<div class="col-md-12 mar-bottom-20">
-									<?php 
-										$html = "";
-										if(isset($WorkPlansL))if(count($WorkPlansL))
-										{	$saved_this = 0;
-											$html.='<h3 class="mar-top-10 mar-bottom-10">Planned Leave</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width=""></th><th>Leave Type</th><th>On</th></thead><tbody>';
-											foreach ($WorkPlansL as $WorkPlanL)
-											{
-												$html.='<tr class="'.(($WorkPlanL->is_reported)?"reported":"").' '.(($WorkPlanL->is_missed)?"missed":"").' "><td><input type="checkbox" class="workplan_id_1" name="workplan_id['.$WorkPlanL->id.']" value="'.$WorkPlanL->id.'"></td><td>'.$WorkPlanL->work_type->name.'</td><td>'.$reportDate.'</td></tr>';
-												if($WorkPlanL->is_reported || $WorkPlanL->is_missed) $saved_this = 1;
-											}
-											$html.='</tbody></table>';
-										?>
-										<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportUpdate"])?>">
-										<input type="hidden" value="<?php echo $reportDate;?>" name="reportDate">
-										<div class="table-responsive">
-											<?php echo $html;?>
-										</div>
-										<div class="clearfix"></div>
-										<div class="center-button-container">
-											<div class="row">
-												<div class="form-group  mar-top-30">
-													<div class="col-sm-3">
-														<input type="hidden" id="return" name="return" value="dailyReport" >
-														<input type="submit" id="w1SubmitSave" name="SubmitSave" class="hide" >
-														<button class="common-btn blue-btn pull-left" value="w1SubmitSave" type="button" name="" id="w1ButtonSave">Save</button>
-													</div>
-													<div class="col-sm-3">
-														<input type="submit" id="w1SubmitMissed" name="SubmitMissed" class="hide" >
-														<button class="common-btn blue-btn pull-left" value="w1SubmitMissed" type="button" name="" id="w1ButtonMissed">Missed</button>
-													</div>
-													<div class="col-sm-3">
-														<input type="submit" id="w1SubmitRemove" name="SubmitRemove" class="hide" >
-														<button class="common-btn blue-btn pull-left" value="w1SubmitRemove" type="button" name="" id="w1ButtonRemove">Remove Visit List</button>
-													</div>
-												</div>
-											</div>
-										</div>
-										</form>
-										<script>
-											$("#w1ButtonSave,#w1ButtonMissed,#w1ButtonRemove").click(function(){
-												var target_id = $(this).val();
-												if ($('input[type="checkbox"].workplan_id_1').is(':checked'))
-												{
-													$( "#"+target_id ).click();
-												}
-												else{
-													alert("Please check a Plan");
-												}
-											});
-										</script>
-									<?php }?>
-								</div>
-								<?php if($saved_this){?>
-									<p class="message">
-									Have you done any field work on this date? Is yes <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField",'?' => ['date' => $reportDate]])?>" > Click here </a> or Click on <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "finalSubmitReport",'?' => ['date' => $reportDate]])?>" >Final Submit</a> and proceed to next date. 
-									</p>
-								<?php }?>
-							</div>
-							<div class="col-md-12 mar-bottom-20">
-							<hr />
 								<form class="workplanForm" id="LeaveAddForm" method="POST" >
 									<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
 									<input type="hidden" name="work_type_id" value="1">
@@ -375,11 +313,11 @@
 												</div>
 												<div class="col-md-3 col-sm-3 col-xs-3 form-group">
 													<label for="start_date">From</label>
-													<input class="form-control required " placeholder="From" name="start_date" id="start_date" /> - 
+													<input class="form-control required " placeholder="From" name="start_date" id="start_date" value="<?php echo $reportDate?>" /> - 
 												</div>
 												<div class="col-md-3 col-sm-3 col-xs-3 form-group">
 													<label for="end_date">To</label>
-													<input class="form-control " placeholder="To" name="end_date" id="end_date" />
+													<input class="form-control " placeholder="To" name="end_date" id="end_date" value="<?php echo $reportDate?>" />
 												</div>
 											</div>	
 											<div class="col-sm-12 mar-bottom-20">
@@ -392,7 +330,6 @@
 										</div>
 									</div>
 								</form>
-							</div>
 						</div>
 
 					</div>
@@ -547,6 +484,26 @@
 			   }
 		   }
 	   });
+	}
+	
+	function doDelete(eventID){  // delete event 
+		if (confirm("Are you sure on deleting this?"))
+		{
+		   $.ajax({
+			   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsDeleteReport"])?>',
+			   dataType: "json",
+			   data: 'action=delete&id='+eventID,
+			   type: "POST",
+			   success: function(json) {
+				   if(json.status == 1)
+					{
+						window.location.replace("");			   
+					}
+				   else
+						window.location.replace("");
+			   }
+		   });
+		}
 	}
 	
 	function remove_leave(){  // delete event 

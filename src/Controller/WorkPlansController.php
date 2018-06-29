@@ -552,8 +552,17 @@ class WorkPlansController extends AppController
 				$workPlan = $this->WorkPlans->get($workPlan_id, [
 					'contain' => []
 				]);
-				$reportData['is_reported'] = 1;
 				
+				
+				if(isset($data['SubmitDelete']))
+				{
+					if ($this->WorkPlans->delete($workPlan))
+					$success = 'Deleted Successfully.';
+					
+					continue;
+				}
+
+				$reportData['is_reported'] = 1;
 				if(isset($data['SubmitSave']))
 				{
 					if(isset($data['work_with'][$workPlan_id]))
@@ -980,9 +989,16 @@ class WorkPlansController extends AppController
 			$workPlan = $this->WorkPlans->get($id, [
 				'contain' => []
 			]);
-			if($workPlan->is_planned == 1)
+			if($workPlan->is_planned == 1 && $workPlan->work_type_id == 2)
 			{
-				$workPlan = $this->WorkPlans->patchEntity($workPlan, array('is_reported' => '0'));
+				$reportData['products'] = "";
+				$reportData['samples'] = "";
+				$reportData['gifts'] = "";
+				$reportData['visit_time'] = null;
+				$reportData['business'] = null;
+				$reportData['discussion	'] = null;
+				$reportData['is_reported	'] = 0;
+				$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
 				$action = $this->WorkPlans->save($workPlan);
 			}
 			else

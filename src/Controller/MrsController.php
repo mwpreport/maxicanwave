@@ -244,7 +244,7 @@ class MrsController extends AppController {
 		$state_id = $this->Auth->user('state_id');
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $specialities = $this->Specialities->find('all')->toarray();
-		$products = $this->Products->find('all')->toarray();
+		$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
 		$date = "";
 		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->order(['list' => 'ASC'])->toarray();
 		$WorkPlans = array();
@@ -272,9 +272,10 @@ class MrsController extends AppController {
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
 
 		}
-		$hasLeave = $this->_hasPlannedLeave($date);
+		$hasPlannedLeave = $this->_hasPlannedLeave($date);
+		$hasLeave = $this->_hasLeave($date);
 		$leaveTypes = $this->LeaveTypes->find()->toarray();
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'WorkPlansL', 'workPlanSubmit', 'date','hasLeave'));
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'WorkPlansL', 'workPlanSubmit', 'date','hasPlannedLeave','hasLeave'));
 
     }
 
@@ -298,14 +299,14 @@ class MrsController extends AppController {
 			$specialities = $this->Specialities->find('all')->toarray();
 			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-			$products = $this->Products->find('all')->toarray();
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
 			$samples = $this->AssignedSamples->find('all');
-			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
+			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->order(['Products.name' => 'ASC'])->group('AssignedSamples.product_id')->toarray();
 			$i_samples = $this->IssuedSamples->find('all');
 			$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
 			foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
 			$gifts = $this->AssignedGifts->find('all');
-			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
+			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->order(['Gifts.name' => 'ASC'])->group('AssignedGifts.gift_id')->toarray();
 			$i_gifts = $this->IssuedGifts->find('all');
 			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
 			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
@@ -472,14 +473,14 @@ class MrsController extends AppController {
 			$specialities = $this->Specialities->find('all')->toarray();
 			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-			$products = $this->Products->find('all')->toarray();
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
 			$samples = $this->AssignedSamples->find('all');
-			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
+			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->order(['Products.name' => 'ASC'])->group('AssignedSamples.product_id')->toarray();
 			$i_samples = $this->IssuedSamples->find('all');
 			$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
 			foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
 			$gifts = $this->AssignedGifts->find('all');
-			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
+			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->order(['Gifts.name' => 'ASC'])->group('AssignedGifts.gift_id')->toarray();
 			$i_gifts = $this->IssuedGifts->find('all');
 			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
 			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
@@ -539,14 +540,14 @@ class MrsController extends AppController {
 			$specialities = $this->Specialities->find('all')->toarray();
 			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-			$products = $this->Products->find('all')->toarray();
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
 			$samples = $this->AssignedSamples->find('all');
-			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
+			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->order(['Products.name' => 'ASC'])->group('AssignedSamples.product_id')->toarray();
 			$i_samples = $this->IssuedSamples->find('all');
 			$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
 			foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
 			$gifts = $this->AssignedGifts->find('all');
-			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
+			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->order(['Gifts.name' => 'ASC'])->group('AssignedGifts.gift_id')->toarray();
 			$i_gifts = $this->IssuedGifts->find('all');
 			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
 			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
@@ -595,9 +596,9 @@ class MrsController extends AppController {
 			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
 			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-			$products = $this->Products->find('all')->toarray();
-			$samples = $this->Products->find('all')->toarray();
-			$gifts = $this->Gifts->find('all')->toarray();
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$samples = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$gifts = $this->Gifts->find('all')->order(['name' => 'ASC'])->toarray();
 			$html = "";
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
@@ -663,11 +664,11 @@ class MrsController extends AppController {
 			$user =  $this->Auth->user;
 			$state_id = $this->Auth->user('state_id');
 			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-			$products = $this->Products->find('all')->toarray();
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
 			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-			$samples = $this->Products->find('all')->toarray();
-			$gifts = $this->Gifts->find('all')->toarray();
+			$samples = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$gifts = $this->Gifts->find('all')->order(['name' => 'ASC'])->toarray();
 			$html = "";
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";
@@ -735,9 +736,9 @@ class MrsController extends AppController {
 			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
 			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
 			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
-			$products = $this->Products->find('all')->toarray();
-			$samples = $this->Products->find('all')->toarray();
-			$gifts = $this->Gifts->find('all')->toarray();
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$samples = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$gifts = $this->Gifts->find('all')->order(['name' => 'ASC'])->toarray();
 			$html = "";
 			$start_date = $date." 00:00:00";
 			$end_date = $date." 23:59:00";

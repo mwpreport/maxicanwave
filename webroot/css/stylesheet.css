@@ -572,41 +572,80 @@ input[type="checkbox"]:disabled + label span {
     color: #0071bc;
     font-size: 17px;
 }
-.datepicker .table > thead > tr > th{
-    background: transparent;
-    color:#fff;
+.datepicker-days .table > thead > tr > th{
+    background: #fff;
+    color:#0071bc;
     font-size: 15px;
     padding:8px 10px;
 }
 .datepicker th.datepicker-switch{
-    background: transparent;
-    color:#fff;
+    background: #fff;
+    color:#0071bc;
     font-size: 15px;
-        padding:8px 10px;
+    padding:8px 10px;
 }
 .datepicker.dropdown-menu th, .datepicker.dropdown-menu td{
     background: #fff;
     color:#0071bc;
     font-size: 15px;
-        padding:8px 10px;
+    padding:8px 10px;
 }
 .datepicker thead tr:first-child th:hover, .datepicker tfoot tr th:hover{
-    background: rgba(0,0,0,0.2);
+    background:#0071bc;
     color:#fff;
 }
 .datepicker table tr td span:hover{
-     background:rgba(0,0,0,0.2);
+    background:#0071bc;
     color:#fff;
 }
 .datepicker table tr td.day:hover, .datepicker table tr td.day.focused{
+    background:#0071bc;
+    color:#fff;
+}
+.datepicker table tr td.active.active{
+    background:#0071bc;
+    color:#fff;
+}
+#calendar .datepicker .table > thead > tr > th{
+    background: transparent;
+    color:#fff;
+    font-size: 15px;
+    padding:8px 10px;
+}
+#calendar .datepicker-days .table > thead > tr > th{
+    background: transparent;
+    color:#fff;
+}
+
+#calendar .datepicker th.datepicker-switch{
+    background: transparent;
+    color:#fff;
+    font-size: 15px;
+        padding:8px 10px;
+}
+#calendar .datepicker.dropdown-menu th, .datepicker.dropdown-menu td{
+    background: #fff;
+    color:#0071bc;
+    font-size: 15px;
+        padding:8px 10px;
+}
+#calendar .datepicker thead tr:first-child th:hover, .datepicker tfoot tr th:hover{
+    background: rgba(0,0,0,0.2);
+    color:#fff;
+}
+#calendar .datepicker table tr td span:hover{
+     background:rgba(0,0,0,0.2);
+    color:#fff;
+}
+#calendar .datepicker table tr td.day:hover, .datepicker table tr td.day.focused{
     background:rgba(0,0,0,0.2);
     color:#fff;
 }
-.datepicker td.highlight, .datepicker table tr td.active.active{
+#calendar .datepicker td.highlight, .datepicker table tr td.active.active{
     background:rgba(0,0,0,0.5);
     color:#fff;
 }
-.input-group.date .input-group-addon i{
+#calendar .input-group.date .input-group-addon i{
     color: #0071bc;
 }
 .input-group .input-group-addon{
