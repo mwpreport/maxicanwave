@@ -16,7 +16,7 @@
                 <div class="clearfix"></div>
                 <div class="daily-report-radio-cnt">
                   <div class="row">
-    							<?= $this->Form->create($expense, array('id' => 'newform')) ?>
+    							<?= $this->Form->create($expense, array('id' => 'getExpenseList', 'type' => 'GET')) ?>
     								<div class="form-group">
     									<div class="col-sm-4">
                         <?= $this->Form->control('month', ['class' => 'form-control required', 'options' => $months,'empty' => 'Select', 'required' => true,]) ?>
@@ -233,7 +233,7 @@
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
                                                 </td>
                                                 <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>                                                  
+                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
                                                 <?php } ?>
                                         </tr>
                                      <?php
@@ -266,8 +266,8 @@
                             <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
                             <?= $this->Form->create('expenses', array('id' => 'newform')) ?>
                             <?= $this->form->control('approve_request', ['type' => 'hidden', 'label' => false, 'value' => 1]); ?>
-                            <?= $this->Form->control('month', ['type' => 'hidden','label' => false, 'value' => $this->request->data['month']]) ?>
-                            <?= $this->Form->control('year', ['type' => 'hidden','label' => false, 'value' => $this->request->data['year']]) ?>
+                            <?= $this->Form->control('month', ['type' => 'hidden','label' => false, 'value' => $this->request->getQuery('month')]) ?>
+                            <?= $this->Form->control('year', ['type' => 'hidden','label' => false, 'value' => $this->request->getQuery('year')]) ?>
                           <?= $this->Form->button(__('Send Expense For Approvals'), ['class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
                             <?= $this->Form->end() ?>
                           <?php }else if(!empty($expenseApproval) && $expenseApproval['is_approved'] == 1){ ?>
@@ -293,10 +293,6 @@
 </div>
 
 <script>
-$("#newform").validate();
-function loadexpenses(){
-  var month = $("#month").val();
-  var year = $("#year").val();
-  alert(month+year);
-}
+$("#getExpenseList").validate();
+
 </script>
