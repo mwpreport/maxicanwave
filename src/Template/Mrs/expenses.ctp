@@ -16,7 +16,7 @@
                 <div class="clearfix"></div>
                 <div class="daily-report-radio-cnt">
                   <div class="row">
-    							<?= $this->Form->create($expense, array('id' => 'getExpenseList', 'type' => 'GET')) ?>
+    							<?= $this->Form->create($expense, array('id' => 'newform')) ?>
     								<div class="form-group">
     									<div class="col-sm-4">
                         <?= $this->Form->control('month', ['class' => 'form-control required', 'options' => $months,'empty' => 'Select', 'required' => true,]) ?>
@@ -132,7 +132,7 @@
                                     <?php if(!isset($report->expense->travel_expenses) && !isset($report->expense->travel_expenses)){ ?>
                                    <tr>
     									                 <td>
-                                         <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
+                                         <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'viewDailyReport', "?" => ["date" => date('Y-m-d', $time)]],['class' => 'iframe-popup-link','escape' => false]) ?>
                                        </td>
                                            <td></td>
                                            <td></td>
@@ -233,7 +233,7 @@
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
                                                 </td>
                                                 <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                                     <td width="50"><?= $this->Html->link(__('<img src="./images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>                                                  
                                                 <?php } ?>
                                         </tr>
                                      <?php
@@ -293,6 +293,21 @@
 </div>
 
 <script>
-$("#getExpenseList").validate();
+$("#newform").validate();
+function loadexpenses(){
+  var month = $("#month").val();
+  var year = $("#year").val();
+  alert(month+year);
+}
+$('.iframe-popup-link').magnificPopup({
+	type: 'iframe',
+	modal: true,
+	iframe: {
+		markup: '<div class="mfp-iframe-scaler">'+
+				'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
+				'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+				'</div>'
+	  }
+});
 
 </script>

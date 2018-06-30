@@ -718,6 +718,7 @@ class MrsController extends AppController {
         }
         $this->set('title', 'Daily Report');
         $this->set(compact('years', 'months', 'expense'));
+        
     }
 
 	public function editExpense(){
