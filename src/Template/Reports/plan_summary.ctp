@@ -71,8 +71,8 @@
                                                 <tr>
                                                     <th>S.No</th>
                                                     <th>ID</th>
-                                                    <th>Doctor Name</th>
-                                                    <th>Speciality</th>
+                                                    <th>Name</th>
+                                                    <th>Spec</th>
                                                     <th>Class</th>
                                                     <th>City</th>
                                                     <?php if($filter != "Un-Planned_Doctors"){?>

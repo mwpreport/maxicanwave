@@ -13,9 +13,9 @@
                 </div>
                 <div class="clearfix"></div>
                 <form id="plan_summary_form" method="POST" action="<?php echo $this->Url->build(["controller" => "Reports","action" => "doctorVisitReport"])?>">
-                    <div class="form-group mar-bottom-40">
+                    <div class="form-group mar-bottom-40 popup-content">
                         <div class="col-sm-3">
-                            <select name="month[]" class="error form-control" id="state" aria-invalid="true"  multiple="multiple" required>
+                            <select name="month[]" class="multiselect-ui form-control" id="state" aria-invalid="true"  multiple="multiple" required>
 								<?php
 								for ($i = 0; $i < 6; $i++) {
 								  echo '<option value='.$i.'>'.date('F Y', strtotime("-$i month")).'</option>';
@@ -35,6 +35,7 @@
     </div>
     <!-- /.content -->
 </div>
+<script src="<?php echo $this->Url->image('../js/multiselect.js')?>"></script>
 <script>
 			
 
@@ -61,7 +62,7 @@
 						'</div>'
 			  }
 		});
-
+		$('.multiselect-ui').multiselect({ });
 		$(document).on('click', '.popup-modal-dismiss', function (e) {
 			e.preventDefault();
 			$.magnificPopup.close();

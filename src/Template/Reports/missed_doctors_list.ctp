@@ -24,8 +24,9 @@
 													<th scope="col">S.No</th>
 													<th scope="col"><?= $this->Paginator->sort('Code') ?></th>
 													<th scope="col"><?= $this->Paginator->sort('name') ?></th>
-													<th scope="col"><?= $this->Paginator->sort('speciality_id') ?></th>
-													<th scope="col"><?= $this->Paginator->sort('Location') ?></th>
+													<th scope="col"><?= $this->Paginator->sort('Spec') ?></th>
+													<th scope="col"><?= $this->Paginator->sort('Class') ?></th>
+													<th scope="col"><?= $this->Paginator->sort('City') ?></th>
 													<th scope="col" class="actions"><?= __('Options') ?></th>
 												</tr>
 											</thead>
@@ -36,6 +37,7 @@
 													<td><?= $doctor->doctor->code ?></td>
 													<td><?= h($doctor->doctor->name) ?></td>
 													<td><?= $doctor->doctor->speciality->name ?></td>
+													<td><?=$class[$doctor->doctor->class]?></td>
 													<td><?= $doctor->doctor->city->city_name ?></td>
 													<td width="60"><a href="<?php echo $this->Url->build(["controller" => "Doctors","action" => "viewDoctorProfile",'?' => ['id' => $doctor->doctor_id]])?>" class="ajax-popup-link">Profile</a></td>
 												</tr>
