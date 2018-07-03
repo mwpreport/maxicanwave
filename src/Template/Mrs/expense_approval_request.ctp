@@ -233,7 +233,7 @@
                                                     <?= $this->form->control('expenses['.$expense_key.'][abeyance]', ['label' => false, 'value' => $expense['abeyance']]); ?>
                                                 </td>
                                                 <td>
-                                                    <?= $this->form->control('expenses['.$expense_key.'][abeyance_remark]', ['type' => 'textArea', 'label' => false,'value' => $expense['abeyance_remark']]); ?>                                                  
+                                                    <?= $this->form->control('expenses['.$expense_key.'][abeyance_remark]', ['type' => 'textArea', 'label' => false,'value' => $expense['abeyance_remark']]); ?>
                                                 </td>
                                         </tr>
                                      <?php
@@ -323,9 +323,4 @@
 
 <script>
 $("#newform").validate();
-function loadexpenses(){
-  var month = $("#month").val();
-  var year = $("#year").val();
-  alert(month+year);
-}
 </script>

@@ -132,7 +132,7 @@
                                     <?php if(!isset($report->expense->travel_expenses) && !isset($report->expense->travel_expenses)){ ?>
                                    <tr>
     									                 <td>
-                                         <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
+                                         <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'viewDailyReport', "?" => ["date" => date('Y-m-d', $time)]],['class' => 'iframe-popup-link','escape' => false]) ?>
                                        </td>
                                            <td></td>
                                            <td></td>
@@ -266,8 +266,8 @@
                             <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
                             <?= $this->Form->create('expenses', array('id' => 'newform')) ?>
                             <?= $this->form->control('approve_request', ['type' => 'hidden', 'label' => false, 'value' => 1]); ?>
-                            <?= $this->Form->control('month', ['type' => 'hidden','label' => false, 'value' => $this->request->data['month']]) ?>
-                            <?= $this->Form->control('year', ['type' => 'hidden','label' => false, 'value' => $this->request->data['year']]) ?>
+                            <?= $this->Form->control('month', ['type' => 'hidden','label' => false, 'value' => $this->request->getQuery('month')]) ?>
+                            <?= $this->Form->control('year', ['type' => 'hidden','label' => false, 'value' => $this->request->getQuery('year')]) ?>
                           <?= $this->Form->button(__('Send Expense For Approvals'), ['class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
                             <?= $this->Form->end() ?>
                           <?php }else if(!empty($expenseApproval) && $expenseApproval['is_approved'] == 1){ ?>
@@ -299,4 +299,15 @@ function loadexpenses(){
   var year = $("#year").val();
   alert(month+year);
 }
+$('.iframe-popup-link').magnificPopup({
+	type: 'iframe',
+	modal: true,
+	iframe: {
+		markup: '<div class="mfp-iframe-scaler">'+
+				'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
+				'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+				'</div>'
+	  }
+});
+
 </script>
