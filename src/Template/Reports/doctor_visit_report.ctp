@@ -28,10 +28,10 @@
                                             <thead>
                                                 <tr>
                                                     <th>S.No</th>
-                                                    <th>Doctor Name</th>
-                                                    <th>City</th>
+                                                    <th>Name</th>
+                                                    <th>Spec</th>
                                                     <th>Class</th>
-                                                    <th>Speciality</th>
+                                                    <th>City</th>
                                                     <?php foreach($reported_months as $reported_month){?>
 													<th><?php echo $reported_month?></th>
                                                     <?php }?>
@@ -48,9 +48,9 @@
 											<tr>
 											<td><?=$i?></td>
 											<td><?=$doctor->doctor->name?></td>
-											<td><?=$doctor->doctor->city->city_name?></td>
-											<td><?=$class[$doctor->doctor->class]?></td>
 											<td><?=$doctor->doctor->speciality->code?></td>
+											<td><?=$class[$doctor->doctor->class]?></td>
+											<td><?=$doctor->doctor->city->city_name?></td>
 											<?php foreach($reported_months as $reported_month){ $total+=(!empty($visits[$reported_month][$doctor->doctor_id]))?count(explode("/",$visits[$reported_month][$doctor->doctor_id])):0;?>
 											<th><?php echo $visits[$reported_month][$doctor->doctor_id]?></th>
 											<?php }?>

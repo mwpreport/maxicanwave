@@ -218,11 +218,6 @@ class ReportsController extends AppController {
 				->contain(['Cities', 'Doctors', 'Doctors.Specialities'])	
 				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $plandate, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
 				
-				$WorkPlansPD = $this->WorkPlans
-				->find('all')
-				->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])	
-				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $plandate, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
-				
 				$WorkPlans = $this->WorkPlans
 				->find('all')
 				->contain(['WorkTypes', 'Cities'])	
@@ -248,8 +243,6 @@ class ReportsController extends AppController {
 				$workPlansDate[$date]['field'] = $WorkPlansD;
 				if($WorkPlansUD)
 				$workPlansDate[$date]['un_field'] = $WorkPlansUD;
-				if($WorkPlansPD)
-				$workPlansDate[$date]['pg_field'] = $WorkPlansPD;
 				if($WorkPlansC)
 				$workPlansDate[$date]['chemist'] = $WorkPlansC;
 				if($WorkPlansS)
@@ -259,7 +252,7 @@ class ReportsController extends AppController {
 				if($WorkPlansL)
 				$workPlansDate[$date]['leave'] = $WorkPlansL;
 				
-				if(!$WorkPlansD && !$WorkPlansUD && !$WorkPlansPD && !$WorkPlansC && !$WorkPlansS && !$WorkPlans && !$WorkPlansL)
+				if(!$WorkPlansD && !$WorkPlansUD && !$WorkPlansC && !$WorkPlansS && !$WorkPlans && !$WorkPlansL)
 				{
 					if($this->isSunday($date))
 					$workPlansDate[$date]['sunday'] = "Sunday";
