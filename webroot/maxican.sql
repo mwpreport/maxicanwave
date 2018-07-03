@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 22, 2018 at 01:42 AM
+-- Generation Time: Jun 25, 2018 at 04:18 PM
 -- Server version: 5.6.33-0ubuntu0.14.04.1
 -- PHP Version: 5.6.36-1+ubuntu14.04.1+deb.sury.org+1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `maxican`
+-- Database: `maxcake`
 --
 
 -- --------------------------------------------------------
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `cities` (
   `city_name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `state_id` (`state_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1472 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1473 ;
 
 --
 -- Dumping data for table `cities`
@@ -1604,7 +1604,8 @@ INSERT INTO `cities` (`id`, `state_id`, `city_name`) VALUES
 (1468, 12, 'Dharwad'),
 (1469, 12, 'Gadag'),
 (1470, 24, 'Chennai'),
-(1471, 24, 'Coimbatore');
+(1471, 24, 'Coimbatore'),
+(1472, 24, 'VEERAPANDI PRIVU');
 
 -- --------------------------------------------------------
 
@@ -1699,6 +1700,7 @@ CREATE TABLE IF NOT EXISTS `doctors` (
   `dow` date DEFAULT NULL,
   `address` text NOT NULL,
   `clinic_name` varchar(255) NOT NULL,
+  `reg_no` varchar(50) NOT NULL,
   `door_no` varchar(255) NOT NULL,
   `street` varchar(255) NOT NULL,
   `area` varchar(255) NOT NULL,
@@ -1715,24 +1717,25 @@ CREATE TABLE IF NOT EXISTS `doctors` (
   KEY `doc_state_id` (`state_id`),
   KEY `doc_speciality_id` (`speciality_id`),
   KEY `doc_qualification_id` (`qualification_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `doctors`
 --
 
-INSERT INTO `doctors` (`id`, `code`, `user_id`, `name`, `class`, `speciality_id`, `qualification_id`, `add_qualification`, `mobile`, `phone`, `email`, `dob`, `dow`, `address`, `clinic_name`, `door_no`, `street`, `area`, `state_id`, `city_id`, `pincode`, `is_approved`, `is_active`, `is_deleted`, `last_updated`, `dt`) VALUES
-(1, 'DCTN00001', 1, 'mano', 1, 1, 3, '', 123456789, 1321313131, 'mano@gmail.com', '1970-01-01', '1970-01-01', 'address 1', 'Mano Clinic', '10', 'street', 'local area', 24, 1143, 123431, 1, 1, 0, '2017-11-26 09:19:00', '2017-11-26 09:19:00'),
-(2, 'DCTN00002', 1, 'Mani', 1, 1, 1, '', 79879879, 0, 'mani@doctor.com', '1995-01-13', '2017-10-17', 'address2', '', '', '0', '0', 24, 1143, 654564, 1, 1, 0, '2017-11-26 09:23:00', '2017-11-26 09:23:00'),
-(3, 'DCTN00003', 1, 'mahesh', 2, 1, 1, '', 1234567896, 0, '', NULL, NULL, 'address of mahesh', '', '', '0', '0', 24, 1143, 654564, 1, 1, 0, '2017-11-26 09:24:00', '2017-11-26 09:24:00'),
-(4, 'DCTN00004', 1, 'Ramesh', 2, 1, 1, '', 1234567896, 0, '', NULL, NULL, 'address of mahesh', '', '', '0', '0', 24, 1143, 654564, 1, 1, 0, '2017-11-26 09:24:00', '2017-11-26 09:24:00'),
-(6, 'DCTN00006', 1, 'Ramar', 2, 1, 4, '', 2147483647, 0, 'ramar@admin.com', '1970-01-01', '1970-01-01', '', '', '', '', '', 24, 1145, 111111, 1, 1, 0, '2018-01-18 06:30:49', '2018-01-18 06:30:49'),
-(7, 'DCTN00007', 1, 'Ashok', 0, 1, 5, 'MBA', 2147483647, NULL, 'ashok@admin.com', '2000-01-12', '2018-02-06', '', 'Ashokan Clinic', '20', 'nortrh st', 'KK Nagar', 24, 1145, 624552, 1, 1, 0, '2018-02-07 06:50:02', '2018-02-07 06:50:02'),
-(8, 'DCTN00008', 2, 'Priya', 1, 2, 1, '', 54654562, NULL, 'priya@admin.com', NULL, NULL, '', '', '', '', '', 24, 1143, NULL, 1, 1, 0, '2018-02-19 05:28:19', '2018-02-19 05:28:19'),
-(9, 'DCTN00009', 2, 'Harini', 0, 1, 3, '', 2147483647, NULL, 'harini@admin.com', NULL, NULL, '', '', '', '', '', 24, 1145, NULL, 1, 1, 0, '2018-02-19 05:32:57', '2018-02-19 05:32:57'),
-(10, 'DCTN00010', 2, 'haarini', 1, 1, 1, '', 89898998, NULL, 'haarini@admin.com', NULL, NULL, '', '', '', '', '', 24, 1143, NULL, 1, 1, 0, '2018-02-19 05:35:31', '2018-02-19 05:35:31'),
-(11, 'DCTN00011', 2, 'Test', 0, 1, 1, '', 84848484, NULL, 'tet@admin.com', NULL, NULL, '', '', '', '', '', 24, 1143, NULL, 1, 1, 0, '2018-02-27 05:09:26', '2018-02-27 05:09:26'),
-(13, 'DCTN00012', 1, 'Theodar', 2, 1, 4, '', 2147483647, 0, 'ramar@admin.com', '1970-01-01', '1970-01-01', '', '', '', '', '', 24, 1145, 111111, 1, 1, 0, '2018-01-18 06:30:49', '2018-01-18 06:30:49');
+INSERT INTO `doctors` (`id`, `code`, `user_id`, `name`, `class`, `speciality_id`, `qualification_id`, `add_qualification`, `mobile`, `phone`, `email`, `dob`, `dow`, `address`, `clinic_name`, `reg_no`, `door_no`, `street`, `area`, `state_id`, `city_id`, `pincode`, `is_approved`, `is_active`, `is_deleted`, `last_updated`, `dt`) VALUES
+(1, 'DCTN00001', 1, 'RAMADOSS K', 2, 1, 3, 'DM(Neuro)', 123456789, 1321313131, 'ramneuo@gmail.com', '1970-07-16', '1970-01-01', 'address 1', 'SRI RAMAKRISHNA HOSPTIAL', '12334', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2017-11-26 09:19:00', '2017-11-26 09:19:00'),
+(2, 'DCTN00002', 1, 'ASOKAN K', 1, 1, 3, 'DM(Neuro)', 79879879, 0, 'drasokan@rediffmail.com', '1995-01-13', '2017-10-17', 'address2', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2017-11-26 09:23:00', '2017-11-26 09:23:00'),
+(3, 'DCTN00003', 1, 'VIKRAM M', 2, 8, 4, 'DNB', 1234567896, 0, 'vikram@gmail.com', '1970-01-01', '1970-01-01', 'address of mahesh', 'SRI RAMAKRISHNA HOSPTIAL', '1234', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2017-11-26 09:24:00', '2017-11-26 09:24:00'),
+(4, 'DCTN00004', 1, 'JAMBULINGAM S', 2, 4, 3, '', 1234567896, 0, 'dr@gmail.com', '1970-01-01', '1970-01-01', 'address of mahesh', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2017-11-26 09:24:00', '2017-11-26 09:24:00'),
+(6, 'DCTN00006', 1, 'RAMASAMY M', 2, 4, 3, '', 2147483647, 0, 'ramar@admin.com', '1970-01-01', '1970-01-01', '', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2018-01-18 06:30:49', '2018-01-18 06:30:49'),
+(7, 'DCTN00007', 1, 'SARAVANAKUMAR', 0, 8, 4, '', 2147483647, NULL, 'ashok@admin.com', '2000-01-12', '2018-02-06', '', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2018-02-07 06:50:02', '2018-02-07 06:50:02'),
+(8, 'DCTN00008', 2, 'MURUGESH M', 1, 12, 3, 'DM(Gastro)', 54654562, NULL, 'priya@admin.com', '1970-01-01', '1970-01-01', '', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2018-02-19 05:28:19', '2018-02-19 05:28:19'),
+(9, 'DCTN00009', 2, 'KRISHNA SHANKAR G', 0, 5, 3, '', 2147483647, NULL, 'harini@admin.com', '1970-01-01', '1970-01-01', '', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2018-02-19 05:32:57', '2018-02-19 05:32:57'),
+(10, 'DCTN00010', 2, 'MANOHARAN S', 0, 2, 3, 'DM(Cardio)', 89898998, NULL, 'haarini@admin.com', '1970-01-01', '1970-01-01', '', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2018-02-19 05:35:31', '2018-02-19 05:35:31'),
+(11, 'DCTN00011', 2, 'SUMAN C P', 0, 3, 5, '', 84848484, NULL, 'tet@admin.com', '1970-01-01', '1970-01-01', '', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2018-02-27 05:09:26', '2018-02-27 05:09:26'),
+(13, 'DCTN00012', 1, 'GOKULA KRISHNAN R', 2, 3, 5, '', 2147483647, 0, 'ramar@admin.com', '1970-01-01', '1970-01-01', '', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641044, 1, 1, 0, '2018-01-18 06:30:49', '2018-01-18 06:30:49'),
+(14, 'DCTN00014', 1, 'GUHAN', NULL, 3, 5, '', 9999999999, NULL, 'kasokan@rediffmail.com', '1970-01-01', '1970-01-01', '', 'SRI RAMAKRISHNA HOSPTIAL', '12345', '395', 'SAROJINI NAIDU ROAD', 'SIDHAPUDUR', 24, 1145, 641013, 0, 0, 0, '2018-06-18 13:13:36', '2018-06-18 13:13:36');
 
 -- --------------------------------------------------------
 
@@ -1751,7 +1754,7 @@ CREATE TABLE IF NOT EXISTS `doctors_relation` (
   KEY `dcr_doctor_id` (`doctor_id`),
   KEY `dcr_user_id` (`user_id`),
   KEY `class` (`class`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
 
 --
 -- Dumping data for table `doctors_relation`
@@ -1762,7 +1765,7 @@ INSERT INTO `doctors_relation` (`id`, `user_id`, `doctor_id`, `class`, `is_activ
 (2, 3, 2, 2, 1, '2017-11-27 21:40:53'),
 (3, 3, 3, 2, 1, '2017-11-27 21:41:05'),
 (4, 2, 4, 2, 1, '2017-12-08 13:37:22'),
-(6, 2, 1, 1, 1, '2017-12-08 15:20:43'),
+(6, 2, 1, 2, 1, '2017-12-08 15:20:43'),
 (8, 2, 2, 1, 1, '2017-12-09 12:46:15'),
 (10, 2, 3, 2, 1, '2018-01-16 08:08:52'),
 (11, 4, 2, 1, 1, '2018-01-16 08:16:28'),
@@ -1778,7 +1781,11 @@ INSERT INTO `doctors_relation` (`id`, `user_id`, `doctor_id`, `class`, `is_activ
 (21, 9, 7, 2, 1, '2018-02-27 04:31:04'),
 (22, 2, 8, 1, 1, '2018-05-27 17:53:15'),
 (23, 2, 13, 2, 1, '2018-05-30 15:03:04'),
-(24, 2, 10, 1, 0, '2018-06-11 06:17:24');
+(24, 2, 7, 1, 0, '2018-06-18 15:38:27'),
+(25, 2, 9, 1, 0, '2018-06-18 15:38:27'),
+(26, 2, 10, 1, 0, '2018-06-18 15:38:27'),
+(27, 2, 11, 1, 0, '2018-06-18 15:38:27'),
+(28, 2, 14, 1, 0, '2018-06-18 15:38:27');
 
 -- --------------------------------------------------------
 
@@ -1825,20 +1832,7 @@ CREATE TABLE IF NOT EXISTS `expenses` (
   KEY `user_id` (`user_id`),
   KEY `work_plan_submit_id` (`work_plan_submit_id`),
   KEY `expense_type_id` (`expense_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
-
---
--- Dumping data for table `expenses`
---
-
-INSERT INTO `expenses` (`id`, `user_id`, `work_plan_submit_id`, `expense_date`, `expense_type_id`, `daily_allowance`, `started`, `reached`, `disallowed`, `disallowed_remark`, `abeyance`, `abeyance_remark`, `created`, `updated`) VALUES
-(1, 2, 7, '2018-06-01', 1, 0, '09:00:00', '11:00:00', 234, 'Test', 0, '', '2018-06-14 11:00:19', '2018-06-14 11:00:19'),
-(2, 2, 11, '2018-06-05', 2, 210, '12:24:00', '15:30:00', 0, '', 0, '', '2018-06-14 11:23:00', '2018-06-14 11:23:00'),
-(5, 2, 8, '2018-06-02', 1, 210, '08:00:00', '09:13:00', 300, 'Test', 0, '', '2018-06-16 19:42:29', '2018-06-16 19:42:29'),
-(7, 2, 9, '2018-06-03', 1, 0, '02:00:00', '02:12:00', 300, 'Test', 0, '', '2018-06-17 18:52:35', '2018-06-17 18:52:35'),
-(8, 2, 12, '2018-06-07', 1, 0, '00:00:00', '00:00:00', 0, '', 0, '', '2018-06-20 01:05:14', '2018-06-20 01:05:14'),
-(9, 2, 13, '2018-06-08', 3, 0, '04:00:00', '12:00:00', 0, '', 0, '', '2018-06-20 01:31:15', '2018-06-20 01:31:15'),
-(10, 2, 14, '2018-06-09', 1, 0, '00:00:00', '00:00:00', 0, '', 0, '', '2018-06-20 01:53:54', '2018-06-20 01:53:54');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1855,14 +1849,7 @@ CREATE TABLE IF NOT EXISTS `expense_approvals` (
   `is_rejected` int(11) NOT NULL DEFAULT '0',
   `dt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `expense_approvals`
---
-
-INSERT INTO `expense_approvals` (`id`, `date`, `user_id`, `lead_id`, `is_approved`, `is_rejected`, `dt`) VALUES
-(2, '2018-06-01', 2, 8, 1, 0, '2018-06-21 01:12:16');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1909,6 +1896,37 @@ INSERT INTO `gifts` (`id`, `name`, `code`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `holidays`
+--
+
+CREATE TABLE IF NOT EXISTS `holidays` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+
+--
+-- Dumping data for table `holidays`
+--
+
+INSERT INTO `holidays` (`id`, `name`, `date`) VALUES
+(1, 'PONGAL ', '2018-01-15'),
+(2, 'PONGAL', '2018-01-16'),
+(3, 'REPUBLIC DAY', '2018-01-26'),
+(4, 'TAMIL NEW YEAR', '2018-04-14'),
+(6, 'MAY DAY', '2018-05-01'),
+(7, 'INDEPENDENCE DAY', '2018-08-15'),
+(8, 'VINAYAGAR CHADURTHI', '2018-09-13'),
+(9, 'GANDHI JAYANTHI', '2018-10-02'),
+(10, 'POOJA FESTIVAL', '2018-10-18'),
+(11, 'VIJAYA DHASAMI', '2018-10-19'),
+(12, 'DIWALI', '2018-11-06'),
+(13, 'CHRISTMAS', '2018-12-25');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `issued_gifts`
 --
 
@@ -1927,20 +1945,19 @@ CREATE TABLE IF NOT EXISTS `issued_gifts` (
   KEY `doctor_id` (`doctor_id`),
   KEY `plan_id` (`plan_id`),
   KEY `pgother_id` (`pgother_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `issued_gifts`
 --
 
 INSERT INTO `issued_gifts` (`id`, `gift_id`, `user_id`, `doctor_id`, `pgother_id`, `plan_id`, `count`, `dt`) VALUES
-(6, 1, 2, 6, NULL, 151, 1, '2018-05-30 14:51:17'),
-(7, 2, 2, 6, NULL, 151, 15, '2018-05-30 14:51:18'),
 (8, 1, 2, 1, NULL, 106, 15, '2018-05-30 15:01:13'),
 (9, 2, 2, 1, NULL, 106, 15, '2018-05-30 15:01:14'),
 (10, 1, 2, 13, NULL, 152, 15, '2018-05-30 15:03:31'),
 (12, 2, 2, NULL, 14, 154, 15, '2018-05-30 15:12:12'),
-(13, 1, 2, 2, NULL, 107, 10, '2018-05-06 00:39:08');
+(13, 1, 2, 2, NULL, 107, 10, '2018-05-06 00:39:08'),
+(14, 1, 2, 4, NULL, 105, 1, '2018-06-18 12:49:26');
 
 -- --------------------------------------------------------
 
@@ -1963,15 +1980,13 @@ CREATE TABLE IF NOT EXISTS `issued_samples` (
   KEY `doctor_id` (`doctor_id`),
   KEY `plan_id` (`plan_id`),
   KEY `pgother_id` (`pgother_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `issued_samples`
 --
 
 INSERT INTO `issued_samples` (`id`, `product_id`, `user_id`, `doctor_id`, `pgother_id`, `plan_id`, `count`, `dt`) VALUES
-(7, 1, 2, 6, NULL, 151, 12, '2018-05-30 14:51:18'),
-(8, 2, 2, 6, NULL, 151, 12, '2018-05-30 14:51:18'),
 (9, 1, 2, 1, NULL, 106, 12, '2018-05-30 15:01:14'),
 (10, 2, 2, 1, NULL, 106, 12, '2018-05-30 15:01:14'),
 (11, 1, 2, 13, NULL, 152, 15, '2018-05-30 15:03:31'),
@@ -1979,7 +1994,8 @@ INSERT INTO `issued_samples` (`id`, `product_id`, `user_id`, `doctor_id`, `pgoth
 (16, 1, 2, 6, NULL, 115, 15, '2018-05-02 16:43:12'),
 (17, 1, 2, 8, NULL, 203, 5, '2018-05-05 23:18:10'),
 (18, 2, 2, 8, NULL, 203, 5, '2018-05-05 23:18:10'),
-(19, 1, 2, 2, NULL, 107, 10, '2018-05-06 00:39:09');
+(19, 1, 2, 2, NULL, 107, 10, '2018-05-06 00:39:09'),
+(20, 1, 2, 4, NULL, 105, 2, '2018-06-18 12:49:27');
 
 -- --------------------------------------------------------
 
@@ -2040,25 +2056,7 @@ CREATE TABLE IF NOT EXISTS `other_expenses` (
   PRIMARY KEY (`id`),
   KEY `expense_id` (`expense_id`),
   KEY `other_allowance_id` (`other_allowance_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
-
---
--- Dumping data for table `other_expenses`
---
-
-INSERT INTO `other_expenses` (`id`, `expense_id`, `other_allowance_id`, `description`, `fare`, `voucher_no`) VALUES
-(1, 1, 1, 'hill station', 50, 1234567),
-(2, 1, 2, 'Review meeting', 100, 1234568),
-(3, 1, 1, 'hkjhjhkj', 987, 1529257830),
-(4, 5, 2, 'test', 456, 1529257975),
-(19, 7, 1, 'tefr', 245, 1529263791),
-(20, 7, 2, 'fdfdf', 43, 1529263804),
-(21, 8, 1, 'Hill station', 100, 1529456757),
-(22, 8, 2, 'Review Meeting', 200, 1529458183),
-(23, 9, 1, 'Hill station', 1000, 1529459510),
-(24, 10, 1, 'Allowance', 500, 1529459604),
-(25, 10, 2, 'Review Meeting', 1000, 1529459634),
-(26, 9, 2, 'test', 500, 1529459695);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2092,7 +2090,7 @@ CREATE TABLE IF NOT EXISTS `pg_others` (
   KEY `doc_city_id` (`city_id`),
   KEY `doc_state_id` (`state_id`),
   KEY `doc_speciality_id` (`speciality_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 --
 -- Dumping data for table `pg_others`
@@ -2111,7 +2109,8 @@ INSERT INTO `pg_others` (`id`, `code`, `user_id`, `name`, `speciality_id`, `mobi
 (11, 'DCTN00011', 2, 'Test', 1, 84848484, NULL, 'tet@admin.com', NULL, NULL, '', '', '', '', '', 24, 1143, NULL, 0, '2018-02-27 05:09:26', '2018-02-27 05:09:26'),
 (12, '', 2, 'Smith', 1, 0, NULL, '', NULL, NULL, '', '', '', '', '', 24, 1143, NULL, 0, '2018-05-11 06:03:54', '2018-05-11 06:03:54'),
 (13, '', 2, 'Sivaaumar', 2, 0, NULL, '', NULL, NULL, '', '', '', '', '', 24, 1145, NULL, 0, '2018-05-30 15:09:09', '2018-05-30 15:09:09'),
-(14, '', 2, 'Sivaaumar', 2, 0, NULL, '', NULL, NULL, '', '', '', '', '', 24, 1145, NULL, 0, '2018-05-30 15:12:12', '2018-05-30 15:12:12');
+(14, '', 2, 'Sivaaumar', 2, 0, NULL, '', NULL, NULL, '', '', '', '', '', 24, 1145, NULL, 0, '2018-05-30 15:12:12', '2018-05-30 15:12:12'),
+(15, '', 2, 'RAMASAMY', 1, 0, NULL, '', NULL, NULL, '', '', '', '', '', 24, 1143, NULL, 0, '2018-06-18 12:55:26', '2018-06-18 12:55:26');
 
 -- --------------------------------------------------------
 
@@ -2154,31 +2153,55 @@ CREATE TABLE IF NOT EXISTS `products` (
   `name` varchar(100) NOT NULL,
   `code` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
 
 --
 -- Dumping data for table `products`
 --
 
 INSERT INTO `products` (`id`, `name`, `code`) VALUES
-(1, 'Mexbact', 'Mex'),
-(2, 'Maxhope', 'Max'),
-(3, 'Antiseiz', 'Anz'),
-(4, 'Wavfix O', 'Wvo'),
-(5, 'Wavpod', 'Wpd'),
-(6, 'Fallnil', 'Fnl'),
-(7, 'Wavefer', 'Wfr'),
-(8, 'Miracal', 'Mcl'),
-(9, 'Hapiwalk', 'Hwk'),
-(10, 'Wavcox', ''),
-(11, 'Wavedol', ''),
-(12, 'Mexdase', ''),
-(13, 'Mefinac', ''),
-(14, 'Wavcort', ''),
-(15, 'Lemo', ''),
-(16, 'Wavtus (D)', ''),
-(17, 'KM Syrup', ''),
-(18, 'Dz', '');
+(1, 'MEXBACT', 'Mex'),
+(2, 'MAXHOPE', 'Max'),
+(4, 'WAVFIX O', 'Wvo'),
+(5, 'WAVPOD', 'Wpd'),
+(6, 'FALLNIL', 'Fnl'),
+(7, 'WAVEFER', 'Wfr'),
+(8, 'MIRACAL', 'Mcl'),
+(9, 'HAPIWALK', 'Hwk'),
+(10, 'WAVCOX', ''),
+(11, 'WAVEDOL', ''),
+(12, 'MEXDASE', ''),
+(13, 'MEXFINAC', ''),
+(14, 'WAVCORT', ''),
+(15, 'LEMO', ''),
+(16, 'WAVTUS', ''),
+(17, 'KM SYRUP', ''),
+(18, 'D2', ''),
+(19, 'MEXROVA', ''),
+(20, 'SAFSTAT', ''),
+(21, 'SAFDIPINE', ''),
+(22, 'WAVTEL', ''),
+(23, 'WAVTEL H', ''),
+(24, 'WAVTEL AM', ''),
+(25, 'SAFGLIM', ''),
+(26, 'SAFGLIM MF', ''),
+(27, 'SAFGLIM VG', ''),
+(28, 'MEXBOSE', ''),
+(29, 'MEXBOSE MF', ''),
+(30, 'WAVIT', ''),
+(31, 'SAFNERV', ''),
+(32, 'SAFNERV PG', ''),
+(33, 'DUGALIN NTM', ''),
+(34, 'ESOWAVE', ''),
+(35, 'ESOWAVE D', ''),
+(36, 'NAPCOX D', ''),
+(37, 'WAVMOX CV', ''),
+(38, 'BACTROZAP', ''),
+(39, 'CYTOGABA AT', ''),
+(40, 'CYTOGABA PLUS', ''),
+(41, 'B DIET', ''),
+(42, 'MEXARTH', ''),
+(43, 'WAVTUS D', '');
 
 -- --------------------------------------------------------
 
@@ -2190,7 +2213,7 @@ CREATE TABLE IF NOT EXISTS `qualifications` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
 
 --
 -- Dumping data for table `qualifications`
@@ -2201,7 +2224,32 @@ INSERT INTO `qualifications` (`id`, `name`) VALUES
 (2, 'BDS'),
 (3, 'MD'),
 (4, 'MS'),
-(5, 'BAMS');
+(5, 'MS(Ortho)'),
+(6, 'DM(Neuro)'),
+(7, 'DNB'),
+(8, 'D DIAB'),
+(9, 'DGO'),
+(10, 'DCH'),
+(11, 'D Ortho'),
+(12, 'DTCD'),
+(13, 'DA'),
+(14, 'DPM'),
+(15, 'DLO'),
+(17, 'MS(ENT)'),
+(18, 'MS(O&G)'),
+(19, 'DM(Gastro)'),
+(20, 'D Cardio'),
+(21, 'DM(Cardio)'),
+(22, 'DM(Nephro)'),
+(23, 'DM(Rheum)'),
+(24, 'DM(Onco)'),
+(25, 'M.Ch(Neuro)'),
+(26, 'M.Ch(Gastro)'),
+(27, 'M.Ch(Uro)'),
+(28, 'M.Ch(Plastic)'),
+(29, 'M.Ch(Ortho)'),
+(30, 'M.Ch(Onco)'),
+(31, 'M.Ch(Cardio)');
 
 -- --------------------------------------------------------
 
@@ -2212,6 +2260,7 @@ INSERT INTO `qualifications` (`id`, `name`) VALUES
 CREATE TABLE IF NOT EXISTS `roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `code` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
@@ -2219,12 +2268,12 @@ CREATE TABLE IF NOT EXISTS `roles` (
 -- Dumping data for table `roles`
 --
 
-INSERT INTO `roles` (`id`, `name`) VALUES
-(1, 'Super Admin'),
-(2, 'Zonal Manager'),
-(3, 'Regional Manager'),
-(4, 'Area Manager'),
-(5, 'Medical Rep');
+INSERT INTO `roles` (`id`, `name`, `code`) VALUES
+(1, 'Super Admin', 'SA'),
+(2, 'Zonal Manager', 'ZM'),
+(3, 'Regional Manager', 'RM'),
+(4, 'Area Manager', 'AR'),
+(5, 'Medical Rep', 'MR');
 
 -- --------------------------------------------------------
 
@@ -2237,15 +2286,34 @@ CREATE TABLE IF NOT EXISTS `specialities` (
   `name` varchar(250) NOT NULL,
   `code` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
 
 --
 -- Dumping data for table `specialities`
 --
 
 INSERT INTO `specialities` (`id`, `name`, `code`) VALUES
-(1, 'Neurology', 'NEU'),
-(2, 'Physiology', 'PSY');
+(1, 'NEUROLOGIST', 'NEUP'),
+(2, 'CARDIOLOGIST', 'CARDIO'),
+(3, 'ORTHOPAEDICIAN', 'ORTHO'),
+(4, 'CONSULTANT PHYSICIAN', 'CP'),
+(5, 'DIABETOLOGIST', 'DIAB'),
+(6, 'GENERAL PRACTIONER', 'GP'),
+(7, 'NEURO SURGEON', 'NEUS'),
+(8, 'GENERAL SURGEON', 'SUR'),
+(9, 'PAEDIATRICIAN', 'PAED'),
+(10, 'GYNAECOLOGIST', 'GYN'),
+(11, 'DENTIST', 'DENT'),
+(12, 'GASTROENRTOLOGIST', 'GASTRO'),
+(13, 'NEPHROLOGIST', 'NEPH'),
+(14, 'RHEUMATALOGIST', 'RHEU'),
+(15, 'ONCOLOGIST', 'ONCO'),
+(16, 'UROLOGIST', 'URO'),
+(17, 'DERMATALOGIST', 'DERM'),
+(18, 'PULMONOLOGIST', 'PULM'),
+(19, 'ENT', 'ENT'),
+(20, 'PSYCHIATRIST', 'PSY'),
+(22, 'GASTRO SURGEON', 'GASTS');
 
 -- --------------------------------------------------------
 
@@ -2374,20 +2442,7 @@ CREATE TABLE IF NOT EXISTS `travel_expenses` (
   KEY `city_from` (`city_from`),
   KEY `city_to` (`city_to`),
   KEY `work_type_id` (`work_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
-
---
--- Dumping data for table `travel_expenses`
---
-
-INSERT INTO `travel_expenses` (`id`, `expense_id`, `work_type_id`, `city_from`, `city_to`, `km`, `fare`, `travel_mode`, `started`, `reached`) VALUES
-(1, 1, 2, 1143, 1143, 60, 120, 'Road', '00:00:00', '00:00:00'),
-(2, 2, 3, 1143, 1145, 56, 112, 'Train', '12:00:00', '15:00:00'),
-(3, 2, 2, 1145, 1143, 60, 120, 'Road', '00:00:00', '00:00:00'),
-(16, 5, 2, 1143, 1143, 0, 0, 'Road', '00:00:00', '00:00:00'),
-(17, 7, 2, 1143, 1143, 0, 0, 'Road', '00:00:00', '00:00:00'),
-(18, 8, 3, 1143, 1143, 0, 0, 'Road', '00:00:00', '00:00:00'),
-(19, 9, 2, 1143, 1145, 56, 112, 'Road', '03:00:00', '05:00:00');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2424,7 +2479,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `role` (`role_id`),
   KEY `users_states_id` (`state_id`),
   KEY `users_city_id` (`city_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `users`
@@ -2432,15 +2487,17 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `code`, `username`, `email`, `password`, `reset_password_token`, `token_created_at`, `status`, `role_id`, `lead_id`, `firstname`, `lastname`, `state_id`, `city_id`, `avatar`, `gender`, `qualification`, `is_approved`, `is_active`, `is_deleted`, `last_logon`, `dt`) VALUES
 (1, 'MWPTN00001', 'admin', 'admin@admin.com', '$2y$10$MGYDUYCIJZujzJaCaIFbR.4GcFHQPOSGDSm8u622x4um.LSF3rBc2', '', NULL, 1, 1, NULL, 'maxicanwave', 'Pharma', 24, 1143, '', '1', '', 1, 1, 0, '0000-00-00 00:00:00', '2017-11-18 21:34:37'),
-(2, 'MWPTN00002', 'mr', 'mr@admin.com', '$2y$10$27GWiSr0GUZWVj/ACkb3vekz1oYUqDnxbLrHDye8WmBXSaii3R7xW', '', NULL, 1, 5, 8, 'goutham', '', 24, 1143, '', '1', '', 1, 1, 0, '0000-00-00 00:00:00', '2017-11-18 21:34:37'),
-(3, 'MWPTN00003', 'karthi', 'karthi@admin.com', '$2y$10$27GWiSr0GUZWVj/ACkb3vekz1oYUqDnxbLrHDye8WmBXSaii3R7xW', '', NULL, 1, 5, 8, 'Ktm', '', 24, 1143, '', '1', '', 1, 1, 0, '0000-00-00 00:00:00', '2017-11-18 21:34:37'),
-(4, 'MWPTN00004', 'krtgtm', 'krtgtm@admin.com', '$2y$10$08IG9Z.ubxA/fl3YMfQZ7uV3eyClit8OILUaWANKI6xELeiqadof2', '', NULL, 0, 5, 8, 'krt', 'gtm', 24, 1143, '', '1', '', 1, 1, 0, '0000-00-00 00:00:00', '2018-01-09 06:21:12'),
-(5, 'MWPTN00005', 'Sethupathi', 'csethupathi@mexicanwavepharma.com', '$2y$10$46WOYrlw9YmLchRdft4CeukocdE43UyM6AQSX70YE07/JfpvtwY/G', '', NULL, 0, 5, 8, 'Sethupathy', 'C', 24, 1150, '', '1', 'DME', 1, 1, 0, '0000-00-00 00:00:00', '2018-02-07 06:45:12'),
+(2, 'MWPTN00002', 'MUTHAIAH', 'smuthaiah@mexicanwavepharma.com', '$2y$10$MGYDUYCIJZujzJaCaIFbR.4GcFHQPOSGDSm8u622x4um.LSF3rBc2', '', NULL, 1, 5, 8, 'MUTHAIAH', 'S', 24, 1145, '', '1', 'BA', 1, 1, 0, '0000-00-00 00:00:00', '2017-11-18 21:34:37'),
+(3, 'MWPTN00003', 'karthi', 'karthi@admin.com', '$2y$10$27GWiSr0GUZWVj/ACkb3vekz1oYUqDnxbLrHDye8WmBXSaii3R7xW', '', NULL, 1, 5, 8, 'Ktm', '', 24, 1143, '', '1', '', 1, 1, 1, '0000-00-00 00:00:00', '2017-11-18 21:34:37'),
+(4, 'MWPTN00004', 'krtgtm', 'krtgtm@admin.com', '$2y$10$08IG9Z.ubxA/fl3YMfQZ7uV3eyClit8OILUaWANKI6xELeiqadof2', '', NULL, 0, 5, 8, 'krt', 'gtm', 24, 1143, '', '1', '', 1, 1, 1, '0000-00-00 00:00:00', '2018-01-09 06:21:12'),
+(5, 'MWPTN00005', 'SETHUPATHI', 'csethupathi@mexicanwavepharma.com', '$2y$10$MGYDUYCIJZujzJaCaIFbR.4GcFHQPOSGDSm8u622x4um.LSF3rBc2', '', NULL, 0, 5, 8, 'SETHUPATHI', 'C', 24, 1150, '', '1', 'DME', 1, 1, 0, '0000-00-00 00:00:00', '2018-02-07 06:45:12'),
 (6, 'MWPTN00006', 'zm', 'ramesh@admin.com', '$2y$10$08IG9Z.ubxA/fl3YMfQZ7uV3eyClit8OILUaWANKI6xELeiqadof2', '', NULL, 0, 2, 1, 'Ramesh', 'G', 24, 1143, '', '1', '', 1, 1, 0, '0000-00-00 00:00:00', '2018-01-09 06:21:12'),
 (7, 'MWPTN00007', 'rm', 'johny@admin.com', '$2y$10$08IG9Z.ubxA/fl3YMfQZ7uV3eyClit8OILUaWANKI6xELeiqadof2', '', NULL, 0, 3, 6, 'Johny', 'G', 24, 1143, '', '1', '', 1, 1, 0, '0000-00-00 00:00:00', '2018-01-09 06:21:12'),
 (8, 'MWPTN00008', 'am', 'prem@admin.com', '$2y$10$08IG9Z.ubxA/fl3YMfQZ7uV3eyClit8OILUaWANKI6xELeiqadof2', '', NULL, 0, 4, 7, 'Prem', 'G', 24, 1143, '', '1', '', 1, 1, 0, '0000-00-00 00:00:00', '2018-01-09 06:21:12'),
-(9, 'MWPTN00009', 'mr1', 'mr1@admin.com', '$2y$10$wrZ8IAVuG9HeoC6oGwa3o.hDaa2hCWqvKf7hglC0OuNbgTE/0jWIy', '', NULL, 0, 5, 8, 'MR!', 'test', 24, 1143, '', '1', 'MBA', 1, 1, 0, '0000-00-00 00:00:00', '2018-02-27 04:29:51'),
-(10, 'MWPTN00010', 'mr2', 'mr2@admin.com', '$2y$10$yylQ2jwNe90eT8KkSG/ssuAeP2Lw18erMg.FMJbzdDJRaLHFkoXhS', '', NULL, 0, 5, 8, 'MR2', 'Test', 24, 1145, '', '1', 'MBA', 1, 1, 0, '0000-00-00 00:00:00', '2018-02-27 04:35:50');
+(9, 'MWPTN00009', 'mr1', 'mr1@admin.com', '$2y$10$wrZ8IAVuG9HeoC6oGwa3o.hDaa2hCWqvKf7hglC0OuNbgTE/0jWIy', '', NULL, 0, 5, 8, 'MR!', 'test', 24, 1143, '', '1', 'MBA', 1, 1, 1, '0000-00-00 00:00:00', '2018-02-27 04:29:51'),
+(10, 'MWPTN00010', 'mr2', 'mr2@admin.com', '$2y$10$yylQ2jwNe90eT8KkSG/ssuAeP2Lw18erMg.FMJbzdDJRaLHFkoXhS', '', NULL, 0, 5, 8, 'MR2', 'Test', 24, 1145, '', '1', 'MBA', 1, 1, 1, '0000-00-00 00:00:00', '2018-02-27 04:35:50'),
+(11, 'MWPTN00011', 'USMAN', 'mdusman@mexicanwavepharma.com', '$2y$10$MGYDUYCIJZujzJaCaIFbR.4GcFHQPOSGDSm8u622x4um.LSF3rBc2', '', NULL, 0, 5, 8, 'MOHAMED', 'USMAN', 24, 1471, '', '1', 'BSC', 1, 1, 0, '0000-00-00 00:00:00', '2018-06-18 13:11:18'),
+(12, 'MWPTN00012', 'SENTHIL', 'ksenthilkumar@mexicanwavepharma.com', '$2y$10$bGzgzniog.4e1cV9SxU/ZOGOSbvzJetRPSB3l4giZZMIDQjLJXCgu', '', NULL, 0, 3, 6, 'SENTHIL ', 'KUMAR K', 24, 1145, '', '1', 'MBA', 1, 1, 0, '0000-00-00 00:00:00', '2018-06-18 14:18:51');
 
 -- --------------------------------------------------------
 
@@ -2462,7 +2519,7 @@ CREATE TABLE IF NOT EXISTS `work_plans` (
   `plan_reason` int(11) DEFAULT NULL,
   `plan_details` text NOT NULL,
   `plan_time` varchar(15) DEFAULT NULL,
-  `work_with` varchar(50) NOT NULL,
+  `work_with` varchar(50) DEFAULT NULL,
   `products` text NOT NULL,
   `samples` text NOT NULL,
   `gifts` text NOT NULL,
@@ -2485,7 +2542,7 @@ CREATE TABLE IF NOT EXISTS `work_plans` (
   KEY `work_city_id` (`city_id`),
   KEY `work_user_id` (`user_id`),
   KEY `plan_reason` (`plan_reason`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=310 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=227 ;
 
 --
 -- Dumping data for table `work_plans`
@@ -2590,104 +2647,116 @@ INSERT INTO `work_plans` (`id`, `user_id`, `work_type_id`, `start_date`, `end_da
 (101, 2, 3, '2018-02-01 00:00:00', '2018-02-01 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-02-27 05:20:06', '2018-02-27 05:20:06'),
 (102, 2, 1, '2018-02-06 00:00:00', '2018-02-06 23:59:00', 1143, NULL, NULL, NULL, NULL, 2, 'test leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-02-27 05:33:20', '2018-02-27 05:33:20'),
 (103, 2, 1, '2018-02-06 00:00:00', '2018-02-06 23:59:00', 1143, NULL, NULL, NULL, NULL, 2, 'test leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-02-27 05:33:30', '2018-02-27 05:33:30'),
-(104, 2, 3, '2018-05-10 00:00:00', '2018-05-10 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-05 04:19:01', '2018-05-05 04:19:01'),
-(105, 2, 2, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, NULL, NULL, 'Doctor not in Station', 0, 1, 0, 1, 0, 0, 0, 0, '2018-05-24 04:24:56', '2018-05-07 10:20:20'),
-(106, 2, 2, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:2:{i:1;s:2:"12";i:2;s:2:"12";}', 'a:2:{i:1;s:2:"15";i:2;s:2:"15";}', '', '2', 2, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-05-30 15:01:13', '2018-05-07 10:20:20'),
-(107, 2, 2, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:1:{i:1;s:2:"10";}', 'a:1:{i:1;s:2:"10";}', '', '2', 500, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-05-06 01:03:19', '2018-05-07 10:20:20'),
-(108, 2, 2, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', '', NULL, NULL, 'Doctor on Leave', 1, 1, 0, 1, 1, 0, 0, 0, '2018-05-03 17:06:48', '2018-05-07 10:20:20'),
-(109, 2, 2, '2018-05-03 00:00:00', '2018-05-03 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:20:28'),
-(110, 2, 2, '2018-05-03 00:00:00', '2018-05-03 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:20:28'),
-(111, 2, 2, '2018-05-03 00:00:00', '2018-05-03 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:20:29'),
-(112, 2, 2, '2018-05-03 00:00:00', '2018-05-03 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:20:29'),
-(113, 2, 2, '2018-05-02 00:00:00', '2018-05-02 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:20:43'),
-(114, 2, 3, '2018-05-04 00:00:00', '2018-05-04 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 1, 0, 0, 0, '2018-05-08 17:28:13', '2018-05-07 10:20:49'),
-(115, 2, 2, '2018-05-05 00:00:00', '2018-05-05 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, '', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:1:{i:1;s:2:"15";}', '', '', '', NULL, '', 0, 1, 0, 1, 1, 0, 0, 0, '2018-05-02 16:43:11', '2018-05-07 10:21:03'),
-(116, 2, 2, '2018-05-05 00:00:00', '2018-05-05 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:12'),
-(117, 2, 2, '2018-05-05 00:00:00', '2018-05-05 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:12'),
-(118, 2, 2, '2018-05-05 00:00:00', '2018-05-05 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:12'),
-(119, 2, 7, '2018-05-06 00:00:00', '2018-05-06 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:23'),
-(120, 2, 7, '2018-05-07 00:00:00', '2018-05-07 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:28'),
-(121, 2, 2, '2018-05-08 00:00:00', '2018-05-08 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:34'),
-(122, 2, 2, '2018-05-08 00:00:00', '2018-05-08 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:34'),
-(123, 2, 2, '2018-05-08 00:00:00', '2018-05-08 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:34'),
-(124, 2, 2, '2018-05-08 00:00:00', '2018-05-08 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:34'),
-(125, 2, 2, '2018-05-09 00:00:00', '2018-05-09 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:42'),
-(126, 2, 2, '2018-05-09 00:00:00', '2018-05-09 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:42'),
-(127, 2, 2, '2018-05-10 00:00:00', '2018-05-10 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:52'),
-(128, 2, 2, '2018-05-10 00:00:00', '2018-05-10 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:21:52'),
-(129, 2, 2, '2018-05-11 00:00:00', '2018-05-11 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:03'),
-(130, 2, 2, '2018-05-11 00:00:00', '2018-05-11 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:03'),
-(131, 2, 2, '2018-05-12 00:00:00', '2018-05-12 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:11'),
-(132, 2, 2, '2018-05-12 00:00:00', '2018-05-12 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:11'),
-(133, 2, 2, '2018-05-12 00:00:00', '2018-05-12 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:11'),
-(134, 2, 2, '2018-05-12 00:00:00', '2018-05-12 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:11'),
-(135, 2, 2, '2018-05-13 00:00:00', '2018-05-13 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:18'),
-(136, 2, 2, '2018-05-13 00:00:00', '2018-05-13 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:18'),
-(137, 2, 2, '2018-05-13 00:00:00', '2018-05-13 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:18'),
-(138, 2, 2, '2018-05-14 00:00:00', '2018-05-14 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:25'),
-(139, 2, 2, '2018-05-14 00:00:00', '2018-05-14 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:25'),
-(140, 2, 2, '2018-05-15 00:00:00', '2018-05-15 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:34'),
-(141, 2, 2, '2018-05-15 00:00:00', '2018-05-15 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-07 10:22:34'),
-(143, 2, NULL, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, NULL, NULL, NULL, 12, NULL, '', NULL, 'Alone', '', '', '', 'discussion', '2.00', 2, '', 0, 0, 0, 1, 1, 1, 0, 0, '2018-05-25 06:21:20', '2018-05-11 06:00:57'),
-(144, 2, NULL, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, NULL, NULL, NULL, 12, NULL, '', NULL, 'Alone', '', '', '', 'discussion', '2.00', 2, '', 0, 0, 0, 1, 1, 1, 0, 0, '2018-05-25 06:21:20', '2018-05-11 06:03:54'),
-(145, 2, NULL, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, NULL, 1, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 1, 0, 0, '2018-05-25 06:21:20', '2018-05-24 03:57:37'),
-(146, 2, NULL, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1145, NULL, NULL, 3, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 1, 0, 0, '2018-05-25 06:21:20', '2018-05-24 03:58:09'),
-(151, 2, 2, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:2:{i:1;s:2:"12";i:2;s:2:"12";}', 'a:2:{i:1;s:1:"1";i:2;s:2:"15";}', '', '2', 500, '', 0, 0, 1, 1, 1, 0, 0, 0, '2018-05-30 14:51:17', '2018-05-30 14:51:17'),
-(152, 2, 2, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1145, 13, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:1:{i:1;s:2:"15";}', 'a:1:{i:1;s:2:"15";}', '', '', NULL, '', 0, 0, 1, 1, 1, 0, 0, 0, '2018-05-30 15:03:31', '2018-05-30 15:03:31'),
-(154, 2, NULL, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1145, NULL, NULL, NULL, 14, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:1:{i:1;s:2:"15";}', 'a:1:{i:2;s:2:"15";}', '', '2', 500, '', 0, 0, 0, 1, 1, 0, 0, 0, '2018-05-30 15:12:12', '2018-05-30 15:12:12'),
-(155, 2, NULL, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, NULL, 2, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-30 15:13:53', '2018-05-30 15:13:53'),
-(156, 2, NULL, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, NULL, NULL, 1, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-30 15:19:42', '2018-05-30 15:19:42'),
-(157, 2, 2, '2018-05-04 00:00:00', '2018-05-04 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-30 17:02:48'),
-(196, 2, 3, '2018-05-05 00:00:00', '2018-05-05 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-02 15:59:00', '2018-05-02 15:59:01'),
-(197, 2, 3, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-03 17:04:48', '2018-05-03 17:04:48'),
-(198, 2, 2, '2018-05-16 00:00:00', '2018-05-16 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-05-03 17:06:48'),
-(199, 2, 2, '2018-05-02 00:00:00', '2018-05-02 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', '', '', NULL, '', 0, 0, 1, 1, 1, 0, 0, 0, '2018-05-03 18:37:53', '2018-05-03 18:37:53'),
-(200, 2, 2, '2018-05-02 00:00:00', '2018-05-02 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:1:{i:0;s:1:"2";}', '', '', '', '', NULL, '', 0, 0, 1, 1, 1, 0, 0, 0, '2018-05-03 18:38:44', '2018-05-03 18:38:44'),
-(201, 2, NULL, '2018-05-02 00:00:00', '2018-05-02 23:59:00', 1143, NULL, 1, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-03 18:40:51', '2018-05-03 18:40:51'),
-(202, 2, 2, '2018-05-02 00:00:00', '2018-05-02 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', '', '', NULL, '', 0, 0, 1, 1, 1, 0, 0, 0, '2018-05-03 18:41:04', '2018-05-03 18:41:04'),
-(203, 2, 2, '2018-05-01 00:00:00', '2018-05-01 23:59:00', 1143, 8, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"2";i:1;s:1:"3";}', 'a:2:{i:1;s:1:"5";i:2;s:1:"5";}', '', '', '2', 500, '', 0, 0, 1, 1, 1, 0, 0, 0, '2018-05-05 23:18:09', '2018-05-05 23:18:10'),
-(204, 2, 7, '2018-05-04 00:00:00', '2018-05-04 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-16 04:45:11', '2018-05-16 04:45:11'),
-(205, 2, 4, '2018-05-04 00:00:00', '2018-05-04 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-16 04:50:05', '2018-05-16 04:50:05'),
-(206, 2, 8, '2018-05-02 00:00:00', '2018-05-02 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, 'sdfasf', '12:00-02:30', '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-17 05:26:56', '2018-05-17 05:26:56'),
-(207, 2, 8, '2018-05-02 00:00:00', '2018-05-02 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, 'fsdfsdfs', '12:12-21:21', '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-17 05:29:43', '2018-05-17 05:29:43'),
-(208, 2, 3, '2018-05-02 00:00:00', '2018-05-02 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', '', '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-17 05:31:30', '2018-05-17 05:31:30'),
-(209, 2, 3, '2018-05-02 00:00:00', '2018-05-02 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', '', '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-05-17 05:33:14', '2018-05-17 05:33:14'),
-(274, 2, 2, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '09:00', 20000, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:20:34', '2018-06-12 05:00:43'),
-(275, 2, 2, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '09:00', 2345, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:23:20', '2018-06-12 05:00:53'),
-(276, 2, 2, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '12:00', 6546, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:23:20', '2018-06-12 05:00:53'),
-(277, 2, 2, '2018-06-03 00:00:00', '2018-06-03 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '12:12', 234567, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:24:47', '2018-06-12 05:01:00'),
-(278, 2, 2, '2018-06-03 00:00:00', '2018-06-03 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '04:44', 2345, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:24:47', '2018-06-12 05:01:11'),
-(279, 2, 2, '2018-06-04 00:00:00', '2018-06-04 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '09:00', 1235, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:26:23', '2018-06-12 05:01:41'),
-(280, 2, 2, '2018-06-04 00:00:00', '2018-06-04 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '03:00', 23456, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:26:23', '2018-06-12 05:01:49'),
-(281, 2, 2, '2018-06-05 00:00:00', '2018-06-05 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '09:00', 12356, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:29:46', '2018-06-12 05:02:04'),
-(282, 2, 2, '2018-06-05 00:00:00', '2018-06-05 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '12:00', 45678, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:29:46', '2018-06-12 05:02:11'),
-(283, 2, 3, '2018-06-05 00:00:00', '2018-06-05 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:29:46', '2018-06-12 05:03:39'),
-(284, 2, 3, '2018-06-06 00:00:00', '2018-06-06 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 1, 0, 0, 0, '2018-06-12 05:30:31', '2018-06-12 05:07:38'),
-(285, 2, 3, '2018-06-07 00:00:00', '2018-06-07 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:33:13', '2018-06-12 05:07:57'),
-(286, 2, 2, '2018-06-07 00:00:00', '2018-06-07 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '09:00', 34567, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:33:13', '2018-06-12 05:08:21'),
-(287, 2, 2, '2018-06-08 00:00:00', '2018-06-08 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '09:00', 12345, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:35:03', '2018-06-12 05:09:24'),
-(288, 2, 2, '2018-06-09 00:00:00', '2018-06-09 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '09:00', 3466, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-12 05:37:44', '2018-06-12 05:09:55'),
-(289, 2, 1, '2018-06-10 00:00:00', '2018-06-10 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(290, 2, 1, '2018-06-11 00:00:00', '2018-06-11 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(291, 2, 1, '2018-06-12 00:00:00', '2018-06-12 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(292, 2, 1, '2018-06-13 00:00:00', '2018-06-13 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(293, 2, 1, '2018-06-14 00:00:00', '2018-06-14 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(294, 2, 1, '2018-06-15 00:00:00', '2018-06-15 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(295, 2, 1, '2018-06-16 00:00:00', '2018-06-16 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(296, 2, 1, '2018-06-17 00:00:00', '2018-06-17 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(297, 2, 1, '2018-06-18 00:00:00', '2018-06-18 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(298, 2, 1, '2018-06-19 00:00:00', '2018-06-19 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(299, 2, 1, '2018-06-20 00:00:00', '2018-06-20 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(300, 2, 1, '2018-06-21 00:00:00', '2018-06-21 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(301, 2, 1, '2018-06-22 00:00:00', '2018-06-22 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(302, 2, 1, '2018-06-23 00:00:00', '2018-06-23 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(303, 2, 1, '2018-06-24 00:00:00', '2018-06-24 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(304, 2, 1, '2018-06-25 00:00:00', '2018-06-25 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(305, 2, 1, '2018-06-26 00:00:00', '2018-06-26 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(306, 2, 1, '2018-06-27 00:00:00', '2018-06-27 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(307, 2, 1, '2018-06-28 00:00:00', '2018-06-28 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(308, 2, 1, '2018-06-29 00:00:00', '2018-06-29 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21'),
-(309, 2, 1, '2018-06-30 00:00:00', '2018-06-30 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'Casual Leave', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-12 05:11:21');
+(104, 2, 3, '2018-06-10 00:00:00', '2018-06-10 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-05 04:19:01', '2018-06-05 04:19:01'),
+(105, 2, 2, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"4";i:1;s:1:"5";}', 'a:1:{i:1;s:1:"2";}', 'a:1:{i:1;s:1:"1";}', '', '12:00', 1, 'Doctor not in Station', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-07 10:20:20'),
+(106, 2, 2, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:2:{i:1;s:2:"12";i:2;s:2:"12";}', 'a:2:{i:1;s:2:"15";i:2;s:2:"15";}', '', '21:30', 1, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-07 10:20:20'),
+(107, 2, 2, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:1:{i:1;s:2:"10";}', 'a:1:{i:1;s:2:"10";}', '', '90:30', 1, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-07 10:20:20'),
+(108, 2, 2, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', '', NULL, NULL, 'Others', 1, 1, 0, 1, 1, 0, 0, 0, '2018-06-18 12:56:50', '2018-06-07 10:20:20'),
+(109, 2, 2, '2018-06-03 00:00:00', '2018-06-03 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:20:28'),
+(110, 2, 2, '2018-06-03 00:00:00', '2018-06-03 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:20:28'),
+(111, 2, 2, '2018-06-03 00:00:00', '2018-06-03 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:20:29'),
+(112, 2, 2, '2018-06-03 00:00:00', '2018-06-03 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:20:29'),
+(113, 2, 2, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:20:43'),
+(114, 2, 3, '2018-06-04 00:00:00', '2018-06-04 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-07 04:31:20', '2018-06-07 10:20:49'),
+(115, 2, 2, '2018-06-05 00:00:00', '2018-06-05 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, '', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:1:{i:1;s:2:"15";}', '', '', '', NULL, '', 0, 1, 0, 1, 1, 0, 0, 0, '2018-06-02 16:43:11', '2018-06-07 10:21:03'),
+(116, 2, 2, '2018-06-05 00:00:00', '2018-06-05 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:12'),
+(117, 2, 2, '2018-06-05 00:00:00', '2018-06-05 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:12'),
+(118, 2, 2, '2018-06-05 00:00:00', '2018-06-05 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:12'),
+(119, 2, 7, '2018-06-06 00:00:00', '2018-06-06 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 1, 0, 0, 0, '2018-06-08 04:29:31', '2018-06-07 10:21:23'),
+(120, 2, 7, '2018-06-07 00:00:00', '2018-06-07 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:28'),
+(121, 2, 2, '2018-06-08 00:00:00', '2018-06-08 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:34'),
+(122, 2, 2, '2018-06-08 00:00:00', '2018-06-08 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:34'),
+(123, 2, 2, '2018-06-08 00:00:00', '2018-06-08 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:34'),
+(124, 2, 2, '2018-06-08 00:00:00', '2018-06-08 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:34'),
+(125, 2, 2, '2018-06-09 00:00:00', '2018-06-09 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:42'),
+(126, 2, 2, '2018-06-09 00:00:00', '2018-06-09 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:42'),
+(127, 2, 2, '2018-06-10 00:00:00', '2018-06-10 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:52'),
+(128, 2, 2, '2018-06-10 00:00:00', '2018-06-10 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:21:52'),
+(129, 2, 2, '2018-06-11 00:00:00', '2018-06-11 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:03'),
+(130, 2, 2, '2018-06-11 00:00:00', '2018-06-11 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:03'),
+(131, 2, 2, '2018-06-12 00:00:00', '2018-06-12 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, '2018-06-20 04:41:33', '2018-06-07 10:22:11'),
+(132, 2, 2, '2018-06-12 00:00:00', '2018-06-12 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:11'),
+(133, 2, 2, '2018-06-12 00:00:00', '2018-06-12 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:11'),
+(134, 2, 2, '2018-06-12 00:00:00', '2018-06-12 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, 'Doctor Refused Appointment', 1, 1, 0, 1, 1, 0, 0, 0, '2018-06-20 04:42:21', '2018-06-07 10:22:11'),
+(135, 2, 2, '2018-06-13 00:00:00', '2018-06-13 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:18'),
+(136, 2, 2, '2018-06-13 00:00:00', '2018-06-13 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:18'),
+(137, 2, 2, '2018-06-13 00:00:00', '2018-06-13 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:18'),
+(138, 2, 2, '2018-06-14 00:00:00', '2018-06-14 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:25'),
+(139, 2, 2, '2018-06-14 00:00:00', '2018-06-14 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:25'),
+(140, 2, 2, '2018-06-15 00:00:00', '2018-06-15 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:34'),
+(141, 2, 2, '2018-06-15 00:00:00', '2018-06-15 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-07 10:22:34'),
+(143, 2, NULL, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, NULL, NULL, NULL, 12, NULL, '', NULL, 'Alone', '', '', '', 'discussion', '20:0', 1, '', 0, 0, 0, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-11 06:00:57'),
+(144, 2, NULL, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, NULL, NULL, NULL, 12, NULL, '', NULL, 'Alone', '', '', '', 'discussion', '20:0', 2, '', 0, 0, 0, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-11 06:03:54'),
+(146, 2, NULL, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1145, NULL, NULL, 3, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-24 03:58:09'),
+(152, 2, 2, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1145, 13, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:1:{i:1;s:2:"15";}', 'a:1:{i:1;s:2:"15";}', '', '10:00', 1, '', 0, 0, 1, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-30 15:03:31'),
+(154, 2, NULL, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1145, NULL, NULL, NULL, 14, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:1:{i:1;s:2:"15";}', 'a:1:{i:2;s:2:"15";}', '', '12:00', 1, '', 0, 0, 0, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-30 15:12:12'),
+(155, 2, NULL, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, NULL, 2, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-30 15:13:53'),
+(156, 2, NULL, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, NULL, NULL, 1, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-30 15:19:42'),
+(157, 2, 2, '2018-06-04 00:00:00', '2018-06-04 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', NULL, '12', 120, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-07 04:31:20', '2018-06-30 17:02:48'),
+(158, 2, 3, '2018-07-10 00:00:00', '2018-07-10 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 0, '2018-07-05 04:19:01', '2018-07-05 04:19:01'),
+(159, 2, 2, '2018-07-01 00:00:00', '2018-07-01 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, 'Doctor not in Station', 0, 1, 0, 0, 0, 0, 0, 0, '2018-07-24 04:24:56', '2018-07-07 10:20:20'),
+(160, 2, 2, '2018-07-01 00:00:00', '2018-07-01 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:2:{i:1;s:2:"12";i:2;s:2:"12";}', 'a:2:{i:1;s:2:"15";i:2;s:2:"15";}', '', '2', 2, '', 0, 1, 0, 0, 0, 0, 0, 0, '2018-07-30 15:01:13', '2018-07-07 10:20:20'),
+(161, 2, 2, '2018-07-01 00:00:00', '2018-07-01 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', 'a:2:{i:0;s:1:"1";i:1;s:1:"2";}', 'a:2:{i:1;s:1:"1";i:2;s:1:"1";}', 'a:2:{i:1;s:1:"1";i:2;s:2:"12";}', '', '2.5', 1000, '', 0, 1, 0, 0, 0, 0, 0, 0, '2018-07-30 15:08:23', '2018-07-07 10:20:20'),
+(162, 2, 2, '2018-07-01 00:00:00', '2018-07-01 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', '', NULL, NULL, 'Doctor on Leave', 0, 0, 0, 0, 0, 0, 0, 0, '2018-07-30 17:02:48', '2018-07-07 10:20:20'),
+(163, 2, 2, '2018-07-03 00:00:00', '2018-07-03 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:20:28'),
+(164, 2, 2, '2018-07-03 00:00:00', '2018-07-03 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:20:28'),
+(165, 2, 2, '2018-07-03 00:00:00', '2018-07-03 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:20:29'),
+(166, 2, 2, '2018-07-03 00:00:00', '2018-07-03 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:20:29'),
+(167, 2, 2, '2018-07-02 00:00:00', '2018-07-02 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:20:43'),
+(168, 2, 3, '2018-07-04 00:00:00', '2018-07-04 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, '2018-07-08 17:28:13', '2018-07-07 10:20:49'),
+(169, 2, 2, '2018-07-05 00:00:00', '2018-07-05 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:03'),
+(170, 2, 2, '2018-07-05 00:00:00', '2018-07-05 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:12'),
+(171, 2, 2, '2018-07-05 00:00:00', '2018-07-05 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:12'),
+(172, 2, 2, '2018-07-05 00:00:00', '2018-07-05 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:12'),
+(175, 2, 2, '2018-07-08 00:00:00', '2018-07-08 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:34'),
+(176, 2, 2, '2018-07-08 00:00:00', '2018-07-08 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:34'),
+(177, 2, 2, '2018-07-08 00:00:00', '2018-07-08 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:34'),
+(178, 2, 2, '2018-07-08 00:00:00', '2018-07-08 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:34'),
+(179, 2, 2, '2018-07-09 00:00:00', '2018-07-09 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:42'),
+(180, 2, 2, '2018-07-09 00:00:00', '2018-07-09 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:42'),
+(181, 2, 2, '2018-07-10 00:00:00', '2018-07-10 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:52'),
+(182, 2, 2, '2018-07-10 00:00:00', '2018-07-10 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:21:52'),
+(183, 2, 2, '2018-07-11 00:00:00', '2018-07-11 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:03'),
+(184, 2, 2, '2018-07-11 00:00:00', '2018-07-11 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:03'),
+(185, 2, 2, '2018-07-12 00:00:00', '2018-07-12 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:11'),
+(186, 2, 2, '2018-07-12 00:00:00', '2018-07-12 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:11'),
+(187, 2, 2, '2018-07-12 00:00:00', '2018-07-12 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:11'),
+(188, 2, 2, '2018-07-12 00:00:00', '2018-07-12 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:11'),
+(189, 2, 2, '2018-07-13 00:00:00', '2018-07-13 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:18'),
+(190, 2, 2, '2018-07-13 00:00:00', '2018-07-13 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:18'),
+(191, 2, 2, '2018-07-13 00:00:00', '2018-07-13 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:18'),
+(192, 2, 2, '2018-07-14 00:00:00', '2018-07-14 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:25'),
+(193, 2, 2, '2018-07-14 00:00:00', '2018-07-14 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:25'),
+(194, 2, 2, '2018-07-15 00:00:00', '2018-07-15 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:34'),
+(195, 2, 2, '2018-07-15 00:00:00', '2018-07-15 23:59:00', 1143, 2, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-07-07 10:22:34'),
+(196, 2, 3, '2018-06-05 00:00:00', '2018-06-05 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-02 15:59:00', '2018-06-02 15:59:01'),
+(197, 2, 3, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-03 17:04:48'),
+(198, 2, 1, '2018-06-16 00:00:00', '2018-06-16 23:59:00', 1143, NULL, NULL, NULL, NULL, 1, 'test', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 1, 1, 0, 0, '2018-06-08 06:12:03', '2018-06-03 17:06:48'),
+(199, 2, 2, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', '', '', NULL, '', 0, 0, 1, 1, 1, 0, 0, 0, '2018-06-03 18:37:53', '2018-06-03 18:37:53'),
+(200, 2, 2, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, 1, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:1:{i:0;s:1:"2";}', '', '', '', '', NULL, '', 0, 0, 1, 1, 1, 0, 0, 0, '2018-06-03 18:38:44', '2018-06-03 18:38:44'),
+(201, 2, NULL, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, NULL, 1, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-03 18:40:51', '2018-06-03 18:40:51'),
+(202, 2, 2, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, 'Alone', '', '', '', '', '', NULL, '', 0, 0, 1, 1, 1, 0, 0, 0, '2018-06-03 18:41:04', '2018-06-03 18:41:04'),
+(203, 2, 2, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, 8, NULL, NULL, NULL, NULL, '', NULL, 'Alone', 'a:2:{i:0;s:1:"2";i:1;s:1:"3";}', 'a:2:{i:1;s:1:"5";i:2;s:1:"5";}', '', '', '20:00', 1, '', 0, 0, 1, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-05 23:18:10'),
+(204, 2, 7, '2018-06-04 00:00:00', '2018-06-04 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 1, 0, 0, '2018-06-07 04:31:20', '2018-06-16 04:45:11'),
+(205, 2, 4, '2018-06-04 00:00:00', '2018-06-04 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 1, 0, 0, '2018-06-07 04:31:20', '2018-06-16 04:50:05'),
+(206, 2, 8, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, 'sdfasf', '12:00-02:30', '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-17 05:26:56', '2018-06-17 05:26:56'),
+(207, 2, 8, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, 'fsdfsdfs', '12:12-21:21', '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-17 05:29:43', '2018-06-17 05:29:43'),
+(208, 2, 3, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', '', '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-17 05:31:30', '2018-06-17 05:31:30'),
+(209, 2, 3, '2018-06-02 00:00:00', '2018-06-02 23:59:00', 1143, NULL, NULL, NULL, NULL, NULL, '', '', '', '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-17 05:33:14', '2018-06-17 05:33:14'),
+(210, 2, 2, '2018-07-15 00:00:00', '2018-07-15 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, NULL, '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '0000-00-00 00:00:00'),
+(211, 2, 2, '2018-07-18 00:00:00', '2018-07-18 23:59:00', 1143, 4, NULL, NULL, NULL, NULL, '', NULL, NULL, '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '0000-00-00 00:00:00'),
+(214, 2, 2, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', '', 'TM', 'a:1:{i:0;s:1:"4";}', '', '', '', '15:00', 1, '', 0, 0, 1, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-18 12:52:27'),
+(215, 2, NULL, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, NULL, 1, NULL, NULL, NULL, '', '', NULL, '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-18 12:53:51'),
+(216, 2, 2, '2018-06-20 00:00:00', '2018-06-20 23:59:00', 1143, 3, NULL, NULL, NULL, NULL, '', NULL, NULL, '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 1, 0, 0, 0, 0, NULL, '2018-06-18 12:54:39'),
+(217, 2, NULL, '2018-06-01 00:00:00', '2018-06-01 23:59:00', 1143, NULL, NULL, NULL, 15, NULL, '', NULL, 'Alone', '', '', '', '', '14:00', 1, '', 0, 0, 0, 1, 1, 1, 0, 0, '2018-06-18 12:58:17', '2018-06-18 12:55:26'),
+(219, 2, NULL, '2018-06-12 00:00:00', '2018-06-12 23:59:00', 1145, NULL, NULL, 3, NULL, NULL, '', '', NULL, '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-20 04:49:25', '2018-06-20 04:49:25'),
+(220, 2, 2, '2018-07-03 00:00:00', '2018-07-03 23:59:00', 1145, 6, NULL, NULL, NULL, NULL, '', NULL, NULL, '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-06-20 05:17:12'),
+(221, 2, 2, '2018-07-03 00:00:00', '2018-07-03 23:59:00', 1145, 7, NULL, NULL, NULL, NULL, '', NULL, NULL, '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-06-20 05:18:55'),
+(222, 2, 2, '2018-07-03 00:00:00', '2018-07-03 23:59:00', 1145, 8, NULL, NULL, NULL, NULL, '', NULL, NULL, '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-06-20 05:20:03'),
+(223, 2, 2, '2018-07-03 00:00:00', '2018-07-03 23:59:00', 1145, 9, NULL, NULL, NULL, NULL, '', NULL, NULL, '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-06-20 05:20:03'),
+(224, 2, 2, '2018-07-03 00:00:00', '2018-07-03 23:59:00', 1145, 10, NULL, NULL, NULL, NULL, '', NULL, NULL, '', '', '', NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 0, NULL, '2018-06-20 05:20:03'),
+(225, 2, 8, '2018-06-11 00:00:00', '2018-06-11 23:59:00', 1145, NULL, NULL, NULL, NULL, NULL, 'opd camp', '09:00-24:00', NULL, '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-20 05:24:08', '2018-06-20 05:24:08'),
+(226, 2, 7, '2018-06-11 00:00:00', '2018-06-11 23:59:00', 1145, NULL, NULL, NULL, NULL, NULL, '', '', NULL, '', '', '', NULL, NULL, NULL, '', 0, 0, 0, 0, 1, 0, 0, 0, '2018-06-20 05:25:09', '2018-06-20 05:25:09');
 
 -- --------------------------------------------------------
 
@@ -2704,15 +2773,14 @@ CREATE TABLE IF NOT EXISTS `work_plan_approval` (
   `is_rejected` int(11) NOT NULL,
   `dt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `work_plan_approval`
 --
 
 INSERT INTO `work_plan_approval` (`id`, `date`, `user_id`, `lead_id`, `is_approved`, `is_rejected`, `dt`) VALUES
-(1, '2018-03-01', 9, 8, 0, 0, '2018-02-27 04:51:04'),
-(4, '2018-06-01', 2, 8, 1, 0, '2018-06-12 05:11:40');
+(1, '2018-03-01', 9, 8, 0, 0, '2018-02-27 04:51:04');
 
 -- --------------------------------------------------------
 
@@ -2728,21 +2796,16 @@ CREATE TABLE IF NOT EXISTS `work_plan_submit` (
   `is_rejected` int(11) NOT NULL,
   `dt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `work_plan_submit`
 --
 
 INSERT INTO `work_plan_submit` (`id`, `date`, `user_id`, `lead_id`, `is_rejected`, `dt`) VALUES
-(7, '2018-06-01', 2, 8, 0, '2018-06-12 05:20:35'),
-(8, '2018-06-02', 2, 8, 0, '2018-06-12 05:23:20'),
-(9, '2018-06-03', 2, 8, 0, '2018-06-12 05:24:47'),
-(10, '2018-06-04', 2, 8, 0, '2018-06-12 05:26:23'),
-(11, '2018-06-05', 2, 8, 0, '2018-06-12 05:29:46'),
-(12, '2018-06-07', 2, 8, 0, '2018-06-12 05:33:13'),
-(13, '2018-06-08', 2, 8, 0, '2018-06-12 05:35:03'),
-(14, '2018-06-09', 2, 8, 0, '2018-06-12 05:37:44');
+(1, '2018-06-04', 2, 8, 0, '2018-06-07 04:31:20'),
+(2, '2018-06-16', 2, 8, 0, '2018-06-08 06:12:03'),
+(3, '2018-06-01', 2, 8, 0, '2018-06-18 12:58:17');
 
 -- --------------------------------------------------------
 

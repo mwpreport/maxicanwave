@@ -869,13 +869,14 @@ class MrsController extends AppController {
         $years= [$current_year   => $current_year,$current_year-1 => $current_year-1,$current_year-2 => $current_year-2,$current_year-3 => $current_year-3,$current_year-4 => $current_year-4];
         $this->loadModel('Expenses');
 
+
         $expense = $this->Expenses->newEntity();
-        if($this->request->is('post')){
+        if($this->request->getQuery('month') && $this->request->getQuery('year')){
 
           $uid = $this->Auth->user('id');
           $lead_id = $this->Auth->user('lead_id');
-          $month = $this->request->data['month'];
-          $year = $this->request->data['year'];
+          $month = $this->request->getQuery('month');
+          $year = $this->request->getQuery('year');
           $name = $this->Auth->user('firstname')." ".$this->Auth->user('lastname');
           $role = $this->Roles->find()->where(['id' => $this->Auth->user('role_id')])->first();
           $role_name = $role->name;
@@ -897,7 +898,7 @@ class MrsController extends AppController {
           //Store Expense Approval Informations
           $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid,'lead_id ='=> $lead_id,'Month(date) =' => $month, 'Year(date) =' => $year])->first();
           if(isset($this->request->data['approve_request'])){
-            $this->request->data['date']=$this->request->data['year']."-".$this->request->data['month'].'-1';
+            $this->request->data['date']=$this->request->getQuery('year')."-".$this->request->getQuery('month').'-1';
             $this->request->data['user_id']=$uid;
             $this->request->data['lead_id']=$lead_id;
             if(empty($expenseApproval)){
@@ -921,6 +922,7 @@ class MrsController extends AppController {
         }
         $this->set('title', 'Daily Report');
         $this->set(compact('years', 'months', 'expense'));
+        
     }
 
 	public function editExpense(){
@@ -936,6 +938,7 @@ class MrsController extends AppController {
 			if($workPlanSubmit){
 				$expense = $workPlanSubmit['expense'];
 				if($this->request->is(['patch', 'post', 'put'])){ //pr($this->request->data);
+          //pr($this->request->data);exit;
 					$this->request->data['work_plan_submit_id'] = $workPlanSubmit -> id;
 					if($expense){
 						$oldexpense = $this->Expenses->patchEntity($expense, $this->request->data);
