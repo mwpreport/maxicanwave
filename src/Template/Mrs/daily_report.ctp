@@ -8,7 +8,7 @@
                 <div class="col-md-12">
                     <div class="hr-title">
                         <?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
-                        <h2>Daily Report of <?= ($date!="")? "of ".date("Y-m-d (l)", strtotime($date)):"" ?></h2>
+                        <h2>Daily Report of <?= ($date!="")? "of ". $this->Date->title($reportDate) :"" ?></h2>
                         <hr>
                     </div>
                 </div>
@@ -17,7 +17,7 @@
                 <div class="daily-report-radio-cnt">
 					<div class="col-md-12 mar-bottom-20">
 						<div class="row">
-						<?php $reportDate = ""; if($date!="") $reportDate = date("Y-m-d", strtotime($date));?>
+						<?php $reportDate = ""; if($date!="") $reportDate = $date;?>
 						<form action="#" method="post" >
 							<div class="form-group">
 								<div class="col-sm-3">

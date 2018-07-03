@@ -8,7 +8,7 @@
                 <div class="col-md-12">
                     <div class="hr-title">
 						<?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
-                        <h2>Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport",'?' => ['date' => $reportDate]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
+                        <h2>Daily Report of <?= ($date!="")? $this->Date->title($date) :"" ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport",'?' => ['date' => $reportDate]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
                         <hr>
                     </div>
                 </div>
@@ -329,17 +329,10 @@
 	var endDate = new Date(y, m + 1, 0);
 
 	//Date picker
-	$('#reportDate').datepicker({
-		autoclose: true, startDate: startDate, endDate: endDate
-	});
 	$('#missed_doctors_table [type="text"]').datepicker({
 		autoclose: true, startDate: new Date(y, m, d + 1), endDate: endDate
 	});
 
-	$('#reportDate').on('changeDate', function (ev) {
-		window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>?date="+moment(ev.date).format('YYYY-MM-DD'));
-	});
-	
 	$('.popup-modal').magnificPopup({
 		type: 'inline',
 		preloader: false,

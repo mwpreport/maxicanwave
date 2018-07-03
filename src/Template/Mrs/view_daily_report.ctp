@@ -8,7 +8,7 @@
                 <div class="col-md-12">
                     <div class="hr-title">
 						<?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
-                        <h2>Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?> <span class="go-back pull-right"><a href="javascript:void(0)"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
+                        <h2>Daily Report of <?= ($date!="")? $this->Date->title($date) :"" ?> <span class="go-back pull-right"><a href="javascript:void(0)"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
                         <hr>
                     </div>
                 </div>
