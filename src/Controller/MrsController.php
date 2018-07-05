@@ -701,12 +701,12 @@ class MrsController extends AppController {
                                 'Expenses.TravelExpenses.CitiesTo'
                             ])
                             ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year])->order(['WorkPlanSubmit.id' => 'ASC']);
+            $workPlanSubmit=[];
             foreach ($workPlanSubmits as $workPlanSubmitdata) {
                 if (!$this->_hasLeave($workPlanSubmitdata->date)) {
                     $workPlanSubmit[] = $workPlanSubmitdata;
-                }
-                // pr($workPlanSubmit);
-            }
+                }                
+            }            
 
             //Store Expense Approval Informations
             $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid, 'lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year])->first();
@@ -854,7 +854,7 @@ class MrsController extends AppController {
 
                 $month_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
                 $month_in_text = $months[$month];
-                $workPlanSubmit = $this->WorkPlanSubmit->find('all')
+                $workPlanSubmits = $this->WorkPlanSubmit->find('all')
                                 ->contain([
                                     'Expenses.ExpenseTypes',
                                     'Expenses.OtherExpenses',
@@ -863,7 +863,14 @@ class MrsController extends AppController {
                                     'Expenses.TravelExpenses.CitiesTo'
                                 ])
                                 ->where(['WorkPlanSubmit.user_id =' => $expense_user_id, 'WorkPlanSubmit.lead_id =' => $uid, 'Month(date) =' => $month, 'Year(date) =' => $year])->order(['WorkPlanSubmit.id' => 'ASC']);
-
+                
+                $workPlanSubmit=[];
+                foreach ($workPlanSubmits as $workPlanSubmitdata) {                    
+                    if (!$this->_hasLeave($workPlanSubmitdata->date,$expense_user_id)) {
+                        $workPlanSubmit[] = $workPlanSubmitdata;                        
+                    }                    
+                }                
+            
                 //Store Expense Approval Informations
                 if (isset($this->request->data['approve_request'])) {
                     $expense_changes = $this->request->data['expenses'];
@@ -894,9 +901,10 @@ class MrsController extends AppController {
         $this->set(compact('years', 'months', 'expense'));
     }
 
-    protected function _hasLeave($start_date) {
-        $uid = $this->Auth->user('id');
-        $workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date, 'work_type_id =' => 1, 'user_id =' => $uid])->first();
+    protected function _hasLeave($start_date, $uid=null) {
+        if($uid == null)
+            $uid = $this->Auth->user('id');        
+        $workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date, 'work_type_id =' => 1, 'user_id =' => $uid])->first();        
         if (count($workPlans) > 0)
             return $workPlans->id;
 

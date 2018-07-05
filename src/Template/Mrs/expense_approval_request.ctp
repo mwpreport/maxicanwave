@@ -90,6 +90,8 @@
                           $month_daily_expense=0;
                           $month_other_expense=0;
                           $month_total_expense=0;
+                          $month_disallowed_amount=0;
+                          $month_abeyance_amount=0;
                           $expense_key=0;
                           for($i=1; $i<=$month_days; $i++){
                             $time=mktime(12, 0, 0, $month, $i, $year); ?>
@@ -146,6 +148,9 @@
                                    }
                                    $month_total_expense = $month_travel_expense + $month_other_expense + $month_daily_expense;
 
+                                   //total disallowed amount
+                                   $month_disallowed_amount+=$expense->disallowed; 
+                                   $month_abeyance_amount+=$expense->abeyance; 
 
                                    if(!empty($travelExpenses)){
                                        foreach($travelExpenses as $key => $travelExpense){ ?>
@@ -263,22 +268,22 @@
                         </tr>
                         <tr>
                           <td colspan="3">Total Amount Claimed Rs</td>
-                          <td colspan="3">0.00</td>
+                          <td colspan="3"><?php echo $month_total_expense; ?></td>
                           <td colspan="3">Comments </td>
                           <td colspan="4" rowspan="5">
                             <?= $this->form->control('comments', ['type' => 'textArea', 'rows' => 5, 'cols' => 50, 'label' => false, 'value' => isset($expenseApproval['comments']) ? $expenseApproval['comments'] : '' ]); ?>
                           </td>
-
+    
                         </tr>
                         <tr>
                           <td colspan="3">Amount Disallowed Rs</td>
-                          <td colspan="3">0.00</td>
+                          <td colspan="3"><?php echo $month_disallowed_amount; ?></td>
                           <td colspan="3"></td>
 
                         </tr>
                         <tr>
                           <td colspan="3">Amount in Abeyance Rs</td>
-                          <td colspan="3">0.00</td>
+                          <td colspan="3"><?php echo $month_abeyance_amount; ?></td>
                           <td colspan="3"></td>
                         </tr>
                         <tr>
