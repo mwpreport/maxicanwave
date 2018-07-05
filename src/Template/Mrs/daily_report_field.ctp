@@ -8,7 +8,7 @@
                 <div class="col-md-12">
                     <div class="hr-title">
 						<?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
-                        <h2>Daily Report of <?= ($date!="")?date("Y-m-d (l)", strtotime($date)):"" ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport",'?' => ['date' => $reportDate]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
+                        <h2>Daily Report of <?= ($date!="")? $this->Date->title($date) :"" ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReport",'?' => ['date' => $reportDate]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
                         <hr>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
 								<div class="form-group">
 									<div class="col-sm-6">
 									 <input type="hidden" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo $reportDate;?>">
-									 <div class="col-sm-6"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewDailyReport",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>View Reported Calls</b></a></div>
+									 <div class="col-sm-6"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "viewReportedCalls",'?' => ['date' => $reportDate]])?>" class="btn blue-btn btn-block margin-right-35 iframe-popup-link" ><b>View Reported Calls</b></a></div>
 									 <div class="col-sm-6"><button class="btn blue-btn btn-block margin-right-35 pull-right" type="submit">Final Submit</a></div>
 									</div>
 									<!-- /.input group -->
@@ -113,17 +113,16 @@
 											<hr>
 											<div class="form-group  mar-top-10">
 												<div class="col-sm-3">
-													<a  href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "UnplannedDoctors",'?' => ['date' => $reportDate]])?>" class="common-btn blue-btn pull-left"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unplanned Doctors</a>
-													<!--<a href="#UnplannedAdd" class="popup-modal common-btn blue-btn pull-left"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unplanned Doctors</a>-->
+													<a  href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "UnplannedDoctors",'?' => ['date' => $reportDate]])?>" class="common-btn blue-btn pull-left iframe-popup-link"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unplanned Doctors</a>
 												</div>
 												<div class="col-sm-3">
-													<a  href="#ChemistAdd" class="popup-modal common-btn blue-btn pull-left"><i class="fa fa-plus-circle" aria-hidden="true"></i> Chemists</a>
+													<a  href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportChemist",'?' => ['date' => $reportDate]])?>" class="common-btn blue-btn pull-left iframe-popup-link"><i class="fa fa-plus-circle" aria-hidden="true"></i> Chemists</a>
 												</div>
 												<div class="col-sm-3">
-													<a  href="#StockistAdd" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Stockists</a>
+													<a  href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportStockist",'?' => ['date' => $reportDate]])?>" class="common-btn blue-btn pull-right iframe-popup-link"><i class="fa fa-plus-circle" aria-hidden="true"></i> Stockists</a>
 												</div>
 												<div class="col-sm-3">
-													<a  href="#PGOthers" class="popup-modal common-btn blue-btn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Unlisted Doctors</a>
+													<a  href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportPgo",'?' => ['date' => $reportDate]])?>" class="common-btn blue-btn pull-right iframe-popup-link"><i class="fa fa-plus-circle" aria-hidden="true"></i> Non-Listed Doctors</a>
 												</div>
 											</div>
 										</div>
@@ -134,464 +133,11 @@
 						</div>
 						
 						</div>
-					<!--
-					<hr>
-					<table border=0 cellpadding="5" cellspacing="5">
-					<tr class="reported"><td>Saved Reports</td></tr>
-					<tr class="reported unplanned"><td>Saved Reports (Unplanned Doctors)</td></tr>
-					</table>
-					-->
 
             </div>
         </section>
 		<?php if($date!=""){?>
 		<!-- pop starts here -->
-		<div class="mfp-hide white-popup-block large_popup" id="UnplannedAdd">
-			<div class="popup-content">
-				<form class="" id="UnplannedAddForm" method="POST" >
-				<input type="hidden" name="start_date" id="start_date" value="<?php echo $reportDate;?>">
-				<input type="hidden" name="work_type_id" value="2">
-				
-				<div class="popup-header">
-					<button type="button" class="close popup-modal-dismiss add-form"><span>&times;</span></button>
-					<div class="hr-title"><h4>Unplanned Doctors</h4><hr /></div>
-				</div>
-				<div class="popup-body">
-					<div class="row">
-						<div class="col-sm-12 mar-bottom-20">
-							<div class="form-group col-sm-4">
-								<label for="city_id">City</label>
-								<select name="city_id" onchange="loadDoctors(this.form.id)" class="form-control required" id="city_id" aria-invalid="true">
-									<option value="">Select</option>
-									<?php
-									foreach ($cities as $citiy)
-									{?>
-									<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?>><?= $citiy['city_name']?></option>
-									<?php }	?>
-								</select>  
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="doctor_id">Select Doctor</label>
-								<select name="doctor_id" class="form-control required" id="doctor_id" aria-invalid="true">
-								<option value="">Select Doctors</option>
-									<?php
-									if(count($doctorsRelation)>0)
-									foreach ($doctorsRelation as $doctor)
-									{?>
-									<option value="<?= $doctor['doctor_id']?>"><?= $doctor->doctor->name?></option>
-									<?php }	?>
-								</select>  
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="work_with">Work With</label>
-								<select name="work_with" class="form-control required" id="work_with" aria-invalid="true">
-								<option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option> 
-								</select>
-							</div>
-						</div>
-						<div class="col-sm-12 mar-bottom-20">
-						<a href="javascript:void(0)" onclick="$('#unplan_details').removeClass('hide')">Details</a>
-						</div>
-						<div class="col-sm-12 mar-bottom-20 hide" id="unplan_details">
-							<div class="form-group col-sm-6">
-								<label>Products To be detailed :</label>
-								<select name="products[]" class="multiselect-ui form-control required" id="products" aria-invalid="true" multiple="multiple">
-								<?php
-								foreach($products as $product)
-								echo '<option value="'.$product->id.'">'.$product->name.'</option>';
-								?>
-								</select>
-							</div>
-							<?php if(count($samples)){?>
-							<div class="form-group col-sm-6">
-								<h4>Samples :</h4>
-								<ul id="ud_samples">
-								<?php 
-								$sample_limit = (count($samples)<3)? count($samples) : 3;
-								for($i=0; $i< $sample_limit; $i++){ ?>
-									<li>
-									<label class="col-sm-6">
-										<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('ud_samples','<?=$i?>')">
-										<option value="">Select</option>
-										<?php
-										$bal =0;
-										foreach($samples as $sample)
-										{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;?>
-										<option value="<?=$sample->id?>" data-bal="<?=$bal?>"><?=$sample->name?></option>
-										<?php }?>
-										</select>
-									</label>
-									<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="sample_qty required" id="sample_qty_<?=$i?>" value="" disabled></label>
-									</li>
-								<?php }?>
-								</ul>
-							</div>
-							<?php }?>
-							<?php if(count($gifts)){?>
-							<div class="form-group col-sm-6">
-								<h4>Gifts :</h4>
-								<ul id="ud_gifts">
-								<?php
-								$gift_limit = (count($gifts)<3)? count($gifts) : 3;
-								for($i=0; $i< $gift_limit; $i++){ ?>
-									<li>
-									<label class="col-sm-6">
-										<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('ud_gifts','<?=$i?>')">
-										<option value="">Select</option>
-										<?php
-										$bal =0;
-										foreach($gifts as $gift)
-										{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;?>
-										<option value="<?=$gift->id?>" data-bal="<?=$bal?>"><?=$gift->name?></option>
-										<?php }?>
-										</select>
-									</label>
-									<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="gift_qty required" id="gift_qty_<?=$i?>" value="" disabled></label>
-									</li>
-								<?php }?>
-								</ul>
-							</div>
-							<?php }?>
-							<div class="form-group col-sm-12">
-								<div class="form-group col-sm-6">
-									<label class="col-sm-6">Discussion</label>
-									<textarea name="discussion"></textarea>
-								</div>
-								<div class="form-group col-sm-6">
-									<div class="col-sm-6">
-									<label>Visit Time</label>
-									<input type="text" name="visit_time" class="time" value=""><br>
-									</div>
-									<div class="col-sm-6">
-									<label>Doctor Business</label>
-									<input type="text" name="business" value="">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="UnplannedSubmit" class="btn blue-btn btn-block">Save</button></div>
-						<hr>
-						<div class="col-sm-12 mar-bottom-20">
-						<?php 
-						$html ="";
-						if(count($WorkPlansUD))
-						{
-							$html.='<h3 class="mar-top-10 mar-bottom-10">Un-Planned Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
-							$i = 1;
-							foreach ($WorkPlansUD as $WorkPlanUD)
-							{
-								$products_array = array(); $samples_array = array(); $gifts_array = array();
-								if($WorkPlanUD->products!="")
-								$products_array = unserialize($WorkPlanUD->products);
-								if($WorkPlanUD->samples!="")
-								$samples_array = unserialize($WorkPlanUD->samples);
-								if($WorkPlanUD->gifts!="")
-								$gifts_array = unserialize($WorkPlanUD->gifts);
-								$detail_products =array(); $sample_products =array(); $gift_products =array();
-								foreach($products as $product)
-								if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-								foreach($samples as $sample)
-								if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
-								foreach($gifts as $gift)
-								if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
-								$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$class[$WorkPlanUD->doctor->class].'</td><td>'.$WorkPlanUD->doctor->speciality->code.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanUD->visit_time.'</td><td>'.$WorkPlanUD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanUD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
-							$i++;
-							}
-							$html.='</tbody></table>';
-						}
-						if($html!="") echo $html;
-						?>
-						</div>
-					</div>
-				</div>
-				</form>
-			</div>
-		</div>
-		<div class="mfp-hide white-popup-block small_popup" id="ChemistAdd">
-			<div class="popup-content">
-				<form class="" id="ChemistAddForm" method="POST" >
-				<input type="hidden" name="start_date" id="start_date" value="<?php echo $reportDate;?>">
-				<input type="hidden" name="work_type_id" value="">
-				
-				<div class="popup-header">
-					<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-					<div class="hr-title"><h4>Chemists</h4><hr /></div>
-				</div>
-				<div class="popup-body">
-					<div class="row">
-						<div class="col-sm-12 mar-bottom-20">
-							<div class="form-group col-sm-6">
-								<label for="city_id">City</label>
-								<select name="city_id" onchange="loadChemists(this.form.id)" class="form-control required" id="city_id" aria-invalid="true">
-									<option value="">Select</option>
-									<?php
-									foreach ($cities as $citiy)
-									{?>
-									<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?>><?= $citiy['city_name']?></option>
-									<?php }	?>
-								</select>  
-							</div>
-							<div class="form-group col-sm-6">
-								<label for="chemist_id">Select Chemists</label>
-								<select name="chemist_id" class="form-control required" id="chemist_id" aria-invalid="true">
-								<option value="">Select Chemists</option>
-									<?php
-									foreach ($chemists as $chemist)
-									{?>
-									<option value="<?= $chemist->id?>"><?= $chemist->name?></option>
-									<?php }	?>
-								</select>  
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="ChemistSubmit" class="btn blue-btn btn-block">Save</button></div>
-						<hr>
-						<div class="col-sm-12 mar-bottom-20">
-						<?php 
-						$html ="";
-						if(count($WorkPlansC))
-						{
-							$html.='<h3 class="mar-top-10 mar-bottom-10">Chemists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Chemists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
-							$i = 1;
-							foreach ($WorkPlansC as $WorkPlanC)
-							{
-								$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanC->chemist->name.'</td><td>'.$WorkPlanC->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanC->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
-							$i++;
-							}
-							$html.='</tbody></table>';
-						}
-						if($html!="") echo $html;
-						?>
-						</div>
-					</div>
-				</div>
-				</form>
-			</div>
-		</div>
-		<div class="mfp-hide white-popup-block small_popup" id="StockistAdd">
-			<div class="popup-content">
-				<form class="" id="StockistAddForm" method="POST" >
-				<input type="hidden" name="start_date" id="start_date" value="<?php echo $reportDate;?>">
-				<input type="hidden" name="work_type_id" value="">
-				<div class="popup-header">
-					<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-					<div class="hr-title"><h4>Stockists</h4><hr /></div>
-				</div>
-				<div class="popup-body">
-					<div class="row">
-						<div class="col-sm-12 mar-bottom-20">
-							<div class="form-group col-sm-6">
-								<label for="city_id">City</label>
-								<select name="city_id" class="form-control required" onchange="loadStockists(this.form.id)" id="city_id" aria-invalid="true">
-									<option value="">Select</option>
-									<?php
-									foreach ($cities as $citiy)
-									{?>
-									<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?>><?= $citiy['city_name']?></option>
-									<?php }	?>
-								</select>  
-							</div>
-							<div class="form-group col-sm-6">
-								<label for="stockit_id">Select Stockists</label>
-								<select name="stockist_id" class="form-control required" id="stockist_id" aria-invalid="true">
-								<option value="">Select Stockists</option>
-									<?php
-									foreach ($stockists as $stockist)
-									{?>
-									<option value="<?= $stockist->id?>"><?= $stockist->name?></option>
-									<?php }	?>
-								</select>  
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="StockistSubmit" class="btn blue-btn btn-block">Save</button></div>
-						<hr>
-						<div class="col-sm-12 mar-bottom-20">
-						<?php 
-						$html ="";
-						if(count($WorkPlansS))
-						{
-							$html.='<h3 class="mar-top-10 mar-bottom-10">Stockists</h3><table id="plans_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Stockists Name</th><th>City</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
-							$i = 1;
-							foreach ($WorkPlansS as $WorkPlanS)
-							{
-								$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanS->stockist->name.'</td><td>'.$WorkPlanS->city->city_name.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanS->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
-							$i++;
-							}
-							$html.='</tbody></table>';
-						}
-						if($html!="") echo $html;
-						?>
-						</div>
-					</div>
-				</div>
-				</form>
-			</div>
-		</div>
-		<div class="mfp-hide white-popup-block large_popup doctor_product" id="PGOthers">
-			<div class="popup-content">
-				<form class="" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAddPgoReport"])?>" id="PGOAddForm" method="POST" >
-				<input type="hidden" name="start_date" value="<?php echo $reportDate;?>">
-				<input type="hidden" name="work_type_id" value="">
-				<div class="popup-header">
-					<button type="button" class="close popup-modal-dismiss"><span>&times;</span></button>
-					<div class="hr-title"><h4>Unlisted Doctors</h4><hr /></div>
-				</div>
-				<div class="popup-body">
-					<div class="row">
-						<div class="col-sm-12 mar-bottom-20">
-							<div class="form-group col-sm-3">
-								<label for="city_id">Doctor Name</label>
-								<input type="text" name="name" id="name" class="form-control required">
-							</div>
-							<div class="form-group col-sm-3">
-								<label for="city_id">City</label>
-								<select name="city_id" class="form-control required" onchange="loadStockists(this.form.id)" id="city_id" aria-invalid="true">
-									<option value="">Select</option>
-									<?php
-									foreach ($cities as $citiy)
-									{?>
-									<option value="<?= $citiy['id']?>" <?= ($citiy['id']==$userCity	) ? "selected" : "";?>><?= $citiy['city_name']?></option>
-									<?php }	?>
-								</select>  
-							</div>
-							<div class="form-group col-sm-3">
-								<label for="speciality_id">Speciality</label>
-								<select name="speciality_id" class="form-control required" onchange="loadStockists(this.form.id)" id="speciality_id" aria-invalid="true">
-									<option value="">Select</option>
-									<?php
-									foreach ($specialities as $speciality)
-									{?>
-									<option value="<?= $speciality['id']?>" ><?= $speciality['name']?></option>
-									<?php }	?>
-								</select>  
-							</div>
-							<div class="form-group col-sm-3">
-								<label for="work_with">Work With</label>
-								<select name="work_with" class="form-control required" id="work_with" aria-invalid="true">
-									<option>Alone</option><option>TM</option><option>BM</option><option>ZM</option><option>HO</option><option>TM-ZBM</option><option>BM-ZBM</option><option>TM-BM-ZBM</option><option>TM-HO</option><option>TM-BM-HO</option><option>TM-BM-ZBM-HO</option> 
-								</select>
-							</div>
-						</div>
-							<div class="form-group col-sm-6">
-								<label>Products To be detailed :</label>
-								<select name="products[]" class="multiselect-ui form-control required" id="products" aria-invalid="true" multiple="multiple">
-								<?php
-								foreach($products as $product)
-								echo '<option value="'.$product->id.'">'.$product->name.'</option>';
-								?>
-								</select>
-							</div>
-						<div class="col-sm-12 mar-bottom-20">
-							<?php if(count($samples)){?>
-							<div class="form-group col-sm-6">
-								<h4>Samples :</h4>
-								<ul id="pd_samples">
-								<?php 
-								$sample_limit = (count($samples)<3)? count($samples) : 3;
-								for($i=0; $i< $sample_limit; $i++){ ?>
-									<li>
-									<label class="col-sm-6">
-										<select name="sample_id[]" id="sample_id_<?=$i?>" class="sample_id" onchange="productClick('pd_samples','<?=$i?>')">
-										<option value="">Select</option>
-										<?php
-										$bal =0;
-										foreach($samples as $sample)
-										{ $bal = (isset($i_sample[$sample->id]))?($sample->count - $i_sample[$sample->id]):$sample->count;?>
-										<option value="<?=$sample->id?>" data-bal="<?=$bal?>"><?=$sample->name?></option>
-										<?php }?>
-										</select>
-									</label>
-									<label class="col-sm-6"> <input type="text" name="sample_qty[]" max="" class="sample_qty required" id="sample_qty_<?=$i?>" value="" disabled></label>
-									</li>
-								<?php }?>
-								</ul>
-							</div>
-							<?php }?>
-							<?php if(count($gifts)){?>
-							<div class="form-group col-sm-6">
-								<h4>Gifts :</h4>
-								<ul id="pd_gifts">
-								<?php
-								$gift_limit = (count($gifts)<3)? count($gifts) : 3;
-								for($i=0; $i< $gift_limit; $i++){ ?>
-									<li>
-									<label class="col-sm-6">
-										<select name="gift_id[]" id="gift_id_<?=$i?>" class="gift_id" onchange="giftClick('pd_gifts','<?=$i?>')">
-										<option value="">Select</option>
-										<?php
-										$bal =0;
-										foreach($gifts as $gift)
-										{ $bal = (isset($i_gift[$gift->id]))?($gift->count - $i_gift[$gift->id]):$gift->count;?>
-										<option value="<?=$gift->id?>" data-bal="<?=$bal?>"><?=$gift->name?></option>
-										<?php }?>
-										</select>
-									</label>
-									<label class="col-sm-6"> <input type="text" name="gift_qty[]" max="" class="gift_qty required" id="gift_qty_<?=$i?>" value="" disabled></label>
-									</li>
-								<?php }?>
-								</ul>
-							</div>
-							<?php }?>
-							<div class="form-group col-sm-12">
-								<div class="form-group col-sm-6">
-									<label class="col-sm-6">Discussion</label>
-									<textarea name="discussion"></textarea>
-								</div>
-								<div class="form-group col-sm-6">
-									<div class="col-sm-6">
-									<label>Visit Time</label>
-									<input type="text" name="visit_time" class="time" value=""><br>
-									</div>
-									<div class="col-sm-6">
-									<label>Doctor Business</label>
-									<input type="text" name="business" value="">
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6"><button type="button" class="btn blue-btn btn-block margin-right-35 popup-modal-dismiss">Cancel</button></div>
-						<div class="col-md-6 col-sm-6 col-xs-6"> <button type="submit" id="PGOSubmit" class="btn blue-btn btn-block">Save</button></div>
-						<hr>
-						<div class="col-sm-12 mar-bottom-20">
-						<?php 
-						$html ="";
-						if(count($WorkPlansPD))
-						{
-							$html.='<h3 class="mar-top-10 mar-bottom-10">Unlisted Doctors</h3><table id="doctors_table" class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Spec</th><th>City</th><th>Work With</th><th>Products</th><th>Samples</th><th>Gifts</th><th>Visit Time</th><th>Business</th><th class="delete">&nbsp;</th></tr></thead><tbody>';
-							$i = 1;
-							foreach ($WorkPlansPD as $WorkPlanPD)
-							{
-								
-								$products_array = array(); $samples_array = array(); $gifts_array = array();
-								if($WorkPlanPD->products!="")
-								$products_array = unserialize($WorkPlanPD->products);
-								if($WorkPlanPD->samples!="")
-								$samples_array = unserialize($WorkPlanPD->samples);
-								if($WorkPlanPD->gifts!="")
-								$gifts_array = unserialize($WorkPlanPD->gifts);
-								$detail_products =array(); $sample_products =array(); $gift_products =array();
-								foreach($products as $product)
-								if (in_array($product->id, $products_array)) $detail_products[]= $product->name;
-								foreach($samples as $sample)
-								if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
-								foreach($gifts as $gift)
-								if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
-								$html.='<tr><td>'.$i.'</td><td>'.$WorkPlanPD->pg_other->name.'</td><td>'.$WorkPlanPD->pg_other->speciality->code.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td>'.((count($detail_products)>0)?implode(", ",$detail_products):"").'</td><td>'.((count($sample_products)>0)?implode(", ",$sample_products):"").'</td><td>'.((count($gift_products)>0)?implode(", ",$gift_products):"").'</td><td>'.$WorkPlanPD->visit_time.'</td><td>'.$WorkPlanPD->business.'</td><td><a href="javascript:void(0)" onclick="doDelete('.$WorkPlanPD->id.')"><img src="'.$this->Url->image('../images/del@2x.png').'" width="14" height="18" alt="trash"></a></td></tr>';
-							$i++;
-							}
-							$html.='</tbody></table>';
-						}
-						if($html!="") echo $html;
-						?>
-						</div>
-					</div>
-				</div>
-				</form>
-			</div>
-		</div>
 		<div class="mfp-hide white-popup-block small_popup" id="DoctorsMissed">
 			<div class="popup-content">
 				<form method="post" action="<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsReportMissed"])?>" id="DoctorsMissedForm">
@@ -747,7 +293,7 @@
 									<div class="form-group col-sm-6">
 										<div class="col-sm-6">
 										<label>Visit Time</label>
-										<input type="text" name="visit_time" class="time" value="<?= $WorkPlanD->visit_time?>"><br>
+										<input type="text" name="visit_time"  placeholder="HH:MM" class="time" value="<?= $WorkPlanD->visit_time?>"><br>
 										</div>
 										<div class="col-sm-6">
 										<label>Doctor Business</label>
@@ -783,17 +329,10 @@
 	var endDate = new Date(y, m + 1, 0);
 
 	//Date picker
-	$('#reportDate').datepicker({
-		autoclose: true, startDate: startDate, endDate: endDate
-	});
 	$('#missed_doctors_table [type="text"]').datepicker({
 		autoclose: true, startDate: new Date(y, m, d + 1), endDate: endDate
 	});
 
-	$('#reportDate').on('changeDate', function (ev) {
-		window.location.replace("<?php echo $this->Url->build(["controller" => "Mrs","action" => "dailyReportField"])?>?date="+moment(ev.date).format('YYYY-MM-DD'));
-	});
-	
 	$('.popup-modal').magnificPopup({
 		type: 'inline',
 		preloader: false,
@@ -812,7 +351,11 @@
 					'<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>'+
 					'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
 					'</div>'
-		  }
+		  },
+		callbacks: {
+		  close: function(){
+			window.location.replace("");
+		  }}
 	});
 	
 	$(document).on('click', '.popup-modal-dismiss', function (e) {
@@ -821,27 +364,6 @@
 		$.magnificPopup.close();
 	});
 	
-	$("#UnplannedAddForm").validate({
-		ignore: ":hidden",
-		submitHandler: function (form) {
-			doSubmit("#UnplannedAddForm")
-			return false; // required to block normal submit since you used ajax
-		}
-	});
-	$("#ChemistAddForm").validate({
-		ignore: ":hidden",
-		submitHandler: function (form) {
-			doSubmit("#ChemistAddForm")
-			return false; // required to block normal submit since you used ajax
-		}
-	});
-	$("#StockistAddForm").validate({
-		ignore: ":hidden",
-		submitHandler: function (form) {
-			doSubmit("#StockistAddForm")
-			return false; // required to block normal submit since you used ajax
-		}
-	});
 	$("#DoctorsMissedForm").validate({
 		ignore: ":hidden"
 		
@@ -851,14 +373,6 @@
 		submitHandler: function (form) {
 			doSubmit("#LeaveAddForm")
 			return false; // required to block normal submit since you used ajax
-		}
-	});
-	$("input[id^='workType_']").click(function(){
-		if ($(this).is(':checked'))
-		{
-			$("div[id^='workType_section_']").addClass("hide");
-			$("#workType_section_"+$(this).val()).removeClass("hide");
-			$('input[type="checkbox"].workplan_id').prop('checked', false);
 		}
 	});
 	
@@ -903,13 +417,10 @@
 	});
   
 	function reset_form(){
-		//$('#StockistAddForm, #ChemistAddForm')[0].reset();
-		$('.doctor_product_from')[0].reset();
-		$('.doctor_product_from .multiselect-ui').multiselect('refresh');
-		$('#PGOAddForm')[0].reset();
-		$('#PGOAddForm .multiselect-ui').multiselect('refresh');
-		$('#PGOAddForm .sample_qty, #PGOAddForm .gift_qty').prop('disabled', true).attr('max', '');
-
+		if($('.doctor_product_from').length > 0){
+			$('.doctor_product_from')[0].reset();
+			$('.doctor_product_from .multiselect-ui').multiselect('refresh');
+		}
 	}
 	function reset_missed_form(){
 		$("tr[id^='missed_']").hide();
@@ -966,45 +477,6 @@
 		$("#"+ul + " #gift_qty_" + id).prop('disabled', false).attr('max', bal); return;
 	}
 	
-	function loadDoctors(id){
-		var city_id = $('#'+id+' #city_id').val();
-		var start_date = $('#'+id+' #start_date').val();
-		$.ajax({
-			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetDoctors"])?>',
-			   data: "city_id="+city_id+"&start_date="+start_date,
-			   type: "POST",
-			   success: function(json) {
-				   $('#doctor_id').html(json);
-			   }
-		});
-	}
-
-	function loadChemists(id){
-		var city_id = $('#'+id+' #city_id').val();
-		var start_date = $('#'+id+' #start_date').val();
-		$.ajax({
-			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetChemists"])?>',
-			   data: "city_id="+city_id+"&start_date="+start_date,
-			   type: "POST",
-			   success: function(json) {
-				   $('#chemist_id').html(json);
-			   }
-		});
-	}
-
-	function loadStockists(id){
-		var city_id = $('#'+id+' #city_id').val();
-		var start_date = $('#'+id+' #start_date').val();
-		$.ajax({
-			   url: '<?php echo $this->Url->build(["controller" => "Mrs","action" => "reportGetStockists"])?>',
-			   data: "city_id="+city_id+"&start_date="+start_date,
-			   type: "POST",
-			   success: function(json) {
-				   $('#stockist_id').html(json);
-			   }
-		});
-	}
-
 	function doSubmit(form){ // add event
 	   $.ajax({
 		   url: '<?php echo $this->Url->build(["controller" => "WorkPlans","action" => "mrsAddReport"])?>',

@@ -91,19 +91,21 @@ class MrsController extends AppController {
                             ->find('list')
                             ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
 
-            $WorkPlansUD = $this->WorkPlans
-                            ->find('list')
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
 
-            $WorkPlansPD = $this->WorkPlans
-                            ->find('list')
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+				$WorkPlansD = $this->WorkPlans
+				->find('list')
+				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
 
-            $WorkPlansC = $this->WorkPlans
-                            ->find('list')
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+				$WorkPlansUD = $this->WorkPlans
+				->find('list')
+				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
 
-            $doctorCalls += count($WorkPlansD) + count($WorkPlansUD) + count($WorkPlansPD);
+				$WorkPlansC = $this->WorkPlans
+				->find('list')
+				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+
+
+            $doctorCalls+= count($WorkPlansD) + count($WorkPlansUD);
             $chemistCalls += count($WorkPlansC);
         }
         $doctors = $this->paginate($this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']))->toArray();
@@ -237,438 +239,638 @@ class MrsController extends AppController {
         exit;
     }
 
-    public function dailyReport() {
+    public function dailyReport()
+    {
         $this->set('title', 'Daily Report');
         $uid = $this->Auth->user('id');
-        $lead_id = $this->Auth->user('lead_id');
+		$lead_id = $this->Auth->user('lead_id');
         $userCity = $this->Auth->user('city_id');
-        $user = $this->Auth->user;
-        $state_id = $this->Auth->user('state_id');
+        $user =  $this->Auth->user;
+		$state_id = $this->Auth->user('state_id');
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $specialities = $this->Specialities->find('all')->toarray();
-        $products = $this->Products->find('all')->toarray();
-        $date = "";
-        $workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->order(['list' => 'ASC'])->toarray();
-        $WorkPlans = array();
-        $doctorsRelation = array();
+		$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+		$date = "";
+		$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->order(['list' => 'ASC'])->toarray();
+		$WorkPlans = array();
+		$doctorsRelation = array();
 
-        if (isset($_GET['date'])) {
-            $date = $_GET['date'];
-            //echo $date; exit;
-            $start_date = $date . " 00:00:00";
-            $end_date = $date . " 23:59:00";
+		if(isset($_GET['date']))
+		{
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
 
-            $WorkPlans = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['WorkTypes', 'Cities'])
-                            ->where(['WorkPlans.user_id =' => $uid])
-                            ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
+			$WorkPlans = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities'])
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
 
-            $WorkPlansL = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['WorkTypes', 'Cities'])
-                            ->where(['WorkPlans.user_id =' => $uid])
-                            ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
+			$WorkPlansL = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities'])
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
 
-            $workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-        }
-        $hasLeave = $this->_hasPlannedLeave($date);
-        $leaveTypes = $this->LeaveTypes->find()->toarray();
-        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'WorkPlansL', 'workPlanSubmit', 'date', 'hasLeave'));
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+
+		}
+		$hasPlannedLeave = $this->_hasPlannedLeave($date);
+		$hasLeave = $this->_hasLeave($date);
+		$leaveTypes = $this->LeaveTypes->find()->toarray();
+        $this->set(compact('userCity', 'cities', 'specialities', 'leaveTypes', 'products', 'doctorsRelation', 'workTypes', 'WorkPlans', 'WorkPlansL', 'workPlanSubmit', 'date','hasPlannedLeave','hasLeave'));
+
     }
 
-    public function dailyReportField() {
-        if (isset($_GET['date'])) {
-            $date = $_GET['date'];
-            //echo $date; exit;
-            $this->set('title', 'Daily Report');
-            $uid = $this->Auth->user('id');
-            $lead_id = $this->Auth->user('lead_id');
-            $hasLeave = $this->_hasLeave($date);
-            $workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-            if ($workPlanSubmit || $hasLeave) {
-                return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport', '?' => ['date' => $date]]);
-            }
+    public function dailyReportField()
+    {
+		if(isset($_GET['date']))
+		{
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 
-            $userCity = $this->Auth->user('city_id');
-            $user = $this->Auth->user;
-            $state_id = $this->Auth->user('state_id');
-            $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-            $specialities = $this->Specialities->find('all')->toarray();
-            $doctorTypes = $this->DoctorTypes->find('all')->toarray();
-            foreach ($doctorTypes as $doctorType)
-                $class[$doctorType->id] = $doctorType->name;
-            $products = $this->Products->find('all')->toarray();
-            $samples = $this->AssignedSamples->find('all');
-            $samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
-            $i_samples = $this->IssuedSamples->find('all');
-            $i_samples = $i_samples->select(['id' => 'product_id', 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
-            foreach ($i_samples as $sample)
-                $i_sample[$sample->id] = $sample->count;
-            $gifts = $this->AssignedGifts->find('all');
-            $gifts = $gifts->select(['id' => 'gift_id', 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
-            $i_gifts = $this->IssuedGifts->find('all');
-            $i_gifts = $i_gifts->select(['id' => 'gift_id', 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
-            foreach ($i_gifts as $gift)
-                $i_gift[$gift->id] = $gift->count;
-            //pj($i_gift);
-            $workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
-            $WorkPlansD = array();
-            $WorkPlans = array();
-            $doctorsRelation = array();
-            $chemists = array();
-            $stockists = array();
-            $start_date = $date . " 00:00:00";
-            $end_date = $date . " 23:59:00";
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$specialities = $this->Specialities->find('all')->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$samples = $this->AssignedSamples->find('all');
+			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->order(['Products.name' => 'ASC'])->group('AssignedSamples.product_id')->toarray();
+			$i_samples = $this->IssuedSamples->find('all');
+			$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
+			foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
+			$gifts = $this->AssignedGifts->find('all');
+			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->order(['Gifts.name' => 'ASC'])->group('AssignedGifts.gift_id')->toarray();
+			$i_gifts = $this->IssuedGifts->find('all');
+			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
+			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
+			//pj($i_gift);
+			$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
+			$WorkPlansD = array();
+			$WorkPlans = array();
+			$doctorsRelation = array();
+			$chemists = array();
+			$stockists = array();
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
 
 
-            $WorkPlansD = $this->WorkPlans
-                    ->find('all')
-                    ->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
-                    ->where(['WorkPlans.user_id =' => $uid])
-                    ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
-            $reported_doctors = array_map(function($d) {
-                return $d->doctor_id;
-            }, $WorkPlansD->toArray());
-            $reported_doctors[] = 0;
-            $WorkPlansD = $WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
-            $doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors'])->toArray();
+			$WorkPlansD = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
+			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray()); $reported_doctors[]=0;
+			$WorkPlansD = $WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
+			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors'])->toArray();
 
-            $WorkPlansUD = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
+			$WorkPlansUD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
 
-            $WorkPlansPD = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+			$WorkPlansPD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
 
-            $WorkPlans = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['WorkTypes', 'Cities'])
-                            ->where(['WorkPlans.user_id =' => $uid])
-                            ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
+			$WorkPlans = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities'])
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->toArray();
 
-            $WorkPlansC = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Chemists'])
-                            ->where(['WorkPlans.user_id =' => $uid])
-                            ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
-            $reported_chemists = array_map(function($c) {
-                return $c->chemist_id;
-            }, $WorkPlansC);
-            $reported_chemists[] = 0;
-            $chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity, 'Chemists.id NOT IN' => $reported_chemists])->toarray();
+			$WorkPlansC = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Chemists'])
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+			$reported_chemists=array_map(function($c) { return $c->chemist_id; }, $WorkPlansC); $reported_chemists[]=0;
+			$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity, 'Chemists.id NOT IN' => $reported_chemists])->toarray();
 
 
-            $WorkPlansS = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Stockists'])
-                            ->where(['WorkPlans.user_id =' => $uid])
-                            ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
-            $reported_stockists = array_map(function($s) {
-                return $s->stockist_id;
-            }, $WorkPlansS);
-            $reported_stockists[] = 0;
-            $stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
-            $leaveTypes = $this->LeaveTypes->find()->toarray();
+			$WorkPlansS = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Stockists'])
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansS); $reported_stockists[]=0;
+			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
+		$leaveTypes = $this->LeaveTypes->find()->toarray();
 
-            $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansPD', 'WorkPlansS', 'WorkPlansC', 'WorkPlans', 'date'));
-        } else
-            return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
+        $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansPD', 'WorkPlansS', 'WorkPlansC', 'WorkPlans', 'date'));
+
+		}
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
+
+
     }
 
-    public function UnplannedDoctors() {
-        if (isset($_GET['date'])) {
-            $date = $_GET['date'];
-            //echo $date; exit;
-            $this->set('title', 'Daily Report');
-            $uid = $this->Auth->user('id');
-            $lead_id = $this->Auth->user('lead_id');
-            $hasLeave = $this->_hasLeave($date);
-            $workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-            if ($workPlanSubmit || $hasLeave) {
-                return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport', '?' => ['date' => $date]]);
-            }
+    public function dailyReportStockist()
+    {
+		if(isset($_GET['date']))
+		{
+			$this->viewBuilder()->layout('iframe');
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 
-            $userCity = $this->Auth->user('city_id');
-            $user = $this->Auth->user;
-            $state_id = $this->Auth->user('state_id');
-            $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-            $specialities = $this->Specialities->find('all')->toarray();
-            $doctorTypes = $this->DoctorTypes->find('all')->toarray();
-            foreach ($doctorTypes as $doctorType)
-                $class[$doctorType->id] = $doctorType->name;
-            $products = $this->Products->find('all')->toarray();
-            $samples = $this->AssignedSamples->find('all');
-            $samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->group('AssignedSamples.product_id')->toarray();
-            $i_samples = $this->IssuedSamples->find('all');
-            $i_samples = $i_samples->select(['id' => 'product_id', 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
-            foreach ($i_samples as $sample)
-                $i_sample[$sample->id] = $sample->count;
-            $gifts = $this->AssignedGifts->find('all');
-            $gifts = $gifts->select(['id' => 'gift_id', 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->group('AssignedGifts.gift_id')->toarray();
-            $i_gifts = $this->IssuedGifts->find('all');
-            $i_gifts = $i_gifts->select(['id' => 'gift_id', 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
-            foreach ($i_gifts as $gift)
-                $i_gift[$gift->id] = $gift->count;
-            //pj($i_gift);
-            $workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
-            $WorkPlansD = array();
-            $WorkPlansUD = array();
-            $doctorsRelation = array();
-            $chemists = array();
-            $stockists = array();
-            $start_date = $date . " 00:00:00";
-            $end_date = $date . " 23:59:00";
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$stockists = array();
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
+
+			$WorkPlansS = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Stockists'])
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+			$reported_stockists=array_map(function($s) { return $s->stockist_id; }, $WorkPlansS); $reported_stockists[]=0;
+			$stockists = $this->Stockists->find('all')->where(['city_id =' => $userCity, 'Stockists.id NOT IN' => $reported_stockists])->toarray();
+
+        $this->set(compact('userCity', 'cities', 'stockists', 'workTypes', 'WorkPlansS', 'date'));
+
+		}
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
 
 
-            $WorkPlansD = $this->WorkPlans
-                    ->find('all')
-                    ->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
-                    ->where(['WorkPlans.user_id =' => $uid])
-                    ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
-            $reported_doctors = array_map(function($d) {
-                return $d->doctor_id;
-            }, $WorkPlansD->toArray());
-            $reported_doctors[] = 0;
-            $WorkPlansD = $WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
-            $doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors.Specialities'])->toArray();
-
-            $WorkPlansUD = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
-
-
-            $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'doctorsRelation', 'workTypes', 'WorkPlansUD', 'date'));
-        } else
-            return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
     }
 
-    public function viewDailyReport() {
-        if (isset($_GET['date'])) {
-            $this->viewBuilder()->layout('iframe');
-            $date = $_GET['date'];
-            //echo $date; exit;
-            $this->set('title', 'Daily Report');
-            $uid = $this->Auth->user('id');
-            $lead_id = $this->Auth->user('lead_id');
-            $hasLeave = $this->_hasLeave($date);
-            $workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-            if ($workPlanSubmit || $hasLeave) {
-                return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport', '?' => ['date' => $date]]);
-            }
+    public function dailyReportChemist()
+    {
+		if(isset($_GET['date']))
+		{
+			$this->viewBuilder()->layout('iframe');
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 
-            $userCity = $this->Auth->user('city_id');
-            $user = $this->Auth->user;
-            $state_id = $this->Auth->user('state_id');
-            $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-            $doctorTypes = $this->DoctorTypes->find('all')->toarray();
-            foreach ($doctorTypes as $doctorType)
-                $class[$doctorType->id] = $doctorType->name;
-            $products = $this->Products->find('all')->toarray();
-            $samples = $this->Products->find('all')->toarray();
-            $gifts = $this->Gifts->find('all')->toarray();
-            $html = "";
-            $start_date = $date . " 00:00:00";
-            $end_date = $date . " 23:59:00";
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$chemists = array();
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
 
-            $WorkPlansD = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
+			$WorkPlansC = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Chemists'])
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+			$reported_chemists=array_map(function($c) { return $c->chemist_id; }, $WorkPlansC); $reported_chemists[]=0;
+			$chemists = $this->Chemists->find('all')->where(['city_id =' => $userCity, 'Chemists.id NOT IN' => $reported_chemists])->toarray();
 
-            $WorkPlansUD = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
 
-            $WorkPlansPD = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+        $this->set(compact('userCity', 'cities', 'chemists', 'WorkPlansC', 'date'));
 
-            $WorkPlans = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['WorkTypes', 'Cities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
+		}
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
 
-            $WorkPlansL = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['LeaveTypes'])
-                            ->contain(['WorkTypes', 'Cities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
 
-            $WorkPlansC = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Chemists'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
-
-            $WorkPlansS = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Stockists'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
-
-            $this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));
-        } else
-            return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
     }
 
-    public function finalSubmitReport() {
-        if (isset($_GET['date'])) {
-            $date = $_GET['date'];
-            //echo $date; exit;
-            $this->set('title', 'Final Submit');
-            $uid = $this->Auth->user('id');
-            $lead_id = $this->Auth->user('lead_id');
-            $hasLeave = $this->_hasLeave($date);
-            $hasUnSavedPlans = $this->_hasUnSavedPlans($date);
-            $workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-            if ($workPlanSubmit) {
-                return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport', '?' => ['date' => $date]]);
-            }
+    public function UnplannedDoctors()
+    {
+		if(isset($_GET['date']))
+		{
+			$this->viewBuilder()->layout('iframe');
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 
-            $userCity = $this->Auth->user('city_id');
-            $user = $this->Auth->user;
-            $state_id = $this->Auth->user('state_id');
-            $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-            $products = $this->Products->find('all')->toarray();
-            $doctorTypes = $this->DoctorTypes->find('all')->toarray();
-            foreach ($doctorTypes as $doctorType)
-                $class[$doctorType->id] = $doctorType->name;
-            $samples = $this->Products->find('all')->toarray();
-            $gifts = $this->Gifts->find('all')->toarray();
-            $html = "";
-            $start_date = $date . " 00:00:00";
-            $end_date = $date . " 23:59:00";
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$specialities = $this->Specialities->find('all')->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$samples = $this->AssignedSamples->find('all');
+			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->order(['Products.name' => 'ASC'])->group('AssignedSamples.product_id')->toarray();
+			$i_samples = $this->IssuedSamples->find('all');
+			$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
+			foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
+			$gifts = $this->AssignedGifts->find('all');
+			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->order(['Gifts.name' => 'ASC'])->group('AssignedGifts.gift_id')->toarray();
+			$i_gifts = $this->IssuedGifts->find('all');
+			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
+			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
+			//pj($i_gift);
+			$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
+			$WorkPlansD = array();
+			$WorkPlansUD = array();
+			$doctorsRelation = array();
+			$chemists = array();
+			$stockists = array();
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
 
-            $WorkPlansD = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
 
-            $WorkPlansUD = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
+			$WorkPlansD = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_approved =' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
+			$reported_doctors=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray()); $reported_doctors[]=0;
+			$WorkPlansD = $WorkPlansD->where(['WorkPlans.is_planned =' => '1'])->toArray();
+			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $reported_doctors, 'Doctors.city_id' => $userCity])->contain(['Doctors.Specialities'])->toArray();
 
-            $WorkPlansPD = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+			$WorkPlansUD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
 
-            $WorkPlans = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['WorkTypes', 'Cities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
 
-            $WorkPlansL = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['LeaveTypes'])
-                            ->contain(['WorkTypes', 'Cities'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
+        $this->set(compact('userCity', 'cities', 'specialities', 'class', 'leaveTypes', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'doctorsRelation', 'workTypes', 'WorkPlansUD','date'));
 
-            $WorkPlansC = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Chemists'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+		}
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
 
-            $WorkPlansS = $this->WorkPlans
-                            ->find('all')
-                            ->contain(['Cities', 'Stockists'])
-                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
 
-            $this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD', 'hasUnSavedPlans'));
-        } else
-            return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
     }
 
-    public function reportGetDoctors() {
+    public function dailyReportPgo()
+    {
+		if(isset($_GET['date']))
+		{
+			$this->viewBuilder()->layout('iframe');
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$specialities = $this->Specialities->find('all')->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$samples = $this->AssignedSamples->find('all');
+			$samples = $samples->select(['id' => 'product_id', 'name' => 'Products.name', 'count' => $samples->func()->sum('AssignedSamples.count')])->where(['AssignedSamples.user_id' => $uid])->contain(['Products'])->order(['Products.name' => 'ASC'])->group('AssignedSamples.product_id')->toarray();
+			$i_samples = $this->IssuedSamples->find('all');
+			$i_samples = $i_samples->select(['id' => 'product_id' , 'count' => $i_samples->func()->sum('IssuedSamples.count')])->where(['IssuedSamples.user_id' => $uid])->group('IssuedSamples.product_id')->toarray();
+			foreach($i_samples as $sample) $i_sample[$sample->id] = $sample->count;
+			$gifts = $this->AssignedGifts->find('all');
+			$gifts = $gifts->select(['id' => 'gift_id' , 'name' => 'Gifts.name', 'count' => $gifts->func()->sum('AssignedGifts.count')])->where(['AssignedGifts.user_id' => $uid])->contain(['Gifts'])->order(['Gifts.name' => 'ASC'])->group('AssignedGifts.gift_id')->toarray();
+			$i_gifts = $this->IssuedGifts->find('all');
+			$i_gifts = $i_gifts->select(['id' => 'gift_id' , 'count' => $i_gifts->func()->sum('IssuedGifts.count')])->where(['IssuedGifts.user_id' => $uid])->group('IssuedGifts.gift_id')->toarray();
+			foreach($i_gifts as $gift) $i_gift[$gift->id] = $gift->count;
+			//pj($i_gift);
+			$workTypes = $this->WorkTypes->find()->where(['WorkTypes.id >' => '2'])->toarray();
+			$WorkPlansD = array();
+			$WorkPlans = array();
+			$doctorsRelation = array();
+			$chemists = array();
+			$stockists = array();
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
+
+			$WorkPlansPD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+
+
+        $this->set(compact('userCity', 'cities', 'specialities', 'products', 'samples', 'i_sample', 'gifts', 'i_gift', 'WorkPlansPD', 'date'));
+
+		}
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
+
+
+    }
+
+    public function viewReportedCalls()
+    {
+		if(isset($_GET['date']))
+		{
+			$this->viewBuilder()->layout('iframe');
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$samples = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$gifts = $this->Gifts->find('all')->order(['name' => 'ASC'])->toarray();
+			$html = "";
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
+
+			$WorkPlansD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
+
+			$WorkPlansUD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
+
+			$WorkPlansPD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+
+			$WorkPlans = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities'])
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
+
+			$WorkPlansL = $this->WorkPlans
+			->find('all')
+			->contain(['LeaveTypes'])
+			->contain(['WorkTypes', 'Cities'])
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
+
+			$WorkPlansC = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Chemists'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+
+			$WorkPlansS = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Stockists'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+
+			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));
+		}
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
+
+    }
+
+    public function finalSubmitReport()
+    {
+		if(isset($_GET['date']))
+		{
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$this->set('title', 'Final Submit');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
+			$hasUnSavedPlans = $this->_hasUnSavedPlans($date);
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$samples = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$gifts = $this->Gifts->find('all')->order(['name' => 'ASC'])->toarray();
+			$html = "";
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
+
+			$WorkPlansD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
+
+			$WorkPlansUD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
+
+			$WorkPlansPD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+
+			$WorkPlans = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities'])
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
+
+			$WorkPlansL = $this->WorkPlans
+			->find('all')
+			->contain(['LeaveTypes'])
+			->contain(['WorkTypes', 'Cities'])
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
+
+			$WorkPlansC = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Chemists'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+
+			$WorkPlansS = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Stockists'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+
+			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples', 'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD', 'hasUnSavedPlans'));
+		}
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
+
+    }
+
+    public function viewDailyReport()
+    {
+		if(isset($_GET['date']))
+		{
+			$this->viewBuilder()->layout('iframe');
+			$date = $_GET['date'];
+			//echo $date; exit;
+			$this->set('title', 'Daily Report');
+			$uid = $this->Auth->user('id');
+			$lead_id = $this->Auth->user('lead_id');
+			$hasLeave = $this->_hasLeave($date);
+			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
+			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
+
+			$userCity = $this->Auth->user('city_id');
+			$user =  $this->Auth->user;
+			$state_id = $this->Auth->user('state_id');
+			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+			$doctorTypes = $this->DoctorTypes->find('all')->toarray();
+			foreach($doctorTypes as $doctorType) $class[$doctorType->id] = $doctorType->name;
+			$products = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$samples = $this->Products->find('all')->order(['name' => 'ASC'])->toarray();
+			$gifts = $this->Gifts->find('all')->order(['name' => 'ASC'])->toarray();
+			$html = "";
+			$start_date = $date." 00:00:00";
+			$end_date = $date." 23:59:00";
+
+			$WorkPlansD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
+
+			$WorkPlansUD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Doctors', 'Doctors.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_unplanned =' => 1])->toArray();
+
+			$WorkPlansPD = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'PgOthers', 'PgOthers.Specialities'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.pgother_id IS NOT' => null, 'WorkPlans.work_type_id IS' => null])->toArray();
+
+			$WorkPlans = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities'])
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id <>' => 2])->andWhere(['WorkPlans.work_type_id <>' => 1])->toArray();
+
+			$WorkPlansL = $this->WorkPlans
+			->find('all')
+			->contain(['LeaveTypes'])
+			->contain(['WorkTypes', 'Cities'])
+			->where(['WorkPlans.user_id =' => $uid,'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.work_type_id =' => 1])->toArray();
+
+			$WorkPlansC = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Chemists'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+
+			$WorkPlansS = $this->WorkPlans
+			->find('all')
+			->contain(['Cities', 'Stockists'])
+			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+
+			$this->set(compact('userCity', 'cities', 'class', 'products', 'samples',  'gifts', 'chemists', 'stockists', 'doctorsRelation', 'workTypes', 'WorkPlans', 'date', 'WorkPlansD', 'WorkPlansUD', 'WorkPlansC', 'WorkPlansS', 'WorkPlansL', 'WorkPlansPD'));
+		}
+		else
+		return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport']);
+
+    }
+
+    public function reportGetDoctors()
+    {
         $this->autoRender = false;
         $this->viewBuilder()->layout(false);
-        $data = $this->request->data;
-        $uid = $this->Auth->user('id');
-        $city_id = $data['city_id'];
-        $start_date = $data['start_date'];
+		$data = $this->request->data;
+		$uid = $this->Auth->user('id');
+		$city_id = $data['city_id'];
+		$start_date = $data['start_date'];
 
-        $WorkPlansD = $this->WorkPlans
-                ->find('all')
-                ->contain(['WorkTypes', 'Cities', 'Doctors'])
-                ->select('doctor_id')->where(['WorkPlans.user_id =' => $uid])
-                ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
-        $doctor_ids = array_map(function($d) {
-            return $d->doctor_id;
-        }, $WorkPlansD->toArray());
-        $doctor_ids[] = 0;
+		$WorkPlansD = $this->WorkPlans
+			->find('all')
+			->contain(['WorkTypes', 'Cities', 'Doctors'])
+			->select('doctor_id')->where(['WorkPlans.user_id =' => $uid])
+			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2]);
+		$doctor_ids=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD->toArray());
+		$doctor_ids[]=0;
 
-        $doctors = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $doctor_ids, 'Doctors.city_id' => $city_id])->contain(['Doctors.Specialities']);
-        $listHtml = '<option value="">Select Doctors</option>';
-        foreach ($doctors as $doctor)
-            $listHtml .= '<option value="' . $doctor->doctor_id . '" data-spec="' . $doctor->doctor->speciality->name . '">' . $doctor->doctor->name . '</option>';
-        echo $listHtml;
-        exit;
+		$doctors = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $doctor_ids, 'Doctors.city_id' => $city_id])->contain(['Doctors.Specialities']);
+		$listHtml='<option value="">Select Doctors</option>';
+		foreach ($doctors as $doctor)
+		$listHtml.='<option value="'.$doctor->doctor_id.'" data-spec="'.$doctor->doctor->speciality->name.'">'.$doctor->doctor->name.'</option>';
+		echo $listHtml; exit;
     }
 
-    public function reportGetChemists() {
+    public function reportGetChemists()
+    {
         $this->autoRender = false;
         $this->viewBuilder()->layout(false);
-        $data = $this->request->data;
-        $uid = $this->Auth->user('id');
-        $city_id = $data['city_id'];
-        $start_date = $data['start_date'];
+		$data = $this->request->data;
+		$uid = $this->Auth->user('id');
+		$city_id = $data['city_id'];
+		$start_date = $data['start_date'];
 
-        $WorkPlansC = $this->WorkPlans
-                        ->find('all')
-                        ->contain(['Cities', 'Chemists'])
-                        ->where(['WorkPlans.user_id =' => $uid])
-                        ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
-        $chemist_ids = array_map(function($c) {
-            return $c->chemist_id;
-        }, $WorkPlansC);
-        $chemist_ids[] = 0;
+		$WorkPlansC = $this->WorkPlans
+		->find('all')
+		->contain(['Cities', 'Chemists'])
+		->where(['WorkPlans.user_id =' => $uid])
+		->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
+		$chemist_ids=array_map(function($c) { return $c->chemist_id; }, $WorkPlansC);
+		$chemist_ids[]=0;
 
-        $chemists = $this->Chemists->find('all')->where(['city_id =' => $city_id, 'id NOT IN' => $chemist_ids])->toarray();
-        $listHtml = '<option value="">Select Chemists</option>';
-        foreach ($chemists as $chemist)
-            $listHtml .= '<option value="' . $chemist['id'] . '">' . $chemist['name'] . '</option>';
+		$chemists = $this->Chemists->find('all')->where(['city_id =' => $city_id, 'id NOT IN' => $chemist_ids])->toarray();
+		$listHtml='<option value="">Select Chemists</option>';
+		foreach ($chemists as $chemist)
+		$listHtml.='<option value="'.$chemist['id'].'">'.$chemist['name'].'</option>';
 
-        echo $listHtml;
-        exit;
+		echo $listHtml; exit;
     }
 
-    public function reportGetStockists() {
+    public function reportGetStockists()
+    {
         $this->autoRender = false;
         $this->viewBuilder()->layout(false);
-        $data = $this->request->data;
-        $uid = $this->Auth->user('id');
-        $city_id = $data['city_id'];
-        $start_date = $data['start_date'];
+		$data = $this->request->data;
+		$uid = $this->Auth->user('id');
+		$city_id = $data['city_id'];
+		$start_date = $data['start_date'];
 
-        $WorkPlansS = $this->WorkPlans
-                        ->find('all')
-                        ->contain(['Cities', 'Stockists'])
-                        ->where(['WorkPlans.user_id =' => $uid])
-                        ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
-        $stockist_ids = array_map(function($c) {
-            return $c->stockist_id;
-        }, $WorkPlansS);
-        $stockist_ids[] = 0;
+		$WorkPlansS = $this->WorkPlans
+		->find('all')
+		->contain(['Cities', 'Stockists'])
+		->where(['WorkPlans.user_id =' => $uid])
+		->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.stockist_id IS NOT' => null])->toArray();
+		$stockist_ids=array_map(function($c) { return $c->stockist_id; }, $WorkPlansS);
+		$stockist_ids[]=0;
 
-        $stockists = $this->Stockists->find('all')->where(['city_id =' => $city_id, 'id NOT IN' => $stockist_ids])->toarray();
-        $listHtml = '<option value="">Select Stockists</option>';
-        foreach ($stockists as $stockist)
-            $listHtml .= '<option value="' . $stockist['id'] . '">' . $stockist['name'] . '</option>';
+		$stockists = $this->Stockists->find('all')->where(['city_id =' => $city_id, 'id NOT IN' => $stockist_ids])->toarray();
+		$listHtml='<option value="">Select Stockists</option>';
+		foreach ($stockists as $stockist)
+		$listHtml.='<option value="'.$stockist['id'].'">'.$stockist['name'].'</option>';
 
-        echo $listHtml;
-        exit;
+		echo $listHtml; exit;
     }
 
-    public function reports() {
+    public function reports()
+    {
         $this->set('title', 'Reports');
-    }
 
+    }
+   
     public function expenses() {
 
         $current_year = date("Y");

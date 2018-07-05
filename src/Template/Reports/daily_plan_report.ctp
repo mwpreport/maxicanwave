@@ -13,7 +13,7 @@
                         </h2>
                         <hr>
                         <h3><?php echo "Mr. ".$user->firstname." ".$user->lastname." | ".$user->city->city_name." | ".$user->role->code?></h3>
-                        <h5><?php echo "From : ".date("d/m/Y", strtotime($start_date))." | To : ".date("d/m/Y", strtotime($end_date))?></h5>
+                        <h5><?php echo "From : ".$this->Date->view($start_date)." | To : ".$this->Date->view($end_date)?></h5>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -28,7 +28,7 @@
 			//pj($workPlanDate);
 			if(isset($workPlanDate['field']) || isset($workPlanDate['other']) || isset($workPlanDate['leave']))
 			{
-				$html = '<div class="white-wrapper no-padding mar-top-20"><div class="table-responsive" id="report_section"><h3 class="mar-top-10 mar-bottom-15 center"><u>'.$date.'</u></h3>';
+				$html = '<div class="white-wrapper no-padding mar-top-20"><div class="table-responsive" id="report_section"><h3 class="mar-top-10 mar-bottom-15 center"><u>'.$this->Date->view($date).'</u></h3>';
 				if(!empty($workPlanDate['field'])){
 					$html.='<h3 class="mar-top-10 mar-bottom-10 center">Doctors Visit</h3><table class="table table-striped table-bordered table-hover"><thead><tr><th width="">S.No</th><th>Doctor Name</th><th>Class</th><th>Spec</th><th>City</th><th>Products</th></tr></thead><tbody>';
 					$i = 1;

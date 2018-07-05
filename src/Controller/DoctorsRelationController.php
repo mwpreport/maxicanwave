@@ -85,7 +85,9 @@ class DoctorsRelationController extends AppController
 					if($data_count<1)
 					{
 						if ($this->DoctorsRelation->save($doctorsRelation)) {
-							//
+							$doctors = $this->Doctors->get($doctorsRelation['doctor_id']);
+							$doctors = $this->Doctors->patchEntity($doctors, ['class' => $doctorsRelation['class']]);
+							$this->Doctors->save($doctors);
 						}
 						else
 						{
@@ -124,6 +126,9 @@ class DoctorsRelationController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $this->request->getData());
             if ($this->DoctorsRelation->save($doctorsRelation)) {
+				$doctors = $this->Doctors->get($doctorsRelation['doctor_id']);
+				$doctors = $this->Doctors->patchEntity($doctors, ['class' => $doctorsRelation['class']]);
+				$this->Doctors->save($doctors);
                 $this->Flash->success(__('The doctors relation has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
