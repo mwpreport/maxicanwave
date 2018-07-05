@@ -16,7 +16,7 @@
                 <div class="clearfix"></div>
                 <div class="daily-report-radio-cnt">
                   <div class="row">
-    							<?= $this->Form->create($expense, array('id' => 'newform')) ?>
+    							<?= $this->Form->create($expense, array('id' => 'getExpenseList', 'type' => 'GET')) ?>
     								<div class="form-group">
     									<div class="col-sm-4">
                         <?= $this->Form->control('month', ['class' => 'form-control required', 'options' => $months,'empty' => 'Select', 'required' => true,]) ?>
@@ -293,7 +293,7 @@
 </div>
 
 <script>
-$("#newform").validate();
+$("#getExpenseList").validate();
 function loadexpenses(){
   var month = $("#month").val();
   var year = $("#year").val();

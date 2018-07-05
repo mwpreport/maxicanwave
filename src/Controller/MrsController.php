@@ -1,19 +1,19 @@
 <?php
 
 namespace App\Controller;
-use Cake\Core\Configure;
 
+use Cake\Core\Configure;
 use App\Controller\AppController;
 use Cake\Event\Event;
 use DateTime;
 use DatePeriod;
 use DateInterval;
 
-
 /**
  * Mrs Controller
  */
 class MrsController extends AppController {
+
     public function initialize() {
         parent::initialize();
         $this->loadModel('Users');
@@ -49,40 +49,48 @@ class MrsController extends AppController {
         $this->loadModel('ExpenseApprovals');
     }
 
-    public function beforeFilter(Event $event){
+    public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
-        if($this->Auth->User()) {
+        if ($this->Auth->User()) {
             $currentUserid = $this->Auth->user('id');
-        }else{
+        } else {
             return $this->redirect($this->Auth->logout());
         }
     }
 
-    public function index(){
+    public function index() {
         $this->set('title', 'Dashboard');
 
         $month = date('M - Y');
-		$start_date = date('Y-m-01')."00:00:00";
-		$end_date = date('Y-m-t')."23:59:59	";
+        $start_date = date('Y-m-01') . "00:00:00";
+        $end_date = date('Y-m-t') . "23:59:59	";
 
-		$uid = $this->Auth->user('id');
-		$lead_id = $this->Auth->user('lead_id');
-		$user =  $this->Users->get($uid, [ 'contain' => ['Roles', 'States', 'Cities'] ]);
+        $uid = $this->Auth->user('id');
+        $lead_id = $this->Auth->user('lead_id');
+        $user = $this->Users->get($uid, ['contain' => ['Roles', 'States', 'Cities']]);
 
-		$dates = $this->_datePeriod($start_date, $end_date);
-		$reportedDates = array(0); $doctorCalls = 0; $chemistCalls = 0; $visited = array();
+        $dates = $this->_datePeriod($start_date, $end_date);
+        $reportedDates = array(0);
+        $doctorCalls = 0;
+        $chemistCalls = 0;
+        $visited = array();
 
-		$today_eod = strtotime(date("Y-m-d 23:59:59")); // or your date as well
-		$datediff = $today_eod - strtotime($start_date);
-		$coveredDays = round($datediff / (60 * 60 * 24));
+        $today_eod = strtotime(date("Y-m-d 23:59:59")); // or your date as well
+        $datediff = $today_eod - strtotime($start_date);
+        $coveredDays = round($datediff / (60 * 60 * 24));
 
 
 
-		foreach($dates as $date)
-		{
-			$reportedPlans = $this->WorkPlans->find('list')
-			->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date])->toArray();
-			if($reportedPlans)$reportedDates[] = "'".date("m/d/Y", strtotime($date))."'";
+        foreach ($dates as $date) {
+            $reportedPlans = $this->WorkPlans->find('list')
+                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date])->toArray();
+            if ($reportedPlans)
+                $reportedDates[] = "'" . date("m/d/Y", strtotime($date)) . "'";
+
+            $WorkPlansD = $this->WorkPlans
+                            ->find('list')
+                            ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_missed <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_planned =' => 1])->toArray();
+
 
 				$WorkPlansD = $this->WorkPlans
 				->find('list')
@@ -96,138 +104,139 @@ class MrsController extends AppController {
 				->find('list')
 				->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_submitted =' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $date, 'WorkPlans.chemist_id IS NOT' => null])->toArray();
 
-				$doctorCalls+= count($WorkPlansD) + count($WorkPlansUD);
-				$chemistCalls+= count($WorkPlansC);
 
-		}
-		$doctors = $this->paginate($this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']))->toArray();
-		foreach($doctors as $doctor)
-		{
-			$visited[] = $doctor->doctor_id;
-		}
+            $doctorCalls+= count($WorkPlansD) + count($WorkPlansUD);
+            $chemistCalls += count($WorkPlansC);
+        }
+        $doctors = $this->paginate($this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']))->toArray();
+        foreach ($doctors as $doctor) {
+            $visited[] = $doctor->doctor_id;
+        }
 
-		$doctorsAvarage = $doctorCalls/$coveredDays;
-		$chemistAvarage = $chemistCalls/$coveredDays;
-		$doctorsCoverage = count($visited);
-		$this->set(compact('user', 'reportedDates', 'doctorsAvarage', 'chemistAvarage', 'doctorsCoverage'));
+        $doctorsAvarage = $doctorCalls / $coveredDays;
+        $chemistAvarage = $chemistCalls / $coveredDays;
+        $doctorsCoverage = count($visited);
+        $this->set(compact('user', 'reportedDates', 'doctorsAvarage', 'chemistAvarage', 'doctorsCoverage'));
     }
 
-    public function doctorList(){
+    public function doctorList() {
         $this->set('title', 'Doctor List');
         $uid = $this->Auth->user('id');
         $userCity = $this->Auth->user('city_id');
-        $user =  $this->Auth->user;
-		$state_id = $this->Auth->user('state_id');
+        $user = $this->Auth->user;
+        $state_id = $this->Auth->user('state_id');
         $specialities = $this->Specialities->find('all')->toarray();
         $doctorTypes = $this->DoctorTypes->find('all')->toarray();
         $states = $this->States->find('all')->where(['id =' => $state_id])->toarray();
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->contain(['DoctorTypes','Doctors.Specialities','Doctors.Cities'])->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']));
+        $doctorsRelation = $this->paginate($this->DoctorsRelation->find('all')->contain(['DoctorTypes', 'Doctors.Specialities', 'Doctors.Cities'])->where(['DoctorsRelation.user_id =' => $uid])->order(['DoctorsRelation.id' => 'ASC']));
         $doctors = $this->Doctors
-			->find()
-			->notMatching('DoctorsRelation', function ($q) use ($uid) {
-				return $q->where(['DoctorsRelation.user_id' => $uid]);
-			})->where(['city_id =' => $userCity]);
+                        ->find()
+                        ->notMatching('DoctorsRelation', function ($q) use ($uid) {
+                            return $q->where(['DoctorsRelation.user_id' => $uid]);
+                        })->where(['city_id =' => $userCity]);
         //pj($doctors);exit;
         $this->set(compact('userCity', 'specialities', 'states', 'cities', 'doctorsRelation', 'doctors', 'doctorTypes'));
     }
 
-    public function getReports($doctor_id,$uid,$start_date,$end_date){
-		$WorkPlansD = $this->WorkPlans->find('all')
-		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
-		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.doctor_id =' => $doctor_id, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_submitted =' => '1'])
-		->where(['WorkPlans.start_date >=' => $start_date])
-		->andWhere(['WorkPlans.start_date <=' => $end_date])->toArray();
-		$visits = array_map(function($d) { return date("d", strtotime($d->start_date)); }, $WorkPlansD);
-		return (implode("/",$visits));
-	}
+    public function getReports($doctor_id, $uid, $start_date, $end_date) {
+        $WorkPlansD = $this->WorkPlans->find('all')
+                        ->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
+                        ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.doctor_id =' => $doctor_id, 'WorkPlans.work_type_id =' => 2, 'WorkPlans.is_submitted =' => '1'])
+                        ->where(['WorkPlans.start_date >=' => $start_date])
+                        ->andWhere(['WorkPlans.start_date <=' => $end_date])->toArray();
+        $visits = array_map(function($d) {
+            return date("d", strtotime($d->start_date));
+        }, $WorkPlansD);
+        return (implode("/", $visits));
+    }
 
-    public function doctorSelection(){
+    public function doctorSelection() {
         $this->set('title', 'Doctor Visit Report');
     }
 
-	public function monthlyplan(){
+    public function monthlyplan() {
         $this->viewBuilder()->layout('monthlyplan');
         $this->set('title', 'Monthly Plan');
         $uid = $this->Auth->user('id');
-		$lead_id = $this->Auth->user('lead_id');
+        $lead_id = $this->Auth->user('lead_id');
         $userCity = $this->Auth->user('city_id');
-        $user =  $this->Auth->user;
-		$state_id = $this->Auth->user('state_id');
+        $user = $this->Auth->user;
+        $state_id = $this->Auth->user('state_id');
         $workTypes = $this->WorkTypes->find()->order(['list' => 'ASC'])->toarray();
         $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
         $doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
         $leaveTypes = $this->LeaveTypes->find()->toarray();
-		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
+        $thisDate = date("Y") . "-" . sprintf("%02d", (date("m") + 1)) . "-01";
         $workPlanApproval = $this->WorkPlanApproval->find('all')->where(['WorkPlanApproval.user_id =' => $uid, 'WorkPlanApproval.lead_id =' => $lead_id, 'WorkPlanApproval.date =' => $thisDate])->first();
         $holidayArray = $this->holidayArray();
         $this->set(compact('userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate', 'holidayArray'));
-
     }
 
-	public function workPlan($id = null){
-		$workPlanApproval = $this->WorkPlanApproval->find('all')->where(['id =' => $id])->first();
-		$uid = $this->Auth->user('id');
-		if ($workPlanApproval) {
-			$this->viewBuilder()->layout('monthlyplan');
-			$user = $this->Users->find('all')->where(['id =' => $workPlanApproval->user_id])->first();
-			$this->set('title', 'Monthly Plan of '.$user->firstname);
-			$user_id = $user->id;
-			$lead_id = $user->lead_id;
-			$userCity = $user->city_id;
-			$state_id = $user->state_id;
-			$workTypes = $this->WorkTypes->find()->order(['list' => 'ASC'])->toarray();
-			$cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
-			$doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $user_id, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
-			$leaveTypes = $this->LeaveTypes->find()->toarray();
-			$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
-			$this->set(compact('user_id', 'userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate'));
-		}
-		else
-		return $this->redirect(["controller" => "Mrs","action" => "workPlanRequests"]);
+    public function workPlan($id = null) {
+        $workPlanApproval = $this->WorkPlanApproval->find('all')->where(['id =' => $id])->first();
+        $uid = $this->Auth->user('id');
+        if ($workPlanApproval) {
+            $this->viewBuilder()->layout('monthlyplan');
+            $user = $this->Users->find('all')->where(['id =' => $workPlanApproval->user_id])->first();
+            $this->set('title', 'Monthly Plan of ' . $user->firstname);
+            $user_id = $user->id;
+            $lead_id = $user->lead_id;
+            $userCity = $user->city_id;
+            $state_id = $user->state_id;
+            $workTypes = $this->WorkTypes->find()->order(['list' => 'ASC'])->toarray();
+            $cities = $this->Cities->find('all')->where(['state_id =' => $state_id])->toarray();
+            $doctorsRelation = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $user_id, 'Doctors.city_id' => $userCity])->contain(['Doctors']);
+            $leaveTypes = $this->LeaveTypes->find()->toarray();
+            $thisDate = date("Y") . "-" . sprintf("%02d", (date("m") + 1)) . "-01";
+            $this->set(compact('user_id', 'userCity', 'workTypes', 'leaveTypes', 'cities', 'doctorsRelation', 'workPlanApproval', 'thisDate'));
+        } else
+            return $this->redirect(["controller" => "Mrs", "action" => "workPlanRequests"]);
     }
 
-	public function workPlanRequests(){
+    public function workPlanRequests() {
         $this->set('title', 'Plan Requests for Approval');
         $uid = $this->Auth->user('id');
-		$lead_id = $this->Auth->user('lead_id');
-		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
-        $workPlansApproval = $this->paginate($this->WorkPlanApproval->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['WorkPlanApproval.lead_id =' => $uid, 'WorkPlanApproval.date =' => $thisDate, 'WorkPlanApproval.is_approved =' => 0, 'WorkPlanApproval.is_rejected =' => 0]));
+        $lead_id = $this->Auth->user('lead_id');
+        $thisDate = date("Y") . "-" . sprintf("%02d", (date("m") + 1)) . "-01";
+        $workPlansApproval = $this->paginate($this->WorkPlanApproval->find('all')->contain(['Users', 'Users.States', 'Users.Cities'])->where(['WorkPlanApproval.lead_id =' => $uid, 'WorkPlanApproval.date =' => $thisDate, 'WorkPlanApproval.is_approved =' => 0, 'WorkPlanApproval.is_rejected =' => 0]));
         $this->set(compact('workPlansApproval', 'thisDate'));
     }
 
-	public function workPlanSubmits(){
+    public function workPlanSubmits() {
         $this->set('title', 'Plan Requests for Approval');
         $uid = $this->Auth->user('id');
-		$lead_id = $this->Auth->user('lead_id');
-		$thisDate = date("Y")."-".sprintf("%02d", (date("m")+1))."-01";
-        $workPlansSubmit = $this->paginate($this->WorkPlanSubmit->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['WorkPlanSubmit.lead_id =' => $uid, 'WorkPlanSubmit.date =' => $thisDate, 'WorkPlanSubmit.is_approved =' => 0, 'WorkPlanSubmit.is_rejected =' => 0]));
+        $lead_id = $this->Auth->user('lead_id');
+        $thisDate = date("Y") . "-" . sprintf("%02d", (date("m") + 1)) . "-01";
+        $workPlansSubmit = $this->paginate($this->WorkPlanSubmit->find('all')->contain(['Users', 'Users.States', 'Users.Cities'])->where(['WorkPlanSubmit.lead_id =' => $uid, 'WorkPlanSubmit.date =' => $thisDate, 'WorkPlanSubmit.is_approved =' => 0, 'WorkPlanSubmit.is_rejected =' => 0]));
         $this->set(compact('workPlansSubmit', 'thisDate'));
     }
 
-    public function planGetDoctors()
-    {
+    public function planGetDoctors() {
         $this->autoRender = false;
         $this->viewBuilder()->layout(false);
-		$data = $this->request->data;
-		$uid = $this->Auth->user('id');
-		$id = $data['id'];
-		$city_id = $data['city_id'];
-		$start_date = $data['start_date'];
+        $data = $this->request->data;
+        $uid = $this->Auth->user('id');
+        $id = $data['id'];
+        $city_id = $data['city_id'];
+        $start_date = $data['start_date'];
 
-		$WorkPlansD = $this->WorkPlans
-			->find('all')
-			->contain(['WorkTypes', 'Cities', 'Doctors'])
-			->select('doctor_id')->where(['WorkPlans.user_id =' => $uid])
-			->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
-		$doctor_ids=array_map(function($d) { return $d->doctor_id; }, $WorkPlansD);
-		$doctor_ids[]=0;
+        $WorkPlansD = $this->WorkPlans
+                        ->find('all')
+                        ->contain(['WorkTypes', 'Cities', 'Doctors'])
+                        ->select('doctor_id')->where(['WorkPlans.user_id =' => $uid])
+                        ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
+        $doctor_ids = array_map(function($d) {
+            return $d->doctor_id;
+        }, $WorkPlansD);
+        $doctor_ids[] = 0;
 
-		$doctors = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $doctor_ids, 'Doctors.city_id' => $city_id])->contain(['Doctors']);
-		$listHtml='';
-		foreach ($doctors as $doctor)
-		$listHtml.='<option value="'.$doctor->doctor_id.'">'.$doctor->doctor->name.'</option>';
-		echo $listHtml; exit;
+        $doctors = $this->DoctorsRelation->find('all')->where(['DoctorsRelation.user_id =' => $uid, 'DoctorsRelation.doctor_id NOT IN' => $doctor_ids, 'Doctors.city_id' => $city_id])->contain(['Doctors']);
+        $listHtml = '';
+        foreach ($doctors as $doctor)
+            $listHtml .= '<option value="' . $doctor->doctor_id . '">' . $doctor->doctor->name . '</option>';
+        echo $listHtml;
+        exit;
     }
 
     public function dailyReport()
@@ -861,314 +870,316 @@ class MrsController extends AppController {
         $this->set('title', 'Reports');
 
     }
-
-    public function expenses(){
+   
+    public function expenses() {
 
         $current_year = date("Y");
-        $months = [1 => 'January',2 => 'Feburary',3 => 'March',4 => 'April',5 => 'May',6 => 'June',7 => 'July',8 => 'August',9 => 'September',10 => 'October',11 => 'November',12 => 'December'];
-        $years= [$current_year   => $current_year,$current_year-1 => $current_year-1,$current_year-2 => $current_year-2,$current_year-3 => $current_year-3,$current_year-4 => $current_year-4];
+        $months = [1 => 'January', 2 => 'Feburary', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'];
+        $years = [$current_year => $current_year, $current_year - 1 => $current_year - 1, $current_year - 2 => $current_year - 2, $current_year - 3 => $current_year - 3, $current_year - 4 => $current_year - 4];
         $this->loadModel('Expenses');
 
 
         $expense = $this->Expenses->newEntity();
-        if($this->request->getQuery('month') && $this->request->getQuery('year')){
+        if ($this->request->getQuery('month') && $this->request->getQuery('year')) {
 
-          $uid = $this->Auth->user('id');
-          $lead_id = $this->Auth->user('lead_id');
-          $month = $this->request->getQuery('month');
-          $year = $this->request->getQuery('year');
-          $name = $this->Auth->user('firstname')." ".$this->Auth->user('lastname');
-          $role = $this->Roles->find()->where(['id' => $this->Auth->user('role_id')])->first();
-          $role_name = $role->name;
-          $userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
-          $city_name = $userCity -> city_name;
-          $month_days = cal_days_in_month(CAL_GREGORIAN,$month,$year);
-          $month_in_text = $months[$month];
+            $uid = $this->Auth->user('id');
+            $lead_id = $this->Auth->user('lead_id');
+            $month = $this->request->getQuery('month');
+            $year = $this->request->getQuery('year');
+            $name = $this->Auth->user('firstname') . " " . $this->Auth->user('lastname');
+            $role = $this->Roles->find()->where(['id' => $this->Auth->user('role_id')])->first();
+            $role_name = $role->name;
+            $userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
+            $city_name = $userCity->city_name;
+            $month_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            $month_in_text = $months[$month];
 
-          $workPlanSubmit = $this->WorkPlanSubmit->find('all')
-          ->contain([
-          'Expenses.ExpenseTypes',
-          'Expenses.OtherExpenses',
-          'Expenses.TravelExpenses.WorkTypes' ,
-          'Expenses.TravelExpenses.CitiesFrom',
-          'Expenses.TravelExpenses.CitiesTo'
-          ])
-          ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year ])->order(['WorkPlanSubmit.id' => 'ASC']);
+            $workPlanSubmits = $this->WorkPlanSubmit->find('all')
+                            ->contain([
+                                'Expenses.ExpenseTypes',
+                                'Expenses.OtherExpenses',
+                                'Expenses.TravelExpenses.WorkTypes',
+                                'Expenses.TravelExpenses.CitiesFrom',
+                                'Expenses.TravelExpenses.CitiesTo'
+                            ])
+                            ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year])->order(['WorkPlanSubmit.id' => 'ASC']);
+            $workPlanSubmit=[];
+            foreach ($workPlanSubmits as $workPlanSubmitdata) {
+                if (!$this->_hasLeave($workPlanSubmitdata->date)) {
+                    $workPlanSubmit[] = $workPlanSubmitdata;
+                }                
+            }            
 
-          //Store Expense Approval Informations
-          $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid,'lead_id ='=> $lead_id,'Month(date) =' => $month, 'Year(date) =' => $year])->first();
-          if(isset($this->request->data['approve_request'])){
-            $this->request->data['date']=$this->request->getQuery('year')."-".$this->request->getQuery('month').'-1';
-            $this->request->data['user_id']=$uid;
-            $this->request->data['lead_id']=$lead_id;
-            if(empty($expenseApproval)){
-              $expenseApprovalsEntity = $this->ExpenseApprovals->newEntity();
-              $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApprovalsEntity, $this->request->data);
-  						if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
-  							$this->Flash->success(__('The expense approval has been created'));
-  						}
-            }else {
-              $this->request->data['id']=$expenseApproval->id;
-              $this->request->data['is_rejected']=0;
-              $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApproval, $this->request->data);
-  						if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
-  							$this->Flash->success(__('The expense approval has been updated'));
-  						}
+            //Store Expense Approval Informations
+            $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid, 'lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year])->first();
+            if (isset($this->request->data['approve_request'])) {
+                $this->request->data['date'] = $this->request->getQuery('year') . "-" . $this->request->getQuery('month') . '-1';
+                $this->request->data['user_id'] = $uid;
+                $this->request->data['lead_id'] = $lead_id;
+                if (empty($expenseApproval)) {
+                    $expenseApprovalsEntity = $this->ExpenseApprovals->newEntity();
+                    $expenseApprovalpatchEntity = $this->ExpenseApprovals->patchEntity($expenseApprovalsEntity, $this->request->data);
+                    if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
+                        $this->Flash->success(__('The expense approval has been created'));
+                    }
+                } else {
+                    $this->request->data['id'] = $expenseApproval->id;
+                    $this->request->data['is_rejected'] = 0;
+                    $expenseApprovalpatchEntity = $this->ExpenseApprovals->patchEntity($expenseApproval, $this->request->data);
+                    if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
+                        $this->Flash->success(__('The expense approval has been updated'));
+                    }
+                }
+                $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid, 'lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year])->first();
             }
-            $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid,'lead_id ='=> $lead_id,'Month(date) =' => $month, 'Year(date) =' => $year])->first();
-          }
-          $this->set(compact('name','role_name','city_name','month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
-
+            $this->set(compact('name', 'role_name', 'city_name', 'month_days', 'month', 'month_in_text', 'year', 'workPlanSubmit', 'expenseApproval')); //pr($workPlanSubmit->toArray());
         }
         $this->set('title', 'Daily Report');
         $this->set(compact('years', 'months', 'expense'));
-        
     }
 
-	public function editExpense(){
+    public function editExpense() {
 
-		$cities=[];
-		$uid = $this->Auth->user('id');
-		$role_id = $this->Auth->user('role_id');
-		if($this->request->getQuery('date')){
-			$workPlanSubmit = $this->WorkPlanSubmit->find()
-			->contain(['Expenses.ExpenseTypes','Expenses.TravelExpenses','Expenses.OtherExpenses','Expenses.TravelExpenses.CitiesFrom','Expenses.TravelExpenses.CitiesTo','Expenses.OtherExpenses.OtherAllowances'])
-			->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.date' => $this->request->getQuery('date')])
-			->first();
-			if($workPlanSubmit){
-				$expense = $workPlanSubmit['expense'];
-				if($this->request->is(['patch', 'post', 'put'])){ //pr($this->request->data);
-          //pr($this->request->data);exit;
-					$this->request->data['work_plan_submit_id'] = $workPlanSubmit -> id;
-					if($expense){
-						$oldexpense = $this->Expenses->patchEntity($expense, $this->request->data);
-            //pr($oldexpense);exit;
-						if ($this->Expenses->save($oldexpense)) {
-							$this->Flash->success(__('The expense has been updated.'));
-						}
-					}else{
-						$this->request->data['work_plan_submit_id'] = $workPlanSubmit -> id;
-						$this->request->data['expense_date'] = $workPlanSubmit -> date;
-						$this->request->data['user_id'] = $uid;
-						if(isset($this->request->data['other_expenses'])){
-							$this->request->data['daily_allowance'] = 0;
-							$this->request->data['expense_type_id'] = 1;
-						}
+        $cities = [];
+        $uid = $this->Auth->user('id');
+        $role_id = $this->Auth->user('role_id');
+        if ($this->request->getQuery('date')) {
+            $workPlanSubmit = $this->WorkPlanSubmit->find()
+                    ->contain(['Expenses.ExpenseTypes', 'Expenses.TravelExpenses', 'Expenses.OtherExpenses', 'Expenses.TravelExpenses.CitiesFrom', 'Expenses.TravelExpenses.CitiesTo', 'Expenses.OtherExpenses.OtherAllowances'])
+                    ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.date' => $this->request->getQuery('date')])
+                    ->first();
+            if ($workPlanSubmit) {
+                $expense = $workPlanSubmit['expense'];
+                if ($this->request->is(['patch', 'post', 'put'])) { //pr($this->request->data);                    
+                    $this->request->data['work_plan_submit_id'] = $workPlanSubmit->id;
+                    if ($expense) {
+                        $oldexpense = $this->Expenses->patchEntity($expense, $this->request->data);
+                        //pr($oldexpense);exit;
+                        if ($this->Expenses->save($oldexpense)) {
+                            $this->Flash->success(__('The expense has been updated.'));
+                        }
+                    } else {
+                        $this->request->data['work_plan_submit_id'] = $workPlanSubmit->id;
+                        $this->request->data['expense_date'] = $workPlanSubmit->date;
+                        $this->request->data['user_id'] = $uid;
+                        if (isset($this->request->data['other_expenses'])) {
+                            $this->request->data['daily_allowance'] = 0;
+                            $this->request->data['expense_type_id'] = 1;
+                        }
 
-						$expenseNewEntity = $this->Expenses->newEntity();
-						$expensepatchEntity = $this->Expenses->patchEntity($expenseNewEntity, $this->request->data,['associated' => ['TravelExpenses','OtherExpenses']]);
-						if ($this->Expenses->save($expensepatchEntity)) {
-							$this->Flash->success(__('The expense has been saved.'));
-						}
-					}
-					return $this->redirect(['action' => 'editExpense?date='.$this->request->getQuery('date')]);
-				}
-				$WorkPlans = $this->WorkPlans->find('all')->contain(['Cities','WorkTypes'])
-				->where(['WorkPlans.start_date =' => $this->request->getQuery('date'),'WorkPlans.user_id =' => $uid])
-				->order(['work_type_id' => 'DESC'])
-				->hydrate(false)
-				->toArray();
-				if(count($WorkPlans) ){
-					$cities = array_column(array_column($WorkPlans, 'city'), 'city_name', 'id');
-					$worktypes = array_column(array_column($WorkPlans, 'work_type'), 'id');
-				}
-				$userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
-				$cities[$userCity->id]=$userCity->city_name;
+                        $expenseNewEntity = $this->Expenses->newEntity();
+                        $expensepatchEntity = $this->Expenses->patchEntity($expenseNewEntity, $this->request->data, ['associated' => ['TravelExpenses', 'OtherExpenses']]);                        
+                        if ($this->Expenses->save($expensepatchEntity)) {
+                            $this->Flash->success(__('The expense has been saved.'));
+                        }
+                    }
+                    return $this->redirect(['action' => 'editExpense?date=' . $this->request->getQuery('date')]);
+                }
+                $WorkPlans = $this->WorkPlans->find('all')->contain(['Cities', 'WorkTypes'])
+                        ->where(['WorkPlans.start_date =' => $this->request->getQuery('date'), 'WorkPlans.user_id =' => $uid])
+                        ->order(['work_type_id' => 'DESC'])
+                        ->hydrate(false)
+                        ->toArray();
+                if (count($WorkPlans)) {
+                    $cities = array_column(array_column($WorkPlans, 'city'), 'city_name', 'id');
+                    $worktypes = array_column(array_column($WorkPlans, 'work_type'), 'id');
+                }
+                $userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
+                $cities[$userCity->id] = $userCity->city_name;
 
-				$expenseTypes = $this->Expenses->ExpenseTypes->find('list', ['limit' => 200]);
-				$dailyAllowances = $this->DailyAllowances->find('list',['keyField' => 'cost','valueField' => 'cost'])->where(['role_id' => $role_id]);
-				$otherAllowances = $this->OtherAllowances->find('list',['keyField' => 'id','valueField' => 'name']);
+                $expenseTypes = $this->Expenses->ExpenseTypes->find('list', ['limit' => 200]);
+                $dailyAllowances = $this->DailyAllowances->find('list', ['keyField' => 'cost', 'valueField' => 'cost'])->where(['role_id' => $role_id]);
+                $otherAllowances = $this->OtherAllowances->find('list', ['keyField' => 'id', 'valueField' => 'name']);
 
-				$this->set(compact('expense','WorkPlans','expenseTypes','cities','worktypes','dailyAllowances','otherAllowances'));
-				$this->set('title', 'Edit Expense');
+                $this->set(compact('expense', 'WorkPlans', 'expenseTypes', 'cities', 'worktypes', 'dailyAllowances', 'otherAllowances'));
+                $this->set('title', 'Edit Expense');
+            } else {
+                return $this->redirect(['action' => 'dashboard']);
+            }
+        } else {
+            return $this->redirect(['action' => 'dashboard']);
+        }
+    }
 
-			}else {
-				return $this->redirect(['action' => 'dashboard']);
-			}
-		}else{
-			return $this->redirect(['action' => 'dashboard']);
-		}
+    /**
+     * Delete method
+     *
+     * @param string|null $id Other Expense id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function OtherExpensedelete($id = null) {
+        //$this->request->allowMethod(['post', 'delete']);
+        $otherExpense = $this->OtherExpenses->get($id);
+        if ($this->OtherExpenses->delete($otherExpense)) {
+            $this->Flash->success(__('The other expense has been deleted.'));
+        } else {
+            $this->Flash->error(__('The other expense could not be deleted. Please, try again.'));
+        }
 
-	}
+        return $this->redirect(['action' => 'edit-expense?date=' . $this->request->getQuery('date')]);
+    }
 
-	/**
-	* Delete method
-	*
-	* @param string|null $id Other Expense id.
-	* @return \Cake\Http\Response|null Redirects to index.
-	* @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-	*/
-	public function OtherExpensedelete($id = null)
-	{
-		//$this->request->allowMethod(['post', 'delete']);
-		$otherExpense = $this->OtherExpenses->get($id);
-		if ($this->OtherExpenses->delete($otherExpense)) {
-			$this->Flash->success(__('The other expense has been deleted.'));
-		} else {
-			$this->Flash->error(__('The other expense could not be deleted. Please, try again.'));
-		}
-
-		return $this->redirect(['action' => 'edit-expense?date='.$this->request->getQuery('date')]);
-	}
-
-  public function ExpenseApprovalRequests(){
+    public function ExpenseApprovalRequests() {
         $this->set('title', 'Expense Approval Requests');
         $uid = $this->Auth->user('id');
-	      $lead_id = $this->Auth->user('lead_id');
-        $expenseApprovals = $this->paginate($this->ExpenseApprovals->find('all')->contain(['Users','Users.States','Users.Cities'])->where(['ExpenseApprovals.lead_id =' => $uid, 'ExpenseApprovals.is_approved =' => 0, 'ExpenseApprovals.is_rejected =' => 0]));
-        $this->set(compact('expenseApprovals'));
-
-    }
-
-    public function ExpenseApprovalRequest($id){
-
-      $current_year = date("Y");
-      $months = [1 => 'January',2 => 'Feburary',3 => 'March',4 => 'April',5 => 'May',6 => 'June',7 => 'July',8 => 'August',9 => 'September',10 => 'October',11 => 'November',12 => 'December'];
-      $years= [$current_year   => $current_year,$current_year-1 => $current_year-1,$current_year-2 => $current_year-2,$current_year-3 => $current_year-3,$current_year-4 => $current_year-4];
-      $this->loadModel('Expenses');
-
-      $expense = $this->Expenses->newEntity();
-      if($this->request->is('post') || !empty($id)){
-
-        $uid = $this->Auth->user('id');
         $lead_id = $this->Auth->user('lead_id');
-        $name = $this->Auth->user('firstname')." ".$this->Auth->user('lastname');
-        $role = $this->Roles->find()->where(['id' => $this->Auth->user('role_id')])->first();
-        $role_name = $role->name;
-        $userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
-        $city_name = $userCity -> city_name;
+        $expenseApprovals = $this->paginate($this->ExpenseApprovals->find('all')->contain(['Users', 'Users.States', 'Users.Cities'])->where(['ExpenseApprovals.lead_id =' => $uid, 'ExpenseApprovals.is_approved =' => 0, 'ExpenseApprovals.is_rejected =' => 0]));
+        $this->set(compact('expenseApprovals'));
+    }
+
+    public function ExpenseApprovalRequest($id) {
+
+        $current_year = date("Y");
+        $months = [1 => 'January', 2 => 'Feburary', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'];
+        $years = [$current_year => $current_year, $current_year - 1 => $current_year - 1, $current_year - 2 => $current_year - 2, $current_year - 3 => $current_year - 3, $current_year - 4 => $current_year - 4];
+        $this->loadModel('Expenses');
+
+        $expense = $this->Expenses->newEntity();
+        if ($this->request->is('post') || !empty($id)) {
+
+            $uid = $this->Auth->user('id');
+            $lead_id = $this->Auth->user('lead_id');
+            $name = $this->Auth->user('firstname') . " " . $this->Auth->user('lastname');
+            $role = $this->Roles->find()->where(['id' => $this->Auth->user('role_id')])->first();
+            $role_name = $role->name;
+            $userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
+            $city_name = $userCity->city_name;
 
 
-        $expenseApproval = $this->ExpenseApprovals->find()->where(['id'=>$id])->first();
-        if($expenseApproval){
+            $expenseApproval = $this->ExpenseApprovals->find()->where(['id' => $id])->first();
+            if ($expenseApproval) {
 
-          $month = (int)date("m", strtotime($expenseApproval->date));
-          $year = date("Y", strtotime($expenseApproval->date));
-          $expense_user_id =  $expenseApproval->user_id;
+                $month = (int) date("m", strtotime($expenseApproval->date));
+                $year = date("Y", strtotime($expenseApproval->date));
+                $expense_user_id = $expenseApproval->user_id;
 
-          $month_days = cal_days_in_month(CAL_GREGORIAN,$month,$year);
-          $month_in_text = $months[$month];
-          $workPlanSubmit = $this->WorkPlanSubmit->find('all')
-          ->contain([
-          'Expenses.ExpenseTypes',
-          'Expenses.OtherExpenses',
-          'Expenses.TravelExpenses.WorkTypes' ,
-          'Expenses.TravelExpenses.CitiesFrom',
-          'Expenses.TravelExpenses.CitiesTo'
-          ])
-          ->where(['WorkPlanSubmit.user_id =' => $expense_user_id, 'WorkPlanSubmit.lead_id =' => $uid, 'Month(date) =' => $month, 'Year(date) =' => $year ])->order(['WorkPlanSubmit.id' => 'ASC']);
-
-          //Store Expense Approval Informations
-          if(isset($this->request->data['approve_request'])){
-              $expense_changes = $this->request->data['expenses'];
-              foreach($expense_changes as $expense_change){
-                $expense = $this->Expenses->find()->where(['id' => $expense_change['id']])->first();
-                $expensePatchEntity=$this->Expenses->patchEntity($expense,$expense_change);
-                $this->Expenses->save($expensePatchEntity);
-              }
-              unset($this->request->data['expenses']);
-              if(isset($this->request->data['is_approved'])){
-                $this->request->data['is_approved']=1;
-              }else{
-                $this->request->data['is_rejected']=1;
-              }
-              $this->request->data['id']=$expenseApproval->id;
-              $expenseApprovalpatchEntity=  $this->ExpenseApprovals->patchEntity($expenseApproval, $this->request->data);
-              if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
-                $this->Flash->success(__('The expense approval has been updated'));
-                return $this->redirect(["controller" => "Mrs","action" => "ExpenseApprovalRequest",$id]);
-              }
-          }
-          $this->set(compact('name','role_name','city_name','month_days','month','month_in_text','year', 'workPlanSubmit','expenseApproval'));//pr($workPlanSubmit->toArray());
-        }else {
-
+                $month_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                $month_in_text = $months[$month];
+                $workPlanSubmits = $this->WorkPlanSubmit->find('all')
+                                ->contain([
+                                    'Expenses.ExpenseTypes',
+                                    'Expenses.OtherExpenses',
+                                    'Expenses.TravelExpenses.WorkTypes',
+                                    'Expenses.TravelExpenses.CitiesFrom',
+                                    'Expenses.TravelExpenses.CitiesTo'
+                                ])
+                                ->where(['WorkPlanSubmit.user_id =' => $expense_user_id, 'WorkPlanSubmit.lead_id =' => $uid, 'Month(date) =' => $month, 'Year(date) =' => $year])->order(['WorkPlanSubmit.id' => 'ASC']);
+                
+                $workPlanSubmit=[];
+                foreach ($workPlanSubmits as $workPlanSubmitdata) {                    
+                    if (!$this->_hasLeave($workPlanSubmitdata->date,$expense_user_id)) {
+                        $workPlanSubmit[] = $workPlanSubmitdata;                        
+                    }                    
+                }                
+            
+                //Store Expense Approval Informations
+                if (isset($this->request->data['approve_request'])) {
+                    $expense_changes = $this->request->data['expenses'];
+                    foreach ($expense_changes as $expense_change) {
+                        $expense = $this->Expenses->find()->where(['id' => $expense_change['id']])->first();
+                        $expensePatchEntity = $this->Expenses->patchEntity($expense, $expense_change);
+                        $this->Expenses->save($expensePatchEntity);
+                    }
+                    unset($this->request->data['expenses']);
+                    if (isset($this->request->data['is_approved'])) {
+                        $this->request->data['is_approved'] = 1;
+                    } else {
+                        $this->request->data['is_rejected'] = 1;
+                    }
+                    $this->request->data['id'] = $expenseApproval->id;
+                    $expenseApprovalpatchEntity = $this->ExpenseApprovals->patchEntity($expenseApproval, $this->request->data);
+                    if ($this->ExpenseApprovals->save($expenseApprovalpatchEntity)) {
+                        $this->Flash->success(__('The expense approval has been updated'));
+                        return $this->redirect(["controller" => "Mrs", "action" => "ExpenseApprovalRequest", $id]);
+                    }
+                }
+                $this->set(compact('name', 'role_name', 'city_name', 'month_days', 'month', 'month_in_text', 'year', 'workPlanSubmit', 'expenseApproval')); //pr($workPlanSubmit->toArray());
+            } else {
+                
+            }
         }
-
-      }
-      $this->set('title', 'Daily Report');
-      $this->set(compact('years', 'months', 'expense'));
+        $this->set('title', 'Daily Report');
+        $this->set(compact('years', 'months', 'expense'));
     }
 
-	protected function _hasLeave($start_date)
-    {
-		$uid = $this->Auth->user('id');
-		$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date,'work_type_id =' => 1, 'user_id =' => $uid])->first();
-		if(count($workPlans)>0)
-		return $workPlans->id;
+    protected function _hasLeave($start_date, $uid=null) {
+        if($uid == null)
+            $uid = $this->Auth->user('id');        
+        $workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date, 'work_type_id =' => 1, 'user_id =' => $uid])->first();        
+        if (count($workPlans) > 0)
+            return $workPlans->id;
 
-		return false;
+        return false;
     }
 
-	protected function _hasPlannedLeave($start_date)
-    {
-		$uid = $this->Auth->user('id');
-		$workPlans = $this->WorkPlans->find()->where(['WorkPlans.is_missed <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'start_date =' => $start_date,'work_type_id =' => 1, 'user_id =' => $uid])->first();
-		if(count($workPlans)>0)
-		return $workPlans->id;
+    protected function _hasPlannedLeave($start_date) {
+        $uid = $this->Auth->user('id');
+        $workPlans = $this->WorkPlans->find()->where(['WorkPlans.is_missed <>' => '1', 'WorkPlans.is_planned =' => '1', 'WorkPlans.is_approved =' => '1', 'start_date =' => $start_date, 'work_type_id =' => 1, 'user_id =' => $uid])->first();
+        if (count($workPlans) > 0)
+            return $workPlans->id;
 
-		return false;
+        return false;
     }
 
-	protected function _hasUnSavedPlans($start_date)
-    {
-		$uid = $this->Auth->user('id');
-		$workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date, 'user_id =' => $uid, 'is_reported =' => 0])->toArray();
-		if(count($workPlans)>0)
-		return true;
+    protected function _hasUnSavedPlans($start_date) {
+        $uid = $this->Auth->user('id');
+        $workPlans = $this->WorkPlans->find()->where(['start_date =' => $start_date, 'user_id =' => $uid, 'is_reported =' => 0])->toArray();
+        if (count($workPlans) > 0)
+            return true;
 
-		return false;
+        return false;
     }
 
-	protected function _datePeriod($start_date, $end_date)
-    {
-		$period = new DatePeriod(
-		new DateTime($start_date),
-		new DateInterval('P1D'),
-		new DateTime($end_date)
-		);
-		foreach ($period as $key => $value)
-		$dates[]=$value->format('Y-m-d');
-		return $dates;
+    protected function _datePeriod($start_date, $end_date) {
+        $period = new DatePeriod(
+                new DateTime($start_date), new DateInterval('P1D'), new DateTime($end_date)
+        );
+        foreach ($period as $key => $value)
+            $dates[] = $value->format('Y-m-d');
+        return $dates;
+    }
 
-	}
+    public function getReportedVisits($doctor_id, $uid, $start_date, $end_date) {
+        $WorkPlansD = $this->WorkPlans->find('all')
+                        ->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
+                        ->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.doctor_id =' => $doctor_id, 'WorkPlans.work_type_id =' => 2])
+                        ->where(['WorkPlans.start_date >=' => $start_date])
+                        ->andWhere(['WorkPlans.start_date <=' => $end_date])->toArray();
+        $visits = array_map(function($d) {
+            return date("d", strtotime($d->start_date));
+        }, $WorkPlansD);
+        return (implode("/", $visits));
+    }
 
-    public function getReportedVisits($doctor_id,$uid,$start_date,$end_date){
-		$WorkPlansD = $this->WorkPlans->find('all')
-		->contain(['WorkTypes', 'Cities', 'Doctors.Specialities'])
-		->where(['WorkPlans.user_id =' => $uid, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.is_reported =' => '1', 'WorkPlans.doctor_id =' => $doctor_id, 'WorkPlans.work_type_id =' => 2])
-		->where(['WorkPlans.start_date >=' => $start_date])
-		->andWhere(['WorkPlans.start_date <=' => $end_date])->toArray();
-		$visits = array_map(function($d) { return date("d", strtotime($d->start_date)); }, $WorkPlansD);
-		return (implode("/",$visits));
-	}
-
-    public function getcityDistance(){
-      if($this->request->is('Ajax')){
-        $distance = $this->CityDistances->find()
-        ->where(['city_from' => $this->request->data['from'],'city_to' => $this->request->data['to']])
-        ->orWhere(['city_from' => $this->request->data['to'],'city_to' => $this->request->data['from']])
-        ->first();
-        $city_distance = 0;
-        if($distance){
-          $city_distance = $distance['km'];
+    public function getcityDistance() {
+        if ($this->request->is('Ajax')) {
+            $distance = $this->CityDistances->find()
+                    ->where(['city_from' => $this->request->data['from'], 'city_to' => $this->request->data['to']])
+                    ->orWhere(['city_from' => $this->request->data['to'], 'city_to' => $this->request->data['from']])
+                    ->first();
+            $city_distance = 0;
+            if ($distance) {
+                $city_distance = $distance['km'];
+            }
+            $response = [
+                'status' => 1,
+                'distance' => $city_distance,
+                'km_fare' => 2
+            ];
+            echo json_encode($response);
+            exit;
         }
-        $response=[
-          'status' => 1,
-          'distance' => $city_distance,
-          'km_fare' => 2
-        ];
-        echo json_encode($response);exit;
-      }
     }
 
-    public function holidayArray()
-    {
-		$start_date=date("Y-01-01");
-		$end_date=date("Y-12-31");
-		$date_array = array();
+    public function holidayArray() {
+        $start_date = date("Y-01-01");
+        $end_date = date("Y-12-31");
+        $date_array = array();
         $holidays = $this->Holidays->find()->where(['date >=' => $start_date])->andWhere(['date <=' => $end_date])->toArray();
-        foreach($holidays as $holiday)
-        $date_array[date("Y-m-d", strtotime($holiday['date']))]=$holiday['name'];
+        foreach ($holidays as $holiday)
+            $date_array[date("Y-m-d", strtotime($holiday['date']))] = $holiday['name'];
         return (json_encode($date_array));
     }
+
 }
