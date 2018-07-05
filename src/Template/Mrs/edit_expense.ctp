@@ -90,8 +90,8 @@
                                <tr>
                                   <th scope="col"><?= $this->Paginator->sort('Voucher No') ?></th>
                                   <th scope="col"><?= $this->Paginator->sort('Exp. Type') ?></th>
-                                  <th scope="col"><?= $this->Paginator->sort('Amount') ?></th>
                                   <th scope="col"><?= $this->Paginator->sort('Purpose') ?></th>
+                                  <th scope="col"><?= $this->Paginator->sort('Amount') ?></th>
                                   <th scope="col"></th>
                                </tr>
                              </thead>
@@ -127,9 +127,9 @@
                                     <?php } ?>
                                   </td>
                                   <td></td>
-                                  <td><?= $this->Form->control('other_expenses[0][other_allowance_id]', ['class'=> 'form-control', 'options' => $otherAllowances, 'label' => false, 'empty' => 'Select']); ?></td>
-                                  <td><?= $this->Form->control('other_expenses[0][fare]',['label'=>false, 'class'=> 'form-control']); ?></td>
+                                  <td><?= $this->Form->control('other_expenses[0][other_allowance_id]', ['class'=> 'form-control', 'options' => $otherAllowances, 'label' => false, 'empty' => 'Select']); ?></td>                                  
                                   <td><?= $this->Form->control('other_expenses[0][description]',['label'=>false, 'type'=> 'textArea', 'class'=> 'form-control']); ?></td>
+                                  <td><?= $this->Form->control('other_expenses[0][fare]',['label'=>false, 'class'=> 'form-control']); ?></td>
                                   <td style="display:none"><?= $this->Form->control('other_expenses[0][voucher_no]',['class'=> 'form-control', 'label'=>false, 'type'=> 'textArea','value' => time()]); ?></td>
 
                                   <td width="50">
