@@ -1642,17 +1642,19 @@ INSERT INTO `city_distances` (`id`, `city_from`, `city_to`, `km`) VALUES
 
 CREATE TABLE IF NOT EXISTS `config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
   `scope` varchar(225) NOT NULL,
   `value` varchar(225) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `config`
 --
 
-INSERT INTO `config` (`id`, `scope`, `value`) VALUES
-(1, 'mr_doctors_limit', '20');
+INSERT INTO `config` (`id`, `title`, `scope`, `value`) VALUES
+(1, 'Class-A Doctors limit of MR', 'mr_doctors_limit_1', '20'),
+(2, 'Class-B Doctors limit of MR', 'mr_doctors_limit_2', '20');
 
 -- --------------------------------------------------------
 
