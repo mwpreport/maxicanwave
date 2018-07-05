@@ -68,7 +68,7 @@
             <section class="col-lg-6 connectedSortable">
 
                 <!-- Calendar -->
-                <div class="box box-solid bg-green-gradient">
+                <div class="box box-solid bg-white-gradient">
                     <div class="box-header">
                         <i class="fa fa-calendar"></i>
 
@@ -77,7 +77,7 @@
                         <div class="pull-right box-tools">
                             <!-- button with a dropdown -->
                             <div class="btn-group">
-                                <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "monthlyplan"])?>" class="btn btn-success btn-sm">
+                                <a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "monthlyplan"])?>" class="btn btn-sm">
                                     <i class="fa fa-bars"></i>
                                 </a>
                             </div>
