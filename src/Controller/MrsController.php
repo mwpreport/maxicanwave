@@ -733,7 +733,6 @@ class MrsController extends AppController {
 			$lead_id = $this->Auth->user('lead_id');
 			$hasLeave = $this->_hasLeave($date);
 			$workPlanSubmit = $this->WorkPlanSubmit->find('all')->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'WorkPlanSubmit.date =' => $date])->first();
-			if($workPlanSubmit || $hasLeave) {return $this->redirect(['controller' => 'Mrs', 'action' => 'dailyReport','?' => ['date' => $date]]);}
 
 			$userCity = $this->Auth->user('city_id');
 			$user =  $this->Auth->user;

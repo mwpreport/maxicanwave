@@ -178,7 +178,7 @@
                                          <tr>
                                             <td>
                                               <?php if($key==0){ ?>
-                                                <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
+												<?= $this->Html->link(__(date('D-d', $time)), ['action' => 'viewDailyReport', "?" => ["date" => date('Y-m-d', $time)]],['class' => 'iframe-popup-link','escape' => false]) ?>
                                               <?php } ?>
                                              </td>
                                                  <td>
@@ -216,7 +216,7 @@
                                      }elseif(!empty($otherExpenses)) { ?>
                                          <tr>
                                             <td>
-                                                <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
+												<?= $this->Html->link(__(date('D-d', $time)), ['action' => 'viewDailyReport', "?" => ["date" => date('Y-m-d', $time)]],['class' => 'iframe-popup-link','escape' => false]) ?>
                                              </td>
                                                  <td></td>
                                                  <td></td>
@@ -245,7 +245,7 @@
                                if($k == 0){ ?>
                                  <tr>
                                    <td>
-                                     <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
+										<?= $this->Html->link(__(date('D-d', $time)), ['action' => 'viewDailyReport', "?" => ["date" => date('Y-m-d', $time)]],['class' => 'iframe-popup-link','escape' => false]) ?>
                                    </td>
                                    <td colspan="12">Holiday / On Leave</td>
                                 </tr>
