@@ -5,6 +5,16 @@
     <!-- Main content -->
     <div class="content travel-expense">
            <section>
+             <div class="white-wrapper">
+               <div class="col-md-12">
+                   <div class="hr-title">
+                     <h2><?= __('Expense on '.$this->Date->title($date)) ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "expenses",'?' => ['month' => intval($month), 'year' => $year]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
+                       <hr>
+                   </div>
+               </div>
+			 </div>
+           </section>
+           <section>
                <div class="row">
                    <div class="col-xs-12">
                        <div class="white-wrapper mar-top-20">

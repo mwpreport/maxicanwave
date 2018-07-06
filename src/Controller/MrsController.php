@@ -942,11 +942,13 @@ class MrsController extends AppController {
         $cities = [];
         $uid = $this->Auth->user('id');
         $role_id = $this->Auth->user('role_id');
-        if ($this->request->getQuery('date')) {
+        $date = $this->request->getQuery('date');
+        if ($date) {
             $workPlanSubmit = $this->WorkPlanSubmit->find()
                     ->contain(['Expenses.ExpenseTypes', 'Expenses.TravelExpenses', 'Expenses.OtherExpenses', 'Expenses.TravelExpenses.CitiesFrom', 'Expenses.TravelExpenses.CitiesTo', 'Expenses.OtherExpenses.OtherAllowances'])
-                    ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.date' => $this->request->getQuery('date')])
+                    ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.date' => $date])
                     ->first();
+            list($year,$month,$day) = explode("-",$date);
             if ($workPlanSubmit) {
                 $expense = $workPlanSubmit['expense'];
                 if ($this->request->is(['patch', 'post', 'put'])) { //pr($this->request->data);                    
@@ -990,7 +992,7 @@ class MrsController extends AppController {
                 $dailyAllowances = $this->DailyAllowances->find('list', ['keyField' => 'cost', 'valueField' => 'cost'])->where(['role_id' => $role_id]);
                 $otherAllowances = $this->OtherAllowances->find('list', ['keyField' => 'id', 'valueField' => 'name']);
 
-                $this->set(compact('expense', 'WorkPlans', 'expenseTypes', 'cities', 'worktypes', 'dailyAllowances', 'otherAllowances'));
+                $this->set(compact('expense', 'WorkPlans', 'expenseTypes', 'cities', 'worktypes', 'dailyAllowances', 'otherAllowances', 'year', 'month', 'date'));
                 $this->set('title', 'Edit Expense');
             } else {
                 return $this->redirect(['action' => 'dashboard']);

@@ -44,7 +44,7 @@
 						foreach($gifts as $gift)
 						if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
 
-						$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$class[$WorkPlanD->doctor->class].'</td><td>'.$WorkPlanD->doctor->speciality->code.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanD->id.']" value="'.$WorkPlanD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanD->id.']" value="'.$WorkPlanD->business.'"></td></tr>';
+						$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"></td><td>'.$WorkPlanD->doctor->name.'</td><td>'.$class[$WorkPlanD->doctor->class].'</td><td>'.$WorkPlanD->doctor->speciality->code.'</td><td>'.$WorkPlanD->city->city_name.'</td><td>'.$WorkPlanD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanD->id.']" placeholder="HH:MM" value="'.$WorkPlanD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanD->id.']" value="'.$WorkPlanD->business.'"></td></tr>';
 					$i++;
 					}
 					
@@ -69,7 +69,7 @@
 						if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
 						foreach($gifts as $gift)
 						if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
-						$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->id.'"></td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$class[$WorkPlanUD->doctor->class].'</td><td>'.$WorkPlanUD->doctor->speciality->code.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->business.'"></td></tr>';	
+						$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->id.'"></td><td>'.$WorkPlanUD->doctor->name.'</td><td>'.$class[$WorkPlanUD->doctor->class].'</td><td>'.$WorkPlanUD->doctor->speciality->code.'</td><td>'.$WorkPlanUD->city->city_name.'</td><td>'.$WorkPlanUD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanUD->id.']" placeholder="HH:MM" value="'.$WorkPlanUD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanUD->id.']" value="'.$WorkPlanUD->business.'"></td></tr>';	
 					$i++;
 					}
 				}
@@ -93,7 +93,7 @@
 						if (array_key_exists($sample->id, $samples_array)) $sample_products[]= $sample->name;
 						foreach($gifts as $gift)
 						if (array_key_exists($gift->id, $gifts_array)) $gift_products[]= $gift->name;
-						$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->id.'"></td><td>'.$WorkPlanPD->pg_other->name.'</td><td>-</td><td>'.$WorkPlanPD->pg_other->speciality->code.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->business.'"></td></tr>';
+						$html.='<tr><td>'.$i.'<input type="hidden" name="workplan_id['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->id.'"></td><td>'.$WorkPlanPD->pg_other->name.'</td><td>-</td><td>'.$WorkPlanPD->pg_other->speciality->code.'</td><td>'.$WorkPlanPD->city->city_name.'</td><td>'.$WorkPlanPD->work_with.'</td><td><input class="required time" name="visit_time['.$WorkPlanPD->id.']" placeholder="HH:MM" value="'.$WorkPlanPD->visit_time.'"></td><td><input class="required" name="business['.$WorkPlanPD->id.']" value="'.$WorkPlanPD->business.'"></td></tr>';
 					$i++;
 					}
 				}
