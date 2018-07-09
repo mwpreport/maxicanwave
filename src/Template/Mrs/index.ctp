@@ -20,7 +20,7 @@
                 <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
-                        <h3><?=number_format($doctorsAvarage,2)?><sup style="font-size: 20px">%</sup></h3>
+                        <h3><?=number_format($doctorsAvarage,2)?></h3>
 
                         <p>Doctor Call Average</p>
                     </div>
@@ -35,7 +35,7 @@
                 <!-- small box -->
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3><?=number_format($chemistAvarage,2)?><sup style="font-size: 20px">%</sup></h3>
+                        <h3><?=number_format($chemistAvarage,2)?></h3>
 
                         <p>Chemist Call Average</p>
                     </div>
@@ -50,7 +50,7 @@
                 <!-- small box -->
                 <div class="small-box bg-yellow">
                     <div class="inner">
-                        <h3><?=$doctorsCoverage?></h3>
+                        <h3><?=$doctorsCoverage?><sup style="font-size: 20px">%</sup></h3>
 
                         <p>Doctor Coverage</p>
                     </div>

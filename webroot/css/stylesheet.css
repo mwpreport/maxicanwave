@@ -793,7 +793,8 @@ tr.reported.unplanned td:first-child, tr.reported.unplanned td:nth-child(2) {bac
     margin: 10px 0;}
 .at_date { background: #eee; height: 25px; line-height: 25px; margin:0; font-size: 14px; font-weight: bold;}
 .at_status { background: #fff; height: 20px; line-height: 20px; margin:0; font-size: 14px; font-weight: bold;}
-.at_status.holiday,.at_status.sunday,.at_status.leave{background: #bbb;}
+.at_status.holiday,.at_status.sunday{background: #bbb;}
+.at_status.leave{color: #E88A65;}
 .at_status.not-reported{color:red;}
 .at_status.present{color:blue;}
 
