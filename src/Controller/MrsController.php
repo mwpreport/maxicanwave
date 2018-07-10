@@ -951,7 +951,7 @@ class MrsController extends AppController {
             list($year,$month,$day) = explode("-",$date);
             if ($workPlanSubmit) {
                 $expense = $workPlanSubmit['expense'];
-                if ($this->request->is(['patch', 'post', 'put'])) { //pr($this->request->data);                    
+                if ($this->request->is(['patch', 'post', 'put'])) { pr($this->request->data); exit;                   
                     $this->request->data['work_plan_submit_id'] = $workPlanSubmit->id;
                     if ($expense) {
                         $oldexpense = $this->Expenses->patchEntity($expense, $this->request->data);
