@@ -429,27 +429,46 @@ class WorkPlansController extends AppController
     {
 		$this->autoRender = false;
         $this->viewBuilder()->layout(false);
+        $uid = $this->Auth->user('id');
 		$id = $_POST['selected_plan_id'];
 		$start_date = $_POST['copyto']." 00:00:00";
         $end_date = $_POST['copyto']." 23:59:00";
 		$returnArray = array();
+		$workPlans_array = array();
 		
 		$workPlan = $this->WorkPlans->find()
 			->where(['id IN' => $id])->first();
-		
 		if($workPlan['work_type_id'] !=1)
 		{
 			list($status, $error) = $this->_checkLeave($start_date,$start_date,$workPlan->work_type_id,$workPlan->id);
 			if(!$status)
 			{echo json_encode(array("success"=>$status,"error"=>$error)); exit;}
 		}
+		
+		$workPlans = $this->WorkPlans->find()
+		->where(['id IN' => $id]);
 
-		$WorkPlansTable = $this->WorkPlans;
-		if ($WorkPlansTable->updateAll( array('start_date' => $start_date,'end_date' => $end_date), array('id IN' => $id))) {
-			$returnArray = array('success' => "1",'eventIDs' => $id);
+		foreach($workPlans as $workPlan)
+		{
+			$data = array('user_id' => $uid, 'work_type_id' => $workPlan->work_type_id, 'city_id' => $workPlan->city_id,
+			'doctor_id' => $workPlan->doctor_id, 
+			'plan_reason' => $workPlan->plan_reason, 
+			'plan_details' => $workPlan->plan_details, 
+			'start_date' => $start_date, 
+			'end_date' => $end_date, 
+			'is_planned' => 1
+			);
+
+			$workPlans_array[] = $data;
 		}
-		echo json_encode($returnArray); 
-		exit;   
+
+		$entities = $this->WorkPlans->newEntities($workPlans_array);
+		$_results = $this->WorkPlans->saveMany($entities);
+		if ($_results)
+		{
+			echo json_encode(array("success"=>1,"events"=>true)); exit;
+		}
+		echo json_encode(array("success"=>0,"error"=>"Something went wrong!")); exit;
      }
 
 	public function submitPlan()
@@ -996,8 +1015,8 @@ class WorkPlansController extends AppController
 				$reportData['gifts'] = "";
 				$reportData['visit_time'] = null;
 				$reportData['business'] = null;
-				$reportData['discussion	'] = null;
-				$reportData['is_reported	'] = 0;
+				$reportData['discussion'] = null;
+				$reportData['is_reported'] = 0;
 				$workPlan = $this->WorkPlans->patchEntity($workPlan, $reportData);
 				$action = $this->WorkPlans->save($workPlan);
 			}

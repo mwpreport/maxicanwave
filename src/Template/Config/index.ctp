@@ -36,7 +36,7 @@
 											<?php $i=1; foreach ($config as $configd): ?>
 											<tr>
 												<td><?= $i ?></td>
-												<td><?= h($configd->scope) ?></td>
+												<td><?= h($configd->title) ?></td>
 												<td><?= h($configd->value) ?></td>
 												<td><?= $this->Html->link(__('<img src="../images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit', $configd->id],['escape' => false]) ?></td>
 											</tr>

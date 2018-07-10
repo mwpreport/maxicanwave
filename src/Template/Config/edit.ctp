@@ -25,7 +25,7 @@
 									<?= $this->Form->create($config, array('id' => 'editform')) ?>
 									<fieldset>
 										<?php
-											echo $this->Form->control('scope', ['class' => 'form-control mar-bottom-10']);
+											echo $this->Form->control('title', ['class' => 'form-control mar-bottom-10']);
 											echo $this->Form->control('value', ['class' => 'form-control mar-bottom-10']);
 										?>
 									</fieldset>

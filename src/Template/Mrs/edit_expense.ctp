@@ -5,6 +5,16 @@
     <!-- Main content -->
     <div class="content travel-expense">
            <section>
+             <div class="white-wrapper">
+               <div class="col-md-12">
+                   <div class="hr-title">
+                     <h2><?= __('Expense on '.$this->Date->title($date)) ?> <span class="go-back pull-right"><a href="<?php echo $this->Url->build(["controller" => "Mrs","action" => "expenses",'?' => ['month' => intval($month), 'year' => $year]])?>"><i class="fa fa-arrow-left"></i> Go Back</a></span></h2>
+                       <hr>
+                   </div>
+               </div>
+			 </div>
+           </section>
+           <section>
                <div class="row">
                    <div class="col-xs-12">
                        <div class="white-wrapper mar-top-20">
@@ -52,19 +62,24 @@
                                         <?php } ?>
                                         <tr>
 
-                                          <td colspan='2' class='started_date'>
+                                          <td colspan='2' class='started_date' style="display:none">
                                             <span>Started:</span>
                                             <?= $this->Form->control('started_hour', ['class'=> 'form-control', 'options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("G", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
                                             <?= $this->Form->control('started_minute', ['class'=> 'form-control', 'options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("i", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
                                           </td>
-                                          <td colspan='2' class='end_date'>
+                                          <td colspan='2' class='end_date' style="display:none">
                                             <span>Reached:</span>
                                             <?= $this->Form->control('reached_hour', ['class'=> 'form-control', 'options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("G", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
                                             <?= $this->Form->control('reached_minute', ['class'=> 'form-control', 'options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("i", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
                                           </td>
                                         </tr>
                                         <tr>
-                                           <td colspan="4"><?= $this->Form->button(__('Submit'), ['class' => 'travel-expense-submit common-btn blue-btn btn-125']); ?></td>
+                                           
+                                           <?php if(isset($expense['travel_expenses'])){ ?>
+                                            <td colspan="4"><?= $this->Form->button(__('Submit'), ['class' => 'travel-expense-submit common-btn blue-btn btn-125']); ?>&nbsp;Travel expenses are stored already</td>                                                
+                                            <?php }else { ?>
+                                                <td colspan="4"><?= $this->Form->button(__('Submit'), ['class' => 'travel-expense-submit common-btn blue-btn btn-125']); ?></td>
+                                            <?php } ?>  
                                         </tr>
                                     <?= $this->Form->end() ?>
 							                   </tbody>
@@ -90,8 +105,8 @@
                                <tr>
                                   <th scope="col"><?= $this->Paginator->sort('Voucher No') ?></th>
                                   <th scope="col"><?= $this->Paginator->sort('Exp. Type') ?></th>
-                                  <th scope="col"><?= $this->Paginator->sort('Amount') ?></th>
                                   <th scope="col"><?= $this->Paginator->sort('Purpose') ?></th>
+                                  <th scope="col"><?= $this->Paginator->sort('Amount') ?></th>
                                   <th scope="col"></th>
                                </tr>
                              </thead>
@@ -127,9 +142,9 @@
                                     <?php } ?>
                                   </td>
                                   <td></td>
-                                  <td><?= $this->Form->control('other_expenses[0][other_allowance_id]', ['class'=> 'form-control', 'options' => $otherAllowances, 'label' => false, 'empty' => 'Select']); ?></td>
-                                  <td><?= $this->Form->control('other_expenses[0][fare]',['label'=>false, 'class'=> 'form-control']); ?></td>
+                                  <td><?= $this->Form->control('other_expenses[0][other_allowance_id]', ['class'=> 'form-control', 'options' => $otherAllowances, 'label' => false, 'empty' => 'Select']); ?></td>                                  
                                   <td><?= $this->Form->control('other_expenses[0][description]',['label'=>false, 'type'=> 'textArea', 'class'=> 'form-control']); ?></td>
+                                  <td><?= $this->Form->control('other_expenses[0][fare]',['label'=>false, 'class'=> 'form-control']); ?></td>
                                   <td style="display:none"><?= $this->Form->control('other_expenses[0][voucher_no]',['class'=> 'form-control', 'label'=>false, 'type'=> 'textArea','value' => time()]); ?></td>
 
                                   <td width="50">
@@ -183,7 +198,7 @@
                                          ?>
                                       <?= $this->Form->create($expense, array('id' => 'newform','class'=>'main-expense-form')) ?>
                                       <?php
-                                      if(isset($expense['travel_expenses']) && !empty($expense['travel_expenses'])){  ?>
+                                      if(isset($expense['travel_expenses']) && !empty($expense['travel_expenses'])){  ?>                                        
                                        <tr class="travel-expense-row">
                                         <?php if($i==0) {  ?>
                                           <td class="exp-type" rowspan="<?php echo $count; ?>" style="vertical-align : middle;text-align:center;">
@@ -300,7 +315,8 @@
                                        <td colspan="7"><?= $this->Form->control('daily_allowance', ['class'=> 'form-control', 'options' => $dailyAllowances, 'value' => isset($expense['daily_allowance']) ? $expense['daily_allowance'] : 0 ]); ?></td>
                                      </tr>
                                      <tr>
-                                       <td colspan="7"><?= $this->Form->button(__('submit'), ['class' => 'travel-expense-final-submit common-btn blue-btn btn-125']); ?></td>
+                                       <td colspan="7"><?= $this->Form->button(__('submit'), ['class' => 'travel-expense-final-submit common-btn blue-btn btn-125']); ?></td>                                       
+                                       
                                      </tr>
                                      <?= $this->Form->end() ?>
                                    </tbody>
@@ -326,11 +342,22 @@ function loadExpenseType(sel){
   var expense_type_text = sel.options[sel.selectedIndex].text;
 
   var travel_expense_row_count = $('.travel-expense .travel-expense-row').length;
-  if(expense_type == 3){
-    if(travel_expense_row_count > 1)
-      $('.travel-expense .travel-expense-row:last').css('display','none');
-  }else{
+  
+  if(expense_type == 3){      
+      $('.travel-expense .started_date').css('display','');
+      $('.travel-expense .end_date').css('display','');
+    if(travel_expense_row_count > 1){
+        $('.travel-expense .travel-expense-row:last').css('display','none');      
+    }
+  }else if(expense_type == 1){
+      $('.travel-expense .started_date').css('display','none');
+      $('.travel-expense .end_date').css('display','none');
+      $('.travel-expense .travel-expense-row:last').css('display','table-row');      
+  }else{    
+    $('.travel-expense .started_date').css('display','none');
+    $('.travel-expense .end_date').css('display','none');
     $('.travel-expense .travel-expense-row:last').css('display','table-row');
+    
   }
   //change in main submit form(popup)
   $('.main-travel-expense .exp-type input').val(expense_type);
@@ -482,6 +509,8 @@ $('.main-expense-form').submit(function(){
 
 </script>
 <style>
-#daily-allowance{margin-left:279px}
-#travel-expenses-0-travel-mode{margin-left:77px}
+#daily-allowance{margin-left:43%}
+.main-travel-expense tr td{text-align:center !important}
+.main-travel-expense .travel-expense-row select{margin: 0 auto}
+.main-travel-expense .travel-expense-row .select{width:200px;}
 </style>

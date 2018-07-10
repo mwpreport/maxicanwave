@@ -75,7 +75,8 @@ class DoctorsRelationController extends AppController
 			$previous_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid])->count();
 			$doctorsCount=count($rData['doctor_ids']);
 			$totalCount=$previous_count+$doctorsCount;
-			$relationLimit = $this->Config->find()->select('value')->where(['scope' => 'mr_doctors_limit'])->first();
+			$class = $_POST['class'];
+			$relationLimit = $this->Config->find()->where(['scope' => 'mr_doctors_limit_'.$class])->first();
 			if ($this->request->is('post') && $totalCount < $relationLimit->value) {
 				foreach ($rData['doctor_ids'] as $doctor_id){
 					$doctorsRelation = $this->DoctorsRelation->newEntity();
@@ -101,7 +102,7 @@ class DoctorsRelationController extends AppController
 			}
 			else
 			{
-				$this->Flash->error(__('You have reached you limit.'));
+				$this->Flash->error(__($relationLimit->title.' exceeds.'));
 				return $this->redirect(['action' => 'index']);
 			}
         }
@@ -178,10 +179,11 @@ class DoctorsRelationController extends AppController
         $this->viewBuilder()->layout(false);
 		$uid = $this->Auth->user('id');
 		$row_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid])->count();
-		$relationLimit = $this->Config->find()->select('value')->where(['scope' => 'mr_doctors_limit'])->first();
+		$class = $_POST['class'];
+		$relationLimit = $this->Config->find()->where(['scope' => 'mr_doctors_limit_'.$class])->first();
         $doctorsRelation = $this->DoctorsRelation->newEntity();
         if ($this->request->is('post') && $row_count < $relationLimit->value) {
-			$data=array('user_id'=>$uid,'doctor_id'=>$_POST['doctor_id'],'class'=>$_POST['class']);
+			$data=array('user_id'=>$uid,'doctor_id'=>$_POST['doctor_id'],'class'=>$class);
             $doctorsRelation = $this->DoctorsRelation->patchEntity($doctorsRelation, $data);
 			$data_count = $this->DoctorsRelation->find()->where(['user_id =' => $uid, 'doctor_id =' => $data['doctor_id']])->count();
             if($data_count<1)
@@ -201,7 +203,7 @@ class DoctorsRelationController extends AppController
 			$this->Flash->error(__('The relation already exists. Please, try again.'));
         }
         else
-        $this->Flash->error(__('You have reached you limit.'));
+        $this->Flash->error(__($relationLimit->title.' exceeds.'));
         
         return $this->redirect(['controller' => 'Mrs','action' => 'doctorList']);
     }

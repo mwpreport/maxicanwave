@@ -25,10 +25,30 @@
                                     <div class="table-responsive">
                                         <?php
                                         foreach ($workPlansDate as $date=>$status)
-										{?>
+										{
+											switch ($status) {
+												case "PH":
+													$status_class = "holiday";
+													break;
+												case "S":
+													$status_class = "sunday";
+													break;
+												case "?":
+													$status_class = "not-reported";
+													break;
+												case "P":
+													$status_class = "present";
+													break;
+												case "L":
+													$status_class = "leave";
+													break;
+												default:
+													$status_class = "";
+											}
+											?>
 											<div class="at_box">
 												<p class="at_date"><?= date("d", strtotime($date))?></p>
-												<p class="at_status"><?= $status?></p>
+												<p class="at_status <?= $status_class?>"><?= $status?></p>
 											</div>
 										<?php }?>
                                     </div>

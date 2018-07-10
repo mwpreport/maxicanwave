@@ -606,6 +606,10 @@ input[type="checkbox"]:disabled + label span {
     background:#0071bc;
     color:#fff;
 }
+.datepicker td.highlight, .datepicker table tr td.active.active{
+    background:#87cefa;
+}
+/*
 #calendar .datepicker .table > thead > tr > th{
     background: transparent;
     color:#fff;
@@ -648,6 +652,7 @@ input[type="checkbox"]:disabled + label span {
 #calendar .input-group.date .input-group-addon i{
     color: #0071bc;
 }
+*/
 .input-group .input-group-addon{
         border-color: #0071bc;
 }
@@ -787,7 +792,12 @@ tr.reported.unplanned td:first-child, tr.reported.unplanned td:nth-child(2) {bac
     border: solid 1px #ddd;
     margin: 10px 0;}
 .at_date { background: #eee; height: 25px; line-height: 25px; margin:0; font-size: 14px; font-weight: bold;}
-.at_status { background: #fff; height: 20px; line-height: 20px; margin:0; font-size: 14px;}
+.at_status { background: #fff; height: 20px; line-height: 20px; margin:0; font-size: 14px; font-weight: bold;}
+.at_status.holiday,.at_status.sunday{background: #bbb;}
+.at_status.leave{color: #E88A65;}
+.at_status.not-reported{color:red;}
+.at_status.present{color:blue;}
+
 .mfp-ajax-holder .mfp-content {
     line-height: 0;
     width: 100%;
