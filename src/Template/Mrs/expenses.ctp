@@ -265,17 +265,19 @@
 
                                         <td colspan="12">
                             <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-                            <?= $this->Form->create('expenses', array('id' => 'newform')) ?>
-                            <?= $this->form->control('approve_request', ['type' => 'hidden', 'label' => false, 'value' => 1]); ?>
-                            <?= $this->Form->control('month', ['type' => 'hidden','label' => false, 'value' => $this->request->getQuery('month')]) ?>
-                            <?= $this->Form->control('year', ['type' => 'hidden','label' => false, 'value' => $this->request->getQuery('year')]) ?>
-                          <?= $this->Form->button(__('Send Expense For Approvals'), ['class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
-                            <?= $this->Form->end() ?>
-                          <?php }else if(!empty($expenseApproval) && $expenseApproval['is_approved'] == 1){ ?>
-                                            <h4 class="message success">Expense has been approved for this month</h4>
-                          <?php }else{ ?>
-                                            <h4 class="message success">Expense approval request sent for this month</h4>
-                          <?php } ?>
+                                <?= $this->Form->create('expenses', array('id' => 'newform')) ?>
+                                <?= $this->form->control('approve_request', ['type' => 'hidden', 'label' => false, 'value' => 1]); ?>
+                                <?= $this->Form->control('month', ['type' => 'hidden','label' => false, 'value' => $this->request->getQuery('month')]) ?>
+                                <?= $this->Form->control('year', ['type' => 'hidden','label' => false, 'value' => $this->request->getQuery('year')]) ?>
+                                <?= $this->Form->button(__('Send Expense For Approvals'), ['class' => 'other-expense-submit common-btn blue-btn btn-125']); ?>
+                                <?= $this->Form->end() ?>
+                                
+                            <?php }else if(!empty($expenseApproval) && $expenseApproval['is_approved'] == 1){ ?>
+                                <h4 class="message success">Expense has been approved for this month</h4>
+                            <?php }else{ ?>
+                                <h4 class="message success">Expense approval request sent for this month</h4>
+                            <?php } ?>
+                                &nbsp; <?= $this->Html->link(__('View Expense'), ['action' => 'viewExpenseReport', "?" => ["month" => $this->request->getQuery('month'), 'year' => $this->request->getQuery('year')]],['class' => 'iframe-popup-link','escape' => false]) ?>
                                         </td>
                                     </tr>
                                 </tbody>
