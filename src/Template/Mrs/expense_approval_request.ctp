@@ -94,6 +94,7 @@
                           $month_abeyance_amount=0;
                           $expense_key=0;
                           for($i=1; $i<=$month_days; $i++){
+                            $bgcolor= ($i%2 ==0) ? "background-color:#f9f9f9" : "background-color:#ffffff";
                             $time=mktime(12, 0, 0, $month, $i, $year); ?>
                             <?php if (date('m', $time)==$month){
                                   if($i==1){
@@ -104,7 +105,7 @@
                                     $report_date = date("Y-m-d", strtotime($report->date));
                                     if($report_date == date('Y-m-d', $time) ){ ?>
                                     <?php if(!isset($report->expense->travel_expenses) && !isset($report->expense->travel_expenses)){ ?>
-                                   <tr>
+                                   <tr style="<?php echo $bgcolor; ?>">
     									                 <td>
                                          <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
                                        </td>
@@ -154,7 +155,7 @@
 
                                    if(!empty($travelExpenses)){
                                        foreach($travelExpenses as $key => $travelExpense){ ?>
-                                         <tr>
+                                         <tr style="<?php echo $bgcolor; ?>">
                                             <td>
                                               <?php if($key==0){ ?>
                                                 <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
@@ -209,7 +210,7 @@
                                         </tr>
                                        <?php }
                                      }elseif(!empty($otherExpenses)) { ?>
-                                         <tr>
+                                         <tr style="<?php echo $bgcolor; ?>">
                                             <td>
                                                 <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
                                              </td>
@@ -249,11 +250,11 @@
                                  <?php
                                }
                                if($k == 0){ ?>
-                                 <tr>
-                                   <td>
-                                     <?= $this->Html->link(__(date('D-d', $time)), ['action' => 'daily-report', "?" => ["date" => date('Y-m-d', $time)]],['escape' => false]) ?>
+                                 <tr style="<?php echo $bgcolor; ?>">
+                                   <td style="color:red">
+                                     <?php echo date('D-d', $time); ?>
                                    </td>
-                                   <td colspan="16">Holiday / On Leave</td>
+                                   <td colspan="16" style="color:red">Holiday / On Leave</td>
                                 </tr>
                               <?php }
                           }

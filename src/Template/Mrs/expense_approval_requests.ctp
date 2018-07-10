@@ -21,41 +21,41 @@
                         <!-- /.box-header -->
                         <div class="table-responsive">
                             <table  class="table table-striped table-bordered table-hover">
-			<thead>
-				<tr>
-					<th scope="col"><?= $this->Paginator->sort('S.No') ?></th>
-          <th scope="col"><?= $this->Paginator->sort('Month') ?></th>
-					<th scope="col"><?= $this->Paginator->sort('user_id', 'MR') ?></th>
-					<th scope="col"><?= $this->Paginator->sort('City') ?></th>
-					<th scope="col" class="actions"><?= __('Options') ?></th>
-				</tr>
-			</thead>
-			<tbody>
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><?= $this->Paginator->sort('S.No') ?></th>
+                                        <th scope="col"><?= $this->Paginator->sort('Month') ?></th>
+                                        <th scope="col"><?= $this->Paginator->sort('user_id', 'MR') ?></th>
+                                        <th scope="col"><?= $this->Paginator->sort('City') ?></th>
+                                        <th scope="col" class="actions"><?= __('Options') ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 				<?php $i=1; foreach ($expenseApprovals as $expenseApproval): ?>
-				<tr>
-					<td><?= $this->Number->format($i) ?></td>
-          <td>
+                                    <tr>
+                                        <td><?= $this->Number->format($i) ?></td>
+                                        <td>
             <?= date("M-Y", strtotime($expenseApproval->date)); ?>
-          </td>
-					<td><?= $expenseApproval->has('user') ? $expenseApproval->user->firstname." ".$expenseApproval->user->lastname : '' ?></td>
-					<td><?= $expenseApproval->user->city->city_name?></td>
-					<td>
+                                        </td>
+                                        <td><?= $expenseApproval->has('user') ? $expenseApproval->user->firstname." ".$expenseApproval->user->lastname : '' ?></td>
+                                        <td><?= $expenseApproval->user->city->city_name?></td>
+                                        <td>
             <?= $this->Html->link(__('<img src="../images/eye.png" width="29" height="18" alt="profile">'), ['action' => 'expenseApprovalRequest', $expenseApproval->id],['escape' => false]) ?>
-          </td>
-				</tr>
+                                        </td>
+                                    </tr>
 				<?php $i++; endforeach; ?>
-			</tbody>
-		</table>
-		<div class="paginator">
-			<ul class="pagination">
+                                </tbody>
+                            </table>
+                            <div class="paginator">
+                                <ul class="pagination">
 				<?= $this->Paginator->first('<< ' . __('first')) ?>
 				<?= $this->Paginator->prev('< ' . __('previous')) ?>
 				<?= $this->Paginator->numbers() ?>
 				<?= $this->Paginator->next(__('next') . ' >') ?>
 				<?= $this->Paginator->last(__('last') . ' >>') ?>
-			</ul>
-			<p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-		</div>
+                                </ul>
+                                <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+                            </div>
                         </div>
                         <!-- /.box-body -->
                     </div>
