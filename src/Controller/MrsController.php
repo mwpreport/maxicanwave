@@ -936,6 +936,57 @@ class MrsController extends AppController {
         $this->set('title', 'Daily Report');
         $this->set(compact('years', 'months', 'expense'));
     }
+    
+    
+    
+    public function viewExpenseReport() {
+        
+        $this->viewBuilder()->layout('iframe');
+        $current_year = date("Y");
+        $months = [1 => 'January', 2 => 'Feburary', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'];
+        $years = [$current_year => $current_year, $current_year - 1 => $current_year - 1, $current_year - 2 => $current_year - 2, $current_year - 3 => $current_year - 3, $current_year - 4 => $current_year - 4];
+        $this->loadModel('Expenses');
+
+
+        $expense = $this->Expenses->newEntity();
+        if ($this->request->getQuery('month') && $this->request->getQuery('year')) {
+
+            $uid = $this->Auth->user('id');
+            $lead_id = $this->Auth->user('lead_id');
+            $month = $this->request->getQuery('month');
+            $year = $this->request->getQuery('year');
+            $name = $this->Auth->user('firstname') . " " . $this->Auth->user('lastname');
+            $role = $this->Roles->find()->where(['id' => $this->Auth->user('role_id')])->first();
+            $role_name = $role->name;
+            $userCity = $this->Cities->find()->where(['id' => $this->Auth->user('city_id')])->first();
+            $city_name = $userCity->city_name;
+            $month_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            $month_in_text = $months[$month];
+
+            $workPlanSubmits = $this->WorkPlanSubmit->find('all')
+                            ->contain([
+                                'Expenses.ExpenseTypes',
+                                'Expenses.OtherExpenses',
+                                'Expenses.TravelExpenses.WorkTypes',
+                                'Expenses.TravelExpenses.CitiesFrom',
+                                'Expenses.TravelExpenses.CitiesTo'
+                            ])
+                            ->where(['WorkPlanSubmit.user_id =' => $uid, 'WorkPlanSubmit.lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year])->order(['WorkPlanSubmit.id' => 'ASC']);
+            $workPlanSubmit=[];
+            foreach ($workPlanSubmits as $workPlanSubmitdata) {
+                if (!$this->_hasLeave($workPlanSubmitdata->date)) {
+                    $workPlanSubmit[] = $workPlanSubmitdata;
+                }                
+            }            
+            //Store Expense Approval Informations
+            $expenseApproval = $this->ExpenseApprovals->find()->where(['user_id =' => $uid, 'lead_id =' => $lead_id, 'Month(date) =' => $month, 'Year(date) =' => $year])->first();            
+            $this->set(compact('name', 'role_name', 'city_name', 'month_days', 'month', 'month_in_text', 'year', 'workPlanSubmit', 'expenseApproval')); //pr($workPlanSubmit->toArray());
+        }
+        $this->set('title', 'Daily Report');
+        $this->set(compact('years', 'months', 'expense'));
+    }
+    
+    
 
     public function editExpense() {
 
@@ -951,7 +1002,7 @@ class MrsController extends AppController {
             list($year,$month,$day) = explode("-",$date);
             if ($workPlanSubmit) {
                 $expense = $workPlanSubmit['expense'];
-                if ($this->request->is(['patch', 'post', 'put'])) { //pr($this->request->data);                    
+                if ($this->request->is(['patch', 'post', 'put'])) { pr($this->request->data); exit;                   
                     $this->request->data['work_plan_submit_id'] = $workPlanSubmit->id;
                     if ($expense) {
                         $oldexpense = $this->Expenses->patchEntity($expense, $this->request->data);
