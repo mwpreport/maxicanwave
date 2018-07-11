@@ -1,13 +1,12 @@
 <?php
-namespace App\View\Helper;
- 
-use Cake\View\Helper;
+namespace App\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Core\App;
 use DateTime;
 
-class DateHelper extends Helper {
- 
- 
-     
+class DateComponent extends Component {
+	
     public function db($date)
     {   
 		$_date = DateTime::createFromFormat('d-m-Y', substr($date,0,10));
@@ -23,5 +22,5 @@ class DateHelper extends Helper {
 		$_date = DateTime::createFromFormat('Y-m-d', substr($date,0,10));
         return($_date->format('d-m-Y (l)'));
     }
+    
 }
-?>

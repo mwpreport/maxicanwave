@@ -17,6 +17,7 @@ class WorkPlansController extends AppController
 	public function initialize() {
         parent::initialize();
 		$this->loadComponent('Auth');
+		$this->loadComponent('Date');
 	
         $this->loadModel('WorkPlans');
 		$this->loadModel('WorkPlanApproval');
@@ -748,8 +749,8 @@ class WorkPlansController extends AppController
 						{
 							$newWorkPlan = $this->WorkPlans->newEntity();
 							$newData = array('user_id' => $uid, 'work_type_id' => '2', 'city_id' => $workPlan['city_id']);
-							$newData['start_date'] = $data['alt_date'][$workPlan_id]." 00:00:00";
-							$newData['end_date'] = $data['alt_date'][$workPlan_id]." 23:59:00";
+							$newData['start_date'] = $this->Date->db($data['alt_date'][$workPlan_id])." 00:00:00";
+							$newData['end_date'] = $this->Date->db($data['alt_date'][$workPlan_id])." 23:59:00";
 							$newData['is_planned'] = 1;
 							$newData['is_approved'] = 1;
 							$newData['doctor_id'] = $workPlan['doctor_id'];
@@ -782,6 +783,8 @@ class WorkPlansController extends AppController
 			$this->Flash->success(__($success));
 			return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
         }
+        else
+        return $this->redirect(['controller' => 'Mrs','action' => 'index']);
 	}
 
     public function mrsAddReport()
