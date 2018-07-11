@@ -457,11 +457,11 @@
 				
 				//Date picker
                 $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date, #delete_date').datepicker({
-                    autoclose: true, startDate: startDate, endDate: endDate
+                    autoclose: true, startDate: startDate, endDate: endDate, format: 'dd-mm-yyyy'
                 });
                 $('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date').on('changeDate', function (ev) {
 					$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker('remove');
-					$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker({autoclose: true, startDate: ev.date, endDate: endDate});
+					$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker({autoclose: true, startDate: ev.date, endDate: endDate, format: 'dd-mm-yyyy'});
 					//if($('#'+$(this).closest("form").attr('id')+' #end_date').is(":visible"))
 					//$('#'+$(this).closest("form").attr('id')+' #end_date').datepicker("setDate", ev.date);
 
@@ -513,10 +513,10 @@
 				});
 
                 $('#ModalAddForm #end_date, #ModalEditForm #end_date, #ModalLeaveForm #end_date').datepicker({
-                    autoclose: true, startDate: startDate, endDate: endDate
+                    autoclose: true, startDate: startDate, endDate: endDate, format: 'dd-mm-yyyy'
                 })
                 $('#datepicker, #copyfrom, #copyto, #fromdate, #todate').datepicker({
-                    autoclose: true, startDate: startDate, endDate: endDate
+                    autoclose: true, startDate: startDate, endDate: endDate, format: 'dd-mm-yyyy'
                 });
 
                 // initialize the calendar
@@ -544,10 +544,10 @@
 					if(cDate >= startDate && cDate <= endDate && is_editable)
 					{
 						reset_form();
-						$('#ModalAdd #start_date').val(moment(start).format('YYYY-MM-DD'));
+						$('#ModalAdd #start_date').val(moment(start).format('DD-MM-YYYY'));
 						$('#ModalAdd #end_date').datepicker('remove');
 						$('#ModalAdd .multiselect-container li').removeClass('active');
-						$('#ModalAdd #end_date').datepicker({autoclose: true, startDate: moment(start).format('YYYY-MM-DD'), endDate: endDate});
+						$('#ModalAdd #end_date').datepicker({autoclose: true, startDate: moment(start).format('DD-MM-YYYY'), endDate: endDate, format: 'dd-mm-yyyy'});
 						$.magnificPopup.open({ items: {src: '#ModalAdd'}, type: 'inline' });
 					}
 			   },
@@ -567,10 +567,11 @@
 									if(data.success == '1'){
 									$('#ModalEdit #work_type_id').val(data.work_type_id);
 									$('#ModalEdit #long_plan').val(data.long_plan);
-									$('#ModalEdit #start_date').datepicker("setDate", data.start_date);
-									$('#ModalEdit #end_date').datepicker("setDate", data.end_date);
+									$('#ModalEdit #start_date').datepicker("setDate", moment(data.start_date).format('DD-MM-YYYY'));
+									$('#ModalEdit #end_date').datepicker("setDate", moment(data.end_date).format('DD-MM-YYYY'));
 									$('#ModalEdit #end_date').addClass("hide");
 									$('#ModalEdit #city_id').val(data.city_id);
+									loadDoctors("#ModalEditForm");
 									$('#ModalEdit #doctor_id').val(data.doctor_id);
 									$('#ModalEdit #plan_reason').val(data.plan_reason);
 									$('#ModalEdit #plan_details').val(data.plan_details);
@@ -600,13 +601,12 @@
 				   });
 			   },
 			   eventAfterAllRender: function (view) {
-				var fourthOfJuly = '2018-07-04';
-				var fifthOfJuly = '2018-07-05';
 				var holidays = JSON.parse('<?php echo $holidayArray;?>');
 				$.each(holidays, function(index, value) {
 					holidayMoment = index;
 					if (view.name == 'month') {
 						$("td[data-date=" + holidayMoment + "]").addClass('holiday');
+						if($("td[data-date=" + holidayMoment + "] .fc-label").length == 0)
 						$("td[data-date=" + holidayMoment + "]").append("<span class='fc-label'>"+value+"</span>");
 						
 					}
@@ -709,6 +709,13 @@
 		});
 		$( "#ModalAddForm #work_type_id, #ModalAddForm #city_id" ).change(function() {
 			loadDoctors("#ModalAddForm");
+		});
+       
+		$( "#ModalEditForm #start_date" ).on('changeDate', function (ev) {
+			loadDoctors("#ModalEditForm");
+		});
+		$( "#ModalEditForm #work_type_id, #ModalEditForm #city_id" ).change(function() {
+			loadDoctors("#ModalEditForm");
 		});
        
             });

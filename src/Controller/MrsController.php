@@ -16,6 +16,8 @@ class MrsController extends AppController {
 
     public function initialize() {
         parent::initialize();
+        $this->loadComponent('Date');
+        
         $this->loadModel('Users');
         $this->loadModel('Roles');
         $this->loadModel('Specialities');
@@ -217,15 +219,15 @@ class MrsController extends AppController {
         $this->viewBuilder()->layout(false);
         $data = $this->request->data;
         $uid = $this->Auth->user('id');
-        $id = $data['id'];
+        $id = (!empty($data['id'])) ? $data['id'] : 0;
         $city_id = $data['city_id'];
-        $start_date = $data['start_date'];
+        $start_date = $this->Date->db($data['start_date']);
 
         $WorkPlansD = $this->WorkPlans
                         ->find('all')
                         ->contain(['WorkTypes', 'Cities', 'Doctors'])
                         ->select('doctor_id')->where(['WorkPlans.user_id =' => $uid])
-                        ->where(['WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
+                        ->where(['WorkPlans.id <>' => $id, 'WorkPlans.is_deleted <>' => '1', 'WorkPlans.start_date =' => $start_date, 'WorkPlans.doctor_id IS NOT' => null, 'WorkPlans.work_type_id =' => 2])->toArray();
         $doctor_ids = array_map(function($d) {
             return $d->doctor_id;
         }, $WorkPlansD);

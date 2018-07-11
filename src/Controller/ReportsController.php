@@ -16,6 +16,8 @@ use DateInterval;
 class ReportsController extends AppController {
     public function initialize() {
         parent::initialize();
+        $this->loadComponent('Date');
+        
         $this->loadModel('Users');
         $this->loadModel('Roles');
         $this->loadModel('Specialities');
@@ -114,8 +116,8 @@ class ReportsController extends AppController {
     {
 		if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date']))
 		{
-			$start_date = $_REQUEST['start_date']."00:00:00";
-			$end_date = $_REQUEST['end_date']."23:59:59	";
+			$start_date = $this->Date->db($_REQUEST['start_date'])."00:00:00";
+			$end_date = $this->Date->db($_REQUEST['end_date'])."23:59:59	";
 
 			//echo $date; exit;
 			$this->set('title', 'Daily Report');
@@ -183,8 +185,8 @@ class ReportsController extends AppController {
     {
 		if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date']))
 		{
-			$start_date = $_REQUEST['start_date']."00:00:00";
-			$end_date = $_REQUEST['end_date']."23:59:59	";
+			$start_date = $this->Date->db($_REQUEST['start_date'])."00:00:00";
+			$end_date = $this->Date->db($_REQUEST['end_date'])."23:59:59	";
 
 			//echo $date; exit;
 			$this->set('title', 'Daily Report');
