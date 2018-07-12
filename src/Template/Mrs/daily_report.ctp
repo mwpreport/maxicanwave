@@ -7,7 +7,7 @@
             <div class="white-wrapper">
                 <div class="col-md-12">
                     <div class="hr-title">
-                        <?php $reportDate = ($date!="")?date("Y-m-d", strtotime($date)):"";?>
+                        <?php $reportDate = ($date!="")? $date : "";?>
                         <h2>Daily Report of <?= ($date!="")? "of ". $this->Date->title($reportDate) :"" ?></h2>
                         <hr>
                     </div>
@@ -28,7 +28,7 @@
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo $reportDate;?>">
+										<input type="text" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo ($reportDate!="") ? $this->Date->view($reportDate) : "";?>" autocomplete="false">
 									</div>
 								</div>
 								<!-- /.input group -->
@@ -358,7 +358,7 @@
 
 	//Date picker
 	$('#reportDate, #start_date, #end_date').datepicker({
-		autoclose: true, startDate: startDate, endDate: endDate
+		autoclose: true, startDate: startDate, endDate: endDate, format: 'dd-mm-yyyy'
 	});
 	$('#start_date').on('changeDate', function (ev) {
 					$('#end_date').datepicker('remove');

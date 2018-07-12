@@ -66,11 +66,11 @@
 		
 		//Date picker
 		$('#start_date, #end_date').datepicker({
-			autoclose: true, startDate: startDate, endDate: endDate
+			autoclose: true, startDate: startDate, endDate: endDate, format: 'dd-mm-yyyy'
 		});
 		$('#start_date').on('changeDate', function (ev) {
 			$('#end_date').datepicker('remove');
-			$('#end_date').datepicker({autoclose: true, startDate: ev.date, endDate: endDate});
+			$('#end_date').datepicker({autoclose: true, startDate: ev.date, endDate: endDate, format: 'dd-mm-yyyy'});
 		});
 				
        

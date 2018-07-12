@@ -17,6 +17,7 @@ class WorkPlansController extends AppController
 	public function initialize() {
         parent::initialize();
 		$this->loadComponent('Auth');
+		$this->loadComponent('Date');
 	
         $this->loadModel('WorkPlans');
 		$this->loadModel('WorkPlanApproval');
@@ -172,12 +173,12 @@ class WorkPlansController extends AppController
 		$uid = $this->Auth->user('id');
 		$workPlan = $this->WorkPlans->newEntity();
         if ($this->request->is('post')) {
-			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'start_date' => $_POST['start_date'], 'end_date' => $_POST['end_date'], 'city_id' => $_POST['city_id']);
+			$data = array('user_id' => $uid, 'work_type_id' => $_POST['work_type_id'], 'city_id' => $_POST['city_id']);
 			$data['plan_reason'] = isset($_POST['plan_reason'])? $_POST['plan_reason'] : "";
 			$data['plan_details'] = isset($_POST['plan_details'])? $_POST['plan_details'] : "";
 			$data['is_planned'] = 1;
-			$data['start_date'] = $_POST['start_date']." 00:00:00";
-			if( $_POST['end_date']=="")$_POST['end_date'] = $_POST['start_date'];
+			$data['start_date'] = $this->Date->db($_POST['start_date'])." 00:00:00";
+			if( $_POST['end_date']=="")$_POST['end_date'] = $this->Date->db($_POST['start_date']);
 			$data['end_date'] = $_POST['end_date']." 23:59:00";
 			
 			
@@ -259,8 +260,8 @@ class WorkPlansController extends AppController
         ]);
 		if ($this->request->is(['patch', 'post', 'put'])) {
             $workPlan = $this->WorkPlans->patchEntity($workPlan, $this->request->getData());
-            $workPlan->start_date = $_POST['start_date']." 00:00:00";
-            $_POST['end_date'] = $_POST['start_date'];
+            $workPlan->start_date = $this->Date->db($_POST['start_date'])." 00:00:00";
+            $_POST['end_date'] = $this->Date->db($_POST['start_date']);
             $workPlan->end_date = $_POST['end_date']." 23:59:00";
 			
             list($status, $error)=$this->_checkLeave($workPlan['start_date'],$workPlan['end_date'],$workPlan['work_type_id'],$workPlan->id);
@@ -431,8 +432,8 @@ class WorkPlansController extends AppController
         $this->viewBuilder()->layout(false);
         $uid = $this->Auth->user('id');
 		$id = $_POST['selected_plan_id'];
-		$start_date = $_POST['copyto']." 00:00:00";
-        $end_date = $_POST['copyto']." 23:59:00";
+		$start_date = $this->Date->db($_POST['copyto'])." 00:00:00";
+        $end_date = $this->Date->db($_POST['copyto'])." 23:59:00";
 		$returnArray = array();
 		$workPlans_array = array();
 		
@@ -748,8 +749,8 @@ class WorkPlansController extends AppController
 						{
 							$newWorkPlan = $this->WorkPlans->newEntity();
 							$newData = array('user_id' => $uid, 'work_type_id' => '2', 'city_id' => $workPlan['city_id']);
-							$newData['start_date'] = $data['alt_date'][$workPlan_id]." 00:00:00";
-							$newData['end_date'] = $data['alt_date'][$workPlan_id]." 23:59:00";
+							$newData['start_date'] = $this->Date->db($data['alt_date'][$workPlan_id])." 00:00:00";
+							$newData['end_date'] = $this->Date->db($data['alt_date'][$workPlan_id])." 23:59:00";
 							$newData['is_planned'] = 1;
 							$newData['is_approved'] = 1;
 							$newData['doctor_id'] = $workPlan['doctor_id'];
@@ -782,6 +783,8 @@ class WorkPlansController extends AppController
 			$this->Flash->success(__($success));
 			return $this->redirect(['controller' => 'Mrs','action' => $return,'?' => ['date' => $reportDate]]);
         }
+        else
+        return $this->redirect(['controller' => 'Mrs','action' => 'index']);
 	}
 
     public function mrsAddReport()
