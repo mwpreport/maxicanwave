@@ -314,7 +314,15 @@
                                      <?php } ?>
                                      <?php }?>
                                 <tr>
-                                    <td colspan="7"><?= $this->Form->control('daily_allowance', ['class'=> 'form-control', 'options' => $dailyAllowances, 'value' => isset($expense['daily_allowance']) ? $expense['daily_allowance'] : 0 ]); ?></td>
+                                    <td colspan="3">
+                                        <span class='daily_allowance_label'>Daily Allowance:</span>
+                                    </td>
+                                    <td colspan="4">
+                                     <?= $this->Form->control('daily_allowanceHq', ['label' => false, 'class'=> 'form-control dailyAllowanceHq dailyAllowances', 'options' => $dailyAllowancesHq, 'value' => isset($expense['daily_allowance']) ? $expense['daily_allowance'] : 0 ]); ?>
+                                     <?= $this->Form->control('dailyAllowanceExhq', ['label' => false,'class'=> 'form-control dailyAllowanceExhq dailyAllowances', 'options' => $dailyAllowancesExhq, 'value' => isset($expense['daily_allowance']) ? $expense['daily_allowance'] : 0 ]); ?>
+                                     <?= $this->Form->control('dailyAllowanceOs', ['label' => false, 'class'=> 'form-control dailyAllowanceOs dailyAllowances', 'options' => $dailyAllowancesOs, 'value' => isset($expense['daily_allowance']) ? $expense['daily_allowance'] : 0 ]); ?>
+                                     <?= $this->form->control('daily_allowance', ['type' => 'hidden', 'label' => false, 'value' => isset($expense['daily_allowance']) ? $expense['daily_allowance'] : 0]); ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="7"><?= $this->Form->button(__('submit'), ['class' => 'travel-expense-final-submit common-btn blue-btn btn-125']); ?></td>                                       
@@ -469,9 +477,27 @@
                  $('.main-travel-expense tr td[class^="km_"] span').text(0);
                  $('.main-travel-expense tr td[class^="km_"] input').val(0);
                  */
+                 
+                 //Display daily allowance based on type                 
+                 $('.main-travel-expense .dailyAllowanceHq').parent().css('display','none');
+                 $('.main-travel-expense .dailyAllowanceExhq').parent().css('display','none');
+                 $('.main-travel-expense .dailyAllowanceOs').parent().css('display','block');
 
+            } else if(expensetype == 2){            
+                $('.main-travel-expense .travel-expense-row:last').css('display', 'table-row');
+                
+                //Display daily allowance based on type
+                $('.main-travel-expense .dailyAllowanceHq').parent().css('display','none');
+                $('.main-travel-expense .dailyAllowanceExhq').parent().css('display','block');
+                $('.main-travel-expense .dailyAllowanceOs').parent().css('display','none');
+                 
             } else {
                 $('.main-travel-expense .travel-expense-row:last').css('display', 'table-row');
+                
+                //Display daily allowance based on type
+                $('.main-travel-expense .dailyAllowanceHq').parent().css('display','block');
+                $('.main-travel-expense .dailyAllowanceExhq').parent().css('display','none');
+                $('.main-travel-expense .dailyAllowanceOs').parent().css('display','none');
             }
 
             //Open main expense modal popup
@@ -486,10 +512,13 @@
         }
         return false;
     });
-
-
-
+    
     $('.main-expense-form').submit(function () {
+
+        // Put selected daily allowance value in hidden input field
+        var dailyAllowance = $('.dailyAllowances:visible option:selected').val();
+        $('#daily-allowance').val(dailyAllowance);
+                         
         var expensetype = $('.main-travel-expense .exp-type input').val();
         if (expensetype == 3) {
             var travel_expense_row_count = $('.main-travel-expense .travel-expense-row').length;
@@ -527,4 +556,5 @@
     .main-travel-expense tr td{text-align:center !important}
     .main-travel-expense .travel-expense-row select{margin: 0 auto}
     .main-travel-expense .travel-expense-row .select{width:200px;}
+    .daily_allowance_label{text-align: right;width: 100%;display: block;font-weight:bold}
 </style>

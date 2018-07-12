@@ -1004,7 +1004,7 @@ class MrsController extends AppController {
             list($year,$month,$day) = explode("-",$date);
             if ($workPlanSubmit) {
                 $expense = $workPlanSubmit['expense'];
-                if ($this->request->is(['patch', 'post', 'put'])) { pr($this->request->data); exit;                   
+                if ($this->request->is(['patch', 'post', 'put'])) {                   
                     $this->request->data['work_plan_submit_id'] = $workPlanSubmit->id;
                     if ($expense) {
                         $oldexpense = $this->Expenses->patchEntity($expense, $this->request->data);
@@ -1042,10 +1042,13 @@ class MrsController extends AppController {
                 $cities[$userCity->id] = $userCity->city_name;
 
                 $expenseTypes = $this->Expenses->ExpenseTypes->find('list', ['limit' => 200]);
-                $dailyAllowances = $this->DailyAllowances->find('list', ['keyField' => 'cost', 'valueField' => 'cost'])->where(['role_id' => $role_id]);
+                $dailyAllowancesHq = $this->DailyAllowances->find('list', ['keyField' => 'cost', 'valueField' => 'cost'])->where(['role_id' => $role_id, 'expense_type_id' => 1])->order(['cost' => 'DESC']);
+                $dailyAllowancesExhq = $this->DailyAllowances->find('list', ['keyField' => 'cost', 'valueField' => 'cost'])->where(['role_id' => $role_id, 'expense_type_id' => 2])->order(['cost' => 'DESC']);
+                $dailyAllowancesOs = $this->DailyAllowances->find('list', ['keyField' => 'cost', 'valueField' => 'cost'])->where(['role_id' => $role_id, 'expense_type_id' => 3])->order(['cost' => 'DESC']);
+                                
                 $otherAllowances = $this->OtherAllowances->find('list', ['keyField' => 'id', 'valueField' => 'name']);
 
-                $this->set(compact('expense', 'WorkPlans', 'expenseTypes', 'cities', 'worktypes', 'dailyAllowances', 'otherAllowances', 'year', 'month', 'date'));
+                $this->set(compact('expense', 'WorkPlans', 'expenseTypes', 'cities', 'worktypes', 'dailyAllowancesHq', 'dailyAllowancesExhq', 'dailyAllowancesOs','otherAllowances', 'year', 'month', 'date'));
                 $this->set('title', 'Edit Expense');
             } else {
                 return $this->redirect(['action' => 'dashboard']);
