@@ -752,7 +752,7 @@ label.error{font-weight:normal; color:#dd4b39; font-size:12px;}
 .message.success {color:#00a65a;}
 div.error-message, .message.error {color:#dd4b39;}
 /*monthly plan custom styles*/
-.fc-sun, .fc-sun .fc-day-number, .holiday .fc-day-number, .holiday .fc-label { color:red;  }
+.fc-sun, .fc-sun .fc-day-number, .holiday .fc-day-number, .holiday .fc-label { color:red; font-size:12px;  }
 td.fc-day.fc-sun, td.fc-day.holiday { background-color: #f9eff5; }
 .fc-content .fc-time{display:none;} .mfp-close{display:none !important;}
 #start_date-error{ position: absolute; left: 0; bottom: -25px;}

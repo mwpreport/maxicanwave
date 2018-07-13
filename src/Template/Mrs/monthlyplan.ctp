@@ -607,7 +607,7 @@
 					if (view.name == 'month') {
 						$("td[data-date=" + holidayMoment + "]").addClass('holiday');
 						if($("td[data-date=" + holidayMoment + "] .fc-label").length == 0)
-						$("td[data-date=" + holidayMoment + "]").append("<span class='fc-label'>"+value+"</span>");
+						$("td[data-date=" + holidayMoment + "].fc-day").append("<span class='fc-label'>"+value+"</span>");
 						
 					}
 				});
