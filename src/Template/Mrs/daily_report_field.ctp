@@ -157,7 +157,7 @@
 							$html.='<table id="missed_doctors_table" class="table table-striped table-bordered"><thead><tr><th>Doctor Name</th><th>Reason</th><th>Date</th></tr></thead><tbody>';
 							foreach ($WorkPlansD as $WorkPlanD)
 							{
-								$html.='<tr style="display:none" id="missed_'.$WorkPlanD->id.'"><td><input type="checkbox" class="hide" id="m_workplan_id_'.$WorkPlanD->id.'" name="m_workplan_id['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"><h4>'.$WorkPlanD->doctor->name.'</h4></td><td>'.str_replace("%s",$WorkPlanD->id,$is_missed).'<br><label><input type="checkbox" id="m_cancel_plan_'.$WorkPlanD->id.'" name="m_cancel_plan['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"> Check if you cannot plan this month</label></td><td><input class="form-control required" type="text" id="alt_date_'.$WorkPlanD->id.'" name="alt_date['.$WorkPlanD->id.']" autocomplete="false"></td></tr>';
+								$html.='<tr style="display:none" id="missed_'.$WorkPlanD->id.'"><td><input type="checkbox" class="hide" id="m_workplan_id_'.$WorkPlanD->id.'" name="m_workplan_id['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"><h4>'.$WorkPlanD->doctor->name.'</h4></td><td>'.str_replace("%s",$WorkPlanD->id,$is_missed).'<br><label><input type="checkbox" id="m_cancel_plan_'.$WorkPlanD->id.'" name="m_cancel_plan['.$WorkPlanD->id.']" value="'.$WorkPlanD->id.'"> Check if you cannot plan this month</label></td><td><input class="form-control required" type="text" id="alt_date_'.$WorkPlanD->id.'" name="alt_date['.$WorkPlanD->id.']" autocomplete="off"></td></tr>';
 							}
 							$html.='</tbody></table>';
 						}
