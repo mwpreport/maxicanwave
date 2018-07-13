@@ -1,7 +1,7 @@
 <?php ?>
 
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
+<div class="ajax-wrapper">
     <!-- Main content -->
     <div class="content travel-expense">
         <section>

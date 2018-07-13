@@ -991,7 +991,8 @@ class MrsController extends AppController {
     
 
     public function editExpense() {
-
+		$this->viewBuilder()->layout('iframe');
+        $current_year = date("Y");
         $cities = [];
         $uid = $this->Auth->user('id');
         $role_id = $this->Auth->user('role_id');

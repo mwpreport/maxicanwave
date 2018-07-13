@@ -146,7 +146,7 @@
                                         <td></td>
                                         <td></td>
                                            <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-                                        <td width="50"><?= $this->Html->link(__('<img src="../images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                        <td width="50"><?= $this->Html->link(__('<img src="../images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['class' => 'iframe-popup-link-modal', 'escape' => false]) ?></td>
                                            <?php } ?>
                                     </tr>
                                  <?php }else {
@@ -209,7 +209,7 @@
                                         </td>
                                               <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
                                                    <?php if($key==0){ ?>
-                                        <td width="50"><?= $this->Html->link(__('<img src="../images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>
+                                        <td width="50"><?= $this->Html->link(__('<img src="../images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['class' => 'iframe-popup-link-modal', 'escape' => false]) ?></td>
                                                   <?php } ?>
                                                 <?php } ?>
                                     </tr>
@@ -234,7 +234,7 @@
                                                      <?php echo $total_fare = $expense['daily_allowance'] + $total_travel_expense_fare + $otherExpense; ?>
                                         </td>
                                                 <?php if(empty($expenseApproval) || (!empty($expenseApproval) && $expenseApproval['is_rejected'] == 1 )){ ?>
-                                        <td width="50"><?= $this->Html->link(__('<img src="../images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['escape' => false]) ?></td>                                                  
+                                        <td width="50"><?= $this->Html->link(__('<img src="../images/edit@2x.png" width="18" height="18" alt="edit">'), ['action' => 'edit-expense','?'=>['date' =>$report_date]],['class' => 'iframe-popup-link-modal', 'escape' => false]) ?></td>                                                  
                                                 <?php } ?>
                                     </tr>
                                      <?php
@@ -311,6 +311,20 @@
                     '<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>' +
                     '</div>'
         }
+    });
+    $('.iframe-popup-link-modal').magnificPopup({
+        type: 'iframe',
+        modal: true,
+        iframe: {
+            markup: '<div class="mfp-iframe-scaler">' +
+                    '<div class="close"><button type="button" class="close popup-modal-dismiss"><span>&times;</span></button></div>' +
+                    '<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>' +
+                    '</div>'
+        },
+		callbacks: {
+		  close: function(){
+			window.location.replace("");
+		  }}
     });
 </script>
 <style>
