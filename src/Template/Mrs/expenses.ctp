@@ -19,10 +19,10 @@
                         <?= $this->Form->create($expense, array('id' => 'getExpenseList', 'type' => 'GET')) ?>
                         <div class="form-group">
                             <div class="col-sm-4">
-                            <?= $this->Form->control('month', ['class' => 'form-control required', 'options' => $months,'empty' => 'Select', 'required' => true,]) ?>
+                            <?= $this->Form->control('year', ['class' => 'form-control required', 'options' => $years,'empty' => 'Select']) ?>
                             </div>
                             <div class="col-sm-4">
-                            <?= $this->Form->control('year', ['class' => 'form-control required', 'options' => $years,'empty' => 'Select']) ?>
+                            <?= $this->Form->control('month', ['class' => 'form-control required', 'options' => $months,'empty' => 'Select', 'required' => true,]) ?>
                             </div>
                             <div class="col-sm-4">
                             <?= $this->Form->button(__('Submit'), ['class' => 'expense-submit common-btn blue-btn btn-125 pull-left mar-top-30']); ?>

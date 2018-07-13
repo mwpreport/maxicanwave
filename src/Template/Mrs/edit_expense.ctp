@@ -62,24 +62,37 @@
                                         <?php } ?>
                                     <tr>
 
-                                        <td colspan='2' class='started_date' <?php echo isset($expense['travel_expenses'][$i]) ? 'style="display:none"' : "" ?>>
-                                            <span>Started:</span>
-                                            <?= $this->Form->control('started_hour', ['class'=> 'form-control', 'options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("G", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
-                                            <?= $this->Form->control('started_minute', ['class'=> 'form-control', 'options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("i", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
+                                        <td colspan='2' class='started_date' <?php echo ((isset($expense['travel_expenses'][$i]) || $expense['expense_type_id'] != 3)) ? 'style="display:none"' : "" ?>>
                                         </td>
-                                        <td colspan='2' class='end_date' <?php echo isset($expense['travel_expenses'][$i]) ? 'style="display:none"' : "" ?>>
-                                            <span>Reached:</span>
+                                        <td colspan='2' class='end_date' <?php echo ((isset($expense['travel_expenses'][$i]) || $expense['expense_type_id'] != 3)) ? 'style="display:none"' : "" ?>>
+											<div class="col-sm-6">
+											<span class="pull-left">Started: </span>
+                                            <div class="col-sm-4 pad-left-0 pad-right-0">
+                                            <?= $this->Form->control('started_hour', ['class'=> 'form-control', 'options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("G", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
+                                            </div>
+                                            <div class="col-sm-1">:</div>
+                                            <div class="col-sm-4 pad-left-0 pad-right-0">
+                                            <?= $this->Form->control('started_minute', ['class'=> 'form-control', 'options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['started']) ? date("i", strtotime($expense['travel_expenses'][0]['started'])):'00']); ?>
+                                            </div>
+                                            </div>
+                                            <div class="col-sm-6">
+											<span class="pull-left">Reached: </span>
+                                            <div class="col-sm-4 pad-left-0 pad-right-0">
                                             <?= $this->Form->control('reached_hour', ['class'=> 'form-control', 'options' => $hours, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("G", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
+                                            </div>
+                                            <div class="col-sm-1">:</div>
+                                            <div class="col-sm-4 pad-left-0 pad-right-0">
                                             <?= $this->Form->control('reached_minute', ['class'=> 'form-control', 'options' => $minutes, 'label' => false, 'value' => isset($expense['travel_expenses'][0]['reached']) ? date("i", strtotime($expense['travel_expenses'][0]['reached'])):'00']); ?>
+                                            </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
-
+										<td colspan="4">
                                            <?php if(isset($expense['travel_expenses'])){ ?>
-                                        <td colspan="4"><?= $this->Form->button(__('Submit'), ['class' => 'travel-expense-submit common-btn blue-btn btn-125']); ?>&nbsp;Travel expenses are stored already</td>                                                
-                                            <?php }else { ?>
-                                        <td colspan="4"><?= $this->Form->button(__('Submit'), ['class' => 'travel-expense-submit common-btn blue-btn btn-125']); ?></td>
-                                            <?php } ?>  
+												<p class="message success">Saved!</p><?= $this->Form->button(__('Submit'), ['class' => 'travel-expense-submit common-btn blue-btn btn-125']); ?></td>
+                                           <?php }?>  
+                                        <?= $this->Form->button(__('Submit'), ['class' => 'travel-expense-submit common-btn blue-btn btn-125']); ?></td>
                                     </tr>
                                     <?= $this->Form->end() ?>
                                 </tbody>
