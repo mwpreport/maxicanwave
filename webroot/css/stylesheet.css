@@ -609,6 +609,12 @@ input[type="checkbox"]:disabled + label span {
 .datepicker td.highlight, .datepicker table tr td.active.active{
     background:#87cefa;
 }
+.datepicker td.holiday, .datepicker table tr td:first-child{
+    color:red;
+}
+.datepicker table tr td:first-child.old{
+    color:#777;
+}
 /*
 #calendar .datepicker .table > thead > tr > th{
     background: transparent;

@@ -114,11 +114,15 @@ class MrsController extends AppController {
         foreach ($doctors as $doctor) {
             $visited[] = $doctor->doctor_id;
         }
+        $holidayArray = json_decode($this->holidayArray("all"), True);
+        $holidays = array();
+        foreach(array_keys($holidayArray) as $holiday)
+        $holidays[] = "'" . date("m/d/Y", strtotime($holiday)) . "'";
 
         $doctorsAvarage = $doctorCalls / $coveredDays;
         $chemistAvarage = $chemistCalls / $coveredDays;
         $doctorsCoverage = count($visited);
-        $this->set(compact('user', 'reportedDates', 'doctorsAvarage', 'chemistAvarage', 'doctorsCoverage'));
+        $this->set(compact('user', 'reportedDates',  'holidays', 'doctorsAvarage', 'chemistAvarage', 'doctorsCoverage'));
     }
 
     public function doctorList() {
@@ -1230,9 +1234,18 @@ class MrsController extends AppController {
         }
     }
 
-    public function holidayArray() {
-        $start_date = date("Y-01-01");
-        $end_date = date("Y-12-31");
+    public function holidayArray($mode = null) {
+		if(empty($mode))
+		{
+			$start_date = "2015-01-01";
+			$end_date = date("Y-12-31");
+		}
+		else
+		{
+			$start_date = date("Y-01-01");
+			$end_date = date("Y-12-31");
+		}
+		
         $date_array = array();
         $holidays = $this->Holidays->find()->where(['date >=' => $start_date])->andWhere(['date <=' => $end_date])->toArray();
         foreach ($holidays as $holiday)

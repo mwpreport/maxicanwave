@@ -104,12 +104,18 @@
 <script>
     //The Calender
     var dates = [<?=implode(",",$reportedDates)?>]
+    var holidays = [<?=implode(",",$holidays)?>]
     $('#calendar').datepicker({
         multidate: true,
         beforeShowDay: function(date) {
 		   for (var i = 0; i < dates.length; i++) {
             if (new Date(dates[i]).toString() == date.toString()) {              
                   return {classes: 'highlight', tooltip: 'Reported'};
+                  }
+          }
+		   for (var i = 0; i < holidays.length; i++) {
+            if (new Date(holidays[i]).toString() == date.toString()) {              
+                  return {classes: 'holiday', tooltip: 'Holiday'};
                   }
           }
     }
