@@ -111,7 +111,7 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="start_date" autocomplete="false" class="form-control required" id="start_date">
+											<input type="text" name="start_date" autocomplete="off" class="form-control required" id="start_date">
 										</div>
                                     </div>
                                     <div class="col-sm-6 w1 pad-right-0 hide dhide">
@@ -120,7 +120,7 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="end_date" autocomplete="false" class="form-control required" id="end_date">
+											<input type="text" name="end_date" autocomplete="off" class="form-control required" id="end_date">
 										</div>
                                     </div>
                                 </div>
@@ -198,7 +198,7 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="start_date" autocomplete="false" class="form-control required" id="start_date">
+											<input type="text" name="start_date" autocomplete="off" class="form-control required" id="start_date">
 										</div>
                                     </div>
                                     <div class="col-sm-6 w11 pad-right-0 hide dhide">
@@ -207,7 +207,7 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" name="end_date" autocomplete="false" class="form-control required" id="end_date">
+											<input type="text" name="end_date" autocomplete="off" class="form-control required" id="end_date">
 										</div>
                                     </div>
                                 </div>
@@ -275,7 +275,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        <input type="text" autocomplete="false" class="form-control pull-right required" id="delete_date">
+                                        <input type="text" autocomplete="off" class="form-control pull-right required" id="delete_date">
                                     </div>
                                 </div>
                                 <div class="table-responsive" id="delete_plan_list">
@@ -311,7 +311,7 @@
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" autocomplete="false" class="form-control pull-right required" id="copyfrom" name="copyfrom">
+                                            <input type="text" autocomplete="off" class="form-control pull-right required" id="copyfrom" name="copyfrom">
                                         </div>
                                     </div>
                                 </div>
@@ -322,7 +322,7 @@
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" autocomplete="false" class="form-control pull-right required" id="copyto" name="copyto">
+                                            <input type="text" autocomplete="off" class="form-control pull-right required" id="copyto" name="copyto">
                                         </div>
                                     </div>
                                 </div>
@@ -361,7 +361,7 @@
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control pull-right required" id="start_date" name="start_date" autocomplete="false">
+                                            <input type="text" class="form-control pull-right required" id="start_date" name="start_date" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
@@ -372,7 +372,7 @@
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control pull-right required" id="end_date" name="end_date" autocomplete="false">
+                                            <input type="text" class="form-control pull-right required" id="end_date" name="end_date" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>

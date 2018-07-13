@@ -28,7 +28,7 @@
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo ($reportDate!="") ? $this->Date->view($reportDate) : "";?>" autocomplete="false">
+										<input type="text" class="form-control pull-right" name="reportDate" id="reportDate" value="<?php echo ($reportDate!="") ? $this->Date->view($reportDate) : "";?>" autocomplete="off">
 									</div>
 								</div>
 								<!-- /.input group -->
