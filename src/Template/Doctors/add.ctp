@@ -44,8 +44,8 @@
 											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('state_id', ['class' => 'form-control', 'onchange' => 'loadCitiesOption()', 'options' => $states,'empty' => 'Select State']).'</div>';
 											echo '<div class="col-sm-4">'.$this->Form->control('city_id', ['class' => 'form-control','empty' => 'Select City']).'</div>';
 											echo '<div class="col-sm-4">'.$this->Form->control('pincode', ['class' => 'form-control']).'</div></div>';
-											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('dob', ['autocomplete' =>'false','type' => 'text','label' => 'D.O.Birth', 'class' => 'form-control']).'</div>';
-											echo '<div class="col-sm-4">'.$this->Form->control('dow', ['autocomplete' =>'false','type' => 'text','label' => 'D.O.Wedding', 'class' => 'form-control']).'</div></div>';
+											echo '<div class="form-group mar-bottom-10"><div class="col-sm-4">'.$this->Form->control('dob', ['autocomplete' =>'off','type' => 'text','label' => 'D.O.Birth', 'class' => 'form-control']).'</div>';
+											echo '<div class="col-sm-4">'.$this->Form->control('dow', ['autocomplete' =>'off','type' => 'text','label' => 'D.O.Wedding', 'class' => 'form-control']).'</div></div>';
 										?>
 									</fieldset>
 									<div class="form-group pull-right"> <div class="col-sm-12">
@@ -82,6 +82,6 @@ function loadCitiesOption(){
 var date = new Date(), y = date.getFullYear(), m = date.getMonth(), d = date.getDate();
 var startDate = new Date(y, m, 0);
 var endDate = new Date(y-18, m , 0);
-$('#dob').datepicker({autoclose: true, endDate: new Date(y-18, m , 0)});
-$('#dow').datepicker({autoclose: true, endDate: new Date(y, m , d)});
+$('#dob').datepicker({autoclose: true, endDate: new Date(y-18, m , 0), format: 'dd-mm-yyyy'});
+$('#dow').datepicker({autoclose: true, endDate: new Date(y, m , d), format: 'dd-mm-yyyy'});
 </script>

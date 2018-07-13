@@ -12,6 +12,11 @@ use App\Controller\AppController;
  */
 class DoctorsController extends AppController
 {
+	public function initialize() {
+        parent::initialize();
+		$this->loadComponent('Auth');
+		$this->loadComponent('Date');
+	}
 
     /**
      * Index method
@@ -56,7 +61,10 @@ class DoctorsController extends AppController
 		$uid = $this->Auth->user('id');
         $doctor = $this->Doctors->newEntity();
         if ($this->request->is('post')) {
-            $doctor = $this->Doctors->patchEntity($doctor, $this->request->getData());
+			$data = $this->request->getData();
+			$data['dob'] = $this->Date->db($data['dob']);
+			$data['dow'] = $this->Date->db($data['dow']);
+            $doctor = $this->Doctors->patchEntity($doctor, $data);
             $doctor->user_id=$uid;
             if ($this->Doctors->save($doctor)) {
 				$this->generateCode($doctor->id);
@@ -97,7 +105,10 @@ class DoctorsController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $doctor = $this->Doctors->patchEntity($doctor, $this->request->getData());
+			$data = $this->request->getData();
+			$data['dob'] = $this->Date->db($data['dob']);
+			$data['dow'] = $this->Date->db($data['dow']);
+            $doctor = $this->Doctors->patchEntity($doctor, $data);
             if ($this->Doctors->save($doctor)) {
                 $this->Flash->success(__('The doctor has been saved.'));
 
