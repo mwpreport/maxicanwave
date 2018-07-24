@@ -660,7 +660,14 @@
 		$("#ModalDeleteForm").validate({
 			 ignore: ":hidden",
 			 submitHandler: function (form) {
-				doDateDelete();
+				if ($('input[type="checkbox"].delete_plan_id').is(':checked'))
+				{
+					doDateDelete();
+				}
+				else{
+					alert("Please check a Doctor");
+				}
+				
 				return false; // required to block normal submit since you used ajax
 			 }
 		 });
@@ -741,6 +748,14 @@
 				   }
 			   }
 		   });
+		}
+
+		function toggleCheck(elem)
+		{
+			if($(elem).prop("checked") == true)
+			$(elem).closest("form").find("input:checkbox").prop('checked', true);
+			else
+			$(elem).closest("form").find("input:checkbox").prop('checked', false);
 		}
 
 		function doDateDelete(){  // delete event 
@@ -899,6 +914,7 @@
 			$("#delete_plan_list, #copy_plan_list").html('');
 			$("#ModalAddForm .dhide").addClass("hide");
 			$("#ModalAddForm .dshow").removeClass("hide");
+			$('#ModalAddForm #start_date, #ModalEditForm #start_date, #ModalLeaveForm #start_date, #delete_date, #datepicker, #copyfrom, #copyto, #fromdate, #todate').val("").datepicker("update");
 		}
 
         </script>

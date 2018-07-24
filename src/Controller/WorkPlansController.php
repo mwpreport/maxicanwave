@@ -339,11 +339,11 @@ class WorkPlansController extends AppController
 		$html = "";
 		if(count($WorkPlans))
 		{
-			$i=1;$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th>S.No</th><th>Field/ Others</th><th>City</th></tr></thead><tbody>';
+			$i=1;$html.='<table class="table table-striped table-bordered table-hover"><thead><tr><th><input type="checkbox" class="check_all" checked onclick="toggleCheck(this)" value="1"></th><th>Field/ Others</th><th>City</th></tr></thead><tbody>';
 			foreach ($WorkPlans as $WorkPlan)
 			{
 				$colomn_two = ($WorkPlan->work_type_id == 2) ? $WorkPlan->doctor->name : $WorkPlan->work_type->name;
-				$html.='<tr><td class="text-center">'.$i.'</td><td><input type="hidden" name="selected_plan_id[]" value="'.$WorkPlan->id.'">'.$colomn_two.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
+				$html.='<tr><td class="text-center"><input type="checkbox" class="delete_plan_id" checked name="selected_plan_id[]" value="'.$WorkPlan->id.'"> </td><td>'.$colomn_two.'</td><td>'.$WorkPlan->city->city_name.'</td></tr>';
 				$i++;
 			}
 			$html.='</tbody></table>';
